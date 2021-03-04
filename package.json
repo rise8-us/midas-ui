@@ -1,12 +1,11 @@
 {
-  "name": "app",
+  "name": "midas",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node index.js",
+    "start:local": "react-scripts start",
     "build": "react-scripts build",
-    "build:local": "rm -rf ./server/build && react-scripts build && mv ./build ./server/",
-    "build:zip": "./scripts/build-zip.sh",
     "test": "react-scripts test --coverage",
     "test:all": "npm test -- --coverage --watchAll=false",
     "test:summary": "react-scripts test --coverage --coverageReporters=\"text-summary\"",
@@ -15,8 +14,8 @@
     "lint": "eslint src/.",
     "lint:fix": "eslint src/. --fix",
     "eject": "react-scripts eject",
-    "e2e:local": "npx cypress open --env INTEGRATION_TEST_HOST=http://localhost:9000/",
-    "test:e2e-ci": "npx cypress run --env INTEGRATION_TEST_HOST=https://internet-site/ --browser electron"
+    "test:e2e": "npx cypress run",
+    "test:e2e-ci": "npx cypress run --env configFile=pipeline"
   },
   "eslintConfig": {
     "extends": [
@@ -53,7 +52,7 @@
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.2",
+    "react-scripts": "^4.0.3",
     "redux": "^4.0.5"
   },
   "resolutions": {
@@ -63,12 +62,12 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.7.1",
+    "@testing-library/user-event": "^12.7.3",
     "eslint": "^7.20.0",
-    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-jest": "^24.1.5",
     "prop-types": "^15.7.2",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
-    "stylelint": "^13.10.0"
+    "stylelint": "^13.11.0"
   }
 }

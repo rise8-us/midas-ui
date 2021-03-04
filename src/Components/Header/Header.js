@@ -15,16 +15,16 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const Header = (props) => {
+function Header({ title, subtitle, titleVariant, subtitleVariant, icon }) {
     const classes = useStyles()
 
     return (
         <Box className = {classes.row}>
             <Box className = {classes.box} data-testid = 'Account__header'>
-                <Typography variant = {props.titleVariant} color = 'textPrimary'>{props.title}</Typography>
-                <Typography variant = {props.subtitleVariant} color = 'textSecondary'>{props.subtitle}</Typography>
+                <Typography variant = {titleVariant} color = 'textPrimary'>{title}</Typography>
+                <Typography variant = {subtitleVariant} color = 'textSecondary'>{subtitle}</Typography>
             </Box>
-            {props.icon}
+            {icon}
         </Box>
     )
 }

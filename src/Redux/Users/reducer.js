@@ -13,6 +13,9 @@ const userSlice = createSlice({
         [actions.requestUpdateUser.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
         },
+        [actions.requestUpdateUserRoles.fulfilled]: (state, action) => {
+            state[action.payload.id] = action.payload
+        },
         [requestFetchInitUser.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
         }

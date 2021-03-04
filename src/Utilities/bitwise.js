@@ -6,10 +6,9 @@ export const convertRolesLongToRolesMap = (userRolesLong) => {
 
     if (Object.keys(allRoles).length === 0) return { }
     const longAsBit = userRolesLong.toString(2)
-
     return allRoles.map(role => {
         const permissionBit = Math.pow(2, role.offset).toString(2)
-        return { [role.name]: Boolean(permissionBit === longAsBit) }
+        return { [role.name]: Boolean(permissionBit & longAsBit) }
     }).reduce((roles, role) => {
         return { ...roles, ...role }
     })
