@@ -22,8 +22,8 @@ describe('Info Reducer', () => {
 
     it('should handle initial state', () => {
         expect(reducer(undefined, {})).toEqual({
-            classification: { },
-            roles: { }
+            roles: { },
+            classification: { }
         })
     })
 

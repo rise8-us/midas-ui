@@ -36,12 +36,5 @@ This project is meant to be a launch point for teams who needed a frontend UI an
 1. Install [yarn](https://classic.yarnpkg.com/en/docs/install)
 2. Clone this repo.
 3. Execute, `yarn install`
-4. Execute, `yarn start`
-5. In web browser navigate to, `http://localhost:3000` and see your sweet sweet app!
-
-### Testing Production Build
-1. Execute, `yarn build:local`
-2. Navigate to `./server`
-3. Execute, `yarn install`
-4. Execute, `yarn start`
+4. Execute, `yarn start:local`
 5. In web browser navigate to, `http://localhost:3000` and see your sweet sweet app!

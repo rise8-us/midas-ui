@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { IconButton, InputBase, makeStyles, Paper, Typography } from '@material-ui/core'
+import { Search } from '@material-ui/icons'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { requestFetchOneUser } from '../../../Redux/Users/actions'
+import { getUserById } from '../../../Redux/Users/selectors'
 import Header from '../../Header/Header'
 import Page from '../../Page/Page'
+import { UserRoles } from '../../UserRoles'
 import { UserSettings } from '../../UserSettings'
-import { Search } from '@material-ui/icons'
-import { InputBase, IconButton, makeStyles, Paper, Typography } from '@material-ui/core'
-import { getUserById } from '../../../Redux/Users/selectors'
-import { requestFetchOneUser } from '../../../Redux/Users/actions'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         width: 400,
+        marginLeft: 20
     },
     input: {
         marginLeft: theme.spacing(1),
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const Admin = () => {
+function Admin() {
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -93,8 +95,10 @@ const Admin = () => {
                 {error && <Typography variant = 'h3'>{`User ID: ${userId} Does not exist`}</Typography>}
                 {show &&
                     <>
-                        <UserSettings user = { user } />
-                    </> }
+                        <UserSettings user = {user} />
+                        <UserRoles user = {user} editable/>
+                    </>
+                }
             </>
         </Page>
     )

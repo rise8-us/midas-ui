@@ -13,6 +13,7 @@ const useStyles = makeStyles(() => ({
         flexDirection: 'row'
     }
 }))
+
 function Account() {
     const classes = useStyles()
     const user = useSelector((state) => getUserLoggedIn(state))

@@ -14,23 +14,29 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-function Banner(props) {
+function Banner({ children }) {
     const classes = useStyles()
     const window = useWindowSize()
 
     const classification = useSelector(state => state.info.classification)
-    if (!classification) return (<div data-testid = 'Banner__empty'>{props.children}</div>)
 
     const bottomBannerTopStyle = window.height - 20
-    const banner = `${classification.name}//${classification.caveat}`
-    const bannerStyle = { backgroundColor: classification.backgroundColor, color: classification.textColor }
+    let banner = 'NOT CONNECTED TO SERVER'
+
+    if (classification.name) banner = String(classification.name)
+    if (classification.caveat) banner = banner + `//${classification.caveat}`
+
+    const bannerStyle = {
+        backgroundColor: classification.backgroundColor ? classification.backgroundColor : '#DBDBDB',
+        color: classification.textColor ? classification.textColor : '#000000'
+    }
 
     return (
         <>
             <Box className = {classes.banner} style = {bannerStyle}>
                 {banner}
             </Box>
-            <>{props.children}</>
+            <>{children}</>
             <Box className = {classes.banner} style = {{ top: `${bottomBannerTopStyle}px`, ...bannerStyle }}>
                 {banner}
             </Box>

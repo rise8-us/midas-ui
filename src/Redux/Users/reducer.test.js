@@ -4,7 +4,8 @@ import reducer from './reducer'
 
 const user = {
     id: 1,
-    username: 'jsmith'
+    username: 'jsmith',
+    roles: 0
 }
 
 const userUpdated = {
@@ -12,6 +13,10 @@ const userUpdated = {
     username: 'yoda'
 }
 
+const userRolesUpdated = {
+    ...user,
+    roles: 1
+}
 
 describe('User Reducer', () =>{
 
@@ -21,10 +26,16 @@ describe('User Reducer', () =>{
         expect(state[1]).toEqual(user)
     })
 
-    it('Update', () => {
+    it('Update User', () => {
         const actions = [{ type: reduxActions.requestUpdateUser.fulfilled, payload: userUpdated }]
         const state = actions.reduce(reducer, user)
         expect(state[1]).toEqual(userUpdated)
+    })
+
+    it('Update User Roles', () => {
+        const actions = [{ type: reduxActions.requestUpdateUserRoles.fulfilled, payload: userRolesUpdated }]
+        const state = actions.reduce(reducer, user)
+        expect(state[1]).toEqual(userRolesUpdated)
     })
 
     it('Adds init logon user', () => {

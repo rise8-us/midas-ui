@@ -23,8 +23,7 @@ test('<Banner /> - Has correct info', () => {
 })
 
 test('<Banner /> - Has correct info', () => {
-    useSelectorMock().mockReturnValue()
-    render(<Banner><div/></Banner>, { initialState: {} })
-    const linkElement = screen.getByTestId('Banner__empty')
-    expect(linkElement).toBeInTheDocument()
+    useSelectorMock().mockReturnValue({})
+    render(<Banner><div/></Banner>)
+    expect(screen.getAllByText('NOT CONNECTED TO SERVER')).toHaveLength(2)
 })

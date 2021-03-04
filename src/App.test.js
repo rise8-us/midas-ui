@@ -24,6 +24,6 @@ test('<App /> - Has correct text', () => {
     useDispatchMock().mockReturnValue({ payload: [{}] })
     render(<MemoryRouter><App /></MemoryRouter>, { initialState: mockState })
 
-    const linkElement = screen.getByText(/Hello World/i)
+    const linkElement = screen.getByText(/MIDAS/i)
     expect(linkElement).toBeInTheDocument()
 })

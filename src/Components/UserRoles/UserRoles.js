@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, FormControlLabel, makeStyles, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRolesAsArray } from '../../Redux/Info/selectors'
 import { requestUpdateUserRoles } from '../../Redux/Users/actions'
@@ -21,16 +21,13 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const UserRoles = (props) => {
+function UserRoles({ editable, user }) {
     const classes = useStyles()
     const dispatch = useDispatch()
-
-    const { editable, user } = props
 
     const [assignedRoles, setAssignedRoles] = useState({ ...user.roles })
 
     const allRoles = useSelector((state) => getRolesAsArray(state))
-
 
     const onChangeRole = (e) => {
         setAssignedRoles({
@@ -43,10 +40,6 @@ const UserRoles = (props) => {
         const roles = convertRolesMapToLong(assignedRoles)
         dispatch(requestUpdateUserRoles({ id: user.id, roles: roles }))
     }
-
-    useEffect(() => {
-        setAssignedRoles({ ...user.roles })
-    }, [user])
 
     if (Object.values(assignedRoles).length === 0) return null
 

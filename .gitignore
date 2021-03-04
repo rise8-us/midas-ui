@@ -8,8 +8,6 @@
 
 # production
 /build
-/server
-react-app-frontend.zip
 
 # misc
 .DS_Store
