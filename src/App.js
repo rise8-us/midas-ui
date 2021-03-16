@@ -2,9 +2,12 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { Banner } from './Components/Banner'
-import { Account, Home, PageNotFound, Admin } from './Components/Pages'
+import { Account, Admin, Home, PageNotFound } from './Components/Pages'
+import { PopupManager } from './Components/PopupManager'
 import { getUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchInitInfo, requestFetchInitUser } from './Redux/Info/actions'
+import { requestFetchAllProducts } from './Redux/Products/actions'
+import { requestFetchAllTeams } from './Redux/Teams/actions'
 
 function App() {
     const dispatch = useDispatch()
@@ -15,12 +18,15 @@ function App() {
         async function initializeApp() {
             dispatch(requestFetchInitUser())
             dispatch(requestFetchInitInfo())
+            dispatch(requestFetchAllTeams())
+            dispatch(requestFetchAllProducts())
         }
         initializeApp()
     }, [])
 
     return (
         <Banner>
+            <PopupManager />
             <Switch>
                 {/* unsecured Routes */}
                 <Route exact path = '/'>
