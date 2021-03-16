@@ -3,6 +3,9 @@ import appSettingsReducer from './AppSettings/reducer'
 import authReducer from './Auth/reducer'
 import errorReducer from './Errors/reducer'
 import infoReducer from './Info/reducer'
+import popupReducer from './Popups/reducer'
+import productReducer from './Products/reducer'
+import teamReducer from './Teams/reducer'
 import userReducer from './Users/reducer'
 
 export const rootReducer = combineReducers({
@@ -10,5 +13,8 @@ export const rootReducer = combineReducers({
     auth: authReducer,
     errors: errorReducer,
     info: infoReducer,
-    users: userReducer
+    popups: popupReducer,
+    teams: teamReducer,
+    users: userReducer,
+    products: productReducer
 })

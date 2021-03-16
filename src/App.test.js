@@ -1,15 +1,8 @@
+/* eslint-disable react/display-name */
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 import { render, screen, useDispatchMock } from './Utilities/test-utils'
-
-const mockHistoryPush = jest.fn()
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-        push: mockHistoryPush,
-    })
-}))
 
 const mockState = {
     auth: {
@@ -20,10 +13,12 @@ const mockState = {
     }
 }
 
+jest.mock('./Components/PopupManager/PopupManager', () => () => (<div/>))
+
 test('<App /> - Has correct text', () => {
     useDispatchMock().mockReturnValue({ payload: [{}] })
+
     render(<MemoryRouter><App /></MemoryRouter>, { initialState: mockState })
 
-    const linkElement = screen.getByText(/MIDAS/i)
-    expect(linkElement).toBeInTheDocument()
+    expect(screen.getByText(/MIDAS/i)).toBeInTheDocument()
 })
