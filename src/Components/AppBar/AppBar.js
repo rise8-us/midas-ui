@@ -5,8 +5,14 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
+    logo: {
+        maxBlockSize: '36px',
+        paddingRight: '5px',
+        cursor: 'pointer'
+    },
     title: {
         display: 'none',
+        cursor: 'pointer',
         [theme.breakpoints.up('sm')]: {
             display: 'block'
         }
@@ -16,6 +22,8 @@ const useStyles = makeStyles(theme => ({
 function AppBar({ height, appColor, appName, appLogo, user }) {
     const classes = useStyles()
     const history = useHistory()
+
+    const goHome = () => history.push('/home')
 
     return (
         <AppBarMUI
@@ -28,12 +36,22 @@ function AppBar({ height, appColor, appName, appLogo, user }) {
                 backgroundColor: '#24292e'
             }}
         >
-            <Toolbar>
+            <Toolbar style = {{ paddingLeft: '10px' }}>
                 {appLogo &&
-                    <img src = {appLogo} style = {{ maxBlockSize: '28px', paddingRight: '5px' }}/>
+                    <img
+                        src = {appLogo}
+                        data-testid = 'AppBar__img-logo'
+                        className = {classes.logo}
+                        onClick = {goHome}
+                    />
                 }
                 {appName &&
-                    <Typography variant = 'h4' className = {classes.title} color = 'textPrimary'>
+                    <Typography
+                        variant = 'h4'
+                        className = {classes.title}
+                        color = 'textPrimary'
+                        onClick = {goHome}
+                    >
                         {appName}
                     </Typography>
                 }

@@ -3,14 +3,6 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../Utilities/test-utils'
 import { UserSettings } from './index'
 
-const mockHistoryPush = jest.fn()
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-        push: mockHistoryPush,
-    })
-}))
-
 const requestUpdateUserMock = useModuleMock('Redux/Users/actions', 'requestUpdateUser')
 
 const user = {
