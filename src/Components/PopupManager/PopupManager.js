@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useLayoutEffect, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getOpenPopups } from '../../Redux/Popups/selectors'
 
@@ -27,7 +27,7 @@ function PopupManager() {
         }
     })
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const loadPopups = async() => {
             const componentPromises = currentPopups.map((popup, index) => {
                 const Popup = importPopup(popup.componentName)
