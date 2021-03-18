@@ -21,7 +21,7 @@ const allRolesMock = [
     }
 ]
 
-const getRolesAsArrayMock = useModuleMock('Redux/Info/selectors', 'getRolesAsArray')
+const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
 
 test('<Account /> - Renders Components', () => {
     getRolesAsArrayMock.mockReturnValue(allRolesMock)

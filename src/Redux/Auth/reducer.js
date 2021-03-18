@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { requestFetchInitUser } from '../Info/actions'
+import { requestFetchInit } from '../Init/actions'
 
 const authSlice = createSlice({
     name: 'auth',
@@ -11,9 +11,9 @@ const authSlice = createSlice({
     },
     reducers: { },
     extraReducers: {
-        [requestFetchInitUser.fulfilled]: (state, action) => {
-            state.user = action.payload
-            state.isAdmin = Boolean(action.payload.roles.toString(2) & 1)
+        [requestFetchInit.fulfilled]: (state, action) => {
+            state.user = action.payload.userLoggedIn
+            state.isAdmin = Boolean(action.payload.userLoggedIn.roles.toString(2) & 1)
         }
     }
 })

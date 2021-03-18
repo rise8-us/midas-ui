@@ -26,7 +26,7 @@ const roleMapInput = {
     ROLE4: true
 }
 
-const getRolesAsArrayMock = useModuleMock('Redux/Info/selectors', 'getRolesAsArray')
+const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
 
 test('should return object', () => {
     getRolesAsArrayMock.mockReturnValue(allRolesMock)

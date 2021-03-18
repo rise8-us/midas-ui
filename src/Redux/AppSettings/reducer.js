@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { requestFetchInit } from '../Init/actions'
 
 const appSettingsSlice = createSlice({
     name: 'app',
     initialState: {
-        navBarOpen: false
+        navBarOpen: false,
+        roles: {},
+        classification: {}
     },
     reducers: {
         toggleNavBarOpen: (state) => {
@@ -11,6 +14,12 @@ const appSettingsSlice = createSlice({
         }
     },
     extraReducers: {
+        [requestFetchInit.fulfilled]: (state, action) => {
+            state.classification = action.payload.classification
+            action.payload.roles.map(role => {
+                state.roles[role.name] = role
+            })
+        }
     }
 })
 

@@ -5,7 +5,7 @@ import { Banner } from './Components/Banner'
 import { Account, Admin, Home, PageNotFound } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { getUserLoggedIn } from './Redux/Auth/selectors'
-import { requestFetchInitInfo, requestFetchInitUser } from './Redux/Info/actions'
+import { requestFetchInit } from './Redux/Init/actions'
 import { requestFetchAllProducts } from './Redux/Products/actions'
 import { requestFetchAllTeams } from './Redux/Teams/actions'
 
@@ -16,8 +16,7 @@ function App() {
 
     useEffect(() => {
         async function initializeApp() {
-            dispatch(requestFetchInitUser())
-            dispatch(requestFetchInitInfo())
+            dispatch(requestFetchInit())
             dispatch(requestFetchAllTeams())
             dispatch(requestFetchAllProducts())
         }

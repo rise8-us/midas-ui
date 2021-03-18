@@ -1,22 +1,45 @@
+import { requestFetchInit } from '../Init/actions'
 import reducer, { toggleNavBarOpen } from './reducer'
 
-const initialState = {
-    navBarOpen: false
+const mockStore = {
+    navBarOpen: false,
+    roles: {},
+    classification: {}
 }
 
-describe('AppSettings Reducer', () =>{
-    it('should handle initial state', () => {
-        expect(reducer(undefined, {})).toEqual({
-            navBarOpen: false
-        })
+test('should handle initial state', () => {
+    expect(reducer(undefined, {})).toEqual({
+        navBarOpen: false,
+        classification: {},
+        roles: {}
     })
+})
 
-    it('should handle toggleNavBarOpen', () => {
-        expect(
-            reducer(initialState, { type: toggleNavBarOpen.type, payload: {} })
-        ).toEqual({
-            navBarOpen: true
-        })
+test('should handle toggleNavBarOpen', () => {
+    expect(
+        reducer(mockStore, { type: toggleNavBarOpen.type, payload: {} })
+    ).toEqual({
+        ...mockStore,
+        navBarOpen: true
     })
+})
 
+test('sets init info', () => {
+    const initResponse = {
+        roles: [{
+            name: 'ADMIN'
+        }],
+        classification: {
+            backgroundColor: 'purple',
+            textColor: 'white',
+            label: 'UNCLASSIFIED',
+            caveats: 'IL2'
+        }
+    }
+
+    const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
+    const state = actions.reduce(reducer, mockStore)
+
+    expect(state.classification).toEqual(initResponse.classification)
+    expect(state.roles.ADMIN).toEqual(initResponse.roles[0])
 })
