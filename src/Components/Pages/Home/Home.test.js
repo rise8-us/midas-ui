@@ -14,7 +14,7 @@ test('<Home /> - Has correct text', () => {
     render(<Home />)
 
     expect(screen.getByText('Add New Team')).toBeInTheDocument()
-    expect(screen.getByText('Add Product Team')).toBeInTheDocument()
+    expect(screen.getByText('Add New Product')).toBeInTheDocument()
     expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
 })
 

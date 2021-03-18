@@ -18,7 +18,7 @@ function Banner({ children }) {
     const classes = useStyles()
     const window = useWindowSize()
 
-    const classification = useSelector(state => state.info.classification)
+    const classification = useSelector(state => state.app.classification)
 
     const bottomBannerTopStyle = window.height - 20
     let banner = 'NOT CONNECTED TO SERVER'

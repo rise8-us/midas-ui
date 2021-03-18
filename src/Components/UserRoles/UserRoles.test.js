@@ -2,7 +2,7 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../Utilities/test-utils'
 import { UserRoles } from './index'
 
-const getRolesAsArrayMock = useModuleMock('Redux/Info/selectors', 'getRolesAsArray')
+const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
 const requestUpdateUserRolesMock = useModuleMock('Redux/Users/actions', 'requestUpdateUserRoles')
 
 const userWithRoles = {

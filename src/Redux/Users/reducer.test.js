@@ -1,4 +1,4 @@
-import { requestFetchInitUser } from '../Info/actions'
+import { requestFetchInit } from '../Init/actions'
 import * as reduxActions from './actions'
 import reducer from './reducer'
 
@@ -18,30 +18,26 @@ const userRolesUpdated = {
     roles: 1
 }
 
-describe('User Reducer', () =>{
+test('Get One', () => {
+    const actions = [{ type: reduxActions.requestFetchOneUser.fulfilled, payload: user }]
+    const state = actions.reduce(reducer, {})
+    expect(state[1]).toEqual(user)
+})
 
-    it('Get One', () => {
-        const actions = [{ type: reduxActions.requestFetchOneUser.fulfilled, payload: user }]
-        const state = actions.reduce(reducer, {})
-        expect(state[1]).toEqual(user)
-    })
+test('Update User', () => {
+    const actions = [{ type: reduxActions.requestUpdateUser.fulfilled, payload: userUpdated }]
+    const state = actions.reduce(reducer, user)
+    expect(state[1]).toEqual(userUpdated)
+})
 
-    it('Update User', () => {
-        const actions = [{ type: reduxActions.requestUpdateUser.fulfilled, payload: userUpdated }]
-        const state = actions.reduce(reducer, user)
-        expect(state[1]).toEqual(userUpdated)
-    })
+test('Update User Roles', () => {
+    const actions = [{ type: reduxActions.requestUpdateUserRoles.fulfilled, payload: userRolesUpdated }]
+    const state = actions.reduce(reducer, user)
+    expect(state[1]).toEqual(userRolesUpdated)
+})
 
-    it('Update User Roles', () => {
-        const actions = [{ type: reduxActions.requestUpdateUserRoles.fulfilled, payload: userRolesUpdated }]
-        const state = actions.reduce(reducer, user)
-        expect(state[1]).toEqual(userRolesUpdated)
-    })
-
-    it('Adds init logon user', () => {
-        const actions = [{ type: requestFetchInitUser.fulfilled, payload: user }]
-        const state = actions.reduce(reducer, {})
-        expect(state[1]).toEqual(user)
-    })
-
+test('Adds init logon user', () => {
+    const actions = [{ type: requestFetchInit.fulfilled, payload: { userLoggedIn: user } }]
+    const state = actions.reduce(reducer, {})
+    expect(state[1]).toEqual(user)
 })

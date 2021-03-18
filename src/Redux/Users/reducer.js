@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { requestFetchInitUser } from '../Info/actions'
+import { requestFetchInit } from '../Init/actions'
 import * as actions from './actions'
 
 const userSlice = createSlice({
@@ -16,8 +16,8 @@ const userSlice = createSlice({
         [actions.requestUpdateUserRoles.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
         },
-        [requestFetchInitUser.fulfilled]: (state, action) => {
-            state[action.payload.id] = action.payload
+        [requestFetchInit.fulfilled]: (state, action) => {
+            state[action.payload.userLoggedIn.id] = action.payload.userLoggedIn
         }
     }
 })

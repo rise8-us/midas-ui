@@ -8,7 +8,7 @@ beforeEach(() => {
 
 test('<Banner /> - Has correct info', () => {
     const initialState = {
-        info: {
+        app: {
             classification: {
                 name: 'FOO',
                 caveat: 'BAR',

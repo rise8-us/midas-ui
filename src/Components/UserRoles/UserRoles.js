@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, FormControlLabel, makeStyles, Typography } from 
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRolesAsArray } from '../../Redux/Info/selectors'
+import { getRolesAsArray } from '../../Redux/AppSettings/selectors'
 import { requestUpdateUserRoles } from '../../Redux/Users/actions'
 import { convertRolesMapToLong } from '../../Utilities/bitwise'
 
