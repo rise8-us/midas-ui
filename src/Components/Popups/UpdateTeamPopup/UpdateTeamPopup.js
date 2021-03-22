@@ -2,6 +2,7 @@ import { Box, makeStyles, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestUpdateTeam } from '../../../Redux/Teams/actions'
 import TeamConstants from '../../../Redux/Teams/constants'
@@ -21,10 +22,12 @@ function UpdateTeamPopup({ id }) {
     const classes = useStyles()
 
     const updateTeam = useSelector(state => getTeamById(state, id))
+    const errors = useSelector(state => selectRequestErrors(state, TeamConstants.UPDATE_TEAM))
 
     const [name, setName] = useState('')
     const [gitlabGroupId, setGitlabGroupId] = useState('')
     const [description, setDescription] = useState('')
+    const [nameError, setNameError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabGroupIdChange = (e) => setGitlabGroupId(e.target.value)
@@ -50,6 +53,11 @@ function UpdateTeamPopup({ id }) {
         setDescription(updateTeam.description)
     }, [updateTeam])
 
+    useEffect(() => {
+        if (errors.length > 0) {
+            setNameError(errors.filter(error => error.includes('name')))
+        }
+    }, [errors])
     return (
         <Popup
             title = 'Update Team'
@@ -62,6 +70,8 @@ function UpdateTeamPopup({ id }) {
                     data-testid = 'UpdateTeamPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
+                    error = { nameError.length > 0 }
+                    helperText = { nameError[0] ?? '' }
                     margin = 'dense'
                     required
                 />

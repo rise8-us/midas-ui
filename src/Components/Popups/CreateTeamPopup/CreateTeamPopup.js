@@ -1,7 +1,8 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { closePopup } from '../../../Redux/Popups/actions'
+import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { requestCreateTeam } from '../../../Redux/Teams/actions'
 import TeamConstants from '../../../Redux/Teams/constants'
 import Popup from '../../Popup/Popup'
@@ -18,9 +19,12 @@ function CreateTeamPopup() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
+    const errors = useSelector(state => selectRequestErrors(state, TeamConstants.CREATE_TEAM))
+
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [gitlabGroupId, setGitlabGroupId] = useState('')
+    const [nameError, setNameError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabGroupIdChange = (e) => setGitlabGroupId(e.target.value)
@@ -38,6 +42,12 @@ function CreateTeamPopup() {
         }))
     }
 
+    useEffect(() => {
+        if (errors.length > 0) {
+            setNameError(errors.filter(error => error.includes('name')))
+        }
+    }, [errors])
+
     return (
         <Popup
             title = 'Create New Team'
@@ -50,6 +60,8 @@ function CreateTeamPopup() {
                     data-testid = 'CreateTeamPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
+                    error = { nameError.length > 0 }
+                    helperText = { nameError[0] ?? '' }
                     margin = 'dense'
                     required
                 />

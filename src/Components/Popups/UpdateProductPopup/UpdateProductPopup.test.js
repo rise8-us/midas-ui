@@ -66,3 +66,21 @@ test('<UpdateProductPopup /> - test close popup', () => {
 
     expect(closePopupMock).toHaveBeenCalled()
 })
+
+test('<UpdateProductPopup /> -test error messaging product already exist', () => {
+    useDispatchMock().mockReturnValue({})
+    getProductByIdMock.mockReturnValue(returnedProduct)
+    const state = {
+        errors: {
+            'products/updateOne': [
+                'name error',
+                'Gitlab error'
+            ]
+        }
+    }
+    render(<UpdateProductPopup id = {4} />, { initialState: state })
+
+    expect(screen.getByText('name error')).toBeInTheDocument()
+    expect(screen.getByText('Gitlab error')).toBeInTheDocument()
+
+})

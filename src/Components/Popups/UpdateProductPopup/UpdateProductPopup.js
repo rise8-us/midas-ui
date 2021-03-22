@@ -2,6 +2,7 @@ import { Box, makeStyles, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestUpdateProduct } from '../../../Redux/Products/actions'
 import ProductConstants from '../../../Redux/Products/constants'
@@ -21,10 +22,13 @@ function UpdateProductPopup({ id }) {
     const classes = useStyles()
 
     const updateProduct = useSelector(state => getProductById(state, id))
+    const errors = useSelector(state => selectRequestErrors(state, ProductConstants.UPDATE_PRODUCT))
 
     const [name, setName] = useState('')
     const [gitlabProjectId, setGitlabProjectId] = useState('')
     const [description, setDescription] = useState('')
+    const [nameError, setNameError] = useState([])
+    const [gitlabError, setGitlabError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
@@ -49,6 +53,13 @@ function UpdateProductPopup({ id }) {
         setDescription(updateProduct.description)
     }, [updateProduct])
 
+    useEffect(() => {
+        if (errors.length > 0) {
+            setNameError(errors.filter(error => error.includes('name')))
+            setGitlabError(errors.filter(error => error.includes('Gitlab')))
+        }
+    }, [errors])
+
     return (
         <Popup
             title = 'Update Product'
@@ -61,6 +72,8 @@ function UpdateProductPopup({ id }) {
                     data-testid = 'UpdateProductPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
+                    error = { nameError.length > 0 }
+                    helperText = { nameError[0] ?? '' }
                     margin = 'dense'
                     required
                 />
@@ -72,6 +85,8 @@ function UpdateProductPopup({ id }) {
                     inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabProjectId}
                     onChange = {onGitlabProjectIdChange}
+                    error = { gitlabError.length > 0 }
+                    helperText = { gitlabError[0] ?? '' }
                     margin = 'dense'
                 />
                 <TextField
