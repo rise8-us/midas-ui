@@ -39,7 +39,7 @@ test('<CreateTeamPopup /> - test submit team', () => {
     expect(submitTeamMock.mock.calls[0][0]).toEqual({ name, gitlabGroupId, description })
 })
 
-test('<CreateTeam /> - test close popup', () => {
+test('<CreateTeamPopup /> - test close popup', () => {
     useDispatchMock().mockReturnValue({})
     render(<CreateTeamPopup />)
 
@@ -47,3 +47,18 @@ test('<CreateTeam /> - test close popup', () => {
 
     expect(closePopupMock).toHaveBeenCalled()
 })
+
+test('<CreateTeamPopup /> -test error messaging', () => {
+    const state = {
+        errors: {
+            'teams/createOne': [
+                'name error',
+            ]
+        }
+    }
+    render(<CreateTeamPopup />, { initialState: state })
+
+    expect(screen.getByText('name error')).toBeInTheDocument()
+
+})
+

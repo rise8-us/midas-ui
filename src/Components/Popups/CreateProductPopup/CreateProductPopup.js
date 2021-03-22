@@ -1,6 +1,7 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateProduct } from '../../../Redux/Products/actions'
 import ProductConstants from '../../../Redux/Products/constants'
@@ -18,9 +19,13 @@ function CreateProductPopup() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
+    const errors = useSelector(state => selectRequestErrors(state, ProductConstants.CREATE_PRODUCT))
+
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [gitlabProjectId, setGitlabProjectId] = useState('')
+    const [nameError, setNameError] = useState([])
+    const [gitlabError, setGitlabError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
@@ -38,6 +43,13 @@ function CreateProductPopup() {
         }))
     }
 
+    useEffect(() => {
+        if (errors.length > 0) {
+            setNameError(errors.filter(error => error.includes('name')))
+            setGitlabError(errors.filter(error => error.includes('Gitlab')))
+        }
+    }, [errors])
+
     return (
         <Popup
             title = 'Create New Product'
@@ -50,6 +62,8 @@ function CreateProductPopup() {
                     data-testid = 'CreateProductPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
+                    error = { nameError.length > 0 }
+                    helperText = { nameError[0] ?? '' }
                     margin = 'dense'
                     required
                 />
@@ -61,6 +75,8 @@ function CreateProductPopup() {
                     inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabProjectId}
                     onChange = {onGitlabProjectIdChange}
+                    error = { gitlabError.length > 0 }
+                    helperText = { gitlabError[0] ?? '' }
                     margin = 'dense'
                 />
                 <TextField

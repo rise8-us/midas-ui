@@ -57,7 +57,7 @@ test('<UpdateTeamPopup /> - test edit team', () => {
     expect(submitTeamMock.mock.calls[0][0]).toEqual({ ...returnedTeam, name, description, gitlabGroupId })
 })
 
-test('<CreateTeam /> - test close popup', () => {
+test('<UpdateTeamPopup /> - test close popup', () => {
     useDispatchMock().mockReturnValue({})
     getTeamByIdMock.mockReturnValue(returnedTeam)
     render(<UpdateTeamPopup id = {4}/>)
@@ -65,4 +65,21 @@ test('<CreateTeam /> - test close popup', () => {
     fireEvent.click(screen.getByTestId('Popup__button-close'))
 
     expect(closePopupMock).toHaveBeenCalled()
+})
+
+test('<UpdateTeamPopup /> - test error messaging', () => {
+    useDispatchMock().mockReturnValue({})
+    getTeamByIdMock.mockReturnValue(returnedTeam)
+
+    const state = {
+        errors: {
+            'teams/updateOne': [
+                'team name'
+            ]
+        }
+    }
+    render(<UpdateTeamPopup id = {4}/>, { initialState: state })
+
+    expect(screen.getByText('team name')).toBeInTheDocument()
+
 })

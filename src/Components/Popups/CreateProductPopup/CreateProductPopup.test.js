@@ -47,3 +47,20 @@ test('<CreateProduct /> - test close popup', () => {
 
     expect(closePopupMock).toHaveBeenCalled()
 })
+
+test('<CreateProduct /> -test error messaging', () => {
+    const state = {
+        errors: {
+            'products/createOne': [
+                'name error',
+                'Gitlab error'
+            ]
+        }
+    }
+    render(<CreateProductPopup />, { initialState: state })
+
+    expect(screen.getByText('name error')).toBeInTheDocument()
+    expect(screen.getByText('Gitlab error')).toBeInTheDocument()
+
+})
+
