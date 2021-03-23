@@ -3,16 +3,20 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, screen } from '../../../Utilities/test-utils'
 import { PageNotFound } from './index'
 
-test('<PageNotFound /> - Has correct text', () => {
-    render(<MemoryRouter><PageNotFound /></MemoryRouter>)
+describe('<PageNotFound />', () => {
 
-    expect(screen.getByText(/This is not the page you are looking for./i)).toBeInTheDocument()
-})
+    test('should have correct text', () => {
+        render(<MemoryRouter><PageNotFound /></MemoryRouter>)
 
-test('<PageNotFound /> - Redirect goes home', () => {
-    render(<MemoryRouter><PageNotFound /></MemoryRouter>)
-    const linkElement = screen.getByText(/Go Home/i)
+        expect(screen.getByText(/This is not the page you are looking for./i)).toBeInTheDocument()
+    })
 
-    expect(linkElement).toBeInTheDocument()
-    expect(linkElement).toHaveAttribute('href', '/home')
+    test('should redirect to home', () => {
+        render(<MemoryRouter><PageNotFound /></MemoryRouter>)
+        const linkElement = screen.getByText(/Go Home/i)
+
+        expect(linkElement).toBeInTheDocument()
+        expect(linkElement).toHaveAttribute('href', '/home')
+    })
+
 })

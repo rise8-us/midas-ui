@@ -58,6 +58,7 @@ function UpdateTeamPopup({ id }) {
             setNameError(errors.filter(error => error.includes('name')))
         }
     }, [errors])
+
     return (
         <Popup
             title = 'Update Team'

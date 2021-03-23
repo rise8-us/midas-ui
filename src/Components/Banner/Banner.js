@@ -27,8 +27,8 @@ function Banner({ children }) {
     if (classification.caveat) banner = banner + `//${classification.caveat}`
 
     const bannerStyle = {
-        backgroundColor: classification.backgroundColor ? classification.backgroundColor : '#DBDBDB',
-        color: classification.textColor ? classification.textColor : '#000000'
+        backgroundColor: classification.backgroundColor ?? '#DBDBDB',
+        color: classification.textColor ?? '#000000'
     }
 
     return (

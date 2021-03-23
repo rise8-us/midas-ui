@@ -11,7 +11,7 @@ const PopupsSlice = createSlice({
                 state[action.payload.name] = action.payload
             })
             .addCase(actions.closePopup, (state, action) => {
-                state[action.payload.name] = action.payload
+                state = delete state[action.payload.name]
             })
             .addMatcher(
                 (action) => {
@@ -20,7 +20,7 @@ const PopupsSlice = createSlice({
                 (state, action) => {
                     const name = action.type.split('/fulfilled')[0]
                     if (state[name] !== undefined) {
-                        state[name] = { open: false, name, componentName: '', props: {} }
+                        state = delete state[name]
                     }
                 }
             )

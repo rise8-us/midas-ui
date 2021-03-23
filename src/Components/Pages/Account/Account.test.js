@@ -2,33 +2,35 @@ import React from 'react'
 import { render, screen, useModuleMock } from '../../../Utilities/test-utils'
 import { Account } from './index'
 
-const mockState = {
-    auth: {
-        user: {
-            id: 1,
-            username: 'yoda',
-            displayName: '',
-            email: '',
-            roles: 1
+describe('<Account />', () => {
+
+    const mockState = {
+        auth: {
+            user: {
+                id: 1,
+                username: 'yoda',
+                displayName: '',
+                email: '',
+                roles: 1
+            }
         }
     }
-}
 
-const allRolesMock = [
-    {
-        name: 'ROLE1',
-        offset: 0
-    }
-]
+    const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
 
-const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
+    test('Renders Components', () => {
+        getRolesAsArrayMock.mockReturnValue([
+            {
+                name: 'ROLE1',
+                offset: 0
+            }
+        ])
 
-test('<Account /> - Renders Components', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesMock)
+        render(<Account />, { initialState: mockState })
 
-    render(<Account />, { initialState: mockState })
+        expect(screen.getByText('Account Information')).toBeInTheDocument()
+        expect(screen.getByText('General Information')).toBeInTheDocument()
+        expect(screen.getByText('Assigned Roles')).toBeInTheDocument()
+    })
 
-    expect(screen.getByText('Account Information')).toBeInTheDocument()
-    expect(screen.getByText('General Information')).toBeInTheDocument()
-    expect(screen.getByText('Assigned Roles')).toBeInTheDocument()
 })
