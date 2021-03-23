@@ -2,7 +2,6 @@ import axios from 'axios'
 import * as requestUtils from './requests'
 
 jest.mock('axios')
-jest.mock('./index', () => function getAPIURL() { return 'http://localhost:8000' })
 
 describe('requests', () => {
 

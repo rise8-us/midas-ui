@@ -16,7 +16,9 @@ FROM registry.il2.dso.mil/platform-one/devops/pipeline-templates/base-image/hard
 USER appuser
 
 COPY --from=builder --chown=appuser:appuser /app/build/ /var/www
+COPY --from=builder /app/scripts/ /app/scripts/
 
-EXPOSE 8080
+EXPOSE 80
 
-CMD [ "nginx", "-g", "daemon off;" ]
+CMD [ "sh", "/app/scripts/docker_run.sh", "/var/www/config.js" ]
+
