@@ -12,44 +12,47 @@ jest.mock('react-router-dom', () => ({
     })
 }))
 
-test('<AppBar> - renders no user', () => {
-    render(<AppBar/>)
+describe('<AppBar />', () => {
 
-    expect(screen.queryByTestId('AppBar__icon-admin')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('AppBar__icon-account')).not.toBeInTheDocument()
-})
+    test('renders no user', () => {
+        render(<AppBar/>)
 
-test('<AppBar /> - renders regular user', () => {
-    render(<AppBar user = {{ id: 1, isAdmin: false }}/>)
+        expect(screen.queryByTestId('AppBar__icon-admin')).not.toBeInTheDocument()
+        expect(screen.queryByTestId('AppBar__icon-account')).not.toBeInTheDocument()
+    })
 
-    expect(screen.queryByTestId('AppBar__icon-admin')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('AppBar__icon-account')).toBeInTheDocument()
+    test('renders regular user', () => {
+        render(<AppBar user = {{ id: 1, isAdmin: false }}/>)
 
-})
+        expect(screen.queryByTestId('AppBar__icon-admin')).not.toBeInTheDocument()
+        expect(screen.queryByTestId('AppBar__icon-account')).toBeInTheDocument()
 
-test('<AppBar /> - renders admin user', () => {
-    render(<AppBar user = {{ id: 1, isAdmin: true }}/>)
+    })
 
-    expect(screen.queryByTestId('AppBar__icon-admin')).toBeInTheDocument()
-    expect(screen.queryByTestId('AppBar__icon-account')).toBeInTheDocument()
-})
+    test('renders admin user', () => {
+        render(<AppBar user = {{ id: 1, isAdmin: true }}/>)
 
-test('<AppBar /> - links navigate correctly', () => {
-    render(
-        <MemoryRouter>
-            <AppBar appName = 'APP' appLogo = {appLogo} user = {{ id: 1, isAdmin: true }}/>
-        </MemoryRouter>
-    )
+        expect(screen.queryByTestId('AppBar__icon-admin')).toBeInTheDocument()
+        expect(screen.queryByTestId('AppBar__icon-account')).toBeInTheDocument()
+    })
 
-    fireEvent.click(screen.getByTestId('AppBar__icon-admin'))
-    expect(mockHistoryPush).toHaveBeenCalledWith('/admin')
+    test('should links navigate correctly', () => {
+        render(
+            <MemoryRouter>
+                <AppBar appName = 'APP' appLogo = {appLogo} user = {{ id: 1, isAdmin: true }}/>
+            </MemoryRouter>
+        )
 
-    fireEvent.click(screen.getByTestId('AppBar__icon-account'))
-    expect(mockHistoryPush).toHaveBeenCalledWith('/account')
+        fireEvent.click(screen.getByTestId('AppBar__icon-admin'))
+        expect(mockHistoryPush).toHaveBeenCalledWith('/admin')
 
-    fireEvent.click(screen.getByTestId('AppBar__img-logo'))
-    expect(mockHistoryPush).toHaveBeenCalledWith('/home')
+        fireEvent.click(screen.getByTestId('AppBar__icon-account'))
+        expect(mockHistoryPush).toHaveBeenCalledWith('/account')
 
-    fireEvent.click(screen.getByText('APP'))
-    expect(mockHistoryPush).toHaveBeenCalledWith('/home')
+        fireEvent.click(screen.getByTestId('AppBar__img-logo'))
+        expect(mockHistoryPush).toHaveBeenCalledWith('/home')
+
+        fireEvent.click(screen.getByText('APP'))
+        expect(mockHistoryPush).toHaveBeenCalledWith('/home')
+    })
 })

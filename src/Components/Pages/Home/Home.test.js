@@ -4,32 +4,35 @@ import TeamConstants from '../../../Redux/Teams/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { Home } from './index'
 
-const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+describe('<Home>', () => {
 
-beforeEach(() => {
-    useDispatchMock().mockReturnValue({})
-})
+    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
-test('<Home /> - Has correct text', () => {
-    render(<Home />)
+    beforeEach(() => {
+        useDispatchMock().mockReturnValue({})
+    })
 
-    expect(screen.getByText('Add New Team')).toBeInTheDocument()
-    expect(screen.getByText('Add New Product')).toBeInTheDocument()
-    expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
-})
+    test('Has correct text', () => {
+        render(<Home />)
 
-test('<Home /> - Add Team calls openPopup', () => {
-    render(<Home />)
+        expect(screen.getByText('Add New Team')).toBeInTheDocument()
+        expect(screen.getByText('Add New Product')).toBeInTheDocument()
+        expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
+    })
 
-    fireEvent.click(screen.getByText('Add New Team'))
+    test('Add Team calls openPopup', () => {
+        render(<Home />)
 
-    expect(openPopupMock).toHaveBeenCalledWith(TeamConstants.CREATE_TEAM, 'CreateTeamPopup')
-})
+        fireEvent.click(screen.getByText('Add New Team'))
 
-test('<Home /> - Add Product calls openPopup', () => {
-    render(<Home />)
+        expect(openPopupMock).toHaveBeenCalledWith(TeamConstants.CREATE_TEAM, 'CreateTeamPopup')
+    })
 
-    fireEvent.click(screen.getByText('Add New Product'))
+    test('Add Product calls openPopup', () => {
+        render(<Home />)
 
-    expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup')
+        fireEvent.click(screen.getByText('Add New Product'))
+
+        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup')
+    })
 })

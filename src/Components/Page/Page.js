@@ -18,7 +18,7 @@ function Page({ children }) {
             />
             <div
                 data-testid = 'Page__content'
-                style = {{ padding: '68px 0 20px 0' }}
+                style = {{ padding: '68px 0 20px 0', height: 'inherit' }}
             >
                 {children}
             </div>

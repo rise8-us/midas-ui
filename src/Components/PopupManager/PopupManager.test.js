@@ -2,68 +2,75 @@ import React from 'react'
 import { render, screen, useSelectorMock, waitFor } from '../../Utilities/test-utils'
 import { PopupManager } from './index'
 
-beforeEach(async() => {
-    useSelectorMock().mockReturnValue([])
-})
+jest.mock('../Popups/CreateTeamPopup/CreateTeamPopup',
+    () => function testing() { return (<div>PopupManagerTest</div>) })
 
-test('<PopupManger /> - initializes', async() => {
-    render(<PopupManager />)
+describe('PopupManager', () => {
 
-    await waitFor(() => expect(screen.queryByTestId('PopupManager__wrap-fallback')).not.toBeInTheDocument())
-})
+    beforeEach(async() => {
+        useSelectorMock().mockReturnValue([])
+    })
 
-test('<PopupManger /> - rendered component', async() => {
-    useSelectorMock().mockReturnValue([{
-        componentName: 'CreateTeamPopup',
-        name: 'test/popup',
-        open: true,
-        props: {}
-    }])
+    test('initializes', async() => {
+        render(<PopupManager />)
 
-    render(<PopupManager />)
+        await waitFor(() => expect(screen.queryByTestId('PopupManager__wrap-fallback')).not.toBeInTheDocument())
+    })
 
-    await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
-    expect(screen.getByText('Create New Team')).toBeInTheDocument()
-})
+    test('rendered component', async() => {
 
-test('<PopupManger /> - checks props', async() => {
-    useSelectorMock().mockReturnValueOnce([{
-        componentName: 'CreateTeamPopup',
-        name: 'test/popup',
-        open: true,
-        props: {}
-    }])
+        useSelectorMock().mockReturnValue([{
+            componentName: 'CreateTeamPopup',
+            name: 'test/popup',
+            open: true,
+            props: { userId: 0 }
+        }])
 
-    useSelectorMock().mockReturnValueOnce([{
-        componentName: 'CreateTeamPopup',
-        name: 'test/popupDiff',
-        open: true,
-        props: {}
-    }])
+        render(<PopupManager />)
 
-    render(<PopupManager />)
+        await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
+        expect(screen.getByText('PopupManagerTest')).toBeInTheDocument()
+    })
 
-    await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
-    expect(screen.getByText('Create New Team')).toBeInTheDocument()
-})
+    test('checks props', async() => {
+        useSelectorMock().mockReturnValueOnce([{
+            componentName: 'CreateTeamPopup',
+            name: 'test/popup',
+            open: true,
+            props: { userId: 0 }
+        }])
 
-test('<PopupManger /> - no dups same popup', async() => {
-    useSelectorMock().mockReturnValueOnce([{
-        componentName: 'CreateTeamPopup',
-        name: 'test/popup',
-        open: true,
-        props: {}
-    }])
+        useSelectorMock().mockReturnValueOnce([{
+            componentName: 'CreateTeamPopup',
+            name: 'test/popupDiff',
+            open: true,
+            props: { userId: 0 }
+        }])
 
-    useSelectorMock().mockReturnValueOnce([{
-        componentName: 'CreateTeamPopup',
-        name: 'test/popup',
-        open: true,
-        props: {}
-    }])
+        render(<PopupManager />)
 
-    render(<PopupManager />)
+        await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
+        expect(screen.getByText('PopupManagerTest')).toBeInTheDocument()
+    })
 
-    await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
-    expect(screen.getAllByText('Create New Team')).toHaveLength(1)
+    test('no dups same popup', async() => {
+        useSelectorMock().mockReturnValueOnce([{
+            componentName: 'CreateTeamPopup',
+            name: 'test/popup',
+            open: true,
+            props: { userId: 0 }
+        }])
+
+        useSelectorMock().mockReturnValueOnce([{
+            componentName: 'CreateTeamPopup',
+            name: 'test/popup',
+            open: true,
+            props: { userId: 0 }
+        }])
+
+        render(<PopupManager />)
+
+        await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
+        expect(screen.getAllByText('PopupManagerTest')).toHaveLength(1)
+    })
 })

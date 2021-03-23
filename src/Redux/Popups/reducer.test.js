@@ -12,15 +12,6 @@ const mockStateOpen = {
     }
 }
 
-const mockStateClose = {
-    foobar: {
-        open: false,
-        name: 'foobar',
-        componentName: '',
-        props: { }
-    }
-}
-
 test('should handle initial state', () => {
     expect(reducer(undefined, { type: 'blah' })).toEqual({})
 })
@@ -49,13 +40,13 @@ test('should handle closePopup', () => {
     }
     expect(
         reducer(mockStateOpen, { type: `${reduxActions.closePopup}`, payload: payloadClose })
-    ).toEqual(mockStateClose)
+    ).toEqual({})
 })
 
 test('should handle fulfilled matcher - exists', () => {
     expect(
         reducer(mockStateOpen, { type: 'foobar/fulfilled', payload: {} })
-    ).toEqual(mockStateClose)
+    ).toEqual({})
 })
 
 test('should handle fulfilled matcher - undefined', () => {

@@ -9,7 +9,7 @@ import Page from '../../Page/Page'
 import { UserRoles } from '../../UserRoles'
 import { UserSettings } from '../../UserSettings'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         padding: '2px 4px',
         display: 'flex',

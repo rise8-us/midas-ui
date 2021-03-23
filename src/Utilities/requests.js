@@ -17,7 +17,7 @@ export const handleThunkRequest = async({ endpoint, method, body }, rejectWithVa
 }
 
 export const getAPIURL = () => {
-    return 'http://localhost:8000'
+    return window.REACT_APP_API_URL ?? 'http://localhost:8000'
 }
 
 export const createAxiosRequest = (routeSuffix, method, body) => {

@@ -1,24 +1,26 @@
-/* eslint-disable react/display-name */
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 import { render, screen, useDispatchMock } from './Utilities/test-utils'
 
-const mockState = {
-    auth: {
-        user: {
-            roles: 0
-        },
-        isAdmin: true
+jest.mock('./Components/PopupManager/PopupManager', () => function testing() { return (<div/>) })
+
+describe('<App />', () => {
+
+    const mockState = {
+        auth: {
+            user: {
+                roles: 0
+            },
+            isAdmin: true
+        }
     }
-}
 
-jest.mock('./Components/PopupManager/PopupManager', () => () => (<div/>))
+    test('Has correct text', () => {
+        useDispatchMock().mockReturnValue({ payload: [{}] })
 
-test('<App /> - Has correct text', () => {
-    useDispatchMock().mockReturnValue({ payload: [{}] })
+        render(<MemoryRouter><App /></MemoryRouter>, { initialState: mockState })
 
-    render(<MemoryRouter><App /></MemoryRouter>, { initialState: mockState })
-
-    expect(screen.getByText(/MIDAS/i)).toBeInTheDocument()
+        expect(screen.getByText(/MIDAS/i)).toBeInTheDocument()
+    })
 })

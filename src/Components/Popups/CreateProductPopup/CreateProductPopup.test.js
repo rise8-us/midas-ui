@@ -3,64 +3,67 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../../Utilities/test-utils'
 import { CreateProductPopup } from './index'
 
-const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
-const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
+describe('<CreateProductPopup />', () => {
 
-test('<CreateProductPopup /> - test component renders properly', () => {
-    render(<CreateProductPopup />)
+    const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
+    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
 
-    expect(screen.getByText('Create New Product')).toBeInTheDocument()
-    expect(screen.getByTestId('CreateProductPopup__input-name')).toBeInTheDocument()
-    expect(screen.getByTestId('CreateProductPopup__input-description')).toBeInTheDocument()
-    expect(screen.getByTestId('CreateProductPopup__input-gitlabProjectId')).toBeInTheDocument()
-})
+    test('should render properly', () => {
+        render(<CreateProductPopup />)
 
-test('<CreateProductPopup /> - test submit team',  () => {
-    useDispatchMock().mockReturnValue({})
-    render(<CreateProductPopup />)
+        expect(screen.getByText('Create New Product')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProductPopup__input-name')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProductPopup__input-description')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProductPopup__input-gitlabProjectId')).toBeInTheDocument()
+    })
 
-    const name = 'My New Product'
-    const gitlabProjectId = '1234567'
-    const description = 'Test Description'
+    test('should execute onSubmit', () => {
+        useDispatchMock().mockReturnValue({})
+        render(<CreateProductPopup />)
 
-    const nameInput =  within(screen.getByTestId('CreateProductPopup__input-name'))
-        .getByRole('textbox')
-    const descriptionInput =  within(screen.getByTestId('CreateProductPopup__input-description'))
-        .getByRole('textbox')
-    const gitlabProjectIdInput = within(screen.getByTestId('CreateProductPopup__input-gitlabProjectId'))
-        .getByRole('spinbutton')
+        const name = 'My New Product'
+        const gitlabProjectId = '1234567'
+        const description = 'Test Description'
 
-    userEvent.type(nameInput, name)
-    userEvent.type(gitlabProjectIdInput, gitlabProjectId)
-    userEvent.type(descriptionInput, description)
-    fireEvent.click(screen.getByText('Submit'))
+        const nameInput =  within(screen.getByTestId('CreateProductPopup__input-name'))
+            .getByRole('textbox')
+        const descriptionInput =  within(screen.getByTestId('CreateProductPopup__input-description'))
+            .getByRole('textbox')
+        const gitlabProjectIdInput = within(screen.getByTestId('CreateProductPopup__input-gitlabProjectId'))
+            .getByRole('spinbutton')
 
-    expect(submitProductMock).toHaveBeenCalledTimes(1)
-    expect(submitProductMock.mock.calls[0][0]).toEqual({ name, gitlabProjectId, description })
-})
+        userEvent.type(nameInput, name)
+        userEvent.type(gitlabProjectIdInput, gitlabProjectId)
+        userEvent.type(descriptionInput, description)
+        fireEvent.click(screen.getByText('Submit'))
 
-test('<CreateProduct /> - test close popup', () => {
-    useDispatchMock().mockReturnValue({})
-    render(<CreateProductPopup />)
+        expect(submitProductMock).toHaveBeenCalledTimes(1)
+        expect(submitProductMock.mock.calls[0][0]).toEqual({ name, gitlabProjectId, description })
+    })
 
-    fireEvent.click(screen.getByTestId('Popup__button-close'))
+    test('should close popup', () => {
+        useDispatchMock().mockReturnValue({})
+        render(<CreateProductPopup />)
 
-    expect(closePopupMock).toHaveBeenCalled()
-})
+        fireEvent.click(screen.getByTestId('Popup__button-close'))
 
-test('<CreateProduct /> -test error messaging', () => {
-    const state = {
-        errors: {
-            'products/createOne': [
-                'name error',
-                'Gitlab error'
-            ]
+        expect(closePopupMock).toHaveBeenCalled()
+    })
+
+    test('should display error messages', () => {
+        const state = {
+            errors: {
+                'products/createOne': [
+                    'name error',
+                    'Gitlab error'
+                ]
+            }
         }
-    }
-    render(<CreateProductPopup />, { initialState: state })
+        render(<CreateProductPopup />, { initialState: state })
 
-    expect(screen.getByText('name error')).toBeInTheDocument()
-    expect(screen.getByText('Gitlab error')).toBeInTheDocument()
+        expect(screen.getByText('name error')).toBeInTheDocument()
+        expect(screen.getByText('Gitlab error')).toBeInTheDocument()
+
+    })
 
 })
-

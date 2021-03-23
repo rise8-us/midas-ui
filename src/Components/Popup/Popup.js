@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         minWidth: 350,
         minHeight: 250

@@ -2,80 +2,73 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../Utilities/test-utils'
 import { UserRoles } from './index'
 
-const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
-const requestUpdateUserRolesMock = useModuleMock('Redux/Users/actions', 'requestUpdateUserRoles')
+describe('<UserRoles />', () => {
 
-const userWithRoles = {
-    roles: { ADMIN: true }
-}
-const userWithoutRoles = {
-    roles: { }
-}
+    const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
+    const requestUpdateUserRolesMock = useModuleMock('Redux/Users/actions', 'requestUpdateUserRoles')
 
-const allRolesAsArray = [
-    { name: 'ADMIN' },
-    { name: 'ROLE2' }
-]
+    const userWithRoles = {
+        roles: { ADMIN: true }
+    }
+    const userWithoutRoles = {
+        roles: { }
+    }
 
-test('<UserRoles /> - Lists roles', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
+    const allRolesAsArray = [
+        { name: 'ADMIN' },
+        { name: 'ROLE2' }
+    ]
 
-    render(<UserRoles user = {userWithRoles}/>)
+    beforeEach(() => {
+        getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
+        useDispatchMock().mockReturnValue({})
+    })
 
-    expect(screen.queryByText('Assigned Roles')).toBeInTheDocument()
-    expect(screen.queryByText('ADMIN')).toBeInTheDocument()
-    expect(screen.queryByText('ROLE2')).not.toBeInTheDocument()
-})
+    test('should lists roles', () => {
+        render(<UserRoles user = {userWithRoles}/>)
 
-test('<UserRoles /> - Does not list page', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
+        expect(screen.queryByText('Assigned Roles')).toBeInTheDocument()
+        expect(screen.queryByText('ADMIN')).toBeInTheDocument()
+        expect(screen.queryByText('ROLE2')).not.toBeInTheDocument()
+    })
 
-    render(<UserRoles user = {userWithoutRoles}/>)
+    test('should not list page', () => {
+        render(<UserRoles user = {userWithoutRoles}/>)
 
-    expect(screen.queryByText('Assigned Roles')).not.toBeInTheDocument()
-})
+        expect(screen.queryByText('Assigned Roles')).not.toBeInTheDocument()
+    })
 
-test('<UserRoles editable/> - Checkboxes visible', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
+    test('should render checkboxes', () => {
+        render(<UserRoles user = {userWithRoles} editable/>)
 
-    render(<UserRoles user = {userWithRoles} editable/>)
+        expect(screen.queryAllByRole('checkbox')).toHaveLength(2)
+    })
 
-    expect(screen.queryAllByRole('checkbox')).toHaveLength(2)
-})
+    test('should render save button', () => {
+        render(<UserRoles user = {userWithRoles} editable/>)
 
-test('<UserRoles editable/> - save button visible', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
+        expect(screen.getByText('save')).toBeTruthy()
+    })
 
-    render(<UserRoles user = {userWithRoles} editable/>)
+    test('should save changes to roles', () => {
+        render(<UserRoles user = {userWithRoles} editable/>)
+        fireEvent.click(screen.getByText('save'))
 
-    expect(screen.getByText('save')).toBeTruthy()
-})
+        expect(requestUpdateUserRolesMock).toHaveBeenCalled()
+    })
 
-test('<UserRoles editable/> - save dispatches updateUserRoles', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
-    useDispatchMock().mockReturnValue({})
+    test('should pre-set checkboxes', () => {
+        render(<UserRoles user = {userWithRoles} editable/>)
 
-    render(<UserRoles user = {userWithRoles} editable/>)
-    fireEvent.click(screen.getByText('save'))
+        expect(within(screen.getByTestId('UserRoles__checkbox-ADMIN')).getByRole('checkbox').checked).toBeTruthy()
+        expect(within(screen.getByTestId('UserRoles__checkbox-ROLE2')).getByRole('checkbox').checked).toBeFalsy()
+    })
 
-    expect(requestUpdateUserRolesMock).toHaveBeenCalled()
-})
+    test('should update checkboxes', () => {
+        render(<UserRoles user = {userWithRoles} editable/>)
+        expect(within(screen.getByTestId('UserRoles__checkbox-ADMIN')).getByRole('checkbox').checked).toBeTruthy()
+        fireEvent.click(screen.getByText('ADMIN'))
 
-test('<UserRoles editable/> - Checkboxes initial values set', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
-
-    render(<UserRoles user = {userWithRoles} editable/>)
-
-    expect(within(screen.getByTestId('UserRoles__checkbox-ADMIN')).getByRole('checkbox').checked).toBeTruthy()
-    expect(within(screen.getByTestId('UserRoles__checkbox-ROLE2')).getByRole('checkbox').checked).toBeFalsy()
-})
-
-test('<UserRoles editable/> - Checkboxes can be updated', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
-
-    render(<UserRoles user = {userWithRoles} editable/>)
-    expect(within(screen.getByTestId('UserRoles__checkbox-ADMIN')).getByRole('checkbox').checked).toBeTruthy()
-    fireEvent.click(screen.getByText('ADMIN'))
-
-    expect(within(screen.getByTestId('UserRoles__checkbox-ADMIN')).getByRole('checkbox').checked).toBeFalsy()
+        expect(within(screen.getByTestId('UserRoles__checkbox-ADMIN')).getByRole('checkbox').checked).toBeFalsy()
+    })
 })
