@@ -38,3 +38,10 @@ This project is meant to be a launch point for teams who needed a frontend UI an
 3. Execute, `yarn install`
 4. Execute, `yarn start:local`
 5. In web browser navigate to, `http://localhost:3000` and see your sweet sweet app!
+
+### Running Docker
+1. Execute, `docker build .`
+2. Execute, `docker images` and grab the **IMAGE_ID** for the just built image
+   * Will reference as **I_ID** for remaining instructions
+3. Execute, `docker run -p 80:80 -e REACT_APP_API_URL=<YOUR_BACKEND_URL> <I_ID>`
+4. In web browser navigate to, `http://localhost` and see your sweet sweet app!

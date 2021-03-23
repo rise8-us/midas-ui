@@ -1,5 +1,6 @@
 import Axios from 'axios'
-import getAPIURL from './index'
+
+export const getAPIURL = () => { return window.REACT_APP_API_URL ?? 'http://localhost:8000' }
 
 export const handleThunkRequest = async({ endpoint, method, body }, rejectWithValue) => {
     const request = createAxiosRequest(endpoint, method, body)
