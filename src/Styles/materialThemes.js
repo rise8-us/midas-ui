@@ -5,6 +5,7 @@ import { createMuiTheme } from '@material-ui/core/styles'
 export const darkTheme = createMuiTheme({
     palette: {
         type: 'dark',
+        appColor: '#d4af37',
         primary: {
             main: '#26c6da',
         },

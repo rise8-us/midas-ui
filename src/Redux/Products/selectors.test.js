@@ -18,3 +18,12 @@ test('getProductById - returns product object', () => {
 test('getProductById - returns empty object', () => {
     expect(selectors.getProductById(mockState, 2)).toBeInstanceOf(Object)
 })
+
+test('getProducts - returns product array', () => {
+    const product = selectors.getProducts(mockState)
+    expect(product[0]).toBe(mockState.products[4])
+})
+
+test('getProducts - returns empty array', () => {
+    expect(selectors.getProducts({})).toBeInstanceOf(Array)
+})

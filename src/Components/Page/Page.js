@@ -1,3 +1,4 @@
+import { useTheme } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -7,12 +8,13 @@ import { AppBar } from '../AppBar'
 
 function Page({ children }) {
     const user = useSelector(state => getUserLoggedIn(state))
+    const theme = useTheme()
 
     return (
         <>
             <AppBar
                 user = {user}
-                appColor = '#D4AF37'
+                appColor = {theme.palette.appColor}
                 appLogo = {appLogo}
                 appName = 'MIDAS'
             />

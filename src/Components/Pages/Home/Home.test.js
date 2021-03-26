@@ -1,15 +1,19 @@
 import React from 'react'
 import ProductConstants from '../../../Redux/Products/constants'
 import TeamConstants from '../../../Redux/Teams/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import {
+    fireEvent, render, screen, useDispatchMock, useModuleMock
+} from '../../../Utilities/test-utils'
 import { Home } from './index'
 
 describe('<Home>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+    const allProductsMock = useModuleMock('Redux/Products/selectors', 'getProducts')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
+        allProductsMock.mockReturnValue([{ name: 'testProduct', description: 'desc', tags: [], id: 0 }])
     })
 
     test('Has correct text', () => {
