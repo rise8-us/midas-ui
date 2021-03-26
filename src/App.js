@@ -7,6 +7,7 @@ import { PopupManager } from './Components/PopupManager'
 import { getUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchInit } from './Redux/Init/actions'
 import { requestFetchAllProducts } from './Redux/Products/actions'
+import { requestFetchAllTags } from './Redux/Tags/actions'
 import { requestFetchAllTeams } from './Redux/Teams/actions'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             dispatch(requestFetchInit())
             dispatch(requestFetchAllTeams())
             dispatch(requestFetchAllProducts())
+            dispatch(requestFetchAllTags())
         }
         initializeApp()
     }, [])
