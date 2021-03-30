@@ -6,6 +6,7 @@ import { openPopup } from '../../../Redux/Popups/actions'
 import ProductConstants from '../../../Redux/Products/constants'
 import { getProducts } from '../../../Redux/Products/selectors'
 import TeamConstants from '../../../Redux/Teams/constants'
+import TagConstants from '../../../Redux/Tags/constants'
 import { ProductCard } from '../../Cards'
 import Page from '../../Page/Page'
 
@@ -31,6 +32,7 @@ function Home() {
 
     const createProduct = () => dispatch(openPopup(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup'))
     const createTeam = () => dispatch(openPopup(TeamConstants.CREATE_TEAM, 'CreateTeamPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
 
     return (
         <Page>
@@ -56,6 +58,14 @@ function Home() {
                             onClick = {createTeam}
                         >
                             Add New Team
+                        </Button>
+                        <Button
+                            variant = 'text'
+                            startIcon = {<Add/>}
+                            className = {classes.button}
+                            onClick = {createTag}
+                        >
+                            Add New Tag
                         </Button>
                     </div>
                 </div>
