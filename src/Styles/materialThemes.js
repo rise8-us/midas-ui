@@ -28,7 +28,7 @@ export const darkTheme = createMuiTheme({
         info: {
             main: '#26c6da',
         },
-        divider: '#778175',
+        divider: '#3e4548',
         subtext: '#778185',
         classification: {
             UNCLASS: '#5bad76',
@@ -78,6 +78,35 @@ export const darkTheme = createMuiTheme({
             arrow: {
                 color: '#3e4548'
             }
+        },
+        MuiStepper: {
+            padding: 0
+        },
+        MuiStep: {
+            margin: '0 50px 0 50px'
+        },
+        MuiStepConnector: {
+            alternativeLabel: {
+                top: 17
+            },
+            active: {
+                '& $line': {
+                    backgroundImage:
+                    'linear-gradient( 95deg, #46b058 0%, #46b058 20%, #d45555 100%)',
+                    border: 0
+                },
+            },
+            completed: {
+                '& $line': {
+                    backgroundColor: '#46b058',
+                    border: 0
+                },
+            },
+            line: {
+                height: 3,
+                border: 0,
+                borderRadius: 1,
+            },
         },
         MuiTabs: {
             indicator: {

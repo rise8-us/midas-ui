@@ -16,11 +16,11 @@ describe('<ProductCard />', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
     })
+
     test('should display data', () => {
         render(<ProductCard product = {product}/>)
 
         expect(screen.getByText('product 1')).toBeInTheDocument()
-        expect(screen.getByText('desc 1')).toBeInTheDocument()
     })
 
     test('should fire updateProductPopup', () => {
@@ -30,6 +30,5 @@ describe('<ProductCard />', () => {
 
         expect(openPopupMock).toHaveBeenCalledWith(
             ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id: product.id })
-
     })
 })
