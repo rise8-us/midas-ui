@@ -1,16 +1,12 @@
-import {
-    Avatar, Box, Card, CardContent, CardHeader, Divider, IconButton, Typography, useTheme
-} from '@material-ui/core'
-import { ArrowForward, BusinessCenter, Edit, Flag, LocalShipping, Map } from '@material-ui/icons'
+import { Box, Card, CardContent, CardHeader, IconButton, useTheme } from '@material-ui/core'
+import { Edit } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProductConstants from '../../../Redux/Products/constants'
+import { PathToProdStepper } from '../../PathToProdStepper'
 import Tag from '../../Tag/Tag'
-
-// TODO: Change businessCenter icon to Assets/pipeline.svg
-// Wasn't rendering when tried to use <SvgIcon> needs investigating
 
 function ProductCard({ product }) {
 
@@ -31,10 +27,6 @@ function ProductCard({ product }) {
             label: 'Feature',
             color: '#cad442',
             description: ''
-        }, {
-            label: 'CTF::Awaiting Pipelines',
-            color: '#1933b3',
-            description: ''
         }
     ]
 
@@ -47,18 +39,6 @@ function ProductCard({ product }) {
             <CardHeader
                 title = {product.name}
                 titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
-                subheader = {
-                    <Box display = 'flex' flexWrap = 'wrap'>
-                        {tags.map((tag, index) => (
-                            <Tag { ...tag } key = {index}/>
-                        ))}
-                    </Box>
-                }
-                avatar = {
-                    <Avatar style = {{ backgroundColor: theme.palette.appColor }}>
-                        {product.name.slice(0, 2)}
-                    </Avatar>
-                }
                 action = {
                     <IconButton
                         onClick = {editProductPopup}
@@ -69,28 +49,12 @@ function ProductCard({ product }) {
                     </IconButton>
                 }
             />
-            <Divider light />
+            <PathToProdStepper />
             <CardContent>
-                <Box style = {{ padding: '0px 55px' }}>
-                    <Box
-                        display = 'flex'
-                        flexDirection = 'row'
-                        justifyContent = 'space-between'
-                    >
-                        <Flag/>
-                        <ArrowForward />
-                        <BusinessCenter />
-                        <ArrowForward />
-                        <Map />
-                        <ArrowForward />
-                        <LocalShipping />
-                    </Box>
-                    {product.description.length > 0 &&
-                    <div style = {{ padding: '15px 0px' }}>
-                        <Divider light />
-                        <Typography variant = 'body1' color = 'textSecondary'>{product.description}</Typography>
-                    </div>
-                    }
+                <Box display = 'flex' flexWrap = 'wrap'>
+                    {tags.map((tag, index) => (
+                        <Tag { ...tag } key = {index}/>
+                    ))}
                 </Box>
             </CardContent>
         </Card>
@@ -101,7 +65,6 @@ ProductCard.propTypes = {
     product: PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
-        description: PropTypes.string,
         tags: PropTypes.arrayOf(PropTypes.number)
     }).isRequired
 }

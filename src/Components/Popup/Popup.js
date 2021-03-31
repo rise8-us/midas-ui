@@ -1,10 +1,9 @@
 import {
-    Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, makeStyles, Typography
+    Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, makeStyles, Typography
 } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import PropTypes from 'prop-types'
 import React from 'react'
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -61,18 +60,29 @@ const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-            <DialogContent dividers className = {classes.dialogContent} style = {{ paddingBottom: '50px' }}>
+            <Divider />
+            <DialogContent className = {classes.dialogContent} style = {{ paddingBottom: '50px' }}>
                 {children}
             </DialogContent>
             <DialogActions className = {classes.dialogActions}>
                 <Button
-                    autoFocus
-                    data-testid = 'Popup__button-submit'
-                    onClick = {onSubmit}
-                    color = 'primary'
+                    data-testid = 'Popup__button-cancel'
+                    onClick = {onClose}
+                    color = 'secondary'
+                    variant = 'text'
                 >
-                    {submitText}
+                    cancel
                 </Button>
+                { onSubmit &&
+                    <Button
+                        data-testid = 'Popup__button-submit'
+                        onClick = {onSubmit}
+                        color = 'primary'
+                        variant = 'outlined'
+                    >
+                        {submitText}
+                    </Button>
+                }
             </DialogActions>
         </Dialog>
     )
@@ -81,7 +91,7 @@ const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
 Popup.propTypes = {
     title: PropTypes.string.isRequired,
     submitText: PropTypes.string,
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.element,
@@ -90,7 +100,8 @@ Popup.propTypes = {
 }
 
 Popup.defaultProps = {
-    submitText: 'Submit'
+    submitText: 'Submit',
+    onSubmit: undefined
 }
 
 export default Popup
