@@ -14,7 +14,7 @@ describe('<CreateTagPopup />', () => {
         expect(screen.getByText('Create Tag')).toBeInTheDocument()
         expect(screen.getByTestId('CreateTagPopup__input-label')).toBeInTheDocument()
         expect(screen.getByTestId('CreateTagPopup__input-description')).toBeInTheDocument()
-        expect(screen.getByTestId('CreateTagPopup__input-color')).toBeInTheDocument()
+        expect(screen.getByTestId('ColorPicker__input-color')).toBeInTheDocument()
     })
 
     test('should execute onSubmit', () => {
