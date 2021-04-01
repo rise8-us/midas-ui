@@ -1,6 +1,7 @@
-import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../../Utilities/test-utils'
+import {
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
+} from '../../../Utilities/test-utils'
 import { UpdateTagPopup } from './index'
 
 describe('<UpdateTagPopup />', () => {
@@ -29,7 +30,7 @@ describe('<UpdateTagPopup />', () => {
             .getByRole('textbox')).toHaveValue(returnedTag.label)
         expect(within(screen.getByTestId('UpdateTagPopup__input-description'))
             .getByRole('textbox')).toHaveValue(returnedTag.description)
-        expect(within(screen.getByTestId('UpdateTagPopup__input-color'))
+        expect(within(screen.getByTestId('ColorPicker__input-color'))
             .getByRole('textbox')).toHaveValue(returnedTag.color)
     })
 
@@ -44,7 +45,7 @@ describe('<UpdateTagPopup />', () => {
             .getByRole('textbox')
         const descriptionInput =  within(screen.getByTestId('UpdateTagPopup__input-description'))
             .getByRole('textbox')
-        const colorInput = within(screen.getByTestId('UpdateTagPopup__input-color'))
+        const colorInput = within(screen.getByTestId('ColorPicker__input-color'))
             .getByRole('textbox')
         const colorPicker = screen.getByTitle('#e91e63')
 
