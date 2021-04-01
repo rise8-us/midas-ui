@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { render as rtlRender } from '@testing-library/react'
-import React from 'react'
+import userEvent from '@testing-library/user-event'
+// import React from 'react'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import { rootReducer } from '../Redux/reducers'
@@ -14,6 +15,7 @@ function render(
     } = {}
 ) {
     function Wrapper({ children }) {
+        // eslint-disable-next-line react/react-in-jsx-scope
         return <Provider store = {store}>{children}</Provider>
     }
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
@@ -42,6 +44,6 @@ export const useModuleMock = (moduleName, property) => {
 // re-export everything
 export * from '@testing-library/react'
 export * from '@testing-library/user-event'
+export { userEvent }
 // override render method
 export { render }
-

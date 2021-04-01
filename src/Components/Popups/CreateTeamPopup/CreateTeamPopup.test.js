@@ -1,6 +1,7 @@
-import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../../Utilities/test-utils'
+import {
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
+} from '../../../Utilities/test-utils'
 import { CreateTeamPopup } from './index'
 
 describe('', () => {

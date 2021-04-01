@@ -16,7 +16,7 @@ function Tag({ label, description, color }) {
     const classes = useStyles()
     const theme = useTheme()
 
-    const scope = Array.from(label.split('::'))
+    const scope = Array.from(String(label).split('::'))
 
     const tag = (tagLabel, tagColor) => (
         <Chip

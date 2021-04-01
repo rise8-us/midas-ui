@@ -1,6 +1,7 @@
 import React from 'react'
-import userEvent from '@testing-library/user-event'
-import { render, screen, within, useModuleMock, fireEvent, useDispatchMock } from '../../../Utilities/test-utils'
+import {
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
+} from '../../../Utilities/test-utils'
 import { Admin } from './index'
 
 const mockUser1 = {
