@@ -18,7 +18,7 @@ const tagsSlice = createSlice({
             state[action.payload.id] = action.payload
         },
         [actions.requestDeleteTag.fulfilled]: (state, action) => {
-            state = delete state[action.payload.id]
+            delete state[action.payload.id]
         }
     }
 })
