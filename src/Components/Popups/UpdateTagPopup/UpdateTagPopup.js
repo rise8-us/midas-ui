@@ -25,8 +25,8 @@ function UpdateTagPopup({ id }) {
 
     const onLabelChange = (e) => setLabel(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
-    const onColorPickerChange = (color) => {
-        setColor(color.hex)
+    const onColorPickerChange = (colorPicked) => {
+        setColor(colorPicked.hex)
     }
 
     const onClose = () => {
