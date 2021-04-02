@@ -83,6 +83,15 @@ describe('<UpdateProductPopup />', () => {
         expect(await screen.getByText('Tag 2')).toBeInTheDocument()
     })
 
+    test('should handle remove all tags', async() => {
+        render(<UpdateProductPopup id = {4}/>)
+
+        fireEvent.click(await screen.findByTitle('Clear'))
+
+        expect(await screen.queryByText('Tag 1')).not.toBeInTheDocument()
+        expect(await screen.queryByText('label 1')).not.toBeInTheDocument()
+    })
+
     test('should allow only one scoped tag', async() => {
         render(<UpdateProductPopup id = {4}/>)
         expect(await screen.findByText('label 1')).toBeInTheDocument()
