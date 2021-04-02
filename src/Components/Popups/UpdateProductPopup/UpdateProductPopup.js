@@ -41,6 +41,11 @@ function UpdateProductPopup({ id }) {
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
     const onSelectTag = (_e, values) => {
+        if (values.length === 0) {
+            setTags([])
+            return
+        }
+
         const selectedValue = String(values[values.length - 1].label).split('::')
         const existingTag = values.filter(tag =>
             selectedValue.length === 2 &&
