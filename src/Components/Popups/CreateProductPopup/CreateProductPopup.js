@@ -1,11 +1,14 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateProduct } from '../../../Redux/Products/actions'
 import ProductConstants from '../../../Redux/Products/constants'
+import { selectAllTags } from '../../../Redux/Tags/selectors'
 import Popup from '../../Popup/Popup'
+import { Tag } from '../../Tag'
 
 const useStyles = makeStyles(() => ({
     textField: {
@@ -19,17 +22,38 @@ function CreateProductPopup() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
+    const allTags = useSelector(selectAllTags)
+
     const errors = useSelector(state => selectRequestErrors(state, ProductConstants.CREATE_PRODUCT))
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [gitlabProjectId, setGitlabProjectId] = useState('')
+    const [tags, setTags] = useState([])
     const [nameError, setNameError] = useState([])
     const [gitlabError, setGitlabError] = useState([])
+    const [tagsError, setTagsError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
+
+    const onSelectTag = (_e, values) => {
+        if (values.length === 0) {
+            setTags([])
+            return
+        }
+
+        const selectedValue = String(values[values.length - 1].label).split('::')
+        const existingTag = values.filter(tag =>
+            selectedValue.length === 2 &&
+            tag.label.includes(selectedValue[0], 0) &&
+            !tag.label.includes(selectedValue[1])
+        )
+
+        if (existingTag.length === 0) setTags(values)
+        else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
+    }
 
     const onClose = () => {
         dispatch(closePopup(ProductConstants.CREATE_PRODUCT))
@@ -39,7 +63,8 @@ function CreateProductPopup() {
         dispatch(requestCreateProduct({
             name,
             gitlabProjectId,
-            description
+            description,
+            tagIds: Object.values(tags.map(t => t.id))
         }))
     }
 
@@ -47,6 +72,7 @@ function CreateProductPopup() {
         if (errors.length > 0) {
             setNameError(errors.filter(error => error.includes('name')))
             setGitlabError(errors.filter(error => error.includes('Gitlab')))
+            setTagsError(errors.filter(error => error.includes('Tag')))
         }
     }, [errors])
 
@@ -86,6 +112,25 @@ function CreateProductPopup() {
                     onChange = {onDescriptionChange}
                     margin = 'dense'
                     multiline
+                />
+                <Autocomplete
+                    multiple
+                    options = {allTags}
+                    getOptionLabel = {(option) => option.label}
+                    getOptionSelected = {(option, value) => option.id === value.id}
+                    onChange = {onSelectTag}
+                    value = {tags}
+                    defaultValue = {tags}
+                    renderTags = {(value) => value.map((tag, index) => <Tag key = {index} {...tag} />)}
+                    renderInput = {(params) =>
+                        <TextField
+                            {...params}
+                            label = 'Add Tag(s)'
+                            margin = 'dense'
+                            error = { tagsError.length > 0 }
+                            helperText = { tagsError[0] ?? ''}
+                        />
+                    }
                 />
             </Box>
         </Popup>
