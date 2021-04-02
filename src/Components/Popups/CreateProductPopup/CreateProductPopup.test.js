@@ -26,9 +26,9 @@ describe('<CreateProductPopup />', () => {
         const gitlabProjectId = '1234567'
         const description = 'Test Description'
 
-        const nameInput =  within(screen.getByTestId('CreateProductPopup__input-name'))
+        const nameInput = within(screen.getByTestId('CreateProductPopup__input-name'))
             .getByRole('textbox')
-        const descriptionInput =  within(screen.getByTestId('CreateProductPopup__input-description'))
+        const descriptionInput = within(screen.getByTestId('CreateProductPopup__input-description'))
             .getByRole('textbox')
         const gitlabProjectIdInput = within(screen.getByTestId('CreateProductPopup__input-gitlabProjectId'))
             .getByRole('spinbutton')

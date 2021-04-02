@@ -17,7 +17,7 @@ describe('<App />', () => {
     }
 
     test('Has correct text', () => {
-        useDispatchMock().mockReturnValue({ payload: [{}] })
+        useDispatchMock().mockReturnValue({ meta: { requestState: 'fulfilled' }, payload: [{}] })
 
         render(<MemoryRouter><App /></MemoryRouter>, { initialState: mockState })
 

@@ -79,12 +79,6 @@ export const darkTheme = createMuiTheme({
                 color: '#3e4548'
             }
         },
-        MuiStepper: {
-            padding: 0
-        },
-        MuiStep: {
-            margin: '0 50px 0 50px'
-        },
         MuiStepConnector: {
             alternativeLabel: {
                 top: 17

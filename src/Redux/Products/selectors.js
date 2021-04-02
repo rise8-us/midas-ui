@@ -1,5 +1,13 @@
-export const getProductById = (state, key) => {
-    return state.products[key] ?? {}
+import { selectTagsByIds } from '../Tags/selectors'
+
+export const getProductById = (state, id) => {
+    const product = state.products[id]
+    if (!product) return {}
+
+    const tags = selectTagsByIds(state, product.tagIds)
+    const updatedProduct = { ...product, tags }
+
+    return updatedProduct
 }
 
 export const getProducts = (state) => {

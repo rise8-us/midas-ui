@@ -7,6 +7,7 @@
     "start:local": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
+    "test:debug": "DEBUG_PRINT_LIMIT=20000 react-scripts test --coverage",
     "test:all": "npm test -- --coverage --watchAll=false",
     "test:summary": "react-scripts test --coverage --coverageReporters=\"text-summary\"",
     "test:lite": "react-scripts test --bail",
@@ -45,6 +46,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/styles": "^4.11.3",
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
