@@ -17,10 +17,15 @@ function App() {
 
     useEffect(() => {
         async function initializeApp() {
-            dispatch(requestFetchInit())
-            dispatch(requestFetchAllTeams())
-            dispatch(requestFetchAllProducts())
-            dispatch(requestFetchAllTags())
+            const init = await dispatch(requestFetchInit())
+
+            if (init.meta.requestStatus === 'fulfilled') {
+                dispatch(requestFetchAllTeams())
+                dispatch(requestFetchAllProducts())
+                dispatch(requestFetchAllTags())
+            } else {
+                console.error('INIT FAILED')
+            }
         }
         initializeApp()
     }, [])

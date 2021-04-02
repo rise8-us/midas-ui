@@ -6,10 +6,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        minWidth: 350,
-        minHeight: 250
-    },
     closeButton: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -48,7 +44,7 @@ const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
             data-testid = 'Popup__dialog'
             open
             scroll = 'paper'
-            className = {classes.root}
+            PaperProps = {{ style: { width: '395px' } }}
         >
             <DialogTitle disableTypography className = {classes.dialogTitle}>
                 <Typography variant = 'h6'>{title}</Typography>

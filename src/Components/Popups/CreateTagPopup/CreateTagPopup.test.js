@@ -26,9 +26,9 @@ describe('<CreateTagPopup />', () => {
         const color = '#e91e63'
         const description = 'Test Description'
 
-        const labelInput =  within(screen.getByTestId('CreateTagPopup__input-label'))
+        const labelInput = within(screen.getByTestId('CreateTagPopup__input-label'))
             .getByRole('textbox')
-        const descriptionInput =  within(screen.getByTestId('CreateTagPopup__input-description'))
+        const descriptionInput = within(screen.getByTestId('CreateTagPopup__input-description'))
             .getByRole('textbox')
 
         const colorPicker = screen.getByTitle('#e91e63')
