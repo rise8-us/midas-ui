@@ -28,8 +28,7 @@ describe('PopupManager', () => {
 
         render(<PopupManager />)
 
-        await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
-        expect(screen.getByText('PopupManagerTest')).toBeInTheDocument()
+        expect(await screen.findByText('PopupManagerTest')).toBeInTheDocument()
     })
 
     test('checks props', async() => {
@@ -49,8 +48,7 @@ describe('PopupManager', () => {
 
         render(<PopupManager />)
 
-        await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
-        expect(screen.getByText('PopupManagerTest')).toBeInTheDocument()
+        expect(await screen.findByText('PopupManagerTest')).toBeInTheDocument()
     })
 
     test('no dups same popup', async() => {
@@ -70,7 +68,6 @@ describe('PopupManager', () => {
 
         render(<PopupManager />)
 
-        await waitFor(() => screen.findByTestId('PopupManager__wrap-fallback'))
-        expect(screen.getAllByText('PopupManagerTest')).toHaveLength(1)
+        expect(await screen.findAllByText('PopupManagerTest')).toHaveLength(1)
     })
 })

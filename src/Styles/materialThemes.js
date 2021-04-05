@@ -101,11 +101,6 @@ export const darkTheme = createMuiTheme({
                 border: 0,
                 borderRadius: 1,
             },
-        },
-        MuiTabs: {
-            indicator: {
-                display: 'none'
-            },
         }
     },
     accordion: {

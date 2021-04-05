@@ -1,4 +1,4 @@
-import { AppBar as AppBarMUI, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import { AppBar as AppBarMUI, IconButton, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core'
 import { AccountCircle, Gavel } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 function AppBar({ height, appColor, appName, appLogo, user }) {
     const classes = useStyles()
     const history = useHistory()
+    const theme = useTheme()
 
     const goHome = () => history.push('/home')
 
@@ -33,7 +34,7 @@ function AppBar({ height, appColor, appName, appLogo, user }) {
                 justifyContent: 'center',
                 boxShadow: 'none',
                 borderBottom: `solid 1px ${appColor}`,
-                backgroundColor: '#24292e'
+                backgroundColor: theme.palette.background.paper
             }}
         >
             <Toolbar style = {{ paddingLeft: '10px' }}>
