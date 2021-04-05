@@ -6,7 +6,8 @@ const appSettingsSlice = createSlice({
     initialState: {
         navBarOpen: false,
         roles: {},
-        classification: {}
+        classification: {},
+        productJourneyMap: {}
     },
     reducers: {
         toggleNavBarOpen: (state) => {
@@ -18,6 +19,9 @@ const appSettingsSlice = createSlice({
             state.classification = action.payload.classification
             action.payload.roles.map(role => {
                 state.roles[role.name] = role
+            })
+            action.payload.productJourneyMap.map(pjm => {
+                state.productJourneyMap[pjm.name] = pjm
             })
         }
     }

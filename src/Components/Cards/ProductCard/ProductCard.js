@@ -1,34 +1,32 @@
-import { Box, Card, CardContent, CardHeader, IconButton, useTheme } from '@material-ui/core'
-import { Edit } from '@material-ui/icons'
+import { Box, Card, CardContent, CardHeader, IconButton, Tooltip, useTheme } from '@material-ui/core'
+import { ChevronLeft, ChevronRight, Edit } from '@material-ui/icons'
 import PropTypes from 'prop-types'
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import { React } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
+import { requestUpdateJourneyMapById } from '../../../Redux/Products/actions'
 import ProductConstants from '../../../Redux/Products/constants'
+import { getProductById } from '../../../Redux/Products/selectors'
 import { PathToProdStepper } from '../../PathToProdStepper'
 import Tag from '../../Tag/Tag'
 
-function ProductCard({ product }) {
-
+function ProductCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
 
-    //test data to be removed after tags integrated.
-    const tags = [
-        {
-            label: 'Category::Targeting',
-            color: '#e67a3c',
-            description: 'This is a description'
-        }, {
-            label: 'Horizon::1',
-            color: '#347807',
-            description: 'To be prioritized within 1 to 3 months'
-        }, {
-            label: 'Feature',
-            color: '#cad442',
-            description: ''
-        }
-    ]
+    const product = useSelector(state => getProductById(state, id))
+
+    const calcStep = () => Math.log2(product.productJourneyMap + 1)
+
+    const handleProgress = (increment) => {
+        const step = calcStep() + increment
+        const journey = Math.pow(2, step) - 1
+
+        dispatch(requestUpdateJourneyMapById({
+            id: product.id,
+            productJourneyMap: journey
+        }))
+    }
 
     const editProductPopup = () => {
         dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id: product.id }))
@@ -49,10 +47,36 @@ function ProductCard({ product }) {
                     </IconButton>
                 }
             />
-            <PathToProdStepper />
+            <Box display = 'flex'>
+                <Tooltip title = 'Roll back status'>
+                    <IconButton
+                        onClick = {() => handleProgress(-1)}
+                        color = 'secondary'
+                        data-testid = 'ProductCard__button-back'
+                        disabled = {product.productJourneyMap === 0}
+                        style = {{ height: '48px', margin: 'auto' }}
+                        disableRipple
+                    >
+                        <ChevronLeft />
+                    </IconButton>
+                </Tooltip>
+                <PathToProdStepper step = {calcStep()} />
+                <Tooltip title = 'Complete current step'>
+                    <IconButton
+                        onClick = {() => handleProgress(1)}
+                        color = 'secondary'
+                        data-testid = 'ProductCard__button-forward'
+                        disabled = {product.productJourneyMap === 15}
+                        style = {{ height: '48px', margin: 'auto' }}
+                        disableRipple
+                    >
+                        <ChevronRight />
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <CardContent>
                 <Box display = 'flex' flexWrap = 'wrap'>
-                    {tags.map((tag, index) => (
+                    {product.tags.map((tag, index) => (
                         <Tag { ...tag } key = {index}/>
                     ))}
                 </Box>
@@ -62,11 +86,7 @@ function ProductCard({ product }) {
 }
 
 ProductCard.propTypes = {
-    product: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        tags: PropTypes.arrayOf(PropTypes.number)
-    }).isRequired
+    id: PropTypes.number.isRequired
 }
 
 export default ProductCard

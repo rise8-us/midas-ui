@@ -72,7 +72,7 @@ function Home() {
                 <div style = {{ padding: '0 10%' }}>
                     <Box display = 'flex' flexWrap = 'wrap'>
                         {allProducts.map((product, index) => (
-                            <ProductCard key = {index} product = {product}/>
+                            <ProductCard key = {index} id = {product.id}/>
                         ))}
                     </Box>
                 </div>
