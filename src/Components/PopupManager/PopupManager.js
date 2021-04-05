@@ -7,7 +7,7 @@ const importPopup = componentName => lazy(() => import(`../Popups/${componentNam
 function PopupManager() {
     const [popups, setPopups] = useState([])
     const [currentPopups, setCurrentPopups] = useState([])
-    const allPopups = useSelector(state => getOpenPopups(state))
+    const allPopups = useSelector(getOpenPopups)
 
     useEffect(() => {
         if (allPopups.length !== currentPopups.length) {

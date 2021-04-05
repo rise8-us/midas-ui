@@ -4,14 +4,16 @@ import reducer, { toggleNavBarOpen } from './reducer'
 const mockStore = {
     navBarOpen: false,
     roles: {},
-    classification: {}
+    classification: {},
+    productJourneyMap: {}
 }
 
 test('should handle initial state', () => {
     expect(reducer(undefined, {})).toEqual({
         navBarOpen: false,
         classification: {},
-        roles: {}
+        roles: {},
+        productJourneyMap: {}
     })
 })
 
@@ -34,7 +36,10 @@ test('sets init info', () => {
             textColor: 'white',
             label: 'UNCLASSIFIED',
             caveats: 'IL2'
-        }
+        },
+        productJourneyMap: [{
+            name: 'foo'
+        }]
     }
 
     const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
@@ -42,4 +47,5 @@ test('sets init info', () => {
 
     expect(state.classification).toEqual(initResponse.classification)
     expect(state.roles.ADMIN).toEqual(initResponse.roles[0])
+    expect(state.productJourneyMap.foo).toEqual(initResponse.productJourneyMap[0])
 })

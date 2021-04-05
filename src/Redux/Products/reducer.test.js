@@ -4,14 +4,17 @@ import reducer from './reducer'
 const allProductsResponse = [
     {
         id: 1,
-        name: 'product1'
+        name: 'product1',
+        productJourneyMap: 1
     }, {
         id: 2,
-        name: 'product2'
+        name: 'product2',
+        productJourneyMap: 1
     }
 ]
 
 const updatedProduct = { id: 1, name: 'foo' }
+const updatedProductJourney = { id: 1, productJourneyMap: 2 }
 
 describe('Products Reducer', () => {
     it('should handle initial state', () => {
@@ -37,5 +40,11 @@ describe('Products Reducer', () => {
         const actions = [{ type: reduxActions.requestUpdateProduct.fulfilled, payload: updatedProduct }]
         const state = actions.reduce(reducer, { 1: allProductsResponse[0] })
         expect(state).toEqual({ 1: updatedProduct })
+    })
+
+    it('Update Product Journey', () => {
+        const actions = [{ type: reduxActions.requestUpdateJourneyMapById.fulfilled, payload: updatedProductJourney }]
+        const state = actions.reduce(reducer, { 1: allProductsResponse[0] })
+        expect(state).toEqual({ 1: updatedProductJourney })
     })
 })

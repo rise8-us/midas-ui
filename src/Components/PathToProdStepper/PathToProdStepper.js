@@ -52,8 +52,9 @@ StepIcons.propTypes = {
     icon: PropTypes.number.isRequired,
 }
 
-function PathToProdStepper() {
-    // TODO: pass in from product once CTF data is attached to product entity #41
+
+function PathToProdStepper({ step }) {
+
     const steps = ['COT', 'Pipelines', 'CTF', 'Prod']
 
     return (
@@ -61,11 +62,15 @@ function PathToProdStepper() {
             <IconStepper
                 steps = {steps}
                 icons = {StepIcons}
-                currentStep = {2} // TODO: #41
+                currentStep = {step}
                 tooltip
             />
         </div>
     )
+}
+
+PathToProdStepper.propTypes = {
+    step: PropTypes.number.isRequired,
 }
 
 export default PathToProdStepper

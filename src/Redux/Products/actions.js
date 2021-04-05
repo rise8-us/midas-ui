@@ -26,3 +26,11 @@ export const requestUpdateProduct = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestUpdateJourneyMapById = createAsyncThunk(
+    Constants.UPDATE_JOURNEYMAP,
+    async({ id, productJourneyMap }, { rejectWithValue }) => {
+        const request = { endpoint: `/api/products/${id}/journeymap`, method: 'PUT', body: { productJourneyMap } }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
