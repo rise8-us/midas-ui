@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProductConstants from '../../../Redux/Products/constants'
 import { getProducts } from '../../../Redux/Products/selectors'
-import TeamConstants from '../../../Redux/Teams/constants'
 import TagConstants from '../../../Redux/Tags/constants'
+import TeamConstants from '../../../Redux/Teams/constants'
 import { ProductCard } from '../../Cards'
 import Page from '../../Page/Page'
 
@@ -16,12 +16,7 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main
         },
         height: 40
-    },
-    container: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(12, 1fr)',
-        gridGap: theme.spacing(3),
-    },
+    }
 }))
 
 function Home() {
@@ -69,13 +64,11 @@ function Home() {
                         </Button>
                     </div>
                 </div>
-                <div style = {{ padding: '0 10%' }}>
-                    <Box display = 'flex' flexWrap = 'wrap'>
-                        {allProducts.map((product, index) => (
-                            <ProductCard key = {index} id = {product.id}/>
-                        ))}
-                    </Box>
-                </div>
+                <Box display = 'flex' flexWrap = 'wrap' justifyContent = 'center'>
+                    {allProducts.map((product, index) => (
+                        <ProductCard key = {index} id = {product.id}/>
+                    ))}
+                </Box>
             </Box>
         </Page>
     )

@@ -1,7 +1,7 @@
-import React from 'react'
+import { Box, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import React from 'react'
 import { CirclePicker } from 'react-color'
-import { TextField } from '@material-ui/core'
 
 function ColorPicker({ onColorPickerChange, color, colorError }) {
     return (
@@ -16,11 +16,11 @@ function ColorPicker({ onColorPickerChange, color, colorError }) {
                 disabled = {false}
                 fullWidth
             />
-            <div style = {{ paddingTop: '20px', paddingLeft: '35px' }}>
+            <Box display = 'flex' justifyContent = 'space-around' style = {{ paddingTop: '20px' }}>
                 <CirclePicker
                     color = {color}
                     onChange = {onColorPickerChange} />
-            </div>
+            </Box>
         </div>
     )
 }

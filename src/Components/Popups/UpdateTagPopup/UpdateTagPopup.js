@@ -1,6 +1,5 @@
 import { Box, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import ColorPicker from '../../ColorPicker/ColorPicker'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
@@ -8,8 +7,9 @@ import { closePopup } from '../../../Redux/Popups/actions'
 import { requestUpdateTag } from '../../../Redux/Tags/actions'
 import TagConstants from '../../../Redux/Tags/constants'
 import { selectTagById } from '../../../Redux/Tags/selectors'
-import Popup from '../../Popup/Popup'
-import Tag from '../../Tag/Tag'
+import { ColorPicker } from '../../ColorPicker'
+import { Popup } from '../../Popup'
+import { Tag } from '../../Tag'
 
 function UpdateTagPopup({ id }) {
     const dispatch = useDispatch()

@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, CardHeader, IconButton, Tooltip, useTheme } from '@material-ui/core'
 import { ChevronLeft, ChevronRight, Edit } from '@material-ui/icons'
 import PropTypes from 'prop-types'
-import { React } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestUpdateJourneyMapById } from '../../../Redux/Products/actions'

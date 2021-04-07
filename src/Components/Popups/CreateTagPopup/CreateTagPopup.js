@@ -5,9 +5,9 @@ import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateTag } from '../../../Redux/Tags/actions'
 import TagConstants from '../../../Redux/Tags/constants'
-import Popup from '../../Popup/Popup'
-import Tag from '../../Tag/Tag'
-import ColorPicker from '../../ColorPicker/ColorPicker'
+import { ColorPicker } from '../../ColorPicker'
+import { Popup } from '../../Popup'
+import { Tag } from '../../Tag'
 
 function CreateTagPopup() {
     const dispatch = useDispatch()
