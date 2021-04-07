@@ -1,6 +1,6 @@
-# ReactJS frontend template
+# Mixer UI
 
-This project is meant to be a launch point for teams who needed a frontend UI and wish to use React. The desire is that you, a developer, can fork this repo and begin adding your own content and not have to worry about how to integrate P1 SSO or any of the initial foundation work, such as adding network requests, state management, or jest tests.
+This project is a ReactJS SPA that focuses on being a dashboard to see, through a single lens, all the apps within the ABMS Apps portfolio. It aggregrates data from Jira & Gitlab then presents it in a bitsize view to empower leadership to make decisions based on relivant data.
 
 ## VSCode Extension recomendations
 * Babel JavaScript
