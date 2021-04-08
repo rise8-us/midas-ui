@@ -14,5 +14,7 @@ export const getProducts = (state) => {
     const allProducts = state.products
     if (!allProducts) return []
 
-    return Object.values(state.products)
+    return Object.values(state.products).map(product => {
+        return { ...product, tags: selectTagsByIds(state, product.tagIds) }
+    })
 }

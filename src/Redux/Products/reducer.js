@@ -19,6 +19,9 @@ const productSlice = createSlice({
         },
         [actions.requestUpdateJourneyMapById.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
+        },
+        [actions.requestArchiveProduct.fulfilled]: (state, action) => {
+            state[action.payload.id] = action.payload
         }
     }
 })

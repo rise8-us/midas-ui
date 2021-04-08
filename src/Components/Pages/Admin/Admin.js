@@ -1,14 +1,14 @@
 import { AppBar, Tab, Tabs, useTheme } from '@material-ui/core'
 import React, { Suspense, useState } from 'react'
-import Page from '../../Page/Page'
+import { Page } from '../../Page'
 
 const UserTab = React.lazy(() => import('../../Admin/UserTab/UserTab'))
-
 const TagsTab = React.lazy(() => import('../../Admin/TagsTab/TagsTab'))
+const ProductsTab = React.lazy(() => import('../../Admin/ProductsTab/ProductsTab'))
 
 function Admin() {
     const theme = useTheme()
-    const [value, setValue] = useState('tags')
+    const [value, setValue] = useState(false)
 
     const handleChange = (_e, newValue) => setValue(newValue)
 
@@ -34,6 +34,9 @@ function Admin() {
                 }
                 { value === 'tags' &&
                     <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><TagsTab/></Suspense>
+                }
+                { value === 'products' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProductsTab/></Suspense>
                 }
             </>
         </Page>

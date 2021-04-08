@@ -9,7 +9,15 @@ const mockState = {
             id: 4,
             name: 'New Product',
             gitlabProjectId: 1234,
-            tagIds: []
+            tagIds: [1],
+        }
+    },
+    tags: {
+        1: {
+            id: 1,
+            label: 'Some tags',
+            description: null,
+            color: ''
         }
     }
 }
@@ -29,8 +37,24 @@ test('getProductById - returns empty object', () => {
 })
 
 test('getProducts - returns product array', () => {
-    const product = selectors.getProducts(mockState)
-    expect(product[0]).toBe(mockState.products[4])
+    selectTagsByIdsMock.mockReturnValue([mockState.tags[1]])
+
+    const productOne = {
+        id: 4,
+        name: 'New Product',
+        gitlabProjectId: 1234,
+        tagIds: [1],
+        tags: [
+            {   id: 1,
+                label: 'Some tags',
+                description: null,
+                color: ''
+            }
+        ]
+
+    }
+    const products = selectors.getProducts(mockState)
+    expect(products[0]).toEqual(productOne)
 })
 
 test('getProducts - returns empty array', () => {

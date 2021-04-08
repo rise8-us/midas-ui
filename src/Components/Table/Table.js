@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     },
     regular: {
         maxWidth: 'auto',
-        padding: '0 16px',
+        padding: '12px 16px',
         color: theme.palette.text.secondary
     }
 }))
