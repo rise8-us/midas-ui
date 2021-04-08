@@ -5,7 +5,8 @@ const allProductsResponse = [
     {
         id: 1,
         name: 'product1',
-        productJourneyMap: 1
+        productJourneyMap: 1,
+        isArchived: false
     }, {
         id: 2,
         name: 'product2',
@@ -15,6 +16,7 @@ const allProductsResponse = [
 
 const updatedProduct = { id: 1, name: 'foo' }
 const updatedProductJourney = { id: 1, productJourneyMap: 2 }
+const archiveProduct = { id: 1, isArchived: false }
 
 describe('Products Reducer', () => {
     it('should handle initial state', () => {
@@ -46,5 +48,11 @@ describe('Products Reducer', () => {
         const actions = [{ type: reduxActions.requestUpdateJourneyMapById.fulfilled, payload: updatedProductJourney }]
         const state = actions.reduce(reducer, { 1: allProductsResponse[0] })
         expect(state).toEqual({ 1: updatedProductJourney })
+    })
+
+    it('Archive Product', () => {
+        const actions = [{ type: reduxActions.requestArchiveProduct.fulfilled, payload: archiveProduct }]
+        const state = actions.reduce(reducer, { 1: allProductsResponse[0] })
+        expect(state).toEqual({ 1: archiveProduct })
     })
 })

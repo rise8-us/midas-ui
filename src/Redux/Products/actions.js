@@ -34,3 +34,11 @@ export const requestUpdateJourneyMapById = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestArchiveProduct = createAsyncThunk(
+    Constants.ARCHIVE_PRODUCT,
+    async({ id, isArchived }, { rejectWithValue }) => {
+        const request = { endpoint: `/api/products/${id}/admin/archive`, method: 'PUT', body: { isArchived } }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
