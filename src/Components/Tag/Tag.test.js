@@ -1,8 +1,10 @@
 import React from 'react'
-import { fireEvent, render, screen, waitFor } from '../../Utilities/test-utils'
+import { fireEvent, render, screen, userEvent, waitFor } from '../../Utilities/test-utils'
 import { Tag } from './index'
 
 describe('<Tag />', () => {
+
+    const onDeleteMock = jest.fn()
 
     test('scopped tag no description', () => {
         const data = {
@@ -59,5 +61,19 @@ describe('<Tag />', () => {
         render(<Tag {...data}/>)
 
         expect(screen.getByText(data.label)).toBeInTheDocument()
+    })
+
+    test('single tag no description', () => {
+        const data = {
+            label: 'scope::label 4',
+            description: '',
+            color: '#000000'
+        }
+
+        render(<Tag {...data} onDelete = {onDeleteMock}/>)
+
+        userEvent.click(screen.getByTitle('delete'))
+
+        expect(onDeleteMock).toHaveBeenCalled()
     })
 })
