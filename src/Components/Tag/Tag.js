@@ -1,22 +1,38 @@
-import { Box, Chip, makeStyles, Tooltip, Typography, useTheme } from '@material-ui/core'
+import { Box, Chip, IconButton, makeStyles, rgbToHex, Tooltip, Typography, useTheme } from '@material-ui/core'
+import { Cancel } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     scopedChip: {
         border: '1px solid',
         backgroundColor: 'transparent',
         height: '20px',
         verticalAlign: 'middle',
         borderRadius: '16px',
+    },
+    deleteIcon: {
+        padding: 0,
+        margin: '6px 0px 0px 4px',
+        height: 14,
+        width: 14,
+        color: rgbToHex(theme.palette.secondary.light) + '60',
+        '&:hover, &:active': {
+            color: rgbToHex(theme.palette.secondary.light) + 'A0',
+        }
     }
 }))
 
-function Tag({ label, description, color }) {
+function Tag({ label, description, color, onDelete }) {
     const classes = useStyles()
     const theme = useTheme()
 
     const scope = Array.from(String(label).split('::'))
+
+    const handleDeleteIconClick = (event) => {
+        event.stopPropagation()
+        onDelete(event)
+    }
 
     const tag = (tagLabel, tagColor) => (
         <Chip
@@ -29,6 +45,7 @@ function Tag({ label, description, color }) {
             }}
             variant = 'outlined'
             size = 'small'
+            onDelete = {onDelete}
         />
     )
 
@@ -38,6 +55,7 @@ function Tag({ label, description, color }) {
             style = {{ color: tagColor, margin: '2px' }}
             display = 'flex'
             flexDirection = 'row'
+            flexWrap = 'none'
         >
             <Typography
                 variant = 'body2'
@@ -55,6 +73,7 @@ function Tag({ label, description, color }) {
                 {tagLabel[0]}
             </Typography>
             <Typography
+                noWrap
                 variant = 'body2'
                 style = {{
                     color: tagColor,
@@ -67,6 +86,11 @@ function Tag({ label, description, color }) {
             >
                 {tagLabel[1]}
             </Typography>
+            {onDelete &&
+                <IconButton onClick = {handleDeleteIconClick} className = {classes.deleteIcon} title = 'delete'>
+                    <Cancel viewBox = '0 0 35 35' />
+                </IconButton>
+            }
         </Box>
     )
 
@@ -98,10 +122,12 @@ function Tag({ label, description, color }) {
 Tag.propTypes = {
     label: PropTypes.string.isRequired,
     description: PropTypes.string,
-    color: PropTypes.string.isRequired
+    color: PropTypes.string.isRequired,
+    onDelete: PropTypes.func
 }
 
 Tag.defaultProps = {
-    description: null
+    description: null,
+    onDelete: undefined
 }
 export default Tag
