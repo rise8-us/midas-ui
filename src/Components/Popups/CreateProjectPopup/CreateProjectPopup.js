@@ -55,9 +55,8 @@ function CreateProjectPopup() {
         else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
     }
 
-    const onClose = () => {
-        dispatch(closePopup(ProjectConstants.CREATE_PROJECT))
-    }
+    const onClose = () => dispatch(closePopup(ProjectConstants.CREATE_PROJECT))
+    const onRemoveTag = (id) => setTags(tags.filter(t => t.id !== id))
 
     const onSubmit = () => {
         dispatch(requestCreateProject({
@@ -121,7 +120,13 @@ function CreateProjectPopup() {
                     onChange = {onSelectTag}
                     value = {tags}
                     defaultValue = {tags}
-                    renderTags = {(value) => value.map((tag, index) => <Tag key = {index} {...tag} />)}
+                    renderTags = {(value) => value.map((tag, index) =>
+                        <Tag
+                            key = {index}
+                            {...tag}
+                            onDelete = {() => onRemoveTag(tag.id)}
+                        />
+                    )}
                     renderInput = {(params) =>
                         <TextField
                             {...params}

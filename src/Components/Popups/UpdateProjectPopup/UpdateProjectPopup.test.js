@@ -127,4 +127,13 @@ describe('<UpdateProjectPopup />', () => {
         expect(screen.getByText('name error')).toBeInTheDocument()
         expect(screen.getByText('Gitlab error')).toBeInTheDocument()
     })
+
+
+    test('should delete tag', async() => {
+        render(<UpdateProjectPopup id = {4}/>)
+
+        fireEvent.click(await screen.findByTitle('delete'))
+
+        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
+    })
 })
