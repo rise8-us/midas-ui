@@ -13,25 +13,22 @@ import { Tag } from '../../Tag'
 
 function UpdateTagPopup({ id }) {
     const dispatch = useDispatch()
-    const updateTag = useSelector(state => selectTagById(state, id))
 
+    const updateTag = useSelector(state => selectTagById(state, id))
     const errors = useSelector(state => selectRequestErrors(state, TagConstants.CREATE_TAG))
 
-    const [label, setLabel] = useState('')
-    const [description, setDescription] = useState('')
-    const [color, setColor] = useState('')
+    const [label, setLabel] = useState(updateTag.label)
+    const [description, setDescription] = useState(updateTag.description)
+    const [color, setColor] = useState(updateTag.color)
+
     const [labelError, setLabelError] = useState([])
-    const [colorError, setGitlabError] = useState([])
+    const [colorError, setColorError] = useState([])
 
     const onLabelChange = (e) => setLabel(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
-    const onColorPickerChange = (colorPicked) => {
-        setColor(colorPicked.hex)
-    }
+    const onColorChange = (e) => setColor(e)
 
-    const onClose = () => {
-        dispatch(closePopup(TagConstants.UPDATE_TAG))
-    }
+    const onClose = () => dispatch(closePopup(TagConstants.UPDATE_TAG))
 
     const onSubmit = () => {
         dispatch(requestUpdateTag({
@@ -43,15 +40,9 @@ function UpdateTagPopup({ id }) {
     }
 
     useEffect(() => {
-        setLabel(updateTag.label)
-        setColor(updateTag.color)
-        setDescription(updateTag.description)
-    }, [updateTag])
-
-    useEffect(() => {
         if (errors.length > 0) {
             setLabelError(errors.filter(error => error.includes('label')))
-            setGitlabError(errors.filter(error => error.includes('hex')))
+            setColorError(errors.filter(error => error.includes('hex')))
         }
     }, [errors])
 
@@ -81,18 +72,17 @@ function UpdateTagPopup({ id }) {
                     multiline
                 />
                 <ColorPicker
-                    onColorPickerChange = {onColorPickerChange}
-                    color = {color}
-                    colorError = {colorError}
+                    onChange = {onColorChange}
+                    errors = {colorError}
+                    initialColor = {color}
                 />
-                <div style = {{
-                    paddingTop: '20px',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    margin: 'auto'
-                }}>
-                    <Tag label = {label} description = {description} color = {color} />
-                </div>
+                <Box display = 'flex' justifyContent = 'space-around' margin = 'auto' style = {{ paddingTop: '20px' }}>
+                    {label && color ?
+                        <Tag label = {label} description = {description} color = {color} />
+                        :
+                        <div style = {{ height: '24px' }}/>
+                    }
+                </Box>
             </Box>
         </Popup>
     )

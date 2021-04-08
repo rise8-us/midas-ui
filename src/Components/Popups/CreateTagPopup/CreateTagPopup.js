@@ -16,15 +16,13 @@ function CreateTagPopup() {
 
     const [label, setLabel] = useState('')
     const [description, setDescription] = useState('')
-    const [color, setColor] = useState('#969696')
+    const [color, setColor] = useState('')
     const [labelError, setLabelError] = useState([])
-    const [colorError, setGitlabError] = useState([])
+    const [colorError, setColorError] = useState([])
 
     const onLabelChange = (e) => setLabel(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
-    const onColorPickerChange = (colorPicked) => {
-        setColor(colorPicked.hex)
-    }
+    const onColorChange = (e) => setColor(e)
 
     const onClose = () => {
         dispatch(closePopup(TagConstants.CREATE_TAG))
@@ -41,7 +39,7 @@ function CreateTagPopup() {
     useEffect(() => {
         if (errors.length > 0) {
             setLabelError(errors.filter(error => error.includes('label')))
-            setGitlabError(errors.filter(error => error.includes('hex')))
+            setColorError(errors.filter(error => error.includes('hex')))
         }
     }, [errors])
 
@@ -71,18 +69,16 @@ function CreateTagPopup() {
                     multiline
                 />
                 <ColorPicker
-                    onColorPickerChange = {onColorPickerChange}
-                    color = {color}
-                    colorError = {colorError}
+                    onChange = {onColorChange}
+                    errors = {colorError}
                 />
-                <div style = {{
-                    paddingTop: '20px',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    margin: 'auto'
-                }}>
-                    <Tag label = {label} description = {description} color = {color} />
-                </div>
+                <Box display = 'flex' justifyContent = 'space-around' margin = 'auto' style = {{ paddingTop: '20px' }}>
+                    {label && color ?
+                        <Tag label = {label} description = {description} color = {color} />
+                        :
+                        <div style = {{ height: '24px' }}/>
+                    }
+                </Box>
             </Box>
         </Popup>
     )
