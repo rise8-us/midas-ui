@@ -60,7 +60,7 @@ describe('<CreateProjectPopup />', () => {
         expect(submitProjectMock.mock.calls[0][0]).toEqual({ name, gitlabProjectId, description, tagIds: [2] })
     })
     test('should add & remove tag', async() => {
-        render(<CreateProjectPopup id = {4}/>)
+        render(<CreateProjectPopup />)
         fireEvent.click(await screen.findByTitle('Open'))
 
         // Add tag
@@ -76,7 +76,7 @@ describe('<CreateProjectPopup />', () => {
     })
 
     test('should allow only one scoped tag', async() => {
-        render(<CreateProjectPopup id = {4}/>)
+        render(<CreateProjectPopup />)
 
         // add first scoped label
         fireEvent.click(await screen.findByTitle('Open'))
@@ -95,6 +95,7 @@ describe('<CreateProjectPopup />', () => {
         expect(await screen.queryByText('label 1')).not.toBeInTheDocument()
         expect(await screen.findByText('label 2')).toBeInTheDocument()
     })
+
     test('should close popup', () => {
         render(<CreateProjectPopup />)
 
@@ -118,7 +119,19 @@ describe('<CreateProjectPopup />', () => {
         expect(screen.getByText('name error')).toBeInTheDocument()
         expect(screen.getByText('Gitlab error')).toBeInTheDocument()
         expect(screen.getByText('Tag error')).toBeInTheDocument()
-
     })
 
+    test('should delete tag', async() => {
+        render(<CreateProjectPopup />)
+
+        fireEvent.click(await screen.findByTitle('Open'))
+        const option = screen.getByText('scoped::label 1')
+        expect(option).toBeInTheDocument()
+        fireEvent.click(option)
+
+        expect(await screen.findByText('label 1')).toBeInTheDocument()
+        fireEvent.click(await screen.findByTitle('delete'))
+
+        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
+    })
 })

@@ -63,7 +63,7 @@ describe('<Tag />', () => {
         expect(screen.getByText(data.label)).toBeInTheDocument()
     })
 
-    test('single tag no description', () => {
+    test('should call onDelete func', () => {
         const data = {
             label: 'scope::label 4',
             description: '',
