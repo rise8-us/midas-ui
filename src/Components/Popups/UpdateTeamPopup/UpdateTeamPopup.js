@@ -10,7 +10,7 @@ import { getTeamById } from '../../../Redux/Teams/selectors'
 import Popup from '../../Popup/Popup'
 
 const useStyles = makeStyles(() => ({
-    textField: {
+    numberField: {
         '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
             display: 'none'
         }
@@ -24,9 +24,10 @@ function UpdateTeamPopup({ id }) {
     const updateTeam = useSelector(state => getTeamById(state, id))
     const errors = useSelector(state => selectRequestErrors(state, TeamConstants.UPDATE_TEAM))
 
-    const [name, setName] = useState('')
-    const [gitlabGroupId, setGitlabGroupId] = useState('')
-    const [description, setDescription] = useState('')
+    const [name, setName] = useState(updateTeam.name)
+    const [gitlabGroupId, setGitlabGroupId] = useState(updateTeam.gitlabGroupId)
+    const [description, setDescription] = useState(updateTeam.description)
+
     const [nameError, setNameError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
@@ -48,12 +49,6 @@ function UpdateTeamPopup({ id }) {
     }
 
     useEffect(() => {
-        setName(updateTeam.name)
-        setGitlabGroupId(updateTeam.gitlabGroupId)
-        setDescription(updateTeam.description)
-    }, [updateTeam])
-
-    useEffect(() => {
         if (errors.length > 0) {
             setNameError(errors.filter(error => error.includes('name')))
         }
@@ -65,23 +60,22 @@ function UpdateTeamPopup({ id }) {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' style = {{ flexDirection: 'column' }}>
+            <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Team Name'
                     data-testid = 'UpdateTeamPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
-                    error = { nameError.length > 0 }
-                    helperText = { nameError[0] ?? '' }
+                    error = {nameError.length > 0}
+                    helperText = {nameError[0] ?? ''}
                     margin = 'dense'
                     required
                 />
                 <TextField
-                    className = {classes.textField}
+                    className = {classes.numberField}
                     label = 'Gitlab Group Id'
                     type = 'number'
                     data-testid = 'UpdateTeamPopup__input-gitlabGroupId'
-                    inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabGroupId}
                     onChange = {onGitlabGroupIdChange}
                     margin = 'dense'

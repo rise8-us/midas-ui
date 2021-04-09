@@ -8,16 +8,12 @@ jest.mock('../../Admin/UserTab/UserTab',
 jest.mock('../../Admin/ProjectsTab/ProjectsTab',
     () => function testing() { return (<div>Admin Page Project Tab Test</div>) })
 
-jest.mock('../../Admin/TagsTab/TagsTab',
-    () => function testing() { return (<div>Admin Page Tags Tab Test</div>) })
-
 describe('<Admin />', () => {
 
     test('should render correctly', () => {
         render(<Admin />)
 
         expect(screen.getByText('users')).toBeInTheDocument()
-        expect(screen.getByText('tags')).toBeInTheDocument()
         expect(screen.getByText('projects')).toBeInTheDocument()
     })
 
@@ -36,15 +32,5 @@ describe('<Admin />', () => {
 
         expect(await screen.findByText('Admin Page Project Tab Test')).toBeInTheDocument()
     })
-
-    test('should call tagsTab component', async() => {
-        render(<Admin />)
-
-        fireEvent.click(screen.getByText('tags'))
-
-        expect(await screen.findByText('Admin Page Tags Tab Test')).toBeInTheDocument()
-    })
-
-
 
 })

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { Banner } from './Components/Banner'
-import { Account, Admin, Home, PageNotFound } from './Components/Pages'
+import { Account, Admin, Home, PageNotFound, Tags } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { getUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchInit } from './Redux/Init/actions'
@@ -40,6 +40,7 @@ function App() {
                 </Route>
                 <Route exact path = '/home' component = {Home} />
                 <Route exact path = '/account' component = {Account} />
+                <Route exact path = '/tags' component = {Tags} />
                 {user.isAdmin && <Route exact path = '/admin' component = {Admin} />}
                 <Route component = {PageNotFound} />
             </Switch>
