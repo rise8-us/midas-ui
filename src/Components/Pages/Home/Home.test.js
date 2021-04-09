@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductConstants from '../../../Redux/Products/constants'
+import ProjectConstants from '../../../Redux/Projects/constants'
 import TagConstants from '../../../Redux/Tags/constants'
 import TeamConstants from '../../../Redux/Teams/constants'
 import {
@@ -10,22 +10,22 @@ import { Home } from './index'
 describe('<Home>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
-    const allProductsMock = useModuleMock('Redux/Products/selectors', 'getProducts')
-    const getProductByIdMock = useModuleMock('Redux/Products/selectors', 'getProductById')
+    const allProjectsMock = useModuleMock('Redux/Projects/selectors', 'getProjects')
+    const getProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'getProjectById')
 
-    const products = {
+    const projects = {
         id: 0,
-        name: 'product 1',
+        name: 'project 1',
         description: 'desc 1',
-        productJourneyMap: 2,
+        projectJourneyMap: 2,
         tagIds: [1],
     }
 
-    const product = {
+    const project = {
         id: 0,
-        name: 'product 1',
+        name: 'project 1',
         description: 'desc 1',
-        productJourneyMap: 2,
+        projectJourneyMap: 2,
         tagIds: [1],
         tags: [
             { id: 1,
@@ -38,15 +38,15 @@ describe('<Home>', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        allProductsMock.mockReturnValue([products])
-        getProductByIdMock.mockReturnValue(product)
+        allProjectsMock.mockReturnValue([projects])
+        getProjectByIdMock.mockReturnValue(project)
     })
 
     test('Has correct text', () => {
         render(<Home />)
 
         expect(screen.getByText('Add New Team')).toBeInTheDocument()
-        expect(screen.getByText('Add New Product')).toBeInTheDocument()
+        expect(screen.getByText('Add New Project')).toBeInTheDocument()
         expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
     })
 
@@ -58,12 +58,12 @@ describe('<Home>', () => {
         expect(openPopupMock).toHaveBeenCalledWith(TeamConstants.CREATE_TEAM, 'CreateTeamPopup')
     })
 
-    test('Add Product calls openPopup', () => {
+    test('Add Project calls openPopup', () => {
         render(<Home />)
 
-        fireEvent.click(screen.getByText('Add New Product'))
+        fireEvent.click(screen.getByText('Add New Project'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup')
     })
 
     test('Add Tag calls openPopup', () => {

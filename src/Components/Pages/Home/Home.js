@@ -3,12 +3,12 @@ import { Add } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { getProducts } from '../../../Redux/Products/selectors'
+import ProjectConstants from '../../../Redux/Projects/constants'
+import { getProjects } from '../../../Redux/Projects/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
 import TeamConstants from '../../../Redux/Teams/constants'
-import { ProductCard } from '../../Cards'
-import Page from '../../Page/Page'
+import { ProjectCard } from '../../Cards'
+import { Page } from '../../Page'
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -23,9 +23,9 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allProducts = useSelector(getProducts)
+    const allProjects = useSelector(getProjects)
 
-    const createProduct = () => dispatch(openPopup(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup'))
+    const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
     const createTeam = () => dispatch(openPopup(TeamConstants.CREATE_TEAM, 'CreateTeamPopup'))
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
 
@@ -42,9 +42,9 @@ function Home() {
                             variant = 'text'
                             startIcon = {<Add/>}
                             className = {classes.button}
-                            onClick = {createProduct}
+                            onClick = {createProject}
                         >
-                            Add New Product
+                            Add New Project
                         </Button>
                         <Button
                             variant = 'text'
@@ -65,8 +65,8 @@ function Home() {
                     </div>
                 </div>
                 <Box display = 'flex' flexWrap = 'wrap' justifyContent = 'center'>
-                    {allProducts.map((product, index) => (
-                        <ProductCard key = {index} id = {product.id}/>
+                    {allProjects.map((project, index) => (
+                        <ProjectCard key = {index} id = {project.id}/>
                     ))}
                 </Box>
             </Box>

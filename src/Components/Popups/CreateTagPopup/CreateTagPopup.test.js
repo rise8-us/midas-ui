@@ -22,7 +22,7 @@ describe('<CreateTagPopup />', () => {
         useDispatchMock().mockReturnValue({})
         render(<CreateTagPopup />)
 
-        const label = 'My New Product'
+        const label = 'My New Tag'
         const color = '#e91e63'
         const description = 'Test Description'
 

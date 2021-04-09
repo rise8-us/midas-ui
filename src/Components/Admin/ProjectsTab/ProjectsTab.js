@@ -3,9 +3,9 @@ import { Add, Archive, Edit, Unarchive } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
-import { requestArchiveProduct } from '../../../Redux/Products/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { getProducts } from '../../../Redux/Products/selectors'
+import { requestArchiveProject } from '../../../Redux/Projects/actions'
+import ProjectConstants from '../../../Redux/Projects/constants'
+import { getProjects } from '../../../Redux/Projects/selectors'
 import { Table } from '../../Table'
 import { Tag } from '../../Tag'
 
@@ -18,22 +18,22 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function ProductsTab() {
+function ProjectsTab() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const allProducts = useSelector(getProducts)
+    const allProjects = useSelector(getProjects)
 
-    const createProduct = () => dispatch(openPopup(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup'))
-    const updateProduct = (id) => dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id }))
-    const archiveProduct = (id, isArchived) => dispatch(requestArchiveProduct({ id, isArchived: !isArchived }))
+    const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
+    const updateProject = (id) => dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id }))
+    const archiveProject = (id, isArchived) => dispatch(requestArchiveProject({ id, isArchived: !isArchived }))
 
     const buildRows = () => {
-        return allProducts.map(product =>
-            [product.name,
-                product.description,
-                product.gitlabProjectId,
-                buildTag(product.tags),
-                buildActions(product.id, product.isArchived)
+        return allProjects.map(project =>
+            [project.name,
+                project.description,
+                project.gitlabProjectId,
+                buildTag(project.tags),
+                buildActions(project.id, project.isArchived)
             ])
     }
 
@@ -54,7 +54,7 @@ function ProductsTab() {
                     <IconButton
                         title = 'edit'
                         color = 'secondary'
-                        onClick = {() => updateProduct(id)}
+                        onClick = {() => updateProject(id)}
                     >
                         <Edit />
                     </IconButton>
@@ -62,7 +62,7 @@ function ProductsTab() {
                 <IconButton
                     title = {isArchived ? 'unarchive' : 'archive' }
                     color = 'secondary'
-                    onClick = {() => archiveProduct(id, isArchived)}
+                    onClick = {() => archiveProject(id, isArchived)}
                 >
                     {isArchived ? <Unarchive /> : <Archive />}
                 </IconButton>
@@ -77,9 +77,9 @@ function ProductsTab() {
                     variant = 'text'
                     startIcon = {<Add/>}
                     className = {classes.button}
-                    onClick = {createProduct}
+                    onClick = {createProject}
                 >
-                            Add New Product
+                            Add New Project
                 </Button>
             </Box>
             <Table
@@ -90,4 +90,4 @@ function ProductsTab() {
     )
 }
 
-export default ProductsTab
+export default ProjectsTab

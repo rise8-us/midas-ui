@@ -1,16 +1,16 @@
 import React from 'react'
-import ProductConstants from '../../../Redux/Products/constants'
+import ProjectConstants from '../../../Redux/Projects/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from '../../../Utilities/test-utils'
-import { ProductsTab } from './index'
+import { ProjectsTab } from './index'
 
 
-describe('<ProductsTab />', () => {
+describe('<ProjectsTab />', () => {
 
-    const allProducts = {
+    const allProjects = {
         id: 0,
-        name: 'Product Test',
+        name: 'Project Test',
         description: 'desc 1',
-        productJourneyMap: 1,
+        projectJourneyMap: 1,
         gitlabProjectId: 1234567,
         tagIds: [1],
         isArchived: false,
@@ -23,59 +23,59 @@ describe('<ProductsTab />', () => {
         ]
     }
 
-    const selectAllProductsMock = useModuleMock('Redux/Products/selectors', 'getProducts')
+    const selectAllProjectsMock = useModuleMock('Redux/Projects/selectors', 'getProjects')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
-    const archiveProductMock = useModuleMock('Redux/Tags/actions', 'requestArchiveProduct')
+    const archiveProjectMock = useModuleMock('Redux/Tags/actions', 'requestArchiveProject')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        selectAllProductsMock.mockReturnValue([allProducts])
+        selectAllProjectsMock.mockReturnValue([allProjects])
     })
 
     test('Table display correctly', () => {
-        render(<ProductsTab  />)
+        render(<ProjectsTab  />)
 
         expect(screen.getByText('Tags')).toBeInTheDocument()
         expect(screen.getByText('Description')).toBeInTheDocument()
         expect(screen.getByText('GitLab Project Id')).toBeInTheDocument()
-        expect(screen.getByText('Product Test')).toBeInTheDocument()
+        expect(screen.getByText('Project Test')).toBeInTheDocument()
         expect(screen.getByText('desc 1')).toBeInTheDocument()
         expect(screen.getByText('Tag Test')).toBeInTheDocument()
         expect(screen.getByText('1234567')).toBeInTheDocument()
     })
 
-    test('Should fire updateProductPopup', () => {
-        render(<ProductsTab />)
+    test('Should fire updateProjectPopup', () => {
+        render(<ProjectsTab />)
 
         fireEvent.click(screen.getByTitle('edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id: allProducts.id })
+            ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id: allProjects.id })
     })
 
     test('Should fire archive tag', () => {
-        render(<ProductsTab />)
+        render(<ProjectsTab />)
 
         fireEvent.click(screen.getByTitle('archive'))
 
-        waitFor(() => expect(archiveProductMock).toHaveBeenCalledWith(allProducts.id, true))
+        waitFor(() => expect(archiveProjectMock).toHaveBeenCalledWith(allProjects.id, true))
     })
 
     test('Should fire unarchive tag', () => {
-        selectAllProductsMock.mockReturnValue([{ ...allProducts, isArchived: true }])
-        render(<ProductsTab />)
+        selectAllProjectsMock.mockReturnValue([{ ...allProjects, isArchived: true }])
+        render(<ProjectsTab />)
 
         fireEvent.click(screen.getByTitle('unarchive'))
 
-        waitFor(() => expect(archiveProductMock).toHaveBeenCalledWith(allProducts.id, false))
+        waitFor(() => expect(archiveProjectMock).toHaveBeenCalledWith(allProjects.id, false))
     })
 
-    test('Add Product calls openPopup', () => {
-        render(<ProductsTab />)
+    test('Add Project calls openPopup', () => {
+        render(<ProjectsTab />)
 
-        fireEvent.click(screen.getByText('Add New Product'))
+        fireEvent.click(screen.getByText('Add New Project'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup')
     })
 
 })

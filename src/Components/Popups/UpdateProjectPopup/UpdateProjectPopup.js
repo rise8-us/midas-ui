@@ -1,13 +1,15 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
+import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
-import { requestCreateProduct } from '../../../Redux/Products/actions'
-import ProductConstants from '../../../Redux/Products/constants'
+import { requestUpdateProject } from '../../../Redux/Projects/actions'
+import ProjectConstants from '../../../Redux/Projects/constants'
+import { getProjectById } from '../../../Redux/Projects/selectors'
 import { selectAllTags } from '../../../Redux/Tags/selectors'
-import Popup from '../../Popup/Popup'
+import { Popup } from '../../Popup'
 import { Tag } from '../../Tag'
 
 const useStyles = makeStyles(() => ({
@@ -18,18 +20,19 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-function CreateProductPopup() {
+function UpdateProjectPopup({ id }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
+    const project = useSelector(state => getProjectById(state, id))
+    const errors = useSelector(state => selectRequestErrors(state, ProjectConstants.UPDATE_PROJECT))
+
     const allTags = useSelector(selectAllTags)
 
-    const errors = useSelector(state => selectRequestErrors(state, ProductConstants.CREATE_PRODUCT))
-
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [gitlabProjectId, setGitlabProjectId] = useState('')
-    const [tags, setTags] = useState([])
+    const [name, setName] = useState(project.name)
+    const [gitlabProjectId, setGitlabProjectId] = useState(project.gitlabProjectId)
+    const [description, setDescription] = useState(project.description)
+    const [tags, setTags] = useState(project.tags)
     const [nameError, setNameError] = useState([])
     const [gitlabError, setGitlabError] = useState([])
     const [tagsError, setTagsError] = useState([])
@@ -37,7 +40,6 @@ function CreateProductPopup() {
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
-
     const onSelectTag = (_e, values) => {
         if (values.length === 0) {
             setTags([])
@@ -55,18 +57,16 @@ function CreateProductPopup() {
         else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
     }
 
-    const onClose = () => {
-        dispatch(closePopup(ProductConstants.CREATE_PRODUCT))
-    }
+    const onClose = () => dispatch(closePopup(ProjectConstants.UPDATE_PROJECT))
 
-    const onSubmit = () => {
-        dispatch(requestCreateProduct({
+    const onSubmit = () =>
+        dispatch(requestUpdateProject({
+            ...project,
             name,
             gitlabProjectId,
             description,
             tagIds: Object.values(tags.map(t => t.id))
         }))
-    }
 
     useEffect(() => {
         if (errors.length > 0) {
@@ -78,14 +78,14 @@ function CreateProductPopup() {
 
     return (
         <Popup
-            title = 'Create New Product'
+            title = 'Update Project'
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' style = {{ flexDirection: 'column' }}>
                 <TextField
-                    label = 'Product Name'
-                    data-testid = 'CreateProductPopup__input-name'
+                    label = 'Project Name'
+                    data-testid = 'UpdateProjectPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
                     error = { nameError.length > 0 }
@@ -97,7 +97,7 @@ function CreateProductPopup() {
                     className = {classes.textField}
                     label = 'Gitlab Project Id'
                     type = 'number'
-                    data-testid = 'CreateProductPopup__input-gitlabProjectId'
+                    data-testid = 'UpdateProjectPopup__input-gitlabProjectId'
                     inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabProjectId}
                     onChange = {onGitlabProjectIdChange}
@@ -107,7 +107,7 @@ function CreateProductPopup() {
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'CreateProductPopup__input-description'
+                    data-testid = 'UpdateProjectPopup__input-description'
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'
@@ -137,4 +137,8 @@ function CreateProductPopup() {
     )
 }
 
-export default CreateProductPopup
+UpdateProjectPopup.propTypes = {
+    id: PropTypes.number.isRequired
+}
+
+export default UpdateProjectPopup

@@ -1,6 +1,6 @@
-export { CreateProductPopup } from './CreateProductPopup'
+export { CreateProjectPopup } from './CreateProjectPopup'
 export { CreateTeamPopup } from './CreateTeamPopup'
-export { UpdateProductPopup } from './UpdateProductPopup'
+export { UpdateProjectPopup } from './UpdateProjectPopup'
 export { UpdateTeamPopup } from './UpdateTeamPopup'
 export { UpdateTagPopup } from './UpdateTagPopup'
 

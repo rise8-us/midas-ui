@@ -4,44 +4,44 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
-import { requestUpdateJourneyMapById } from '../../../Redux/Products/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { getProductById } from '../../../Redux/Products/selectors'
+import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
+import ProjectConstants from '../../../Redux/Projects/constants'
+import { getProjectById } from '../../../Redux/Projects/selectors'
 import { PathToProdStepper } from '../../PathToProdStepper'
 import Tag from '../../Tag/Tag'
 
-function ProductCard({ id }) {
+function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
 
-    const product = useSelector(state => getProductById(state, id))
+    const project = useSelector(state => getProjectById(state, id))
 
-    const calcStep = () => Math.log2(product.productJourneyMap + 1)
+    const calcStep = () => Math.log2(project.projectJourneyMap + 1)
 
     const handleProgress = (increment) => {
         const step = calcStep() + increment
         const journey = Math.pow(2, step) - 1
 
         dispatch(requestUpdateJourneyMapById({
-            id: product.id,
-            productJourneyMap: journey
+            id: project.id,
+            projectJourneyMap: journey
         }))
     }
 
-    const editProductPopup = () => {
-        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id: product.id }))
+    const editProjectPopup = () => {
+        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id: project.id }))
     }
 
     return (
         <Card style = {{ width: '450px', margin: theme.spacing(1) }}>
             <CardHeader
-                title = {product.name}
+                title = {project.name}
                 titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
                 action = {
                     <IconButton
-                        onClick = {editProductPopup}
+                        onClick = {editProjectPopup}
                         color = 'secondary'
-                        data-testid = 'ProductCard__button-edit'
+                        data-testid = 'ProjectCard__button-edit'
                     >
                         <Edit />
                     </IconButton>
@@ -52,8 +52,8 @@ function ProductCard({ id }) {
                     <IconButton
                         onClick = {() => handleProgress(-1)}
                         color = 'secondary'
-                        data-testid = 'ProductCard__button-back'
-                        disabled = {product.productJourneyMap === 0}
+                        data-testid = 'ProjectCard__button-back'
+                        disabled = {project.projectJourneyMap === 0}
                         style = {{ height: '48px', margin: 'auto' }}
                         disableRipple
                     >
@@ -65,8 +65,8 @@ function ProductCard({ id }) {
                     <IconButton
                         onClick = {() => handleProgress(1)}
                         color = 'secondary'
-                        data-testid = 'ProductCard__button-forward'
-                        disabled = {product.productJourneyMap === 15}
+                        data-testid = 'ProjectCard__button-forward'
+                        disabled = {project.projectJourneyMap === 15}
                         style = {{ height: '48px', margin: 'auto' }}
                         disableRipple
                     >
@@ -76,7 +76,7 @@ function ProductCard({ id }) {
             </Box>
             <CardContent>
                 <Box display = 'flex' flexWrap = 'wrap'>
-                    {product.tags.map((tag, index) => (
+                    {project.tags.map((tag, index) => (
                         <Tag { ...tag } key = {index}/>
                     ))}
                 </Box>
@@ -85,8 +85,8 @@ function ProductCard({ id }) {
     )
 }
 
-ProductCard.propTypes = {
+ProjectCard.propTypes = {
     id: PropTypes.number.isRequired
 }
 
-export default ProductCard
+export default ProjectCard
