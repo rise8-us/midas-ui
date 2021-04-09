@@ -5,8 +5,8 @@ import { Admin } from './index'
 jest.mock('../../Admin/UserTab/UserTab',
     () => function testing() { return (<div>Admin Page User Tab Test</div>) })
 
-jest.mock('../../Admin/ProductsTab/ProductsTab',
-    () => function testing() { return (<div>Admin Page Product Tab Test</div>) })
+jest.mock('../../Admin/ProjectsTab/ProjectsTab',
+    () => function testing() { return (<div>Admin Page Project Tab Test</div>) })
 
 jest.mock('../../Admin/TagsTab/TagsTab',
     () => function testing() { return (<div>Admin Page Tags Tab Test</div>) })
@@ -18,7 +18,7 @@ describe('<Admin />', () => {
 
         expect(screen.getByText('users')).toBeInTheDocument()
         expect(screen.getByText('tags')).toBeInTheDocument()
-        expect(screen.getByText('products')).toBeInTheDocument()
+        expect(screen.getByText('projects')).toBeInTheDocument()
     })
 
     test('should call usersTab component', async() => {
@@ -29,12 +29,12 @@ describe('<Admin />', () => {
         expect(await screen.findByText('Admin Page User Tab Test')).toBeInTheDocument()
     })
 
-    test('should call productsTab component', async() => {
+    test('should call projectsTab component', async() => {
         render(<Admin />)
 
-        fireEvent.click(screen.getByText('products'))
+        fireEvent.click(screen.getByText('projects'))
 
-        expect(await screen.findByText('Admin Page Product Tab Test')).toBeInTheDocument()
+        expect(await screen.findByText('Admin Page Project Tab Test')).toBeInTheDocument()
     })
 
     test('should call tagsTab component', async() => {

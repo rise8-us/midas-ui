@@ -2,12 +2,12 @@ import React from 'react'
 import {
     fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
 } from '../../../Utilities/test-utils'
-import { CreateProductPopup } from './index'
+import { CreateProjectPopup } from './index'
 
-describe('<CreateProductPopup />', () => {
+describe('<CreateProjectPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
-    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
+    const submitProjectMock = useModuleMock('Redux/Projects/actions', 'requestCreateProject')
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
 
     const returnedTags = [
@@ -23,26 +23,26 @@ describe('<CreateProductPopup />', () => {
     })
 
     test('should render properly', () => {
-        render(<CreateProductPopup />)
+        render(<CreateProjectPopup />)
 
-        expect(screen.getByText('Create New Product')).toBeInTheDocument()
-        expect(screen.getByTestId('CreateProductPopup__input-name')).toBeInTheDocument()
-        expect(screen.getByTestId('CreateProductPopup__input-description')).toBeInTheDocument()
-        expect(screen.getByTestId('CreateProductPopup__input-gitlabProjectId')).toBeInTheDocument()
+        expect(screen.getByText('Create New Project')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProjectPopup__input-name')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProjectPopup__input-description')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProjectPopup__input-gitlabProjectId')).toBeInTheDocument()
     })
 
     test('should execute onSubmit', async() => {
-        render(<CreateProductPopup />)
+        render(<CreateProjectPopup />)
 
-        const name = 'My New Product'
+        const name = 'My New Project'
         const gitlabProjectId = '1234567'
         const description = 'Test Description'
 
-        const nameInput = within(screen.getByTestId('CreateProductPopup__input-name'))
+        const nameInput = within(screen.getByTestId('CreateProjectPopup__input-name'))
             .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('CreateProductPopup__input-description'))
+        const descriptionInput = within(screen.getByTestId('CreateProjectPopup__input-description'))
             .getByRole('textbox')
-        const gitlabProjectIdInput = within(screen.getByTestId('CreateProductPopup__input-gitlabProjectId'))
+        const gitlabProjectIdInput = within(screen.getByTestId('CreateProjectPopup__input-gitlabProjectId'))
             .getByRole('spinbutton')
 
         userEvent.type(nameInput, name)
@@ -56,11 +56,11 @@ describe('<CreateProductPopup />', () => {
 
         fireEvent.click(screen.getByText('Submit'))
 
-        expect(submitProductMock).toHaveBeenCalledTimes(1)
-        expect(submitProductMock.mock.calls[0][0]).toEqual({ name, gitlabProjectId, description, tagIds: [2] })
+        expect(submitProjectMock).toHaveBeenCalledTimes(1)
+        expect(submitProjectMock.mock.calls[0][0]).toEqual({ name, gitlabProjectId, description, tagIds: [2] })
     })
     test('should add & remove tag', async() => {
-        render(<CreateProductPopup id = {4}/>)
+        render(<CreateProjectPopup id = {4}/>)
         fireEvent.click(await screen.findByTitle('Open'))
 
         // Add tag
@@ -76,7 +76,7 @@ describe('<CreateProductPopup />', () => {
     })
 
     test('should allow only one scoped tag', async() => {
-        render(<CreateProductPopup id = {4}/>)
+        render(<CreateProjectPopup id = {4}/>)
 
         // add first scoped label
         fireEvent.click(await screen.findByTitle('Open'))
@@ -96,7 +96,7 @@ describe('<CreateProductPopup />', () => {
         expect(await screen.findByText('label 2')).toBeInTheDocument()
     })
     test('should close popup', () => {
-        render(<CreateProductPopup />)
+        render(<CreateProjectPopup />)
 
         fireEvent.click(screen.getByTestId('Popup__button-close'))
 
@@ -106,14 +106,14 @@ describe('<CreateProductPopup />', () => {
     test('should display error messages', () => {
         const state = {
             errors: {
-                'products/createOne': [
+                'projects/createOne': [
                     'name error',
                     'Gitlab error',
                     'Tag error'
                 ]
             }
         }
-        render(<CreateProductPopup />, { initialState: state })
+        render(<CreateProjectPopup />, { initialState: state })
 
         expect(screen.getByText('name error')).toBeInTheDocument()
         expect(screen.getByText('Gitlab error')).toBeInTheDocument()

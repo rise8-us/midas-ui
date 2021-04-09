@@ -4,10 +4,10 @@ import * as selectors from './selectors'
 const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByIds')
 
 const mockState = {
-    products: {
+    projects: {
         4: {
             id: 4,
-            name: 'New Product',
+            name: 'New Project',
             gitlabProjectId: 1234,
             tagIds: [1],
         }
@@ -22,26 +22,26 @@ const mockState = {
     }
 }
 
-test('getProductById - returns product object', () => {
+test('getProjectById - returns project object', () => {
     selectTagsByIdsMock.mockReturnValue([])
-    const returnedProduct = {
-        ...mockState.products[4],
+    const returnedProject = {
+        ...mockState.projects[4],
         tags: []
     }
-    const product = selectors.getProductById(mockState, 4)
-    expect(product).toEqual(returnedProduct)
+    const project = selectors.getProjectById(mockState, 4)
+    expect(project).toEqual(returnedProject)
 })
 
-test('getProductById - returns empty object', () => {
-    expect(selectors.getProductById(mockState, 2)).toBeInstanceOf(Object)
+test('getProjectById - returns empty object', () => {
+    expect(selectors.getProjectById(mockState, 2)).toBeInstanceOf(Object)
 })
 
-test('getProducts - returns product array', () => {
+test('getProjects - returns project array', () => {
     selectTagsByIdsMock.mockReturnValue([mockState.tags[1]])
 
-    const productOne = {
+    const projectOne = {
         id: 4,
-        name: 'New Product',
+        name: 'New Project',
         gitlabProjectId: 1234,
         tagIds: [1],
         tags: [
@@ -53,10 +53,10 @@ test('getProducts - returns product array', () => {
         ]
 
     }
-    const products = selectors.getProducts(mockState)
-    expect(products[0]).toEqual(productOne)
+    const projects = selectors.getProjects(mockState)
+    expect(projects[0]).toEqual(projectOne)
 })
 
-test('getProducts - returns empty array', () => {
-    expect(selectors.getProducts({})).toBeInstanceOf(Array)
+test('getProjects - returns empty array', () => {
+    expect(selectors.getProjects({})).toBeInstanceOf(Array)
 })

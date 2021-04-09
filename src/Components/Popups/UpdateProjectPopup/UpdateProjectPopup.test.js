@@ -2,13 +2,13 @@ import React from 'react'
 import {
     fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
 } from '../../../Utilities/test-utils'
-import { UpdateProductPopup } from './index'
+import { UpdateProjectPopup } from './index'
 
-describe('<UpdateProductPopup />', () => {
+describe('<UpdateProjectPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
-    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
-    const getProductByIdMock = useModuleMock('Redux/Products/selectors', 'getProductById')
+    const submitProjectMock = useModuleMock('Redux/Projects/actions', 'requestUpdateProject')
+    const getProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'getProjectById')
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
 
     const returnedTags = [
@@ -18,10 +18,10 @@ describe('<UpdateProductPopup />', () => {
         { id: 14, label: 'scoped::label 2', description: '', color: '#000000' }
     ]
 
-    const returnedProduct = {
+    const returnedProject = {
         id: 4,
         isArchived: false,
-        name: 'My New Product',
+        name: 'My New Project',
         gitlabProjectId: 1234567,
         description: 'Test Description',
         tags: [returnedTags[0], returnedTags[2]]
@@ -29,34 +29,34 @@ describe('<UpdateProductPopup />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        getProductByIdMock.mockReturnValue(returnedProduct)
+        getProjectByIdMock.mockReturnValue(returnedProject)
         selectAllTagsMock.mockReturnValue(returnedTags)
     })
 
     test('should render properly', () => {
-        render(<UpdateProductPopup id = {4}/>)
+        render(<UpdateProjectPopup id = {4}/>)
 
-        expect(screen.getByText('Update Product')).toBeInTheDocument()
-        expect(within(screen.getByTestId('UpdateProductPopup__input-name'))
-            .getByRole('textbox')).toHaveValue(returnedProduct.name)
-        expect(within(screen.getByTestId('UpdateProductPopup__input-description'))
-            .getByRole('textbox')).toHaveValue(returnedProduct.description)
-        expect(within(screen.getByTestId('UpdateProductPopup__input-gitlabProjectId'))
-            .getByRole('spinbutton')).toHaveValue(returnedProduct.gitlabProjectId)
+        expect(screen.getByText('Update Project')).toBeInTheDocument()
+        expect(within(screen.getByTestId('UpdateProjectPopup__input-name'))
+            .getByRole('textbox')).toHaveValue(returnedProject.name)
+        expect(within(screen.getByTestId('UpdateProjectPopup__input-description'))
+            .getByRole('textbox')).toHaveValue(returnedProject.description)
+        expect(within(screen.getByTestId('UpdateProjectPopup__input-gitlabProjectId'))
+            .getByRole('spinbutton')).toHaveValue(returnedProject.gitlabProjectId)
     })
 
     test('should call onSubmit', () => {
-        render(<UpdateProductPopup id = {4} />)
+        render(<UpdateProjectPopup id = {4} />)
 
-        const name = 'My Edited Product'
+        const name = 'My Edited Project'
         const gitlabProjectId = '15550'
         const description = 'New Description'
 
-        const nameInput = within(screen.getByTestId('UpdateProductPopup__input-name'))
+        const nameInput = within(screen.getByTestId('UpdateProjectPopup__input-name'))
             .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('UpdateProductPopup__input-description'))
+        const descriptionInput = within(screen.getByTestId('UpdateProjectPopup__input-description'))
             .getByRole('textbox')
-        const gitlabProjectIdInput = within(screen.getByTestId('UpdateProductPopup__input-gitlabProjectId'))
+        const gitlabProjectIdInput = within(screen.getByTestId('UpdateProjectPopup__input-gitlabProjectId'))
             .getByRole('spinbutton')
 
         userEvent.clear(descriptionInput)
@@ -67,13 +67,13 @@ describe('<UpdateProductPopup />', () => {
         userEvent.type(nameInput, name)
         fireEvent.click(screen.getByText('Submit'))
 
-        expect(submitProductMock).toHaveBeenCalledTimes(1)
-        expect(submitProductMock.mock.calls[0][0]).toEqual(
-            { ...returnedProduct, name, description, gitlabProjectId, tagIds: [1, 13] })
+        expect(submitProjectMock).toHaveBeenCalledTimes(1)
+        expect(submitProjectMock.mock.calls[0][0]).toEqual(
+            { ...returnedProject, name, description, gitlabProjectId, tagIds: [1, 13] })
     })
 
     test('should handle tag changes', async() => {
-        render(<UpdateProductPopup id = {4}/>)
+        render(<UpdateProjectPopup id = {4}/>)
         fireEvent.click(await screen.findByTitle('Open'))
 
         const option = screen.getByText('Tag 2')
@@ -84,7 +84,7 @@ describe('<UpdateProductPopup />', () => {
     })
 
     test('should handle remove all tags', async() => {
-        render(<UpdateProductPopup id = {4}/>)
+        render(<UpdateProjectPopup id = {4}/>)
 
         fireEvent.click(await screen.findByTitle('Clear'))
 
@@ -93,7 +93,7 @@ describe('<UpdateProductPopup />', () => {
     })
 
     test('should allow only one scoped tag', async() => {
-        render(<UpdateProductPopup id = {4}/>)
+        render(<UpdateProjectPopup id = {4}/>)
         expect(await screen.findByText('label 1')).toBeInTheDocument()
         fireEvent.click(await screen.findByTitle('Open'))
 
@@ -106,7 +106,7 @@ describe('<UpdateProductPopup />', () => {
     })
 
     test('should close popup', () => {
-        render(<UpdateProductPopup id = {4}/>)
+        render(<UpdateProjectPopup id = {4}/>)
 
         fireEvent.click(screen.getByTestId('Popup__button-close'))
 
@@ -116,13 +116,13 @@ describe('<UpdateProductPopup />', () => {
     test('should display error message', () => {
         const state = {
             errors: {
-                'products/updateOne': [
+                'projects/updateOne': [
                     'name error',
                     'Gitlab error'
                 ]
             }
         }
-        render(<UpdateProductPopup id = {4} />, { initialState: state })
+        render(<UpdateProjectPopup id = {4} />, { initialState: state })
 
         expect(screen.getByText('name error')).toBeInTheDocument()
         expect(screen.getByText('Gitlab error')).toBeInTheDocument()

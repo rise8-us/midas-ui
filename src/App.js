@@ -6,7 +6,7 @@ import { Account, Admin, Home, PageNotFound } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { getUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchInit } from './Redux/Init/actions'
-import { requestFetchAllProducts } from './Redux/Products/actions'
+import { requestFetchAllProjects } from './Redux/Projects/actions'
 import { requestFetchAllTags } from './Redux/Tags/actions'
 import { requestFetchAllTeams } from './Redux/Teams/actions'
 
@@ -21,7 +21,7 @@ function App() {
 
             if (init.meta.requestStatus === 'fulfilled') {
                 dispatch(requestFetchAllTeams())
-                dispatch(requestFetchAllProducts())
+                dispatch(requestFetchAllProjects())
                 dispatch(requestFetchAllTags())
             } else {
                 console.error('INIT FAILED')

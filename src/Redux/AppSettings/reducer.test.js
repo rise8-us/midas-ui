@@ -5,7 +5,7 @@ const mockStore = {
     navBarOpen: false,
     roles: {},
     classification: {},
-    productJourneyMap: {}
+    projectJourneyMap: {}
 }
 
 test('should handle initial state', () => {
@@ -13,7 +13,7 @@ test('should handle initial state', () => {
         navBarOpen: false,
         classification: {},
         roles: {},
-        productJourneyMap: {}
+        projectJourneyMap: {}
     })
 })
 
@@ -37,7 +37,7 @@ test('sets init info', () => {
             label: 'UNCLASSIFIED',
             caveats: 'IL2'
         },
-        productJourneyMap: [{
+        projectJourneyMap: [{
             name: 'foo'
         }]
     }
@@ -47,5 +47,5 @@ test('sets init info', () => {
 
     expect(state.classification).toEqual(initResponse.classification)
     expect(state.roles.ADMIN).toEqual(initResponse.roles[0])
-    expect(state.productJourneyMap.foo).toEqual(initResponse.productJourneyMap[0])
+    expect(state.projectJourneyMap.foo).toEqual(initResponse.projectJourneyMap[0])
 })

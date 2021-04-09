@@ -4,7 +4,7 @@ import { Page } from '../../Page'
 
 const UserTab = React.lazy(() => import('../../Admin/UserTab/UserTab'))
 const TagsTab = React.lazy(() => import('../../Admin/TagsTab/TagsTab'))
-const ProductsTab = React.lazy(() => import('../../Admin/ProductsTab/ProductsTab'))
+const ProjectsTab = React.lazy(() => import('../../Admin/ProjectsTab/ProjectsTab'))
 
 function Admin() {
     const theme = useTheme()
@@ -26,7 +26,7 @@ function Admin() {
                     <Tabs value = {value} onChange = {handleChange} style = {{ margin: 'auto' }}>
                         <Tab label = 'users' value = 'users' disableRipple/>
                         <Tab label = 'tags' value = 'tags' disableRipple/>
-                        <Tab label = 'products' value = 'products' disableRipple/>
+                        <Tab label = 'projects' value = 'projects' disableRipple/>
                     </Tabs>
                 </AppBar>
                 { value === 'users' &&
@@ -35,8 +35,8 @@ function Admin() {
                 { value === 'tags' &&
                     <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><TagsTab/></Suspense>
                 }
-                { value === 'products' &&
-                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProductsTab/></Suspense>
+                { value === 'projects' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProjectsTab/></Suspense>
                 }
             </>
         </Page>
