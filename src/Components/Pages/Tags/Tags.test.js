@@ -1,10 +1,9 @@
 import React from 'react'
-import { render, screen, useDispatchMock, useModuleMock, fireEvent, waitFor  } from '../../../Utilities/test-utils'
 import TagConstants from '../../../Redux/Tags/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from '../../../Utilities/test-utils'
+import { Tags } from './index'
 
-import { TagsTab } from './index'
-
-describe('<TagsTab />', () => {
+describe('<Tags />', () => {
 
     const allTags = {
         id: 1,
@@ -17,14 +16,16 @@ describe('<TagsTab />', () => {
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const deleteTagMock = useModuleMock('Redux/Tags/actions', 'requestDeletTag')
+    const getUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'getUserLoggedIn')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectAllTagsMock.mockReturnValue([allTags])
+        getUserLoggedInMock.mockReturnValue({ isAdmin: true })
     })
 
     test('Table display correctly', () => {
-        render(<TagsTab  />)
+        render(<Tags />)
 
         expect(screen.getByText('Tag')).toBeInTheDocument()
         expect(screen.getByText('Description')).toBeInTheDocument()
@@ -35,7 +36,7 @@ describe('<TagsTab />', () => {
     })
 
     test('Should fire updateTagPopup', () => {
-        render(<TagsTab />)
+        render(<Tags />)
 
         fireEvent.click(screen.getByTitle('edit'))
 
@@ -44,7 +45,7 @@ describe('<TagsTab />', () => {
     })
 
     test('Should fire delete tag', () => {
-        render(<TagsTab />)
+        render(<Tags />)
 
         fireEvent.click(screen.getByTitle('delete'))
 
@@ -52,7 +53,7 @@ describe('<TagsTab />', () => {
     })
 
     test('Add Tag calls openPopup', () => {
-        render(<TagsTab />)
+        render(<Tags />)
 
         fireEvent.click(screen.getByText('Add New Tag'))
 

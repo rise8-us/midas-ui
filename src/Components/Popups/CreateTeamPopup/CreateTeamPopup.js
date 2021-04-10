@@ -1,14 +1,14 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { closePopup } from '../../../Redux/Popups/actions'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
+import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateTeam } from '../../../Redux/Teams/actions'
 import TeamConstants from '../../../Redux/Teams/constants'
 import Popup from '../../Popup/Popup'
 
 const useStyles = makeStyles(() => ({
-    textField: {
+    numberField: {
         '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
             display: 'none'
         }
@@ -24,6 +24,7 @@ function CreateTeamPopup() {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [gitlabGroupId, setGitlabGroupId] = useState('')
+
     const [nameError, setNameError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
@@ -54,7 +55,7 @@ function CreateTeamPopup() {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' style = {{ flexDirection: 'column' }}>
+            <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Team Name'
                     data-testid = 'CreateTeamPopup__input-name'
@@ -66,11 +67,10 @@ function CreateTeamPopup() {
                     required
                 />
                 <TextField
-                    className = {classes.textField}
+                    className = {classes.numberField}
                     label = 'Gitlab Group Id'
                     type = 'number'
                     data-testid = 'CreateTeamPopup__input-gitlabGroupId'
-                    inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabGroupId}
                     onChange = {onGitlabGroupIdChange}
                     margin = 'dense'

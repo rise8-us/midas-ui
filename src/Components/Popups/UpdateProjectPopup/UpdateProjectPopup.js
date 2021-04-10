@@ -13,7 +13,7 @@ import { Popup } from '../../Popup'
 import { Tag } from '../../Tag'
 
 const useStyles = makeStyles(() => ({
-    textField: {
+    numberField: {
         '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
             display: 'none'
         }
@@ -58,7 +58,7 @@ function UpdateProjectPopup({ id }) {
     }
 
     const onClose = () => dispatch(closePopup(ProjectConstants.UPDATE_PROJECT))
-    const onRemoveTag = (id) => setTags(tags.filter(t => t.id !== id))
+    const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
 
     const onSubmit = () =>
         dispatch(requestUpdateProject({
@@ -83,27 +83,26 @@ function UpdateProjectPopup({ id }) {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' style = {{ flexDirection: 'column' }}>
+            <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Project Name'
                     data-testid = 'UpdateProjectPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
-                    error = { nameError.length > 0 }
-                    helperText = { nameError[0] ?? '' }
+                    error = {nameError.length > 0}
+                    helperText = {nameError[0] ?? ''}
                     margin = 'dense'
                     required
                 />
                 <TextField
-                    className = {classes.textField}
                     label = 'Gitlab Project Id'
                     type = 'number'
+                    className = {classes.numberField}
                     data-testid = 'UpdateProjectPopup__input-gitlabProjectId'
-                    inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabProjectId}
                     onChange = {onGitlabProjectIdChange}
-                    error = { gitlabError.length > 0 }
-                    helperText = { gitlabError[0] ?? '' }
+                    error = {gitlabError.length > 0}
+                    helperText = {gitlabError[0] ?? ''}
                     margin = 'dense'
                 />
                 <TextField

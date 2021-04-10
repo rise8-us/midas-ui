@@ -7,11 +7,11 @@ import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectAllTags } from '../../../Redux/Tags/selectors'
-import Popup from '../../Popup/Popup'
+import { Popup } from '../../Popup'
 import { Tag } from '../../Tag'
 
 const useStyles = makeStyles(() => ({
-    textField: {
+    numberField: {
         '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
             display: 'none'
         }
@@ -56,7 +56,7 @@ function CreateProjectPopup() {
     }
 
     const onClose = () => dispatch(closePopup(ProjectConstants.CREATE_PROJECT))
-    const onRemoveTag = (id) => setTags(tags.filter(t => t.id !== id))
+    const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
 
     const onSubmit = () => {
         dispatch(requestCreateProject({
@@ -81,7 +81,7 @@ function CreateProjectPopup() {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' style = {{ flexDirection: 'column' }}>
+            <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Project Name'
                     data-testid = 'CreateProjectPopup__input-name'
@@ -93,11 +93,10 @@ function CreateProjectPopup() {
                     required
                 />
                 <TextField
-                    className = {classes.textField}
+                    className = {classes.numberField}
                     label = 'Gitlab Project Id'
                     type = 'number'
                     data-testid = 'CreateProjectPopup__input-gitlabProjectId'
-                    inputProps = {{ className: 'digitsOnly' }}
                     value = {gitlabProjectId}
                     onChange = {onGitlabProjectIdChange}
                     error = { gitlabError.length > 0 }
