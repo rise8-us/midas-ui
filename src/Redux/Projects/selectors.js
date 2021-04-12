@@ -18,3 +18,7 @@ export const getProjects = (state) => {
         return { ...project, tags: selectTagsByIds(state, project.tagIds) }
     })
 }
+
+export const getUnarchivedProjects = (state) => {
+    return getProjects(state).filter(p => !p.isArchived)
+}

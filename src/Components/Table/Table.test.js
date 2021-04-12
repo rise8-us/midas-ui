@@ -40,9 +40,4 @@ describe('<Table />', () => {
 
         expect(screen.getByText('one')).toHaveStyle('text-decoration-line: line-through')
     })
-
-
-
-
-
 })

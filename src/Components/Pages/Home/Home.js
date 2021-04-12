@@ -4,7 +4,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import { getProjects } from '../../../Redux/Projects/selectors'
+import { getUnarchivedProjects } from '../../../Redux/Projects/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
 import TeamConstants from '../../../Redux/Teams/constants'
 import { ProjectCard } from '../../Cards'
@@ -23,7 +23,7 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allProjects = useSelector(getProjects)
+    const allProjects = useSelector(getUnarchivedProjects)
 
     const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
     const createTeam = () => dispatch(openPopup(TeamConstants.CREATE_TEAM, 'CreateTeamPopup'))
