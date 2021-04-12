@@ -6,8 +6,14 @@ describe('<Table />', () => {
 
     const columns = ['column 1', 'column 2', '']
     const rows = [
-        ['one', 'two', 'action1'],
-        ['three', 'four', 'action2']
+        {
+            data: ['one', 'two', 'action1'],
+            properties: { strikeThrough: true }
+        },
+        {
+            data: ['three', 'four', 'action2'],
+            properties: { strikeThrough: false }
+        }
     ]
 
     test('data display', () => {
@@ -28,6 +34,14 @@ describe('<Table />', () => {
 
         expect(screen.getByTestId('Table__paper')).toHaveStyle('background-color: transparent')
     })
+
+    test('should have strikeThrough style', () => {
+        render(<Table columns = {columns} rows = {rows} />)
+
+        expect(screen.getByText('one')).toHaveStyle('text-decoration-line: line-through')
+    })
+
+
 
 
 
