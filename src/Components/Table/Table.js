@@ -1,4 +1,6 @@
-import { makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
+import {
+    makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableHead, TableRow, useTheme
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -8,17 +10,18 @@ import React from 'react'
 
 const useStyles = makeStyles(theme => ({
     actions: {
-        padding: '0'
+        padding: '0',
     },
     regular: {
         maxWidth: 'auto',
         padding: '12px 16px',
-        color: theme.palette.text.secondary
-    }
+        color: theme.palette.text.primary
+    },
 }))
 
 function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) {
     const classes = useStyles()
+    const theme = useTheme()
 
     const end = align === 'left' ? 'right' : 'left'
 
@@ -49,14 +52,23 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) 
                 <TableBody>
                     {rows.map((row, index) => {
                         return (
-                            <TableRow tabIndex = {-1} key = {index} hover >
+                            <TableRow
+                                tabIndex = {-1}
+                                key = {index}
+                                hover
+                            >
                                 {columns.map((column, idx) => (
                                     <TableCell
                                         key = {`${index}-${idx}`}
                                         align = {getAlign(columns.length, idx)}
-                                        className = {column.length === 0 ? classes.actions : classes.regular}
+                                        className = {column.length === 0 ? classes.actions  : classes.regular }
+                                        style = {{
+                                            color: row.properties.strikeThrough ?
+                                                theme.palette.text.disabled : theme.palette.text.primary,
+                                            textDecorationLine: row.properties.strikeThrough ? 'line-through' : 'none'
+                                        }}
                                     >
-                                        {row[idx]}
+                                        {row.data[idx]}
                                     </TableCell>
                                 ))}
                             </TableRow>
@@ -70,7 +82,12 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) 
 
 Table.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string).isRequired,
-    rows: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.node, PropTypes.string])).isRequired,
+    rows: PropTypes.arrayOf(PropTypes.shape({
+        data: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
+        properties: PropTypes.shape({
+            strikeThrough: PropTypes.bool
+        })
+    })).isRequired,
     stickyHeader: PropTypes.bool,
     tableWidth: PropTypes.string,
     align: PropTypes.string,

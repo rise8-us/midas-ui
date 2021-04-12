@@ -28,13 +28,16 @@ function ProjectsTab() {
     const archiveProject = (id, isArchived) => dispatch(requestArchiveProject({ id, isArchived: !isArchived }))
 
     const buildRows = () => {
-        return allProjects.map(project =>
-            [project.name,
+        return allProjects.map(project => ({
+            data: [
+                project.name,
                 project.description,
                 project.gitlabProjectId,
                 buildTag(project.tags),
                 buildActions(project.id, project.isArchived)
-            ])
+            ],
+            properties: { strikeThrough: project.isArchived }
+        }))
     }
 
     const buildTag = (tags) => {

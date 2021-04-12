@@ -30,7 +30,10 @@ function Tags() {
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
 
     const buildRows = () => {
-        return allTags.map(tag => [buildTag(tag), tag.description, buildColor(tag.color), buildActions(tag.id)])
+        return allTags.map(tag => ({
+            data: [buildTag(tag), tag.description, buildColor(tag.color), buildActions(tag.id)],
+            properties: {},
+        }))
     }
 
     const buildTag = (tag) => {
