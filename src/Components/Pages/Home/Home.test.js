@@ -2,15 +2,13 @@ import React from 'react'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import TagConstants from '../../../Redux/Tags/constants'
 import TeamConstants from '../../../Redux/Teams/constants'
-import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock
-} from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { Home } from './index'
 
 describe('<Home>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
-    const allProjectsMock = useModuleMock('Redux/Projects/selectors', 'getProjects')
+    const getUnarchivedProjectsMock = useModuleMock('Redux/Projects/selectors', 'getUnarchivedProjects')
     const getProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'getProjectById')
 
     const projects = {
@@ -38,7 +36,7 @@ describe('<Home>', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        allProjectsMock.mockReturnValue([projects])
+        getUnarchivedProjectsMock.mockReturnValue([projects])
         getProjectByIdMock.mockReturnValue(project)
     })
 

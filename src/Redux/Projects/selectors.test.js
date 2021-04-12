@@ -10,6 +10,14 @@ const mockState = {
             name: 'New Project',
             gitlabProjectId: 1234,
             tagIds: [1],
+            isArchived: false
+        },
+        5: {
+            id: 5,
+            name: 'New Project',
+            gitlabProjectId: 1234,
+            tagIds: [1],
+            isArchived: true
         }
     },
     tags: {
@@ -44,6 +52,7 @@ test('getProjects - returns project array', () => {
         name: 'New Project',
         gitlabProjectId: 1234,
         tagIds: [1],
+        isArchived: false,
         tags: [
             {   id: 1,
                 label: 'Some tags',
@@ -59,4 +68,8 @@ test('getProjects - returns project array', () => {
 
 test('getProjects - returns empty array', () => {
     expect(selectors.getProjects({})).toBeInstanceOf(Array)
+})
+
+test('getUnarchivedProjects - returns empty array', () => {
+    expect(selectors.getUnarchivedProjects(mockState)).toHaveLength(1)
 })
