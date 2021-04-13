@@ -6,6 +6,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import appLogo from '../../Assets/appLogo.png'
+import projectIcon from '../../Assets/project.png'
 import { getUserLoggedIn } from '../../Redux/Auth/selectors'
 import { AppBar } from '../AppBar'
 import { SideBar } from '../SideBar'
@@ -38,6 +39,15 @@ function Page({ children }) {
     const pages = [
         { label: 'Home', icon: <Home data-testid = 'Page__icon'/>,
             onClick: () => history.push('/home') },
+        {
+            label: 'Projects',
+            icon: <img
+                src = {projectIcon}
+                title = 'projects'
+                style = {{ maxBlockSize: '28px' }}
+                data-testid = 'Page__icon'/>,
+            onClick: () => history.push('/projects')
+        },
         { label: 'Tags', icon: <LocalOffer title = 'tags' data-testid = 'Page__icon'/>,
             onClick: () => history.push('/tags') }
     ]
