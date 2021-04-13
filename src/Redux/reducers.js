@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import applicationReducer from './Applications/reducer'
 import appSettingsReducer from './AppSettings/reducer'
 import authReducer from './Auth/reducer'
 import errorReducer from './Errors/reducer'
@@ -10,11 +11,12 @@ import userReducer from './Users/reducer'
 
 export const rootReducer = combineReducers({
     app: appSettingsReducer,
+    applications: applicationReducer,
     auth: authReducer,
     errors: errorReducer,
     popups: popupReducer,
     projects: projectReducer,
     tags: tagReducer,
     teams: teamReducer,
-    users: userReducer
+    users: userReducer,
 })

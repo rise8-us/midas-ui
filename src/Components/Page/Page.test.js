@@ -24,20 +24,34 @@ describe('<Page />', () => {
         getUserLoggedInMock.mockReturnValue({})
     })
 
+    afterEach(() => {
+        mockHistoryPush.mockClear()
+    })
+
     test('renders', () => {
         render(<Page><div>This is a test</div></Page>, { initialState: mockState })
 
         expect(screen.getByText(/This is a test/i)).toBeInTheDocument()
     })
 
-    test('Pages navigate properly', () => {
+    test('Pages navigate to home', () => {
         render(<MemoryRouter><Page><div/></Page></MemoryRouter>, { initialState: mockState })
 
         fireEvent.click(screen.getAllByTestId('Page__icon')[0])
         expect(mockHistoryPush).toHaveBeenCalledWith('/home')
-
-        fireEvent.click(screen.getAllByTestId('Page__icon')[1])
-        expect(mockHistoryPush).toHaveBeenCalledWith('/tags')
     })
 
+    test('Pages navigate to projects', () => {
+        render(<MemoryRouter><Page><div/></Page></MemoryRouter>, { initialState: mockState })
+
+        fireEvent.click(screen.getAllByTestId('Page__icon')[1])
+        expect(mockHistoryPush).toHaveBeenCalledWith('/projects')
+    })
+
+    test('Pages navigate to tags', () => {
+        render(<MemoryRouter><Page><div/></Page></MemoryRouter>, { initialState: mockState })
+
+        fireEvent.click(screen.getAllByTestId('Page__icon')[2])
+        expect(mockHistoryPush).toHaveBeenCalledWith('/tags')
+    })
 })
