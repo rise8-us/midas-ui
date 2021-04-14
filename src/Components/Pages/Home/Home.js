@@ -4,10 +4,10 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import { getUnarchivedProjects } from '../../../Redux/Projects/selectors'
+import { getUnarchivedApplications } from '../../../Redux/Applications/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
 import TeamConstants from '../../../Redux/Teams/constants'
-import { ProjectCard } from '../../Cards'
+import { AppCard } from '../../Cards'
 import { Page } from '../../Page'
 
 const useStyles = makeStyles(theme => ({
@@ -23,7 +23,7 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allProjects = useSelector(getUnarchivedProjects)
+    const allApplications = useSelector(getUnarchivedApplications)
 
     const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
     const createTeam = () => dispatch(openPopup(TeamConstants.CREATE_TEAM, 'CreateTeamPopup'))
@@ -65,8 +65,8 @@ function Home() {
                     </div>
                 </div>
                 <Box display = 'flex' flexWrap = 'wrap' justifyContent = 'center'>
-                    {allProjects.map((project, index) => (
-                        <ProjectCard key = {index} id = {project.id}/>
+                    {allApplications.map((app, index) => (
+                        <AppCard key = {index} id = {app.id}/>
                     ))}
                 </Box>
             </Box>
