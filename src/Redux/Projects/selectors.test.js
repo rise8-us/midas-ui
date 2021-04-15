@@ -10,14 +10,16 @@ const mockState = {
             name: 'New Project',
             gitlabProjectId: 1234,
             tagIds: [1],
-            isArchived: false
+            isArchived: false,
+            applicationId: null
         },
         5: {
             id: 5,
             name: 'New Project',
             gitlabProjectId: 1234,
             tagIds: [1],
-            isArchived: true
+            isArchived: true,
+            applicationId: 42
         }
     },
     tags: {
@@ -30,21 +32,21 @@ const mockState = {
     }
 }
 
-test('getProjectById - returns project object', () => {
+test('selectProjectById - returns project object', () => {
     selectTagsByIdsMock.mockReturnValue([])
     const returnedProject = {
         ...mockState.projects[4],
         tags: []
     }
-    const project = selectors.getProjectById(mockState, 4)
+    const project = selectors.selectProjectById(mockState, 4)
     expect(project).toEqual(returnedProject)
 })
 
-test('getProjectById - returns empty object', () => {
-    expect(selectors.getProjectById(mockState, 2)).toBeInstanceOf(Object)
+test('selectProjectById - returns empty object', () => {
+    expect(selectors.selectProjectById(mockState, 2)).toBeInstanceOf(Object)
 })
 
-test('getProjects - returns project array', () => {
+test('selectProjects - returns project array', () => {
     selectTagsByIdsMock.mockReturnValue([mockState.tags[1]])
 
     const projectOne = {
@@ -53,6 +55,7 @@ test('getProjects - returns project array', () => {
         gitlabProjectId: 1234,
         tagIds: [1],
         isArchived: false,
+        applicationId: null,
         tags: [
             {   id: 1,
                 label: 'Some tags',
@@ -62,14 +65,18 @@ test('getProjects - returns project array', () => {
         ]
 
     }
-    const projects = selectors.getProjects(mockState)
+    const projects = selectors.selectProjects(mockState)
     expect(projects[0]).toEqual(projectOne)
 })
 
-test('getProjects - returns empty array', () => {
-    expect(selectors.getProjects({})).toBeInstanceOf(Array)
+test('selectProjects - returns empty array', () => {
+    expect(selectors.selectProjects({})).toBeInstanceOf(Array)
 })
 
-test('getUnarchivedProjects - returns empty array', () => {
-    expect(selectors.getUnarchivedProjects(mockState)).toHaveLength(1)
+test('selectUnarchivedProjects - returns empty array', () => {
+    expect(selectors.selectUnarchivedProjects(mockState)).toHaveLength(1)
+})
+
+test('selectNoAppIdProjects - returns array of one', () => {
+    expect(selectors.selectNoAppIdProjects(mockState)).toHaveLength(1)
 })

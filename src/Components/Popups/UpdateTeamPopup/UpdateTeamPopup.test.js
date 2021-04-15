@@ -8,7 +8,7 @@ describe('<UpdateTeamPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitTeamMock = useModuleMock('Redux/Teams/actions', 'requestUpdateTeam')
-    const getTeamByIdMock = useModuleMock('Redux/Teams/selectors', 'getTeamById')
+    const selectTeamByIdMock = useModuleMock('Redux/Teams/selectors', 'selectTeamById')
 
     const returnedTeam = {
         id: 4,
@@ -21,7 +21,7 @@ describe('<UpdateTeamPopup />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        getTeamByIdMock.mockReturnValue(returnedTeam)
+        selectTeamByIdMock.mockReturnValue(returnedTeam)
     })
 
     test('should render properly', () => {

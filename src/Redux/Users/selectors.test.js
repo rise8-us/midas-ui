@@ -18,28 +18,28 @@ const expectedUser = {
 }
 
 const convertRolesLongToRolesMapMock = useModuleMock('Utilities/bitwise', 'convertRolesLongToRolesMap')
-const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
+const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
 
 test('should return object', () => {
     convertRolesLongToRolesMapMock.mockReturnValue({})
-    getRolesAsArrayMock.mockResolvedValue({})
+    selectRolesAsArrayMock.mockResolvedValue({})
 
-    const user = selectors.getUserById(mockState, 42)
+    const user = selectors.selectUserById(mockState, 42)
     expect(user).toBeInstanceOf(Object)
 })
 
 test('should return empty object', () => {
     convertRolesLongToRolesMapMock.mockReturnValue({})
-    getRolesAsArrayMock.mockResolvedValue({})
+    selectRolesAsArrayMock.mockResolvedValue({})
 
-    const user = selectors.getUserById(mockState, 43)
+    const user = selectors.selectUserById(mockState, 43)
     expect(user).toBeInstanceOf(Object)
 })
 
 test('should have data', () => {
     convertRolesLongToRolesMapMock.mockReturnValue({ ROLE1: true, ROLE2: true })
-    getRolesAsArrayMock.mockResolvedValue({})
+    selectRolesAsArrayMock.mockResolvedValue({})
 
-    const user = selectors.getUserById(mockState, 42)
+    const user = selectors.selectUserById(mockState, 42)
     expect(user).toEqual(expectedUser)
 })

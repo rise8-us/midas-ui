@@ -1,6 +1,6 @@
 import { convertRolesLongToRolesMap } from '../../Utilities/bitwise'
 
-export const getUserById = (state, id) => {
+export const selectUserById = (state, id) => {
     const user = state.users[id]
     if (!user) return {}
 

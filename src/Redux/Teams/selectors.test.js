@@ -10,11 +10,11 @@ const mockState = {
     }
 }
 
-test('getTeamById - returns team object', () => {
-    const team = selectors.getTeamById(mockState, 4)
+test('selectTeamById - returns team object', () => {
+    const team = selectors.selectTeamById(mockState, 4)
     expect(team).toBe(mockState.teams[4])
 })
 
-test('getTeamById - returns empty object', () => {
-    expect(selectors.getTeamById(mockState, 2)).toBeInstanceOf(Object)
+test('selectTeamById - returns empty object', () => {
+    expect(selectors.selectTeamById(mockState, 2)).toBeInstanceOf(Object)
 })

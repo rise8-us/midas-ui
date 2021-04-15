@@ -6,11 +6,11 @@ import { UserTab } from './index'
 
 describe('<UserTab />', () => {
 
-    const getUserByIdMock = useModuleMock('Redux/Users/selectors', 'getUserById')
+    const selectUserByIdMock = useModuleMock('Redux/Users/selectors', 'selectUserById')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        getUserByIdMock.mockReturnValue({})
+        selectUserByIdMock.mockReturnValue({})
     })
 
     test('Titles display correctly', () => {
@@ -33,7 +33,7 @@ describe('<UserTab />', () => {
         const element = within(screen.getByTestId('InputBase__input-user-id')).getByRole('textbox')
 
         userEvent.type(element, '1')
-        getUserByIdMock.mockReturnValue({
+        selectUserByIdMock.mockReturnValue({
             id: 1,
             username: 'yoda',
             displayName: '',

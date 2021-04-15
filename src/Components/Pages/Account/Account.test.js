@@ -16,10 +16,10 @@ describe('<Account />', () => {
         }
     }
 
-    const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
+    const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
 
     test('Renders Components', () => {
-        getRolesAsArrayMock.mockReturnValue([
+        selectRolesAsArrayMock.mockReturnValue([
             {
                 name: 'ROLE1',
                 offset: 0

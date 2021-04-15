@@ -30,7 +30,7 @@ export const requestUpdateApplication = createAsyncThunk(
 export const requestArchiveApplication = createAsyncThunk(
     Constants.ARCHIVE_APPLICATION,
     async({ id, isArchived }, { rejectWithValue }) => {
-        const request = { endpoint: `/api/applications/${id}/admin/archive`, method: 'PUT', body: { isArchived } }
+        const request = { endpoint: `/api/applications/${id}/archive`, method: 'PUT', body: { isArchived } }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

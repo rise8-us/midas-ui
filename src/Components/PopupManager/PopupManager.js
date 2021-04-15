@@ -1,13 +1,13 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getOpenPopups } from '../../Redux/Popups/selectors'
+import { selectOpenPopups } from '../../Redux/Popups/selectors'
 
 const importPopup = componentName => lazy(() => import(`../Popups/${componentName}/${componentName}`))
 
 function PopupManager() {
     const [popups, setPopups] = useState([])
     const [currentPopups, setCurrentPopups] = useState([])
-    const allPopups = useSelector(getOpenPopups)
+    const allPopups = useSelector(selectOpenPopups)
 
     useEffect(() => {
         if (allPopups.length !== currentPopups.length) {

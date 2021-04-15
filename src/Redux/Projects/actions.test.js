@@ -104,7 +104,7 @@ describe('Project action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestArchiveProject(requestBody))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/projects/1/admin/archive')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/projects/1/archive')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ isArchived: false })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
         expect(store.getActions()[0].type).toEqual(actions.requestArchiveProject.pending.toString())

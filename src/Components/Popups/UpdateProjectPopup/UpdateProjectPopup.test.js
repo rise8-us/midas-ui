@@ -8,7 +8,7 @@ describe('<UpdateProjectPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitProjectMock = useModuleMock('Redux/Projects/actions', 'requestUpdateProject')
-    const getProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'getProjectById')
+    const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
 
     const returnedTags = [
@@ -29,7 +29,7 @@ describe('<UpdateProjectPopup />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        getProjectByIdMock.mockReturnValue(returnedProject)
+        selectProjectByIdMock.mockReturnValue(returnedProject)
         selectAllTagsMock.mockReturnValue(returnedTags)
     })
 

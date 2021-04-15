@@ -5,7 +5,7 @@ import { Banner } from './Components/Banner'
 import { Account, Admin, Home, PageNotFound, Projects, Tags } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { requestFetchAllApplications } from './Redux/Applications/actions'
-import { getUserLoggedIn } from './Redux/Auth/selectors'
+import { selectUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchInit } from './Redux/Init/actions'
 import { requestFetchAllProjects } from './Redux/Projects/actions'
 import { requestFetchAllTags } from './Redux/Tags/actions'
@@ -14,7 +14,7 @@ import { requestFetchAllTeams } from './Redux/Teams/actions'
 function App() {
     const dispatch = useDispatch()
 
-    const user = useSelector((state) => getUserLoggedIn(state))
+    const user = useSelector((state) => selectUserLoggedIn(state))
 
     useEffect(() => {
         async function initializeApp() {

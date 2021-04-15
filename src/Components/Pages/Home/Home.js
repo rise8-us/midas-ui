@@ -2,11 +2,10 @@ import { Box, Button, makeStyles, Typography } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import ApplicationConstant from '../../../Redux/Applications/constants'
+import { selectUnarchivedApplicationIds } from '../../../Redux/Applications/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { getUnarchivedApplications } from '../../../Redux/Applications/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
-import TeamConstants from '../../../Redux/Teams/constants'
 import { AppCard } from '../../Cards'
 import { Page } from '../../Page'
 
@@ -23,10 +22,9 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allApplications = useSelector(getUnarchivedApplications)
+    const allApplicationIds = useSelector(selectUnarchivedApplicationIds, (left, right) => left.length === right.length)
 
-    const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
-    const createTeam = () => dispatch(openPopup(TeamConstants.CREATE_TEAM, 'CreateTeamPopup'))
+    const createApp = () => dispatch(openPopup(ApplicationConstant.CREATE_APPLICATION, 'CreateApplicationPopup'))
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
 
     return (
@@ -42,17 +40,9 @@ function Home() {
                             variant = 'text'
                             startIcon = {<Add/>}
                             className = {classes.button}
-                            onClick = {createProject}
+                            onClick = {createApp}
                         >
-                            Add New Project
-                        </Button>
-                        <Button
-                            variant = 'text'
-                            startIcon = {<Add/>}
-                            className = {classes.button}
-                            onClick = {createTeam}
-                        >
-                            Add New Team
+                            Add New App
                         </Button>
                         <Button
                             variant = 'text'
@@ -64,9 +54,9 @@ function Home() {
                         </Button>
                     </div>
                 </div>
-                <Box display = 'flex' flexWrap = 'wrap' justifyContent = 'center'>
-                    {allApplications.map((app, index) => (
-                        <AppCard key = {index} id = {app.id}/>
+                <Box display = 'flex' flexWrap = 'wrap' justifyContent = 'center' padding = '17px'>
+                    {allApplicationIds.map((id) => (
+                        <AppCard key = {id} id = {id}/>
                     ))}
                 </Box>
             </Box>

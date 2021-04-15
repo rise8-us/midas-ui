@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import useWindowSize from '../../../Hooks/useWindowSize'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import { getUnarchivedProjects } from '../../../Redux/Projects/selectors'
+import { selectUnarchivedProjects } from '../../../Redux/Projects/selectors'
 import { ProjectCard } from '../../Cards'
 import { Page } from '../../Page'
 
@@ -28,7 +28,7 @@ function Projects() {
 
     const [cardsOnRow, setCardsOnRow] = useState(1)
 
-    const allProjects = useSelector(getUnarchivedProjects)
+    const allProjects = useSelector(selectUnarchivedProjects)
 
     const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
 

@@ -16,12 +16,12 @@ describe('<Tags />', () => {
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const deleteTagMock = useModuleMock('Redux/Tags/actions', 'requestDeletTag')
-    const getUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'getUserLoggedIn')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectAllTagsMock.mockReturnValue([allTags])
-        getUserLoggedInMock.mockReturnValue({ isAdmin: true })
+        selectUserLoggedInMock.mockReturnValue({ isAdmin: true })
     })
 
     test('Table display correctly', () => {

@@ -1,6 +1,6 @@
 import { selectTagsByIds } from '../Tags/selectors'
 
-export const getProjectById = (state, id) => {
+export const selectProjectById = (state, id) => {
     const project = state.projects[id]
     if (!project) return {}
 
@@ -10,7 +10,7 @@ export const getProjectById = (state, id) => {
     return updatedProject
 }
 
-export const getProjects = (state) => {
+export const selectProjects = (state) => {
     const allProjects = state.projects
     if (!allProjects) return []
 
@@ -19,6 +19,10 @@ export const getProjects = (state) => {
     })
 }
 
-export const getUnarchivedProjects = (state) => {
-    return getProjects(state).filter(p => !p.isArchived)
+export const selectUnarchivedProjects = (state) => {
+    return selectProjects(state).filter(p => !p.isArchived)
+}
+
+export const selectNoAppIdProjects = (state) => {
+    return selectProjects(state).filter(p => p.applicationId === null)
 }

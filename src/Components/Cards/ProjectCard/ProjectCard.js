@@ -6,15 +6,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import { getProjectById } from '../../../Redux/Projects/selectors'
+import { selectProjectById } from '../../../Redux/Projects/selectors'
 import { PathToProdStepper } from '../../PathToProdStepper'
-import Tag from '../../Tag/Tag'
+import { Tag } from '../../Tag'
 
 function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
 
-    const project = useSelector(state => getProjectById(state, id))
+    const project = useSelector(state => selectProjectById(state, id))
 
     const calcStep = () => Math.log2(project.projectJourneyMap + 1)
 
@@ -23,13 +23,13 @@ function ProjectCard({ id }) {
         const journey = Math.pow(2, step) - 1
 
         dispatch(requestUpdateJourneyMapById({
-            id: project.id,
+            id,
             projectJourneyMap: journey
         }))
     }
 
-    const editProjectPopup = () => {
-        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id: project.id }))
+    const updateProjectPopup = () => {
+        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id }))
     }
 
     return (
@@ -39,7 +39,7 @@ function ProjectCard({ id }) {
                 titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
                 action = {
                     <IconButton
-                        onClick = {editProjectPopup}
+                        onClick = {updateProjectPopup}
                         color = 'secondary'
                         data-testid = 'ProjectCard__button-edit'
                     >
@@ -49,29 +49,33 @@ function ProjectCard({ id }) {
             />
             <Box display = 'flex'>
                 <Tooltip title = 'Roll back status'>
-                    <IconButton
-                        onClick = {() => handleProgress(-1)}
-                        color = 'secondary'
-                        data-testid = 'ProjectCard__button-back'
-                        disabled = {project.projectJourneyMap === 0}
-                        style = {{ height: '48px', margin: 'auto' }}
-                        disableRipple
-                    >
-                        <ChevronLeft />
-                    </IconButton>
+                    <>
+                        <IconButton
+                            onClick = {() => handleProgress(-1)}
+                            color = 'secondary'
+                            data-testid = 'ProjectCard__button-back'
+                            disabled = {project.projectJourneyMap === 0}
+                            style = {{ height: '48px', margin: 'auto' }}
+                            disableRipple
+                        >
+                            <ChevronLeft />
+                        </IconButton>
+                    </>
                 </Tooltip>
                 <PathToProdStepper step = {calcStep()} />
                 <Tooltip title = 'Complete current step'>
-                    <IconButton
-                        onClick = {() => handleProgress(1)}
-                        color = 'secondary'
-                        data-testid = 'ProjectCard__button-forward'
-                        disabled = {project.projectJourneyMap === 15}
-                        style = {{ height: '48px', margin: 'auto' }}
-                        disableRipple
-                    >
-                        <ChevronRight />
-                    </IconButton>
+                    <>
+                        <IconButton
+                            onClick = {() => handleProgress(1)}
+                            color = 'secondary'
+                            data-testid = 'ProjectCard__button-forward'
+                            disabled = {project.projectJourneyMap === 15}
+                            style = {{ height: '48px', margin: 'auto' }}
+                            disableRipple
+                        >
+                            <ChevronRight />
+                        </IconButton>
+                    </>
                 </Tooltip>
             </Box>
             <CardContent>

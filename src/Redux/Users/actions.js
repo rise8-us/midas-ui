@@ -23,7 +23,7 @@ export const requestUpdateUser = createAsyncThunk(
 export const requestUpdateUserRoles = createAsyncThunk(
     Constants.UPDATE_USER_ROLES,
     async({ id, roles }, { rejectWithValue }) => {
-        const request = { endpoint: `/api/users/${id}/admin/roles`, method: 'PUT', body: { roles: roles } }
+        const request = { endpoint: `/api/users/${id}/roles`, method: 'PUT', body: { roles: roles } }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

@@ -6,7 +6,7 @@ import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestUpdateTeam } from '../../../Redux/Teams/actions'
 import TeamConstants from '../../../Redux/Teams/constants'
-import { getTeamById } from '../../../Redux/Teams/selectors'
+import { selectTeamById } from '../../../Redux/Teams/selectors'
 import Popup from '../../Popup/Popup'
 
 const useStyles = makeStyles(() => ({
@@ -21,7 +21,7 @@ function UpdateTeamPopup({ id }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const updateTeam = useSelector(state => getTeamById(state, id))
+    const updateTeam = useSelector(state => selectTeamById(state, id))
     const errors = useSelector(state => selectRequestErrors(state, TeamConstants.UPDATE_TEAM))
 
     const [name, setName] = useState(updateTeam.name)

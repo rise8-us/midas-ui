@@ -1,4 +1,5 @@
 import {
+    Box,
     makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableHead, TableRow, useTheme
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
@@ -62,13 +63,20 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) 
                                         key = {`${index}-${idx}`}
                                         align = {getAlign(columns.length, idx)}
                                         className = {column.length === 0 ? classes.actions  : classes.regular }
-                                        style = {{
-                                            color: row.properties.strikeThrough ?
-                                                theme.palette.text.disabled : theme.palette.text.primary,
-                                            textDecorationLine: row.properties.strikeThrough ? 'line-through' : 'none'
-                                        }}
                                     >
-                                        {row.data[idx]}
+                                        <Box
+                                            display = 'flex'
+                                            flexDirection = {
+                                                columns.length - 1 === idx && column.length === 0 ?
+                                                    'row-reverse' : 'row'
+                                            }
+                                            style = {{
+                                                color: row.properties.strikeThrough ?
+                                                    theme.palette.text.disabled : theme.palette.text.primary,
+                                                textDecorationLine: row.properties.strikeThrough ?
+                                                    'line-through' : 'none',
+                                            }}
+                                        >{row.data[idx]}</Box>
                                     </TableCell>
                                 ))}
                             </TableRow>

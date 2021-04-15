@@ -26,10 +26,10 @@ const roleMapInput = {
     ROLE4: true
 }
 
-const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
+const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
 
 test('should return object', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesMock)
+    selectRolesAsArrayMock.mockReturnValue(allRolesMock)
 
     const output = bitwise.convertRolesLongToRolesMap(roleLongInput)
 
@@ -37,7 +37,7 @@ test('should return object', () => {
 })
 
 test('should return empty object', () => {
-    getRolesAsArrayMock.mockReturnValue([])
+    selectRolesAsArrayMock.mockReturnValue([])
 
     const output = bitwise.convertRolesLongToRolesMap(roleLongInput, { })
 
@@ -45,7 +45,7 @@ test('should return empty object', () => {
 })
 
 test('should return data', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesMock)
+    selectRolesAsArrayMock.mockReturnValue(allRolesMock)
 
     const output = bitwise.convertRolesLongToRolesMap(roleLongInput)
 
@@ -53,7 +53,7 @@ test('should return data', () => {
 })
 
 test('no App roles should return 0', () => {
-    getRolesAsArrayMock.mockReturnValue([])
+    selectRolesAsArrayMock.mockReturnValue([])
 
     const output = bitwise.convertRolesMapToLong(roleMapInput)
 
@@ -61,7 +61,7 @@ test('no App roles should return 0', () => {
 })
 
 test('no assignedRoles should return 0', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesMock)
+    selectRolesAsArrayMock.mockReturnValue(allRolesMock)
 
     const output = bitwise.convertRolesMapToLong({ })
 
@@ -69,7 +69,7 @@ test('no assignedRoles should return 0', () => {
 })
 
 test('should return 10', () => {
-    getRolesAsArrayMock.mockReturnValue(allRolesMock)
+    selectRolesAsArrayMock.mockReturnValue(allRolesMock)
 
     const output = bitwise.convertRolesMapToLong(roleMapInput)
 

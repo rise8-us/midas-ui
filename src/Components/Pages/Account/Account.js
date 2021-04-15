@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getUserLoggedIn } from '../../../Redux/Auth/selectors'
+import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
 import { Header } from '../../Header'
 import { Page } from '../../Page'
 import { UserRoles } from '../../UserRoles'
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 
 function Account() {
     const classes = useStyles()
-    const user = useSelector((state) => getUserLoggedIn(state))
+    const user = useSelector((state) => selectUserLoggedIn(state))
 
     return (
         <Page>
