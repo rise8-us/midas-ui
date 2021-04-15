@@ -7,7 +7,7 @@
     "start:local": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
-    "test:debug": "DEBUG_PRINT_LIMIT=20000 react-scripts test --coverage",
+    "test:debug": "DEBUG_PRINT_LIMIT=40000 react-scripts test --coverage",
     "test:all": "npm test -- --coverage --watchAll=false",
     "test:summary": "react-scripts test --coverage --coverageReporters=\"text-summary\"",
     "test:lite": "react-scripts test --bail",

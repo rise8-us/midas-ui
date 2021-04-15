@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, FormControlLabel, makeStyles, Typography } from 
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRolesAsArray } from '../../Redux/AppSettings/selectors'
+import { selectRolesAsArray } from '../../Redux/AppSettings/selectors'
 import { requestUpdateUserRoles } from '../../Redux/Users/actions'
 import { convertRolesMapToLong } from '../../Utilities/bitwise'
 
@@ -27,7 +27,7 @@ function UserRoles({ editable, user }) {
 
     const [assignedRoles, setAssignedRoles] = useState({ ...user.roles })
 
-    const allRoles = useSelector((state) => getRolesAsArray(state))
+    const allRoles = useSelector((state) => selectRolesAsArray(state))
 
     const onChangeRole = (e) => {
         setAssignedRoles({

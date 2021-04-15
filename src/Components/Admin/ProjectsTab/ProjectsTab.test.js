@@ -23,7 +23,7 @@ describe('<ProjectsTab />', () => {
         ]
     }
 
-    const selectAllProjectsMock = useModuleMock('Redux/Projects/selectors', 'getProjects')
+    const selectAllProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectProjects')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const archiveProjectMock = useModuleMock('Redux/Tags/actions', 'requestArchiveProject')
 

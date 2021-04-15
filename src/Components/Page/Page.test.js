@@ -12,7 +12,7 @@ jest.mock('react-router-dom', () => ({
 }))
 
 describe('<Page />', () => {
-    const getUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'getUserLoggedIn')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
 
     const mockState = {
         app: {
@@ -21,7 +21,7 @@ describe('<Page />', () => {
     }
 
     beforeEach(() => {
-        getUserLoggedInMock.mockReturnValue({})
+        selectUserLoggedInMock.mockReturnValue({})
     })
 
     afterEach(() => {

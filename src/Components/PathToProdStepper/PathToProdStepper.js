@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
     },
     completed: {
         backgroundColor: theme.palette.success.main,
+    },
+    default: {
+        color: theme.palette.text.secondary
     }
 }))
 
@@ -38,7 +41,8 @@ function StepIcons({ active, completed, icon }) {
         <div
             className = {clsx(classes.root, {
                 [classes.active]: active,
-                [classes.completed]: completed
+                [classes.completed]: completed,
+                [classes.default]: !active && !completed
             })}
         >
             {icons[icon]}
@@ -53,7 +57,7 @@ StepIcons.propTypes = {
 }
 
 
-function PathToProdStepper({ step }) {
+function PathToProdStepper({ step, padding }) {
 
     const steps = ['COT', 'Pipelines', 'CTF', 'Prod']
 
@@ -64,6 +68,7 @@ function PathToProdStepper({ step }) {
                 icons = {StepIcons}
                 currentStep = {step}
                 tooltip
+                padding = {padding}
             />
         </div>
     )
@@ -71,6 +76,11 @@ function PathToProdStepper({ step }) {
 
 PathToProdStepper.propTypes = {
     step: PropTypes.number.isRequired,
+    padding: PropTypes.string
+}
+
+PathToProdStepper.defaultProps = {
+    padding: '20px'
 }
 
 export default PathToProdStepper

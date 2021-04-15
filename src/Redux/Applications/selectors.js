@@ -1,16 +1,19 @@
+import { selectProjectById } from '../Projects/selectors'
 import { selectTagsByIds } from '../Tags/selectors'
 
-export const getApplicationById = (state, id) => {
+export const selectApplicationById = (state, id) => {
     const application = state.applications[id]
     if (!application) return {}
 
     const tags = selectTagsByIds(state, application.tagIds)
-    const updatedApplication = { ...application, tags }
+    const projects = application.projectIds.map(id => selectProjectById(state, id))
+
+    const updatedApplication = { ...application, tags, projects }
 
     return updatedApplication
 }
 
-export const getApplications = (state) => {
+export const selectApplications = (state) => {
     const allApplications = state.applications
     if (!allApplications) return []
 
@@ -19,6 +22,10 @@ export const getApplications = (state) => {
     })
 }
 
-export const getUnarchivedApplications = (state) => {
-    return getApplications(state).filter(p => !p.isArchived)
+export const selectUnarchivedApplicationIds = (state) => {
+    return Object.values(state.applications).filter(a => !a.isArchived).map(a => a.id)
+}
+
+export const selectUnarchivedApplications = (state) => {
+    return selectApplications(state).filter(a => !a.isArchived)
 }

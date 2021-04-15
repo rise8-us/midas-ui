@@ -20,13 +20,13 @@ describe('<ProjectCard />', () => {
         ]
     }
 
-    const getProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'getProjectById')
+    const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const journeyMapUpdateMock = useModuleMock('Redux/Projects/actions', 'requestUpdateJourneyMapById')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        getProjectByIdMock.mockReturnValue(project)
+        selectProjectByIdMock.mockReturnValue(project)
     })
 
     test('should display data', () => {

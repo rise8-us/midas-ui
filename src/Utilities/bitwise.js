@@ -1,8 +1,8 @@
-import { getRolesAsArray } from '../Redux/AppSettings/selectors'
+import { selectRolesAsArray } from '../Redux/AppSettings/selectors'
 import store from '../Redux/store'
 
 export const convertRolesLongToRolesMap = (userRolesLong) => {
-    const allRoles = getRolesAsArray(store.getState())
+    const allRoles = selectRolesAsArray(store.getState())
 
     if (Object.keys(allRoles).length === 0) return { }
     const longAsBit = userRolesLong.toString(2)
@@ -15,7 +15,7 @@ export const convertRolesLongToRolesMap = (userRolesLong) => {
 }
 
 export const convertRolesMapToLong = (userRolesMap) => {
-    const allRoles = getRolesAsArray(store.getState())
+    const allRoles = selectRolesAsArray(store.getState())
 
     if (Object.keys(allRoles).length === 0 || Object.keys(userRolesMap).length === 0) return 0
 

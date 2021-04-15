@@ -3,7 +3,7 @@ import { Search } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchOneUser } from '../../../Redux/Users/actions'
-import { getUserById } from '../../../Redux/Users/selectors'
+import { selectUserById } from '../../../Redux/Users/selectors'
 import { Header } from '../../Header'
 import { UserRoles } from '../../UserRoles'
 import { UserSettings } from '../../UserSettings'
@@ -38,7 +38,7 @@ function UserTab() {
     const [show, setShow] = useState(false)
     const [error, setError] = useState(false)
 
-    const user = useSelector((state) => getUserById(state, userId))
+    const user = useSelector((state) => selectUserById(state, userId))
 
     useEffect(() => {
         if (Object.keys(user).length === 0 && userId.length > 0) dispatch(requestFetchOneUser(userId))

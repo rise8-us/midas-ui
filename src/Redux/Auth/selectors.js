@@ -1,6 +1,6 @@
 import { convertRolesLongToRolesMap } from '../../Utilities/bitwise'
 
-export const getUserLoggedIn = (state) => {
+export const selectUserLoggedIn = (state) => {
     const auth = state.auth
     const assignedRoles = convertRolesLongToRolesMap(auth.user.roles)
     const authenticatedUser = {

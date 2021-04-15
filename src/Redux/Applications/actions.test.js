@@ -83,7 +83,7 @@ describe('Application action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestArchiveApplication(requestBody))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/applications/1/admin/archive')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/applications/1/archive')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ isArchived: false })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
         expect(store.getActions()[0].type).toEqual(actions.requestArchiveApplication.pending.toString())

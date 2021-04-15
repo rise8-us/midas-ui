@@ -7,7 +7,7 @@ import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestUpdateProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import { getProjectById } from '../../../Redux/Projects/selectors'
+import { selectProjectById } from '../../../Redux/Projects/selectors'
 import { selectAllTags } from '../../../Redux/Tags/selectors'
 import { Popup } from '../../Popup'
 import { Tag } from '../../Tag'
@@ -24,7 +24,7 @@ function UpdateProjectPopup({ id }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const project = useSelector(state => getProjectById(state, id))
+    const project = useSelector(state => selectProjectById(state, id))
     const errors = useSelector(state => selectRequestErrors(state, ProjectConstants.UPDATE_PROJECT))
 
     const allTags = useSelector(selectAllTags)

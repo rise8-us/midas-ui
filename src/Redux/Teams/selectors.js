@@ -1,3 +1,3 @@
-export const getTeamById = (state, key) => {
+export const selectTeamById = (state, key) => {
     return state.teams[key] ?? {}
 }

@@ -4,7 +4,7 @@ import { UserRoles } from './index'
 
 describe('<UserRoles />', () => {
 
-    const getRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'getRolesAsArray')
+    const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
     const requestUpdateUserRolesMock = useModuleMock('Redux/Users/actions', 'requestUpdateUserRoles')
 
     const userWithRoles = {
@@ -20,7 +20,7 @@ describe('<UserRoles />', () => {
     ]
 
     beforeEach(() => {
-        getRolesAsArrayMock.mockReturnValue(allRolesAsArray)
+        selectRolesAsArrayMock.mockReturnValue(allRolesAsArray)
         useDispatchMock().mockReturnValue({})
     })
 

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import appLogo from '../../Assets/appLogo.png'
 import projectIcon from '../../Assets/project.png'
-import { getUserLoggedIn } from '../../Redux/Auth/selectors'
+import { selectUserLoggedIn } from '../../Redux/Auth/selectors'
 import { AppBar } from '../AppBar'
 import { SideBar } from '../SideBar'
 
@@ -33,7 +33,7 @@ function Page({ children }) {
     const theme = useTheme()
     const history = useHistory()
 
-    const user = useSelector(state => getUserLoggedIn(state))
+    const user = useSelector(state => selectUserLoggedIn(state))
     const open = useSelector(state => state.app.navBarOpen)
 
     const pages = [

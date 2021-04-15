@@ -2,6 +2,7 @@ import { useModuleMock } from '../../Utilities/test-utils'
 import * as selectors from './selectors'
 
 const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByIds')
+const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
 
 const mockState = {
     applications: {
@@ -9,58 +10,75 @@ const mockState = {
             id: 4,
             name: 'Midas Application',
             description: 'New Application',
-            applicationsIds: [2,3],
+            projectIds: [2],
             isArchived: false,
             portfolioId: 2,
-            tagIds: [4]
+            tagIds: [7]
         },
         5: {
             id: 5,
             name: 'Something Application',
             description: 'Something Application',
-            applicationsIds: [1,3],
+            projectIds: [3],
             isArchived: true,
             portfolioId: 4,
             tagIds: [2]
         },
     },
     tags: {
-        4: {
-            id: 4,
+        7: {
+            id: 7,
             label: 'Some tags',
             description: null,
             color: ''
         }
+    },
+    projects: {
+        2: {
+            name: 'p2'
+        },
+        3: {
+            name: 'p3'
+        }
     }
 }
-    
 
-test('getApplicationById - returns application object', () => {
+afterEach(() => {
+    selectTagsByIdsMock.mockClear()
+    selectProjectByIdMock.mockClear()
+})
+
+test('selectApplicationById - returns application object', () => {
+    selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
+    selectProjectByIdMock.mockReturnValue(mockState.projects[2])
+
     const returnedApplication = {
         ...mockState.applications[4],
-    
+        tags: [{ ...mockState.tags[7] }],
+        projects: [{ ...mockState.projects[2] }]
+
     }
-    const application = selectors.getApplicationById(mockState, 4)
+    const application = selectors.selectApplicationById(mockState, 4)
     expect(application).toEqual(returnedApplication)
 })
 
-test('getApplicationById - returns empty object', () => {
-    expect(selectors.getApplicationById(mockState, 2)).toBeInstanceOf(Object)
+test('selectApplicationById - returns empty object', () => {
+    expect(selectors.selectApplicationById(mockState, 2)).toBeInstanceOf(Object)
 })
 
-test('getApplications - returns application array', () => {
-    selectTagsByIdsMock.mockReturnValue([mockState.tags[4]])
-    
+test('selectApplications - returns application array', () => {
+    selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
+
     const applicationOne = {
-            id: 4,
-            name: 'Midas Application',
-            description: 'New Application',
-            applicationsIds: [2,3],
-            isArchived: false,
-            portfolioId: 2,
-            tagIds: [4],
-            tags: [
-            {   id: 4,
+        id: 4,
+        name: 'Midas Application',
+        description: 'New Application',
+        projectIds: [2],
+        isArchived: false,
+        portfolioId: 2,
+        tagIds: [7],
+        tags: [
+            {   id: 7,
                 label: 'Some tags',
                 description: null,
                 color: ''
@@ -68,14 +86,19 @@ test('getApplications - returns application array', () => {
         ]
 
     }
-    const applications = selectors.getApplications(mockState)
+    const applications = selectors.selectApplications(mockState)
     expect(applications[0]).toEqual(applicationOne)
 })
 
-test('getApplications - returns empty array', () => {
-    expect(selectors.getApplications({})).toBeInstanceOf(Array)
+test('selectApplications - returns empty array', () => {
+    expect(selectors.selectApplications({})).toBeInstanceOf(Array)
 })
 
-test('getUnarchivedApplications - returns array with only unarchived applications', () => {
-    expect(selectors.getUnarchivedApplications(mockState)).toHaveLength(1)
+test('selectUnarchivedApplications - returns array with only unarchived applications', () => {
+    expect(selectors.selectUnarchivedApplications(mockState)).toHaveLength(1)
+})
+
+test('selectUnarchivedApplicationIds - returns mockState.app[4]', () => {
+    expect(selectors.selectUnarchivedApplicationIds(mockState)).toHaveLength(1)
+    expect(selectors.selectUnarchivedApplicationIds(mockState)).toEqual([4])
 })

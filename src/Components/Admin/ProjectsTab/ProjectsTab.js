@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestArchiveProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import { getProjects } from '../../../Redux/Projects/selectors'
+import { selectProjects } from '../../../Redux/Projects/selectors'
 import { Table } from '../../Table'
 import { Tag } from '../../Tag'
 
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 function ProjectsTab() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const allProjects = useSelector(getProjects)
+    const allProjects = useSelector(selectProjects)
 
     const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
     const updateProject = (id) => dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id }))
@@ -53,6 +53,13 @@ function ProjectsTab() {
     const buildActions = (id, isArchived) => {
         return (
             <>
+                <IconButton
+                    title = {isArchived ? 'unarchive' : 'archive' }
+                    color = 'secondary'
+                    onClick = {() => archiveProject(id, isArchived)}
+                >
+                    {isArchived ? <Unarchive /> : <Archive />}
+                </IconButton>
                 {!isArchived &&
                     <IconButton
                         title = 'edit'
@@ -62,13 +69,6 @@ function ProjectsTab() {
                         <Edit />
                     </IconButton>
                 }
-                <IconButton
-                    title = {isArchived ? 'unarchive' : 'archive' }
-                    color = 'secondary'
-                    onClick = {() => archiveProject(id, isArchived)}
-                >
-                    {isArchived ? <Unarchive /> : <Archive />}
-                </IconButton>
             </>
         )
     }

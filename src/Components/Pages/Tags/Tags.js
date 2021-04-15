@@ -2,7 +2,7 @@ import { Box, Button, IconButton, makeStyles, Typography } from '@material-ui/co
 import { Add, Delete, Edit } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserLoggedIn } from '../../../Redux/Auth/selectors'
+import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestDeleteTag } from '../../../Redux/Tags/actions'
 import TagConstants from '../../../Redux/Tags/constants'
@@ -25,7 +25,7 @@ function Tags() {
     const dispatch = useDispatch()
     const allTags = useSelector(selectAllTags)
 
-    const user = useSelector(getUserLoggedIn)
+    const user = useSelector(selectUserLoggedIn)
 
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
 

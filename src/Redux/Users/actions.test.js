@@ -48,7 +48,7 @@ describe('User action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestUpdateUserRoles({ id: 1, roles: 1 }))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/users/1/admin/roles')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/users/1/roles')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ roles: 1 })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
         expect(store.getActions()[0].type).toEqual(actions.requestUpdateUserRoles.pending.toString())

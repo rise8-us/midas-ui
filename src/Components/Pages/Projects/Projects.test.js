@@ -6,8 +6,8 @@ import { Projects } from './index'
 describe('<Projects>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
-    const getUnarchivedProjectsMock = useModuleMock('Redux/Projects/selectors', 'getUnarchivedProjects')
-    const getProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'getProjectById')
+    const selectUnarchivedProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectUnarchivedProjects')
+    const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
 
     const projects = {
         id: 0,
@@ -34,8 +34,8 @@ describe('<Projects>', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        getUnarchivedProjectsMock.mockReturnValue([projects])
-        getProjectByIdMock.mockReturnValue(project)
+        selectUnarchivedProjectsMock.mockReturnValue([projects])
+        selectProjectByIdMock.mockReturnValue(project)
     })
 
     test('Has correct text', () => {
