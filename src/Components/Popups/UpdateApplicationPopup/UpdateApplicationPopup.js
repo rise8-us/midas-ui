@@ -47,9 +47,7 @@ function UpdateApplicationPopup({ id }) {
 
             dispatch(requestCreateProject({
                 name: newName,
-                gitlabProjectId: 0,
-                description: '',
-                tagIds: [],
+                applicationId: application.id
             })).then(unwrapResult)
                 .then(results => {
                     newValues.push(results)
@@ -87,7 +85,6 @@ function UpdateApplicationPopup({ id }) {
             description,
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
-            productManagerId: 1
         }))
     }
 
