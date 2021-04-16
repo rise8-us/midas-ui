@@ -6,7 +6,7 @@ export const selectApplicationById = (state, id) => {
     if (!application) return {}
 
     const tags = selectTagsByIds(state, application.tagIds)
-    const projects = application.projectIds.map(id => selectProjectById(state, id))
+    const projects = application.projectIds.map(pId => selectProjectById(state, pId))
 
     const updatedApplication = { ...application, tags, projects }
 

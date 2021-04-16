@@ -10,7 +10,8 @@ const constStyle = {
     overflowX: 'hidden',
     margin: '68px 0 20px 0',
     position: 'fixed',
-    height: 'calc(100% - 88px)'
+    height: 'calc(100% - 88px)',
+    zIndex: 100
 }
 
 const useStyles = makeStyles(theme => ({
