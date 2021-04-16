@@ -6,7 +6,7 @@ import useWindowSize from '../../Hooks/useWindowSize'
 
 const useStyles = makeStyles(() => ({
     banner: {
-        zIndex: 1,
+        zIndex: 100,
         display: 'flex',
         justifyContent: 'center',
         width: '100%',

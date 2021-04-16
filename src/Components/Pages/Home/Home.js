@@ -30,7 +30,7 @@ function Home() {
     return (
         <Page>
             <Box display = 'flex' flexDirection = 'column'>
-                <div style = {{ display: 'flex' }}>
+                <Box display = 'flex'>
                     <Typography variant = 'h6' color = 'textSecondary' style = {{ padding: '20px' }}>
                         Measuring Inception to Production
                     </Typography>
@@ -53,8 +53,16 @@ function Home() {
                             Add New Tag
                         </Button>
                     </div>
-                </div>
-                <Box display = 'flex' flexWrap = 'wrap' justifyContent = 'center' padding = '17px'>
+                </Box>
+                <Box
+                    display = 'grid'
+                    justifyContent = 'center'
+                    gridTemplateColumns = 'repeat(auto-fit, 450px)'
+                    gridAutoRows = '2px'
+                    gridGap = '0 10px'
+                    gridAutoFlow = 'row'
+                    style = {{ marginBottom: '40px', padding: '0 30px' }}
+                >
                     {allApplicationIds.map((id) => (
                         <AppCard key = {id} id = {id}/>
                     ))}
