@@ -62,7 +62,7 @@ describe('<CreateApplicationPopup />', () => {
 
         expect(submitApplicationMock).toHaveBeenCalledTimes(1)
         expect(submitApplicationMock.mock.calls[0][0]).toEqual(
-            { name, description, tagIds: [2], productManagerId: 1, projectIds: [20] }
+            { name, description, tagIds: [2], projectIds: [20] }
         )
     })
 

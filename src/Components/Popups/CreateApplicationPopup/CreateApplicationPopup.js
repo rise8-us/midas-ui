@@ -42,12 +42,7 @@ function CreateApplicationPopup() {
             const newName = newProject[0].name.split('"')[1]
             let newValues = values.filter(o => o.id !== -1)
 
-            dispatch(requestCreateProject({
-                name: newName,
-                gitlabProjectId: 0,
-                description: '',
-                tagIds: []
-            })).then(unwrapResult)
+            dispatch(requestCreateProject({ name: newName })).then(unwrapResult)
                 .then(results => {
                     newValues.push(results)
                     setProjects(newValues)
@@ -82,8 +77,7 @@ function CreateApplicationPopup() {
             name,
             description,
             tagIds: Object.values(tags.map(t => t.id)),
-            projectIds: Object.values(projects.map(p => p.id)),
-            productManagerId: 1
+            projectIds: Object.values(projects.map(p => p.id))
         }))
     }
 

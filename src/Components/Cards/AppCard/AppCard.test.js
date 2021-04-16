@@ -22,6 +22,10 @@ describe('<AppCard />', () => {
         ],
         projects: [{ id: 2, name: 'project 1' }]
     }
+    const application2 = {
+        ...application,
+        projects: []
+    }
 
     const selectApplicationByIdMock = useModuleMock('Redux/Applications/selectors', 'selectApplicationById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
@@ -31,11 +35,21 @@ describe('<AppCard />', () => {
         selectApplicationByIdMock.mockReturnValue(application)
     })
 
-    test('should display data', () => {
+    test('should display data with projects', () => {
         render(<AppCard id = {application.id}/>)
 
         expect(screen.getByText('Midas Application')).toBeInTheDocument()
         expect(screen.getByText('Some tags')).toBeInTheDocument()
+        expect(screen.getByText('project 1')).toBeInTheDocument()
+    })
+
+    test('should display data without projects', () => {
+        selectApplicationByIdMock.mockReturnValue(application2)
+        render(<AppCard id = {application.id}/>)
+
+        expect(screen.getByText('Midas Application')).toBeInTheDocument()
+        expect(screen.getByText('Some tags')).toBeInTheDocument()
+        expect(screen.queryByText('project 1')).not.toBeInTheDocument()
     })
 
     test('should fire updateApplicationPopup', () => {
