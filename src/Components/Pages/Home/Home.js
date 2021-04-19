@@ -25,7 +25,7 @@ function Home() {
     const allApplicationIds = useSelector(selectUnarchivedApplicationIds, (left, right) => left.length === right.length)
 
     const createApp = () => dispatch(openPopup(ApplicationConstant.CREATE_APPLICATION, 'CreateApplicationPopup'))
-    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
 
     return (
         <Page>

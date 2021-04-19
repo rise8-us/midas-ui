@@ -1,6 +1,13 @@
 
 export function selectTagById(state, id) {
-    return state.tags[id] ?? {}
+    const tags = state.tags[id]
+    if(!tags) return {
+        label: '',
+        description: '',
+        color: '#'
+    }
+    
+    return tags
 }
 
 export const selectAllTags = state => {
