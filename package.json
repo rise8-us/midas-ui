@@ -60,7 +60,8 @@
   },
   "resolutions": {
     "faye-websocket": "^0.11.3",
-    "immer": "^8.0.1"
+    "immer": "^8.0.1",
+    "ssri": "^8.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.9",
