@@ -4,22 +4,28 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
-import { requestUpdateTag } from '../../../Redux/Tags/actions'
+import { requestUpdateTag, requestCreateTag } from '../../../Redux/Tags/actions'
 import TagConstants from '../../../Redux/Tags/constants'
 import { selectTagById } from '../../../Redux/Tags/selectors'
 import { ColorPicker } from '../../ColorPicker'
 import { Popup } from '../../Popup'
 import { Tag } from '../../Tag'
 
-function UpdateTagPopup({ id }) {
+function CreateOrUpdateTagPopup({ id }) {
     const dispatch = useDispatch()
 
-    const updateTag = useSelector(state => selectTagById(state, id))
-    const errors = useSelector(state => selectRequestErrors(state, TagConstants.CREATE_TAG))
+    const tag = useSelector(state => selectTagById(state, id))
 
-    const [label, setLabel] = useState(updateTag.label)
-    const [description, setDescription] = useState(updateTag.description)
-    const [color, setColor] = useState(updateTag.color)
+    const isCreate = tag.id === undefined
+    const tagConstants = isCreate ? TagConstants.CREATE_TAG : TagConstants.UPDATE_TAG  
+    const tagTitle = isCreate ? 'Create Tag' : 'Update Tag'
+    const tagRequest = (data) => isCreate ? requestCreateTag(data) : requestUpdateTag(data)
+
+    const errors = useSelector(state => selectRequestErrors(state, tagConstants))
+
+    const [label, setLabel] = useState(tag.label)
+    const [description, setDescription] = useState(tag.description)
+    const [color, setColor] = useState(tag.color)
 
     const [labelError, setLabelError] = useState([])
     const [colorError, setColorError] = useState([])
@@ -28,11 +34,11 @@ function UpdateTagPopup({ id }) {
     const onDescriptionChange = (e) => setDescription(e.target.value)
     const onColorChange = (e) => setColor(e)
 
-    const onClose = () => dispatch(closePopup(TagConstants.UPDATE_TAG))
+    const onClose = () => dispatch(closePopup(tagConstants))
 
     const onSubmit = () => {
-        dispatch(requestUpdateTag({
-            ...updateTag,
+        dispatch(tagRequest({
+            ...tag,
             label,
             color,
             description
@@ -48,14 +54,14 @@ function UpdateTagPopup({ id }) {
 
     return (
         <Popup
-            title = 'Update Tag'
+            title = {tagTitle}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Tag Label'
-                    data-testid = 'UpdateTagPopup__input-label'
+                    data-testid = 'CreateOrUpdateTagPopup__input-label'
                     value = {label}
                     onChange = {onLabelChange}
                     error = { labelError.length > 0 }
@@ -65,7 +71,7 @@ function UpdateTagPopup({ id }) {
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'UpdateTagPopup__input-description'
+                    data-testid = 'CreateOrUpdateTagPopup__input-description'
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'
@@ -88,8 +94,12 @@ function UpdateTagPopup({ id }) {
     )
 }
 
-UpdateTagPopup.propTypes = {
-    id: PropTypes.number.isRequired
+CreateOrUpdateTagPopup.propTypes = {
+    id: PropTypes.number
 }
 
-export default UpdateTagPopup
+CreateOrUpdateTagPopup.defaultProps = {
+    id: null
+}
+
+export default CreateOrUpdateTagPopup

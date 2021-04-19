@@ -27,7 +27,7 @@ function Tags() {
 
     const user = useSelector(selectUserLoggedIn)
 
-    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateTagPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateUpdateTagPopup'))
 
     const buildRows = () => {
         return allTags.map(tag => ({
@@ -56,7 +56,7 @@ function Tags() {
                 <IconButton
                     title = 'edit'
                     color = 'secondary'
-                    onClick = {() => dispatch(openPopup(TagConstants.UPDATE_TAG, 'UpdateTagPopup', { id }))}
+                    onClick = {() => dispatch(openPopup(TagConstants.UPDATE_TAG, 'CreateOrUpdateTagPopup', { id }))}
                 >
                     <Edit />
                 </IconButton>
