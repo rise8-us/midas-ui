@@ -1,4 +1,3 @@
-
 export const selectTagById = (state, id) => {
     const tag = state.tags[id]
     if (!tag) return {
@@ -6,7 +5,6 @@ export const selectTagById = (state, id) => {
         description: '',
         color: '#'
     }
-
     return tag
 }
 
