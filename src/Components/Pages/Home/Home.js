@@ -22,7 +22,7 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allProductIds = useSelector(selectUnarchivedProductIds, (left, right) => left.length === right.length)
+    const allProductIds = useSelector(selectUnarchivedProductIds)
 
     const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateProductPopup'))
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))

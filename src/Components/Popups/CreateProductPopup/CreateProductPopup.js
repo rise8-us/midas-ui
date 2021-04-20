@@ -42,7 +42,7 @@ function CreateProductPopup() {
             const newName = newProject[0].name.split('"')[1]
             let newValues = values.filter(o => o.id !== -1)
 
-            dispatch(requestCreateProject({ name: newName })).then(unwrapResult)
+            dispatch(requestCreateProject({ name: newName, tagIds: [] })).then(unwrapResult)
                 .then(results => {
                     newValues.push(results)
                     setProjects(newValues)
