@@ -34,6 +34,7 @@ describe('<CreateOrUpdateTagPopup />', () => {
     })
 
     test('should render properly', () => {
+
         render(<CreateOrUpdateTagPopup />)
 
         expect(screen.getByText('Create Tag')).toBeInTheDocument()

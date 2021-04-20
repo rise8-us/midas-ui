@@ -15,6 +15,6 @@ test('selectTeamById - returns team object', () => {
     expect(team).toBe(mockState.teams[4])
 })
 
-test('selectTeamById - returns empty object', () => {
-    expect(selectors.selectTeamById(mockState, 2)).toBeInstanceOf(Object)
+test('selectTeamById - returns empty property object', () => {
+    expect(selectors.selectTeamById(mockState, 2)).toEqual({ name: '', gitlabGroupId: '', description: '', })
 })

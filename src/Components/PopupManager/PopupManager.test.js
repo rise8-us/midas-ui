@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen, useSelectorMock, waitFor } from '../../Utilities/test-utils'
 import { PopupManager } from './index'
 
-jest.mock('../Popups/CreateTeamPopup/CreateTeamPopup',
+jest.mock('../Popups/CreateOrUpdateTeamPopup/CreateOrUpdateTeamPopup',
     () => function testing() { return (<div>PopupManagerTest</div>) })
 
 describe('PopupManager', () => {
@@ -20,7 +20,7 @@ describe('PopupManager', () => {
     test('rendered component', async() => {
 
         useSelectorMock().mockReturnValue([{
-            componentName: 'CreateTeamPopup',
+            componentName: 'CreateOrUpdateTeamPopup',
             name: 'test/popup',
             open: true,
             props: { userId: 0 }
@@ -33,14 +33,14 @@ describe('PopupManager', () => {
 
     test('checks props', async() => {
         useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateTeamPopup',
+            componentName: 'CreateOrUpdateTeamPopup',
             name: 'test/popup',
             open: true,
             props: { userId: 0 }
         }])
 
         useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateTeamPopup',
+            componentName: 'CreateOrUpdateTeamPopup',
             name: 'test/popupDiff',
             open: true,
             props: { userId: 0 }
@@ -53,14 +53,14 @@ describe('PopupManager', () => {
 
     test('no dups same popup', async() => {
         useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateTeamPopup',
+            componentName: 'CreateOrUpdateTeamPopup',
             name: 'test/popup',
             open: true,
             props: { userId: 0 }
         }])
 
         useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateTeamPopup',
+            componentName: 'CreateOrUpdateTeamPopup',
             name: 'test/popup',
             open: true,
             props: { userId: 0 }

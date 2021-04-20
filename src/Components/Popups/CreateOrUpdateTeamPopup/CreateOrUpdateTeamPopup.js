@@ -1,11 +1,13 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
-import { requestCreateTeam } from '../../../Redux/Teams/actions'
+import { requestUpdateTeam, requestCreateTeam } from '../../../Redux/Teams/actions'
 import TeamConstants from '../../../Redux/Teams/constants'
-import Popup from '../../Popup/Popup'
+import { selectTeamById } from '../../../Redux/Teams/selectors'
+import { Popup } from '../../Popup'
 
 const useStyles = makeStyles(() => ({
     numberField: {
@@ -15,15 +17,23 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-function CreateTeamPopup() {
+function CreateOrUpdateTeamPopup({ id }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const errors = useSelector(state => selectRequestErrors(state, TeamConstants.CREATE_TEAM))
+    const team = useSelector(state => selectTeamById(state, id))
 
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [gitlabGroupId, setGitlabGroupId] = useState('')
+    const isCreate = team.id === undefined
+    const teamConstants = isCreate ? TeamConstants.CREATE_TEAM : TeamConstants.UPDATE_TEAM
+    const teamTitle = isCreate ? 'Create Team' : 'Update Team'
+
+    const teamRequest = (data) => isCreate ? requestCreateTeam(data) : requestUpdateTeam(data)
+    const errors = useSelector(state => selectRequestErrors(state, teamConstants))
+
+
+    const [name, setName] = useState(team.name)
+    const [gitlabGroupId, setGitlabGroupId] = useState(team.gitlabGroupId)
+    const [description, setDescription] = useState(team.description)
 
     const [nameError, setNameError] = useState([])
 
@@ -32,14 +42,16 @@ function CreateTeamPopup() {
     const onDescriptionChange = (e) => setDescription(e.target.value)
 
     const onClose = () => {
-        dispatch(closePopup(TeamConstants.CREATE_TEAM))
+        dispatch(closePopup(teamConstants))
     }
 
     const onSubmit = () => {
-        dispatch(requestCreateTeam({
+        dispatch(teamRequest({
+            ...team,
             name,
             gitlabGroupId,
-            description
+            description,
+            userIds: []
         }))
     }
 
@@ -51,18 +63,18 @@ function CreateTeamPopup() {
 
     return (
         <Popup
-            title = 'Create New Team'
+            title = {teamTitle}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Team Name'
-                    data-testid = 'CreateTeamPopup__input-name'
+                    data-testid = 'CreateOrUpdateTeamPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
-                    error = { nameError.length > 0 }
-                    helperText = { nameError[0] ?? '' }
+                    error = {nameError.length > 0}
+                    helperText = {nameError[0] ?? ''}
                     margin = 'dense'
                     required
                 />
@@ -70,14 +82,14 @@ function CreateTeamPopup() {
                     className = {classes.numberField}
                     label = 'Gitlab Group Id'
                     type = 'number'
-                    data-testid = 'CreateTeamPopup__input-gitlabGroupId'
+                    data-testid = 'CreateOrUpdateTeamPopup__input-gitlabGroupId'
                     value = {gitlabGroupId}
                     onChange = {onGitlabGroupIdChange}
                     margin = 'dense'
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'CreateTeamPopup__input-description'
+                    data-testid = 'CreateOrUpdateTeamPopup__input-description'
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'
@@ -88,4 +100,12 @@ function CreateTeamPopup() {
     )
 }
 
-export default CreateTeamPopup
+CreateOrUpdateTeamPopup.propTypes = {
+    id: PropTypes.number
+}
+
+CreateOrUpdateTeamPopup.defaultProps = {
+    id: null
+}
+
+export default CreateOrUpdateTeamPopup
