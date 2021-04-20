@@ -2,9 +2,9 @@ import { Box, Button, makeStyles, Typography } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ApplicationConstant from '../../../Redux/Applications/constants'
-import { selectUnarchivedApplicationIds } from '../../../Redux/Applications/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
+import ProductConstant from '../../../Redux/Products/constants'
+import { selectUnarchivedProductIds } from '../../../Redux/Products/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
 import { AppCard } from '../../Cards'
 import { Page } from '../../Page'
@@ -22,9 +22,9 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allApplicationIds = useSelector(selectUnarchivedApplicationIds, (left, right) => left.length === right.length)
+    const allProductIds = useSelector(selectUnarchivedProductIds, (left, right) => left.length === right.length)
 
-    const createApp = () => dispatch(openPopup(ApplicationConstant.CREATE_APPLICATION, 'CreateApplicationPopup'))
+    const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateProductPopup'))
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
 
     return (
@@ -40,9 +40,9 @@ function Home() {
                             variant = 'text'
                             startIcon = {<Add/>}
                             className = {classes.button}
-                            onClick = {createApp}
+                            onClick = {createProduct}
                         >
-                            Add New App
+                            Add New Product
                         </Button>
                         <Button
                             variant = 'text'
@@ -63,7 +63,7 @@ function Home() {
                     gridAutoFlow = 'row'
                     style = {{ marginBottom: '40px', padding: '0 30px' }}
                 >
-                    {allApplicationIds.map((id) => (
+                    {allProductIds.map((id) => (
                         <AppCard key = {id} id = {id}/>
                     ))}
                 </Box>

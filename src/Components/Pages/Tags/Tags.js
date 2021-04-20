@@ -27,7 +27,7 @@ function Tags() {
 
     const user = useSelector(selectUserLoggedIn)
 
-    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateUpdateTagPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
 
     const buildRows = () => {
         return allTags.map(tag => ({

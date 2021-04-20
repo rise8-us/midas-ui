@@ -4,11 +4,11 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestUpdateApplication } from '../../../Redux/Applications/actions'
-import ApplicationConstants from '../../../Redux/Applications/constants'
-import { selectApplicationById } from '../../../Redux/Applications/selectors'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
+import { requestUpdateProduct } from '../../../Redux/Products/actions'
+import ProductConstants from '../../../Redux/Products/constants'
+import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
 import { selectNoAppIdProjects } from '../../../Redux/Projects/selectors'
 import { selectAllTags } from '../../../Redux/Tags/selectors'
@@ -17,19 +17,19 @@ import { Tag } from '../../Tag'
 
 const filter = createFilterOptions()
 
-function UpdateApplicationPopup({ id }) {
+function UpdateProductPopup({ id }) {
     const dispatch = useDispatch()
 
     const allTags = useSelector(selectAllTags)
     const availableProjects = useSelector(selectNoAppIdProjects)
-    const application = useSelector(state => selectApplicationById(state, id))
+    const product = useSelector(state => selectProductById(state, id))
 
-    const errors = useSelector(state => selectRequestErrors(state, ApplicationConstants.UPDATE_APPLICATION))
+    const errors = useSelector(state => selectRequestErrors(state, ProductConstants.UPDATE_PRODUCT))
 
-    const [name, setName] = useState(application.name)
-    const [description, setDescription] = useState(application.description)
-    const [tags, setTags] = useState(application.tags)
-    const [projects, setProjects] = useState(application.projects)
+    const [name, setName] = useState(product.name)
+    const [description, setDescription] = useState(product.description)
+    const [tags, setTags] = useState(product.tags)
+    const [projects, setProjects] = useState(product.projects)
 
     const [nameError, setNameError] = useState([])
     const [tagsError, setTagsError] = useState([])
@@ -47,7 +47,7 @@ function UpdateApplicationPopup({ id }) {
 
             dispatch(requestCreateProject({
                 name: newName,
-                applicationId: application.id
+                productId: product.id
             })).then(unwrapResult)
                 .then(results => {
                     newValues.push(results)
@@ -75,12 +75,12 @@ function UpdateApplicationPopup({ id }) {
         else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
     }
 
-    const onClose = () => dispatch(closePopup(ApplicationConstants.UPDATE_APPLICATION))
+    const onClose = () => dispatch(closePopup(ProductConstants.UPDATE_PRODUCT))
     const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
 
     const onSubmit = () => {
-        dispatch(requestUpdateApplication({
-            ...application,
+        dispatch(requestUpdateProduct({
+            ...product,
             name,
             description,
             tagIds: Object.values(tags.map(t => t.id)),
@@ -97,14 +97,14 @@ function UpdateApplicationPopup({ id }) {
 
     return (
         <Popup
-            title = 'Update Application'
+            title = 'Update Product'
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
-                    label = 'Application Name'
-                    data-testid = 'UpdateApplicationPopup__input-name'
+                    label = 'Product Name'
+                    data-testid = 'UpdateProductPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
                     error = { nameError.length > 0 }
@@ -114,7 +114,7 @@ function UpdateApplicationPopup({ id }) {
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'UpdateApplicationPopup__input-description'
+                    data-testid = 'UpdateProductPopup__input-description'
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'
@@ -142,7 +142,7 @@ function UpdateApplicationPopup({ id }) {
                             margin = 'dense'
                             error = { tagsError.length > 0 }
                             helperText = { tagsError[0] ?? ''}
-                            data-testid = 'UpdateApplicationPopup__input-tags'
+                            data-testid = 'UpdateProductPopup__input-tags'
                         />
                     }
                 />
@@ -162,7 +162,7 @@ function UpdateApplicationPopup({ id }) {
                             margin = 'dense'
                             error = {projectsError.length > 0}
                             helperText = {projectsError[0] ?? ''}
-                            data-testid = 'UpdateApplicationPopup__input-projects'
+                            data-testid = 'UpdateProductPopup__input-projects'
                         />
                     }
                     filterOptions = {(options, params) => {
@@ -181,12 +181,12 @@ function UpdateApplicationPopup({ id }) {
     )
 }
 
-UpdateApplicationPopup.propTypes = {
+UpdateProductPopup.propTypes = {
     id: PropTypes.number
 }
 
-UpdateApplicationPopup.defaultProps = {
+UpdateProductPopup.defaultProps = {
     id: 1
 }
 
-export default UpdateApplicationPopup
+export default UpdateProductPopup

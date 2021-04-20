@@ -11,7 +11,7 @@ const mockState = {
             gitlabProjectId: 1234,
             tagIds: [1],
             isArchived: false,
-            applicationId: null
+            productId: null
         },
         5: {
             id: 5,
@@ -19,7 +19,7 @@ const mockState = {
             gitlabProjectId: 1234,
             tagIds: [1],
             isArchived: true,
-            applicationId: 42
+            productId: 42
         }
     },
     tags: {
@@ -42,8 +42,13 @@ test('selectProjectById - returns project object', () => {
     expect(project).toEqual(returnedProject)
 })
 
-test('selectProjectById - returns empty object', () => {
-    expect(selectors.selectProjectById(mockState, 2)).toBeInstanceOf(Object)
+test('selectProjectById - null id returns object with keys', () => {
+    expect(selectors.selectProjectById(mockState, null)).toEqual({
+        name: '',
+        description: '',
+        tags: [],
+        gitlabProjectId: ''
+    })
 })
 
 test('selectProjects - returns project array', () => {
@@ -55,7 +60,7 @@ test('selectProjects - returns project array', () => {
         gitlabProjectId: 1234,
         tagIds: [1],
         isArchived: false,
-        applicationId: null,
+        productId: null,
         tags: [
             {   id: 1,
                 label: 'Some tags',

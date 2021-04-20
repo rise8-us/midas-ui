@@ -29,7 +29,7 @@ function ProjectCard({ id }) {
     }
 
     const updateProjectPopup = () => {
-        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id }))
+        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id }))
     }
 
     return (

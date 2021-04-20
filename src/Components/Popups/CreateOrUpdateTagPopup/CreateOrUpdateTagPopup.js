@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
-import { requestUpdateTag, requestCreateTag } from '../../../Redux/Tags/actions'
+import { requestCreateTag, requestUpdateTag } from '../../../Redux/Tags/actions'
 import TagConstants from '../../../Redux/Tags/constants'
 import { selectTagById } from '../../../Redux/Tags/selectors'
 import { ColorPicker } from '../../ColorPicker'
@@ -17,7 +17,7 @@ function CreateOrUpdateTagPopup({ id }) {
     const tag = useSelector(state => selectTagById(state, id))
 
     const isCreate = tag.id === undefined
-    const tagConstants = isCreate ? TagConstants.CREATE_TAG : TagConstants.UPDATE_TAG  
+    const tagConstants = isCreate ? TagConstants.CREATE_TAG : TagConstants.UPDATE_TAG
     const tagTitle = isCreate ? 'Create Tag' : 'Update Tag'
     const tagRequest = (data) => isCreate ? requestCreateTag(data) : requestUpdateTag(data)
 

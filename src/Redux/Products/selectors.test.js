@@ -5,11 +5,11 @@ const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByI
 const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
 
 const mockState = {
-    applications: {
+    products: {
         4: {
             id: 4,
-            name: 'Midas Application',
-            description: 'New Application',
+            name: 'Midas Product',
+            description: 'New Product',
             projectIds: [2],
             isArchived: false,
             portfolioId: 2,
@@ -17,8 +17,8 @@ const mockState = {
         },
         5: {
             id: 5,
-            name: 'Something Application',
-            description: 'Something Application',
+            name: 'Something Product',
+            description: 'Something Product',
             projectIds: [3],
             isArchived: true,
             portfolioId: 4,
@@ -48,31 +48,31 @@ afterEach(() => {
     selectProjectByIdMock.mockClear()
 })
 
-test('selectApplicationById - returns application object', () => {
+test('selectProductById - returns product object', () => {
     selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
     selectProjectByIdMock.mockReturnValue(mockState.projects[2])
 
-    const returnedApplication = {
-        ...mockState.applications[4],
+    const returnedProduct = {
+        ...mockState.products[4],
         tags: [{ ...mockState.tags[7] }],
         projects: [{ ...mockState.projects[2] }]
 
     }
-    const application = selectors.selectApplicationById(mockState, 4)
-    expect(application).toEqual(returnedApplication)
+    const product = selectors.selectProductById(mockState, 4)
+    expect(product).toEqual(returnedProduct)
 })
 
-test('selectApplicationById - returns empty object', () => {
-    expect(selectors.selectApplicationById(mockState, 2)).toBeInstanceOf(Object)
+test('selectProductById - returns empty object', () => {
+    expect(selectors.selectProductById(mockState, 2)).toBeInstanceOf(Object)
 })
 
-test('selectApplications - returns application array', () => {
+test('selectProducts - returns product array', () => {
     selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
 
-    const applicationOne = {
+    const productOne = {
         id: 4,
-        name: 'Midas Application',
-        description: 'New Application',
+        name: 'Midas Product',
+        description: 'New Product',
         projectIds: [2],
         isArchived: false,
         portfolioId: 2,
@@ -86,19 +86,19 @@ test('selectApplications - returns application array', () => {
         ]
 
     }
-    const applications = selectors.selectApplications(mockState)
-    expect(applications[0]).toEqual(applicationOne)
+    const products = selectors.selectProducts(mockState)
+    expect(products[0]).toEqual(productOne)
 })
 
-test('selectApplications - returns empty array', () => {
-    expect(selectors.selectApplications({})).toBeInstanceOf(Array)
+test('selectProducts - returns empty array', () => {
+    expect(selectors.selectProducts({})).toBeInstanceOf(Array)
 })
 
-test('selectUnarchivedApplications - returns array with only unarchived applications', () => {
-    expect(selectors.selectUnarchivedApplications(mockState)).toHaveLength(1)
+test('selectUnarchivedProducts - returns array with only unarchived products', () => {
+    expect(selectors.selectUnarchivedProducts(mockState)).toHaveLength(1)
 })
 
-test('selectUnarchivedApplicationIds - returns mockState.app[4]', () => {
-    expect(selectors.selectUnarchivedApplicationIds(mockState)).toHaveLength(1)
-    expect(selectors.selectUnarchivedApplicationIds(mockState)).toEqual([4])
+test('selectUnarchivedProductIds - returns mockState.app[4]', () => {
+    expect(selectors.selectUnarchivedProductIds(mockState)).toHaveLength(1)
+    expect(selectors.selectUnarchivedProductIds(mockState)).toEqual([4])
 })

@@ -2,12 +2,12 @@ import React from 'react'
 import {
     act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
 } from '../../../Utilities/test-utils'
-import { CreateApplicationPopup } from './index'
+import { CreateProductPopup } from './index'
 
-describe('<CreateApplicationPopup />', () => {
+describe('<CreateProductPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
-    const submitApplicationMock = useModuleMock('Redux/Applications/actions', 'requestCreateApplication')
+    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
     const selectNoAppIdProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectNoAppIdProjects')
 
@@ -29,22 +29,22 @@ describe('<CreateApplicationPopup />', () => {
     })
 
     test('should render properly', () => {
-        render(<CreateApplicationPopup />)
+        render(<CreateProductPopup />)
 
-        expect(screen.getByText('Create New Application')).toBeInTheDocument()
-        expect(screen.getByTestId('CreateApplicationPopup__input-name')).toBeInTheDocument()
-        expect(screen.getByTestId('CreateApplicationPopup__input-description')).toBeInTheDocument()
+        expect(screen.getByText('Create New Product')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProductPopup__input-name')).toBeInTheDocument()
+        expect(screen.getByTestId('CreateProductPopup__input-description')).toBeInTheDocument()
     })
 
     test('should execute onSubmit', async() => {
-        render(<CreateApplicationPopup />)
+        render(<CreateProductPopup />)
 
-        const name = 'My New Application'
+        const name = 'My New Product'
         const description = 'Test Description'
 
-        const nameInput = within(screen.getByTestId('CreateApplicationPopup__input-name'))
+        const nameInput = within(screen.getByTestId('CreateProductPopup__input-name'))
             .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('CreateApplicationPopup__input-description'))
+        const descriptionInput = within(screen.getByTestId('CreateProductPopup__input-description'))
             .getByRole('textbox')
 
         userEvent.type(nameInput, name)
@@ -60,14 +60,14 @@ describe('<CreateApplicationPopup />', () => {
 
         fireEvent.click(screen.getByText('Submit'))
 
-        expect(submitApplicationMock).toHaveBeenCalledTimes(1)
-        expect(submitApplicationMock.mock.calls[0][0]).toEqual(
+        expect(submitProductMock).toHaveBeenCalledTimes(1)
+        expect(submitProductMock.mock.calls[0][0]).toEqual(
             { name, description, tagIds: [2], projectIds: [20] }
         )
     })
 
     test('should add & remove tag', async() => {
-        render(<CreateApplicationPopup />)
+        render(<CreateProductPopup />)
         fireEvent.click(await screen.queryAllByTitle('Open')[0])
 
         // Add tag
@@ -83,7 +83,7 @@ describe('<CreateApplicationPopup />', () => {
     })
 
     test('should allow only one scoped tag', async() => {
-        render(<CreateApplicationPopup />)
+        render(<CreateProductPopup />)
 
         // add first scoped label
         fireEvent.click(await screen.queryAllByTitle('Open')[0])
@@ -104,7 +104,7 @@ describe('<CreateApplicationPopup />', () => {
     })
 
     test('should close popup', () => {
-        render(<CreateApplicationPopup />)
+        render(<CreateProductPopup />)
 
         fireEvent.click(screen.getByTestId('Popup__button-close'))
 
@@ -114,21 +114,21 @@ describe('<CreateApplicationPopup />', () => {
     test('should display error messages', () => {
         const state = {
             errors: {
-                'applications/createOne': [
+                'products/createOne': [
                     'name error',
                     'Gitlab error',
                     'Tag error'
                 ]
             }
         }
-        render(<CreateApplicationPopup />, { initialState: state })
+        render(<CreateProductPopup />, { initialState: state })
 
         expect(screen.getByText('name error')).toBeInTheDocument()
         expect(screen.getByText('Tag error')).toBeInTheDocument()
     })
 
     test('should delete tag', async() => {
-        render(<CreateApplicationPopup />)
+        render(<CreateProductPopup />)
 
         fireEvent.click(await screen.queryAllByTitle('Open')[0])
         const option = screen.getByText('scoped::label 1')
@@ -150,15 +150,15 @@ describe('<CreateApplicationPopup />', () => {
         act(() => {
             useDispatchMock().mockResolvedValue({ payload: newProject })
         })
-        const { rerender } = render(<CreateApplicationPopup />)
+        const { rerender } = render(<CreateProductPopup />)
 
-        userEvent.type(screen.getByTestId('CreateApplicationPopup__input-projects'), newProject.name)
+        userEvent.type(screen.getByTestId('CreateProductPopup__input-projects'), newProject.name)
         expect(await screen.findByText(`Add "${newProject.name}"`)).toBeInTheDocument()
         const option = screen.getByText(`Add "${newProject.name}"`)
 
         act(() => {
             fireEvent.click(option)
-            rerender(<CreateApplicationPopup />)
+            rerender(<CreateProductPopup />)
         })
 
         expect(await screen.findByText(newProject.name)).toBeInTheDocument()

@@ -1,13 +1,13 @@
 
-export function selectTagById(state, id) {
-    const tags = state.tags[id]
-    if(!tags) return {
+export const selectTagById = (state, id) => {
+    const tag = state.tags[id]
+    if (!tag) return {
         label: '',
         description: '',
         color: '#'
     }
-    
-    return tags
+
+    return tag
 }
 
 export const selectAllTags = state => {

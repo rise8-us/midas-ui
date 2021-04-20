@@ -3,10 +3,10 @@ import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete
 import { unwrapResult } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestCreateApplication } from '../../../Redux/Applications/actions'
-import ApplicationConstants from '../../../Redux/Applications/constants'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
+import { requestCreateProduct } from '../../../Redux/Products/actions'
+import ProductConstants from '../../../Redux/Products/constants'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
 import { selectNoAppIdProjects } from '../../../Redux/Projects/selectors'
 import { selectAllTags } from '../../../Redux/Tags/selectors'
@@ -15,13 +15,13 @@ import { Tag } from '../../Tag'
 
 const filter = createFilterOptions()
 
-function CreateApplicationPopup() {
+function CreateProductPopup() {
     const dispatch = useDispatch()
 
     const allTags = useSelector(selectAllTags)
     const availableProjects = useSelector(selectNoAppIdProjects)
 
-    const errors = useSelector(state => selectRequestErrors(state, ApplicationConstants.CREATE_APPLICATION))
+    const errors = useSelector(state => selectRequestErrors(state, ProductConstants.CREATE_PRODUCT))
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
@@ -69,11 +69,11 @@ function CreateApplicationPopup() {
         else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
     }
 
-    const onClose = () => dispatch(closePopup(ApplicationConstants.CREATE_APPLICATION))
+    const onClose = () => dispatch(closePopup(ProductConstants.CREATE_PRODUCT))
     const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
 
     const onSubmit = () => {
-        dispatch(requestCreateApplication({
+        dispatch(requestCreateProduct({
             name,
             description,
             tagIds: Object.values(tags.map(t => t.id)),
@@ -90,14 +90,14 @@ function CreateApplicationPopup() {
 
     return (
         <Popup
-            title = 'Create New Application'
+            title = 'Create New Product'
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
-                    label = 'Application Name'
-                    data-testid = 'CreateApplicationPopup__input-name'
+                    label = 'Product Name'
+                    data-testid = 'CreateProductPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
                     error = { nameError.length > 0 }
@@ -107,7 +107,7 @@ function CreateApplicationPopup() {
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'CreateApplicationPopup__input-description'
+                    data-testid = 'CreateProductPopup__input-description'
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'
@@ -154,7 +154,7 @@ function CreateApplicationPopup() {
                             margin = 'dense'
                             error = {projectsError.length > 0}
                             helperText = {projectsError[0] ?? ''}
-                            data-testid = 'CreateApplicationPopup__input-projects'
+                            data-testid = 'CreateProductPopup__input-projects'
                         />
                     }
                     filterOptions = {(options, params) => {
@@ -173,4 +173,4 @@ function CreateApplicationPopup() {
     )
 }
 
-export default CreateApplicationPopup
+export default CreateProductPopup

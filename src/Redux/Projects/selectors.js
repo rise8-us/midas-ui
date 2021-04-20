@@ -2,7 +2,12 @@ import { selectTagsByIds } from '../Tags/selectors'
 
 export const selectProjectById = (state, id) => {
     const project = state.projects[id]
-    if (!project) return {}
+    if (!project) return {
+        name: '',
+        description: '',
+        gitlabProjectId: '',
+        tags: []
+    }
 
     const tags = selectTagsByIds(state, project.tagIds)
     const updatedProject = { ...project, tags }
@@ -24,5 +29,5 @@ export const selectUnarchivedProjects = (state) => {
 }
 
 export const selectNoAppIdProjects = (state) => {
-    return selectProjects(state).filter(p => p.applicationId === null)
+    return selectProjects(state).filter(p => p.productId === null)
 }
