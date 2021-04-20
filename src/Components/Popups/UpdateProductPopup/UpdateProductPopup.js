@@ -47,7 +47,8 @@ function UpdateProductPopup({ id }) {
 
             dispatch(requestCreateProject({
                 name: newName,
-                productId: product.id
+                productId: product.id,
+                tagIds: []
             })).then(unwrapResult)
                 .then(results => {
                     newValues.push(results)

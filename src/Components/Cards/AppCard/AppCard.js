@@ -29,7 +29,7 @@ function AppCard({ id }) {
     useLayoutEffect(() => {
         const spans = Math.ceil(ref.current.clientHeight / 2) + 5
         ref.current.style.gridRowEnd = `span ${spans}`
-    }, [])
+    })
 
     return (
         <Card style = {{ width: '450px', height: 'fit-content' }} ref = {ref}>
