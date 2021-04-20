@@ -10,8 +10,8 @@ describe('requests', () => {
             method: 'GET',
             url: 'http://localhost:8000/info',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'product/json',
+                'Accept': 'product/json'
             },
             data: {
                 foo: 'bar'
@@ -26,8 +26,8 @@ describe('requests', () => {
             method: 'GET',
             url: 'http://localhost:8000/info',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'product/json',
+                'Accept': 'product/json'
             }
         }
         const request = requestUtils.createAxiosRequest('/info', 'GET')

@@ -18,7 +18,7 @@ const mockState = {
 }
 
 test('should return empty object', () => {
-    expect(selectors.selectTagById({ tags: {} }, 0)).toEqual({label: '', description: '', color: '#'})
+    expect(selectors.selectTagById({ tags: {} }, 0)).toEqual({ label: '', description: '', color: '#' })
 })
 
 test('should return empty object', () => {

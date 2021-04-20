@@ -1,14 +1,14 @@
 import React from 'react'
-import ApplicationConstants from '../../../Redux/Applications/constants'
+import ProductConstants from '../../../Redux/Products/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { AppCard } from './index'
 
 describe('<AppCard />', () => {
 
-    const application = {
+    const product = {
         id: 4,
-        name: 'Midas Application',
-        description: 'New Application',
+        name: 'Midas Product',
+        description: 'New Product',
         projectIds: [2],
         isArchived: false,
         portfolioId: 2,
@@ -22,43 +22,43 @@ describe('<AppCard />', () => {
         ],
         projects: [{ id: 2, name: 'project 1' }]
     }
-    const application2 = {
-        ...application,
+    const product2 = {
+        ...product,
         projects: []
     }
 
-    const selectApplicationByIdMock = useModuleMock('Redux/Applications/selectors', 'selectApplicationById')
+    const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        selectApplicationByIdMock.mockReturnValue(application)
+        selectProductByIdMock.mockReturnValue(product)
     })
 
     test('should display data with projects', () => {
-        render(<AppCard id = {application.id}/>)
+        render(<AppCard id = {product.id}/>)
 
-        expect(screen.getByText('Midas Application')).toBeInTheDocument()
+        expect(screen.getByText('Midas Product')).toBeInTheDocument()
         expect(screen.getByText('Some tags')).toBeInTheDocument()
         expect(screen.getByText('project 1')).toBeInTheDocument()
     })
 
     test('should display data without projects', () => {
-        selectApplicationByIdMock.mockReturnValue(application2)
-        render(<AppCard id = {application.id}/>)
+        selectProductByIdMock.mockReturnValue(product2)
+        render(<AppCard id = {product.id}/>)
 
-        expect(screen.getByText('Midas Application')).toBeInTheDocument()
+        expect(screen.getByText('Midas Product')).toBeInTheDocument()
         expect(screen.getByText('Some tags')).toBeInTheDocument()
         expect(screen.queryByText('project 1')).not.toBeInTheDocument()
     })
 
-    test('should fire updateApplicationPopup', () => {
-        render(<AppCard id = {application.id}/>)
+    test('should fire updateProductPopup', () => {
+        render(<AppCard id = {product.id}/>)
 
         fireEvent.click(screen.getByTestId('AppCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ApplicationConstants.UPDATE_APPLICATION, 'UpdateApplicationPopup', { id: application.id })
+            ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id: product.id })
     })
 
 })

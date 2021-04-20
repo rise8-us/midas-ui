@@ -41,7 +41,7 @@ describe('<ProjectCard />', () => {
         fireEvent.click(screen.getByTestId('ProjectCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id: project.id })
+            ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id: project.id })
     })
 
     test('should fire updateProgress forward', () => {

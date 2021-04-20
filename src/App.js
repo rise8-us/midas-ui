@@ -4,9 +4,9 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { Banner } from './Components/Banner'
 import { Account, Admin, Home, PageNotFound, Projects, Tags } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
-import { requestFetchAllApplications } from './Redux/Applications/actions'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchInit } from './Redux/Init/actions'
+import { requestFetchAllProducts } from './Redux/Products/actions'
 import { requestFetchAllProjects } from './Redux/Projects/actions'
 import { requestFetchAllTags } from './Redux/Tags/actions'
 import { requestFetchAllTeams } from './Redux/Teams/actions'
@@ -21,7 +21,7 @@ function App() {
             dispatch(requestFetchAllTeams())
             dispatch(requestFetchAllProjects())
             dispatch(requestFetchAllTags())
-            dispatch(requestFetchAllApplications())
+            dispatch(requestFetchAllProducts())
         }
 
         async function whoami() {

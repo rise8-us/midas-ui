@@ -30,7 +30,7 @@ function Projects() {
 
     const allProjects = useSelector(selectUnarchivedProjects)
 
-    const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
+    const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup'))
 
     const setButtonWidth = () => ({
         width: `${cardWidth * cardsOnRow + (theme.spacing(2) * (cardsOnRow - 1))}px`,

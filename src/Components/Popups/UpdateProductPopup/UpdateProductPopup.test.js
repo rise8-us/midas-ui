@@ -2,13 +2,13 @@ import React from 'react'
 import {
     act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
 } from '../../../Utilities/test-utils'
-import { UpdateApplicationPopup } from './index'
+import { UpdateProductPopup } from './index'
 
-describe('<UpdateApplicationPopup />', () => {
+describe('<UpdateProductPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
-    const submitApplicationMock = useModuleMock('Redux/Applications/actions', 'requestUpdateApplication')
-    const selectApplicationByIdMock = useModuleMock('Redux/Applications/selectors', 'selectApplicationById')
+    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
+    const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
     const selectNoAppIdProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectNoAppIdProjects')
 
@@ -24,10 +24,10 @@ describe('<UpdateApplicationPopup />', () => {
         { id: 21, name: 'project 2' },
     ]
 
-    const returnedApplication = {
+    const returnedProduct = {
         id: 4,
-        name: 'Midas Application',
-        description: 'New Application',
+        name: 'Midas Product',
+        description: 'New Product',
         projectIds: [4],
         isArchived: false,
         portfolioId: 2,
@@ -39,31 +39,31 @@ describe('<UpdateApplicationPopup />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        selectApplicationByIdMock.mockReturnValue(returnedApplication)
+        selectProductByIdMock.mockReturnValue(returnedProduct)
         selectAllTagsMock.mockReturnValue(returnedTags)
         selectNoAppIdProjectsMock.mockReturnValue(returnedProjects)
     })
 
     test('should render properly', () => {
-        render(<UpdateApplicationPopup id = {4}/>)
+        render(<UpdateProductPopup id = {4}/>)
 
-        expect(screen.getByText('Update Application')).toBeInTheDocument()
-        expect(within(screen.getByTestId('UpdateApplicationPopup__input-name'))
-            .getByRole('textbox')).toHaveValue(returnedApplication.name)
-        expect(screen.getByText(returnedApplication.description)).toBeInTheDocument()
+        expect(screen.getByText('Update Product')).toBeInTheDocument()
+        expect(within(screen.getByTestId('UpdateProductPopup__input-name'))
+            .getByRole('textbox')).toHaveValue(returnedProduct.name)
+        expect(screen.getByText(returnedProduct.description)).toBeInTheDocument()
         expect(screen.getByText('My New Project')).toBeInTheDocument()
         expect(screen.getByText('Tag 1')).toBeInTheDocument()
     })
 
     test('should call onSubmit', async() => {
-        render(<UpdateApplicationPopup id = {4} />)
+        render(<UpdateProductPopup id = {4} />)
 
-        const name = 'My Edited Application'
+        const name = 'My Edited Product'
         const description = 'New Description'
 
-        const nameInput = within(screen.getByTestId('UpdateApplicationPopup__input-name'))
+        const nameInput = within(screen.getByTestId('UpdateProductPopup__input-name'))
             .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('UpdateApplicationPopup__input-description'))
+        const descriptionInput = within(screen.getByTestId('UpdateProductPopup__input-description'))
             .getByRole('textbox')
 
         userEvent.clear(descriptionInput)
@@ -77,13 +77,13 @@ describe('<UpdateApplicationPopup />', () => {
 
         fireEvent.click(screen.getByText('Submit'))
 
-        expect(submitApplicationMock).toHaveBeenCalledTimes(1)
-        expect(submitApplicationMock.mock.calls[0][0]).toEqual(
-            { ...returnedApplication, name, description, projectIds: [4, 21] })
+        expect(submitProductMock).toHaveBeenCalledTimes(1)
+        expect(submitProductMock.mock.calls[0][0]).toEqual(
+            { ...returnedProduct, name, description, projectIds: [4, 21] })
     })
 
     test('should handle tag changes', async() => {
-        render(<UpdateApplicationPopup id = {4}/>)
+        render(<UpdateProductPopup id = {4}/>)
         fireEvent.click(await screen.queryAllByTitle('Open')[0])
 
         const option = screen.getByText('Tag 2')
@@ -94,7 +94,7 @@ describe('<UpdateApplicationPopup />', () => {
     })
 
     test('should handle remove all tags', async() => {
-        render(<UpdateApplicationPopup id = {4}/>)
+        render(<UpdateProductPopup id = {4}/>)
 
         fireEvent.click(await screen.queryAllByTitle('Clear')[0])
 
@@ -103,7 +103,7 @@ describe('<UpdateApplicationPopup />', () => {
     })
 
     test('should allow only one scoped tag', async() => {
-        render(<UpdateApplicationPopup id = {4}/>)
+        render(<UpdateProductPopup id = {4}/>)
         expect(await screen.findByText('label 1')).toBeInTheDocument()
         fireEvent.click(await screen.queryAllByTitle('Open')[0])
 
@@ -116,7 +116,7 @@ describe('<UpdateApplicationPopup />', () => {
     })
 
     test('should close popup', () => {
-        render(<UpdateApplicationPopup id = {4}/>)
+        render(<UpdateProductPopup id = {4}/>)
 
         fireEvent.click(screen.getByTestId('Popup__button-close'))
 
@@ -126,18 +126,18 @@ describe('<UpdateApplicationPopup />', () => {
     test('should display error message', () => {
         const state = {
             errors: {
-                'applications/updateOne': [
+                'products/updateOne': [
                     'name error'
                 ]
             }
         }
-        render(<UpdateApplicationPopup id = {4} />, { initialState: state })
+        render(<UpdateProductPopup id = {4} />, { initialState: state })
 
         expect(screen.getByText('name error')).toBeInTheDocument()
     })
 
     test('should delete tag', async() => {
-        render(<UpdateApplicationPopup id = {4}/>)
+        render(<UpdateProductPopup id = {4}/>)
 
         fireEvent.click(await screen.queryAllByTitle('delete')[0])
 
@@ -153,15 +153,15 @@ describe('<UpdateApplicationPopup />', () => {
         act(() => {
             useDispatchMock().mockResolvedValue({ payload: newProject })
         })
-        const { rerender } = render(<UpdateApplicationPopup id = {4}/>)
+        const { rerender } = render(<UpdateProductPopup id = {4}/>)
 
-        userEvent.type(screen.getByTestId('UpdateApplicationPopup__input-projects'), newProject.name)
+        userEvent.type(screen.getByTestId('UpdateProductPopup__input-projects'), newProject.name)
         expect(await screen.findByText(`Add "${newProject.name}"`)).toBeInTheDocument()
         const option = screen.getByText(`Add "${newProject.name}"`)
 
         act(() => {
             fireEvent.click(option)
-            rerender(<UpdateApplicationPopup id = {4} />)
+            rerender(<UpdateProductPopup id = {4} />)
         })
 
         expect(await screen.findByText(newProject.name)).toBeInTheDocument()
