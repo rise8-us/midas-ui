@@ -14,9 +14,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
     const returnedTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },
-        { id: 2, label: 'Tag 2', description: '', color: '#000000' },
-        { id: 13, label: 'scoped::label 1', description: '', color: '#000000' },
-        { id: 14, label: 'scoped::label 2', description: '', color: '#000000' }
+        { id: 13, label: 'Tag 2', description: '', color: '#000000' },
     ]
 
     const returnedFoundProject = {
@@ -25,7 +23,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
         name: 'My Project',
         gitlabProjectId: 1234567,
         description: 'Test Description',
-        tags: [returnedTags[0], returnedTags[2]]
+        tags: [returnedTags[0], returnedTags[1]]
     }
 
     const returnedNewProject = {
@@ -61,7 +59,6 @@ describe('<CreateOrUpdateProjectPopup />', () => {
                 'projects/createOne': [
                     'name error',
                     'Gitlab error',
-                    'Tag error'
                 ]
             }
         }
@@ -69,54 +66,6 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
         expect(screen.getByText('name error')).toBeInTheDocument()
         expect(screen.getByText('Gitlab error')).toBeInTheDocument()
-        expect(screen.getByText('Tag error')).toBeInTheDocument()
-    })
-
-    test('should handle tag changes', async() => {
-        selectProjectByIdMock.mockReturnValue(returnedFoundProject)
-        render(<CreateOrUpdateProjectPopup id = {4}/>)
-
-        fireEvent.click(await screen.findByTitle('Open'))
-
-        const option = screen.getByText('Tag 2')
-        expect(option).toBeInTheDocument()
-        fireEvent.click(option)
-
-        expect(screen.getByText('Tag 2')).toBeInTheDocument()
-    })
-
-    test('should allow only one scoped tag', async() => {
-        selectProjectByIdMock.mockReturnValue(returnedFoundProject)
-        render(<CreateOrUpdateProjectPopup id = {4}/>)
-
-        expect(await screen.findByText('label 1')).toBeInTheDocument()
-        fireEvent.click(screen.getByTitle('Open'))
-
-        const option = screen.getByText('scoped::label 2')
-        expect(option).toBeInTheDocument()
-        fireEvent.click(option)
-
-        expect(await screen.findByText('label 2')).toBeInTheDocument()
-        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
-    })
-
-    test('should delete tag', async() => {
-        selectProjectByIdMock.mockReturnValue(returnedFoundProject)
-        render(<CreateOrUpdateProjectPopup id = {4}/>)
-
-        fireEvent.click(await screen.findByTitle('delete'))
-
-        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
-    })
-
-    test('should handle remove all tags', async() => {
-        selectProjectByIdMock.mockReturnValue(returnedFoundProject)
-        render(<CreateOrUpdateProjectPopup id = {4}/>)
-
-        fireEvent.click(await screen.findByTitle('Clear'))
-
-        expect(screen.queryByText('Tag 1')).not.toBeInTheDocument()
-        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
     })
 
     test('should call onSubmit for createProject', () => {
