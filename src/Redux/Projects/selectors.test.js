@@ -8,14 +8,16 @@ const mockState = {
         4: {
             id: 4,
             name: 'New Project',
-            gitlabProjectId: 1234,
+            gitlabProjectId: null,
+            description: null,
             tagIds: [1],
             isArchived: false,
             productId: null
         },
         5: {
             id: 5,
-            name: 'New Project',
+            name: 'New Project 2',
+            description: 'whoa nelly',
             gitlabProjectId: 1234,
             tagIds: [1],
             isArchived: true,
@@ -39,7 +41,11 @@ test('selectProjectById - returns project object', () => {
         tags: []
     }
     const project = selectors.selectProjectById(mockState, 4)
-    expect(project).toEqual(returnedProject)
+    expect(project).toEqual({
+        ...returnedProject,
+        description: '',
+        gitlabProjectId: ''
+    })
 })
 
 test('selectProjectById - null id returns object with keys', () => {
@@ -57,7 +63,8 @@ test('selectProjects - returns project array', () => {
     const projectOne = {
         id: 4,
         name: 'New Project',
-        gitlabProjectId: 1234,
+        gitlabProjectId: '',
+        description: '',
         tagIds: [1],
         isArchived: false,
         productId: null,
