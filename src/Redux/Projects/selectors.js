@@ -10,7 +10,13 @@ export const selectProjectById = (state, id) => {
     }
 
     const tags = selectTagsByIds(state, project.tagIds)
-    const updatedProject = { ...project, tags }
+
+    const updatedProject = {
+        ...project,
+        tags,
+        description: project.description ?? '',
+        gitlabProjectId: project.gitlabProjectId ?? '',
+    }
 
     return updatedProject
 }
@@ -19,8 +25,8 @@ export const selectProjects = (state) => {
     const allProjects = state.projects
     if (!allProjects) return []
 
-    return Object.values(state.projects).map(project => {
-        return { ...project, tags: selectTagsByIds(state, project.tagIds) }
+    return Object.keys(allProjects).map(id => {
+        return selectProjectById(state, id)
     })
 }
 

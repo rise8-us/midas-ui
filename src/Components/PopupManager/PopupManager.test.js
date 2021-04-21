@@ -5,6 +5,13 @@ import { PopupManager } from './index'
 jest.mock('../Popups/CreateOrUpdateTeamPopup/CreateOrUpdateTeamPopup',
     () => function testing() { return (<div>PopupManagerTest</div>) })
 
+const popup = {
+    componentName: 'CreateOrUpdateTeamPopup',
+    name: 'test/popup',
+    open: true,
+    props: { userId: 0 }
+}
+
 describe('PopupManager', () => {
 
     beforeEach(async() => {
@@ -18,13 +25,7 @@ describe('PopupManager', () => {
     })
 
     test('rendered component', async() => {
-
-        useSelectorMock().mockReturnValue([{
-            componentName: 'CreateOrUpdateTeamPopup',
-            name: 'test/popup',
-            open: true,
-            props: { userId: 0 }
-        }])
+        useSelectorMock().mockReturnValue([popup])
 
         render(<PopupManager />)
 
@@ -32,18 +33,10 @@ describe('PopupManager', () => {
     })
 
     test('checks props', async() => {
+        useSelectorMock().mockReturnValueOnce([popup])
         useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateOrUpdateTeamPopup',
-            name: 'test/popup',
-            open: true,
-            props: { userId: 0 }
-        }])
-
-        useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateOrUpdateTeamPopup',
+            ...popup,
             name: 'test/popupDiff',
-            open: true,
-            props: { userId: 0 }
         }])
 
         render(<PopupManager />)
@@ -51,23 +44,4 @@ describe('PopupManager', () => {
         expect(await screen.findByText('PopupManagerTest')).toBeInTheDocument()
     })
 
-    test('no dups same popup', async() => {
-        useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateOrUpdateTeamPopup',
-            name: 'test/popup',
-            open: true,
-            props: { userId: 0 }
-        }])
-
-        useSelectorMock().mockReturnValueOnce([{
-            componentName: 'CreateOrUpdateTeamPopup',
-            name: 'test/popup',
-            open: true,
-            props: { userId: 0 }
-        }])
-
-        render(<PopupManager />)
-
-        expect(await screen.findAllByText('PopupManagerTest')).toHaveLength(1)
-    })
 })
