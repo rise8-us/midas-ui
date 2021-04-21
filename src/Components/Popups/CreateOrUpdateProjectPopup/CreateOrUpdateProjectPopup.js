@@ -1,5 +1,4 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,9 +7,8 @@ import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateProject, requestUpdateProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectProjectById } from '../../../Redux/Projects/selectors'
-import { selectAllTags } from '../../../Redux/Tags/selectors'
 import { Popup } from '../../Popup'
-import { Tag } from '../../Tag'
+import { TagDropdown } from '../../TagDropdown'
 
 const useStyles = makeStyles(() => ({
     numberField: {
@@ -32,7 +30,6 @@ function CreateOrUpdateProjectPopup({ id }) {
     const projectRequest = (data) => isCreate ? requestCreateProject(data) : requestUpdateProject(data)
 
     const errors = useSelector(state => selectRequestErrors(state, projectConstant))
-    const allTags = useSelector(selectAllTags)
 
     const [name, setName] = useState(project.name)
     const [gitlabProjectId, setGitlabProjectId] = useState(project.gitlabProjectId)
@@ -46,25 +43,9 @@ function CreateOrUpdateProjectPopup({ id }) {
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
-    const onSelectTag = (_e, values) => {
-        if (values.length === 0) {
-            setTags([])
-            return
-        }
-
-        const selectedValue = String(values[values.length - 1].label).split('::')
-        const existingTag = values.filter(tag =>
-            selectedValue.length === 2 &&
-            tag.label.includes(selectedValue[0], 0) &&
-            !tag.label.includes(selectedValue[1])
-        )
-
-        if (existingTag.length === 0) setTags(values)
-        else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
-    }
+    const onTagsChange = (value) => setTags(value)
 
     const onClose = () => dispatch(closePopup(projectConstant))
-    const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
 
     const onSubmit = () =>
         dispatch(projectRequest({
@@ -119,30 +100,10 @@ function CreateOrUpdateProjectPopup({ id }) {
                     margin = 'dense'
                     multiline
                 />
-                <Autocomplete
-                    multiple
-                    options = {allTags}
-                    getOptionLabel = {(option) => option.label}
-                    getOptionSelected = {(option, value) => option.id === value.id}
-                    onChange = {onSelectTag}
-                    value = {tags}
-                    defaultValue = {tags}
-                    renderTags = {(value) => value.map((tag, index) =>
-                        <Tag
-                            key = {index}
-                            {...tag}
-                            onDelete = {() => onRemoveTag(tag.id)}
-                        />
-                    )}
-                    renderInput = {(params) =>
-                        <TextField
-                            {...params}
-                            label = 'Add Tag(s)'
-                            margin = 'dense'
-                            error = { tagsError.length > 0 }
-                            helperText = { tagsError[0] ?? ''}
-                        />
-                    }
+                <TagDropdown
+                    defaultTags = {tags}
+                    error = {tagsError}
+                    onChange = {onTagsChange}
                 />
             </Box>
         </Popup>

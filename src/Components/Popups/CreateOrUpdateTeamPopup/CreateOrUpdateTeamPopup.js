@@ -30,7 +30,6 @@ function CreateOrUpdateTeamPopup({ id }) {
     const teamRequest = (data) => isCreate ? requestCreateTeam(data) : requestUpdateTeam(data)
     const errors = useSelector(state => selectRequestErrors(state, teamConstants))
 
-
     const [name, setName] = useState(team.name)
     const [gitlabGroupId, setGitlabGroupId] = useState(team.gitlabGroupId)
     const [description, setDescription] = useState(team.description)
