@@ -1,10 +1,10 @@
 import { TextField } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Tag } from '../Tag'
-import { useSelector } from 'react-redux'
 import { Autocomplete } from '@material-ui/lab'
+import PropTypes from 'prop-types'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { selectAllTags } from '../../Redux/Tags/selectors'
+import { Tag } from '../Tag'
 
 function TagDropdown({ defaultTags, error, onChange }) {
     const allTags = useSelector(selectAllTags)

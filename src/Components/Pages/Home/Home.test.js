@@ -32,7 +32,7 @@ describe('<Home>', () => {
 
         fireEvent.click(screen.getByText('Add New Product'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateOrUpdateProductPopup')
     })
 
     test('Add Tag calls openPopup', () => {

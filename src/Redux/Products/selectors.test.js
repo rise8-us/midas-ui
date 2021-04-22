@@ -9,7 +9,7 @@ const mockState = {
         4: {
             id: 4,
             name: 'Midas Product',
-            description: 'New Product',
+            description: null,
             projectIds: [2],
             isArchived: false,
             portfolioId: 2,
@@ -54,6 +54,7 @@ test('selectProductById - returns product object', () => {
 
     const returnedProduct = {
         ...mockState.products[4],
+        description: '',
         tags: [{ ...mockState.tags[7] }],
         projects: [{ ...mockState.projects[2] }]
 
@@ -68,21 +69,21 @@ test('selectProductById - returns empty object', () => {
 
 test('selectProducts - returns product array', () => {
     selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
+    selectProjectByIdMock.mockReturnValue(mockState.projects[2])
 
     const productOne = {
         id: 4,
         name: 'Midas Product',
-        description: 'New Product',
+        description: '',
         projectIds: [2],
         isArchived: false,
         portfolioId: 2,
         tagIds: [7],
         tags: [
-            {   id: 7,
-                label: 'Some tags',
-                description: null,
-                color: ''
-            }
+            mockState.tags[7]
+        ],
+        projects: [
+            mockState.projects[2]
         ]
 
     }
