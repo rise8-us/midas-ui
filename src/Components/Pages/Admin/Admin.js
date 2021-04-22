@@ -7,7 +7,7 @@ const ProjectsTab = React.lazy(() => import('../../Admin/ProjectsTab/ProjectsTab
 
 function Admin() {
     const theme = useTheme()
-    const [value, setValue] = useState(false)
+    const [value, setValue] = useState('users')
 
     const handleChange = (_e, newValue) => setValue(newValue)
 
