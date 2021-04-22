@@ -41,3 +41,9 @@ test('Adds init logon user', () => {
     const state = actions.reduce(reducer, {})
     expect(state[1]).toEqual(user)
 })
+
+test('FindsUserBy', () => {
+    const actions = [{ type: reduxActions.requestFindUserBy.fulfilled, payload: [user] }]
+    const state = actions.reduce(reducer, user)
+    expect(state[1]).toEqual(user)
+})

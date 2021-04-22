@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '../../Utilities/test-utils'
+import { render, screen, userEvent } from '../../Utilities/test-utils'
 import { Table } from './index'
 
 describe('<Table />', () => {
@@ -39,5 +39,14 @@ describe('<Table />', () => {
         render(<Table columns = {columns} rows = {rows} />)
 
         expect(screen.getByText('one')).toHaveStyle('text-decoration-line: line-through')
+    })
+
+    test('should call onRowClick', () => {
+        const onRowClickMock = jest.fn()
+        render(<Table columns = {columns} rows = {rows} invertLastColumnAlign onRowClick = {onRowClickMock}/>)
+
+        userEvent.click(screen.getAllByTestId('Table__row')[0])
+
+        expect(onRowClickMock).toHaveBeenCalledWith(rows[0].data)
     })
 })

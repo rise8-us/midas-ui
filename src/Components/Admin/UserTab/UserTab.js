@@ -1,32 +1,49 @@
-import { IconButton, InputBase, makeStyles, Paper, Typography } from '@material-ui/core'
+import { Box, CircularProgress, fade, InputBase, makeStyles } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
-import React, { useEffect, useState } from 'react'
+import { unwrapResult } from '@reduxjs/toolkit'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestFetchOneUser } from '../../../Redux/Users/actions'
+import useDebounce from '../../../Hooks/useDebounce'
+import { requestFindUserBy } from '../../../Redux/Users/actions'
 import { selectUserById } from '../../../Redux/Users/selectors'
-import { Header } from '../../Header'
+import { Table } from '../../Table'
 import { UserRoles } from '../../UserRoles'
 import { UserSettings } from '../../UserSettings'
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        padding: '2px 4px',
+    searchIcon: {
+        width: 36,
+        pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
-        width: 400,
-        marginLeft: 20
+        justifyContent: 'center',
+        color: theme.palette.secondary.main
     },
-    input: {
-        marginLeft: theme.spacing(1),
-        flex: 1,
+    inputRoot: {
+        height: 48,
+        color: 'inherit',
+        backgroundColor: theme.palette.background.paper,
+        '&:hover': {
+            backgroundColor: fade(theme.palette.background.paper, 0.85)
+        },
+        margin: theme.spacing(3, 3, 1, 3),
+        borderRadius: 3,
+        width: '25%',
+        '&:focus-within': {
+            width: '50%',
+            transition: theme.transitions.create('width', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen
+            })
+        }
     },
-    iconButton: {
-        padding: 10,
+    searching: {
+        padding: theme.spacing(1),
+        marginRight: theme.spacing(1)
     },
-    divider: {
-        height: 28,
-        margin: 4,
-    },
+    tableWrap: {
+        margin: theme.spacing(1, 3)
+    }
 }))
 
 function UserTab() {
@@ -34,63 +51,78 @@ function UserTab() {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const [userId, setUserId] = useState('')
+    const [searchTerm, setSearchTerm] = useState('')
+    const [results, setResults] = useState([])
+    const [isSearching, setIsSearching] = useState(false)
+    const [userId, setUserId] = useState()
     const [show, setShow] = useState(false)
-    const [error, setError] = useState(false)
 
-    const user = useSelector((state) => selectUserById(state, userId))
+    const user = useSelector(state => selectUserById(state, userId))
 
-    useEffect(() => {
-        if (Object.keys(user).length === 0 && userId.length > 0) dispatch(requestFetchOneUser(userId))
-    }, [userId])
+    const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
-    const handleChange = (e) => {
-        const value = e.target.value.trim()
-        if (value === '') {
-            setShow(false)
-            setError(false)
-        }
-        setUserId(value)
-    }
+    const buildRows = useCallback(() => {
+        return results.map(r => ({
+            data: [
+                r.id,
+                r.username,
+                r.email,
+                r.displayName
+            ],
+            properties: {
+                strikeThrough: false
+            }
+        }))
+    }, [results])
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (userId === '') return
-
-        if (Object.keys(user).length === 0) {
-            setError(true)
-            return
-        } else {
-            setShow(true)
-        }
+        const searchValue = e.target.value
+        const searchString = `username:*${searchValue}* OR email:*${searchValue}* OR displayName:*${searchValue}*`
+        setSearchTerm(searchString)
     }
 
+    const showUser = (data) => {
+        setUserId(data[0])
+        setShow(true)
+    }
+
+    useEffect(() => {
+        setShow(false)
+        if (debouncedSearchTerm) {
+            setIsSearching(true)
+            dispatch(requestFindUserBy(debouncedSearchTerm)).then(unwrapResult).then(results => {
+                setIsSearching(false)
+                setResults(results)
+            })
+        } else {
+            setResults([])
+        }
+    }, [debouncedSearchTerm])
+
     return (
-        <>
-            <Header title = 'User Management' />
-            <Paper component = 'form' className = {classes.root} onSubmit = {handleSubmit}>
-                <InputBase
-                    className = {classes.input}
-                    placeholder = 'Search by User ID'
-                    inputProps = {{ 'aria-label': 'search userId' }}
-                    type = 'text'
-                    id = 'userId'
-                    name = 'userId'
-                    value = {userId}
-                    onChange = {handleChange}
-                    data-testid = 'InputBase__input-user-id'
-                />
-                <IconButton
-                    type = 'submit'
-                    className = {classes.iconButton}
-                    aria-label = 'search'
-                    data-testid = 'InputBase__button-user-id'
-                >
-                    <Search/>
-                </IconButton>
-            </Paper>
+        <Box display = 'flex' flexDirection = 'column'>
+            <InputBase
+                placeholder = 'Search…'
+                startAdornment = {<Search className = {classes.searchIcon}/>}
+                endAdornment = {isSearching ? <CircularProgress className = {classes.searching}/> : null}
+                classes = {{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                    focused: classes.inputFocus
+                }}
+                inputProps = {{ 'data-testid': 'UserTab__search-input' }}
+                onChange = {handleSubmit}
+            />
             <>
-                {error && <Typography variant = 'h3'>{`User ID: ${userId} Does not exist`}</Typography>}
+                <div className = {classes.tableWrap}>
+                    <Table
+                        columns = {['id', 'username', 'email', 'display name']}
+                        rows = {buildRows()}
+                        onRowClick = {showUser}
+                        tableWidth = '100%'
+                    />
+                </div>
                 {show &&
                     <>
                         <UserSettings user = {user} />
@@ -98,7 +130,7 @@ function UserTab() {
                     </>
                 }
             </>
-        </>
+        </Box>
     )
 }
 

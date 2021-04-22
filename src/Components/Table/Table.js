@@ -20,13 +20,20 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) {
+function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
+    showHeaders, onRowClick, invertLastColumnAlign }) {
+
     const classes = useStyles()
     const theme = useTheme()
 
     const end = align === 'left' ? 'right' : 'left'
 
-    const getAlign = (columnsLength, currentIndex) => columnsLength - 1 !== currentIndex ? align : end
+    const getAlign = (columnsLength, currentIndex) => {
+        return invertLastColumnAlign ?
+            columnsLength - 1 !== currentIndex ? align : end
+            :
+            align
+    }
 
     return (
         <Paper
@@ -38,25 +45,31 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) 
             }}
         >
             <MUITable { ...stickyHeader }>
-                <TableHead>
-                    <TableRow>
-                        {columns.map((column, index) => (
-                            <TableCell
-                                key = {index}
-                                align = {getAlign(columns.length, index)}
-                            >
-                                {column}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
+                {showHeaders &&
+                    <TableHead>
+                        <TableRow>
+                            {columns.map((column, index) => (
+                                <TableCell
+                                    key = {index}
+                                    align = {getAlign(columns.length, index)}
+                                >
+                                    {column}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                }
                 <TableBody>
                     {rows.map((row, index) => {
                         return (
                             <TableRow
-                                tabIndex = {-1}
                                 key = {index}
                                 hover
+                                data-testid = 'Table__row'
+                                onClick = {() => { typeof onRowClick === 'function' && onRowClick(row.data) }}
+                                style = {{
+                                    cursor: typeof onRowClick === 'function' ? 'pointer' : 'inherit'
+                                }}
                             >
                                 {columns.map((column, idx) => (
                                     <TableCell
@@ -70,6 +83,7 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent }) 
                                                 columns.length - 1 === idx && column.length === 0 ?
                                                     'row-reverse' : 'row'
                                             }
+                                            textAlign = {getAlign(columns.length, idx)}
                                             style = {{
                                                 color: row.properties.strikeThrough ?
                                                     theme.palette.text.disabled : theme.palette.text.primary,
@@ -96,18 +110,24 @@ Table.propTypes = {
             strikeThrough: PropTypes.bool
         })
     })).isRequired,
+    showHeaders: PropTypes.bool,
     stickyHeader: PropTypes.bool,
     tableWidth: PropTypes.string,
     align: PropTypes.string,
-    transparent: PropTypes.bool
+    transparent: PropTypes.bool,
+    onRowClick: PropTypes.func,
+    invertLastColumnAlign: PropTypes.bool
 }
 
 Table.defaultProps = {
+    showHeaders: true,
+    invertLastColumnAlign: false,
     stickyHeader: true,
     maxHeight: '440px',
     align: 'left',
     tableWidth: '75vw',
-    transparent: false
+    transparent: false,
+    onRowClick: undefined
 }
 
 export default Table
