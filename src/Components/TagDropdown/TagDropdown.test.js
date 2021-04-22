@@ -29,6 +29,7 @@ describe('<TagDropdown />', () => {
         fireEvent.click(await screen.findByTitle('Open'))
 
         const option = screen.getByText('Tag 2')
+
         expect(option).toBeInTheDocument()
         fireEvent.click(option)
 
@@ -68,6 +69,7 @@ describe('<TagDropdown />', () => {
 
     test('should display error message', () => {
         render(<TagDropdown defaultTags = {[allTags[0], allTags[2]]} error = {tagsError} onChange = {onTagsChange} />)
+
         expect(screen.getByText('Tag error')).toBeInTheDocument()
     })
 

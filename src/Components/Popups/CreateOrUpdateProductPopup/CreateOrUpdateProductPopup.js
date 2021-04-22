@@ -6,25 +6,28 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
-import { requestUpdateProduct } from '../../../Redux/Products/actions'
+import { requestCreateProduct, requestUpdateProduct } from '../../../Redux/Products/actions'
 import ProductConstants from '../../../Redux/Products/constants'
 import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
 import { selectNoAppIdProjects } from '../../../Redux/Projects/selectors'
-import { selectAllTags } from '../../../Redux/Tags/selectors'
 import { Popup } from '../../Popup'
-import { Tag } from '../../Tag'
+import { TagDropdown } from '../../TagDropdown'
 
 const filter = createFilterOptions()
 
-function UpdateProductPopup({ id }) {
+function CreateOrUpdateProductPopup({ id }) {
     const dispatch = useDispatch()
 
-    const allTags = useSelector(selectAllTags)
     const availableProjects = useSelector(selectNoAppIdProjects)
     const product = useSelector(state => selectProductById(state, id))
 
-    const errors = useSelector(state => selectRequestErrors(state, ProductConstants.UPDATE_PRODUCT))
+    const isCreate = product.id === undefined
+    const popupTitle = isCreate ? 'Create Product' : 'Update Product'
+    const productConstant = isCreate ? ProductConstants.CREATE_PRODUCT : ProductConstants.UPDATE_PRODUCT
+    const productRequest = (data) => isCreate ? requestCreateProduct(data) : requestUpdateProduct(data)
+
+    const errors = useSelector(state => selectRequestErrors(state, productConstant))
 
     const [name, setName] = useState(product.name)
     const [description, setDescription] = useState(product.description)
@@ -37,6 +40,7 @@ function UpdateProductPopup({ id }) {
 
     const onNameChange = (e) => setName(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
+    const onTagsChange = (value) => setTags(value)
 
     const onSelectProjects = (_e, values) => {
         const newProject = values.filter(o => o.id === -1)
@@ -59,28 +63,11 @@ function UpdateProductPopup({ id }) {
             setProjects(values)
         }
     }
-    const onSelectTag = (_e, values) => {
-        if (values.length === 0) {
-            setTags([])
-            return
-        }
 
-        const selectedValue = String(values[values.length - 1].label).split('::')
-        const existingTag = values.filter(tag =>
-            selectedValue.length === 2 &&
-            tag.label.includes(selectedValue[0], 0) &&
-            !tag.label.includes(selectedValue[1])
-        )
-
-        if (existingTag.length === 0) setTags(values)
-        else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
-    }
-
-    const onClose = () => dispatch(closePopup(ProductConstants.UPDATE_PRODUCT))
-    const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
+    const onClose = () => dispatch(closePopup(productConstant))
 
     const onSubmit = () => {
-        dispatch(requestUpdateProduct({
+        dispatch(productRequest({
             ...product,
             name,
             description,
@@ -98,14 +85,14 @@ function UpdateProductPopup({ id }) {
 
     return (
         <Popup
-            title = 'Update Product'
+            title = {popupTitle}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Product Name'
-                    data-testid = 'UpdateProductPopup__input-name'
+                    data-testid = 'CreateOrUpdateProductPopup__input-name'
                     value = {name}
                     onChange = {onNameChange}
                     error = { nameError.length > 0 }
@@ -115,37 +102,16 @@ function UpdateProductPopup({ id }) {
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'UpdateProductPopup__input-description'
+                    data-testid = 'CreateOrUpdateProductPopup__input-description'
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'
                     multiline
                 />
-                <Autocomplete
-                    multiple
-                    options = {allTags}
-                    getOptionLabel = {(option) => option.label}
-                    getOptionSelected = {(option, value) => option.id === value.id}
-                    onChange = {onSelectTag}
-                    value = {tags}
-                    defaultValue = {tags}
-                    renderTags = {(value) => value.map((tag, index) =>
-                        <Tag
-                            key = {index}
-                            {...tag}
-                            onDelete = {() => onRemoveTag(tag.id)}
-                        />
-                    )}
-                    renderInput = {(params) =>
-                        <TextField
-                            {...params}
-                            label = 'Add Tag(s)'
-                            margin = 'dense'
-                            error = { tagsError.length > 0 }
-                            helperText = { tagsError[0] ?? ''}
-                            data-testid = 'UpdateProductPopup__input-tags'
-                        />
-                    }
+                <TagDropdown
+                    defaultTags = {tags}
+                    error = {tagsError}
+                    onChange = {onTagsChange}
                 />
                 <Autocomplete
                     multiple
@@ -163,7 +129,7 @@ function UpdateProductPopup({ id }) {
                             margin = 'dense'
                             error = {projectsError.length > 0}
                             helperText = {projectsError[0] ?? ''}
-                            data-testid = 'UpdateProductPopup__input-projects'
+                            data-testid = 'CreateOrUpdateProductPopup__input-projects'
                         />
                     }
                     filterOptions = {(options, params) => {
@@ -182,12 +148,12 @@ function UpdateProductPopup({ id }) {
     )
 }
 
-UpdateProductPopup.propTypes = {
+CreateOrUpdateProductPopup.propTypes = {
     id: PropTypes.number
 }
 
-UpdateProductPopup.defaultProps = {
+CreateOrUpdateProductPopup.defaultProps = {
     id: 1
 }
 
-export default UpdateProductPopup
+export default CreateOrUpdateProductPopup

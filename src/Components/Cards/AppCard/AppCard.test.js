@@ -58,7 +58,7 @@ describe('<AppCard />', () => {
         fireEvent.click(screen.getByTestId('AppCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id: product.id })
+            ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: product.id })
     })
 
 })

@@ -23,7 +23,7 @@ function AppCard({ id }) {
     const calcStep = (project) => Math.log2(project.projectJourneyMap + 1)
 
     const updateProductPopup = () => {
-        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id }))
+        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id }))
     }
 
     useLayoutEffect(() => {

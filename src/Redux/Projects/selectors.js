@@ -25,9 +25,7 @@ export const selectProjects = (state) => {
     const allProjects = state.projects
     if (!allProjects) return []
 
-    return Object.keys(allProjects).map(id => {
-        return selectProjectById(state, id)
-    })
+    return Object.keys(allProjects).map(id => selectProjectById(state, id))
 }
 
 export const selectUnarchivedProjects = (state) => {

@@ -24,7 +24,7 @@ function Home() {
 
     const allProductIds = useSelector(selectUnarchivedProductIds)
 
-    const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateProductPopup'))
+    const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
 
     return (
