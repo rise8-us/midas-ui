@@ -91,9 +91,9 @@ function UserTab() {
         setShow(false)
         if (debouncedSearchTerm) {
             setIsSearching(true)
-            dispatch(requestFindUserBy(debouncedSearchTerm)).then(unwrapResult).then(results => {
+            dispatch(requestFindUserBy(debouncedSearchTerm)).then(unwrapResult).then(data => {
                 setIsSearching(false)
-                setResults(results)
+                setResults(data)
             })
         } else {
             setResults([])

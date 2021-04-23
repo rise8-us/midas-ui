@@ -5,7 +5,8 @@ export const selectProductById = (state, id) => {
     const product = state.products[id]
     if (!product) return {
         name: '',
-        description: '',
+        visionStatement: '',
+        problemStatement: '',
         tags: [],
         projects: []
     }
@@ -17,7 +18,8 @@ export const selectProductById = (state, id) => {
         ...product,
         tags,
         projects,
-        description: product.description ?? '',
+        visionStatement: product.visionStatement ?? '',
+        problemStatement: product.problemStatement ?? '',
     }
 
     return updatedProduct

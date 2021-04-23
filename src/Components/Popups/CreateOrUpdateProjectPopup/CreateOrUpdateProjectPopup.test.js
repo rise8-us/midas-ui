@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent
 } from '../../../Utilities/test-utils'
 import { CreateOrUpdateProjectPopup } from './index'
 
@@ -87,12 +87,9 @@ describe('<CreateOrUpdateProjectPopup />', () => {
         const gitlabProjectId = '15550'
         const description = 'New Description'
 
-        const nameInput = within(screen.getByTestId('CreateOrUpdateProjectPopup__input-name'))
-            .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('CreateOrUpdateProjectPopup__input-description'))
-            .getByRole('textbox')
-        const gitlabProjectIdInput = within(screen.getByTestId('CreateOrUpdateProjectPopup__input-gitlabProjectId'))
-            .getByRole('spinbutton')
+        const nameInput = screen.getByTestId('CreateOrUpdateProjectPopup__input-name')
+        const descriptionInput = screen.getByTestId('CreateOrUpdateProjectPopup__input-description')
+        const gitlabProjectIdInput = screen.getByTestId('CreateOrUpdateProjectPopup__input-gitlabProjectId')
 
         userEvent.clear(descriptionInput)
         userEvent.clear(gitlabProjectIdInput)

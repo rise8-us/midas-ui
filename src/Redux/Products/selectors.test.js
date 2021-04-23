@@ -10,6 +10,8 @@ const mockState = {
             id: 4,
             name: 'Midas Product',
             description: null,
+            visionStatement: null,
+            problemStatement: null,
             projectIds: [2],
             isArchived: false,
             portfolioId: 2,
@@ -19,6 +21,8 @@ const mockState = {
             id: 5,
             name: 'Something Product',
             description: 'Something Product',
+            visionStatement: 'null',
+            problemStatement: 'null',
             projectIds: [3],
             isArchived: true,
             portfolioId: 4,
@@ -54,7 +58,8 @@ test('selectProductById - returns product object', () => {
 
     const returnedProduct = {
         ...mockState.products[4],
-        description: '',
+        visionStatement: '',
+        problemStatement: '',
         tags: [{ ...mockState.tags[7] }],
         projects: [{ ...mockState.projects[2] }]
 
@@ -74,7 +79,9 @@ test('selectProducts - returns product array', () => {
     const productOne = {
         id: 4,
         name: 'Midas Product',
-        description: '',
+        description: null,
+        visionStatement: '',
+        problemStatement: '',
         projectIds: [2],
         isArchived: false,
         portfolioId: 2,

@@ -11,6 +11,7 @@ import ProductConstants from '../../../Redux/Products/constants'
 import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
 import { selectNoAppIdProjects } from '../../../Redux/Projects/selectors'
+import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
 import { TagDropdown } from '../../TagDropdown'
 
@@ -30,16 +31,18 @@ function CreateOrUpdateProductPopup({ id }) {
     const errors = useSelector(state => selectRequestErrors(state, productConstant))
 
     const [name, setName] = useState(product.name)
-    const [description, setDescription] = useState(product.description)
+    const [visionStatement, setVisionStatement] = useState(product.visionStatement)
     const [tags, setTags] = useState(product.tags)
     const [projects, setProjects] = useState(product.projects)
+    const [problemStatement, setProblemStatement] = useState(product.problemStatement)
 
     const [nameError, setNameError] = useState([])
     const [tagsError, setTagsError] = useState([])
     const [projectsError, setProjectsError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
-    const onDescriptionChange = (e) => setDescription(e.target.value)
+    const onVisionChange = (e) => setVisionStatement(e.target.value)
+    const onProblemStatementChange = (e) => setProblemStatement(e.target.value)
     const onTagsChange = (value) => setTags(value)
 
     const onSelectProjects = (_e, values) => {
@@ -58,7 +61,9 @@ function CreateOrUpdateProductPopup({ id }) {
                     newValues.push(results)
                     setProjects(newValues)
                 })
-                .catch(rejectedValueOrSerializedError => setProjectsError([rejectedValueOrSerializedError]))
+                .catch(rejectedValueOrSerializedError => {
+                    setProjectsError([rejectedValueOrSerializedError])
+                })
         } else {
             setProjects(values)
         }
@@ -70,7 +75,8 @@ function CreateOrUpdateProductPopup({ id }) {
         dispatch(productRequest({
             ...product,
             name,
-            description,
+            visionStatement,
+            problemStatement,
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
         }))
@@ -80,6 +86,7 @@ function CreateOrUpdateProductPopup({ id }) {
         if (errors.length > 0) {
             setNameError(errors.filter(error => error.includes('name')))
             setTagsError(errors.filter(error => error.includes('Tag')))
+            setProjectsError(errors.filter(error => error.includes('Project with')))
         }
     }, [errors])
 
@@ -92,19 +99,33 @@ function CreateOrUpdateProductPopup({ id }) {
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Product Name'
-                    data-testid = 'CreateOrUpdateProductPopup__input-name'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateProductPopup__input-name'
+                    }}
                     value = {name}
                     onChange = {onNameChange}
                     error = { nameError.length > 0 }
-                    helperText = { nameError[0] ?? '' }
+                    helperText = {<FormatErrors errors = {nameError}/>}
                     margin = 'dense'
                     required
                 />
                 <TextField
-                    label = 'Description'
-                    data-testid = 'CreateOrUpdateProductPopup__input-description'
-                    value = {description}
-                    onChange = {onDescriptionChange}
+                    label = 'Vision'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateProductPopup__input-vision'
+                    }}
+                    value = {visionStatement}
+                    onChange = {onVisionChange}
+                    margin = 'dense'
+                    multiline
+                />
+                <TextField
+                    label = 'Problem Statement'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateProductPopup__input-problem-statement'
+                    }}
+                    value = {problemStatement}
+                    onChange = {onProblemStatementChange}
                     margin = 'dense'
                     multiline
                 />
@@ -128,7 +149,7 @@ function CreateOrUpdateProductPopup({ id }) {
                             label = 'Add Project(s)'
                             margin = 'dense'
                             error = {projectsError.length > 0}
-                            helperText = {projectsError[0] ?? ''}
+                            helperText = {<FormatErrors errors = {projectsError}/>}
                             data-testid = 'CreateOrUpdateProductPopup__input-projects'
                         />
                     }

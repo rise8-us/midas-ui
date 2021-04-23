@@ -64,10 +64,10 @@
     "ssri": "^8.0.1"
   },
   "devDependencies": {
+    "@testing-library/dom": "^7.30.3",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.3",
-    "@testing-library/dom":"^7.30.3",
     "eslint": "^7.20.0",
     "eslint-plugin-jest": "^24.1.5",
     "prop-types": "^15.7.2",
