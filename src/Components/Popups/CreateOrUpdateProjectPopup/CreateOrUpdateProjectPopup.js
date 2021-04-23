@@ -7,6 +7,7 @@ import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateProject, requestUpdateProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectProjectById } from '../../../Redux/Projects/selectors'
+import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
 import { TagDropdown } from '../../TagDropdown'
 
@@ -73,11 +74,13 @@ function CreateOrUpdateProjectPopup({ id }) {
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Project Name'
-                    data-testid = 'CreateOrUpdateProjectPopup__input-name'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateProjectPopup__input-name'
+                    }}
                     value = {name}
                     onChange = {onNameChange}
                     error = {nameError.length > 0}
-                    helperText = {nameError[0] ?? ''}
+                    helperText = {<FormatErrors errors = {nameError}/>}
                     margin = 'dense'
                     required
                 />
@@ -85,16 +88,20 @@ function CreateOrUpdateProjectPopup({ id }) {
                     label = 'Gitlab Project Id'
                     type = 'number'
                     className = {classes.numberField}
-                    data-testid = 'CreateOrUpdateProjectPopup__input-gitlabProjectId'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateProjectPopup__input-gitlabProjectId'
+                    }}
                     value = {gitlabProjectId}
                     onChange = {onGitlabProjectIdChange}
                     error = {gitlabError.length > 0}
-                    helperText = {gitlabError[0] ?? ''}
+                    helperText = {<FormatErrors errors = {gitlabError}/>}
                     margin = 'dense'
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'CreateOrUpdateProjectPopup__input-description'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateProjectPopup__input-description'
+                    }}
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'

@@ -4,7 +4,7 @@ import TagConstants from '../../../Redux/Tags/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { Home } from './index'
 
-jest.mock('../../Cards/AppCard/AppCard', () =>
+jest.mock('../../Cards/ProductCard/ProductCard', () =>
     function testing() { return (<div>Product Card mock</div>) })
 
 describe('<Home>', () => {
@@ -27,7 +27,7 @@ describe('<Home>', () => {
         expect(screen.getByText('Product Card mock')).toBeInTheDocument()
     })
 
-    test('Add App calls openPopup', () => {
+    test('Add Product calls openPopup', () => {
         render(<Home />)
 
         fireEvent.click(screen.getByText('Add New Product'))

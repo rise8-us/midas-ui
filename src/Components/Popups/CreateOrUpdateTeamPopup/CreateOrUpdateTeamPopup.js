@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
-import { requestUpdateTeam, requestCreateTeam } from '../../../Redux/Teams/actions'
+import { requestCreateTeam, requestUpdateTeam } from '../../../Redux/Teams/actions'
 import TeamConstants from '../../../Redux/Teams/constants'
 import { selectTeamById } from '../../../Redux/Teams/selectors'
+import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
 
 const useStyles = makeStyles(() => ({
@@ -69,11 +70,13 @@ function CreateOrUpdateTeamPopup({ id }) {
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Team Name'
-                    data-testid = 'CreateOrUpdateTeamPopup__input-name'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateTeamPopup__input-name'
+                    }}
                     value = {name}
                     onChange = {onNameChange}
                     error = {nameError.length > 0}
-                    helperText = {nameError[0] ?? ''}
+                    helperText = {<FormatErrors errors = {nameError}/>}
                     margin = 'dense'
                     required
                 />
@@ -81,14 +84,18 @@ function CreateOrUpdateTeamPopup({ id }) {
                     className = {classes.numberField}
                     label = 'Gitlab Group Id'
                     type = 'number'
-                    data-testid = 'CreateOrUpdateTeamPopup__input-gitlabGroupId'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateTeamPopup__input-gitlabGroupId'
+                    }}
                     value = {gitlabGroupId}
                     onChange = {onGitlabGroupIdChange}
                     margin = 'dense'
                 />
                 <TextField
                     label = 'Description'
-                    data-testid = 'CreateOrUpdateTeamPopup__input-description'
+                    inputProps = {{
+                        'data-testid': 'CreateOrUpdateTeamPopup__input-description'
+                    }}
                     value = {description}
                     onChange = {onDescriptionChange}
                     margin = 'dense'

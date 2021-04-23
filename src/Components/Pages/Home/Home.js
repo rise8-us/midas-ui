@@ -6,7 +6,7 @@ import { openPopup } from '../../../Redux/Popups/actions'
 import ProductConstant from '../../../Redux/Products/constants'
 import { selectUnarchivedProductIds } from '../../../Redux/Products/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
-import { AppCard } from '../../Cards'
+import { ProductCard } from '../../Cards'
 import { Page } from '../../Page'
 
 const useStyles = makeStyles(theme => ({
@@ -64,7 +64,7 @@ function Home() {
                     style = {{ marginBottom: '40px', padding: '0 30px' }}
                 >
                     {allProductIds.map((id) => (
-                        <AppCard key = {id} id = {id}/>
+                        <ProductCard key = {id} id = {id}/>
                     ))}
                 </Box>
             </Box>

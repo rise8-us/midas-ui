@@ -1,3 +1,2 @@
+export { ProductCard } from './ProductCard'
 export { ProjectCard } from './ProjectCard'
-export { AppCard } from './AppCard'
-

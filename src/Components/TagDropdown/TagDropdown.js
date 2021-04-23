@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectAllTags } from '../../Redux/Tags/selectors'
+import FormatErrors from '../../Utilities/FormatErrors'
 import { Tag } from '../Tag'
 
 function TagDropdown({ defaultTags, error, onChange }) {
@@ -56,7 +57,7 @@ function TagDropdown({ defaultTags, error, onChange }) {
                     label = 'Add Tag(s)'
                     margin = 'dense'
                     error = { error.length > 0 }
-                    helperText = { error[0] ?? ''}
+                    helperText = {<FormatErrors errors = {error}/>}
                 />
             }
         />
