@@ -13,10 +13,10 @@ describe('<CreateOrUpdateProductPopup />', () => {
     const selectNoAppIdProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectNoAppIdProjects')
 
     const returnedTags = [
-        { id: 4, label: 'Tag 1', visionStatement: '', color: '#000000' },
-        { id: 2, label: 'Tag 2', visionStatement: '', color: '#000000' },
-        { id: 13, label: 'scoped::label 1', visionStatement: '', color: '#000000' },
-        { id: 14, label: 'scoped::label 2', visionStatement: '', color: '#000000' }
+        { id: 4, label: 'Tag 1', description: '', color: '#000000' },
+        { id: 2, label: 'Tag 2', description: '', color: '#000000' },
+        { id: 13, label: 'scoped::label 1', description: '', color: '#000000' },
+        { id: 14, label: 'scoped::label 2', description: '', color: '#000000' }
     ]
 
     const returnedProjects = [
@@ -38,7 +38,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
     }
 
     beforeEach(() => {
-        useDispatchMock().mockReturnValue({})
+        useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
         selectAllTagsMock.mockReturnValue(returnedTags)
         selectNoAppIdProjectsMock.mockReturnValue(returnedProjects)
     })
@@ -49,33 +49,20 @@ describe('<CreateOrUpdateProductPopup />', () => {
         expect(screen.getByText('Create Product')).toBeInTheDocument()
     })
 
-    test('should execute onSubmit', async() => {
+    test('should call onSubmit', async() => {
         render(<CreateOrUpdateProductPopup />)
-
-        const name = 'My New Product'
-        const visionStatement = 'I have a dream'
-        const problemStatement = 'To update all outdated software'
-
-        const nameInput = screen.getByTestId('CreateOrUpdateProductPopup__input-name')
-        const visionStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-vision')
-        const problemStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-problem-statement')
-
-        userEvent.type(nameInput, name)
-        userEvent.type(visionStatementInput, visionStatement)
-        userEvent.type(problemStatementInput, problemStatement)
-
-        fireEvent.click(screen.queryAllByTitle('Open')[0])
-        const option = screen.getByText('Tag 2')
-        expect(option).toBeInTheDocument()
-        fireEvent.click(option)
-
-        fireEvent.click(screen.queryAllByTitle('Open')[1])
-        fireEvent.click(screen.getByText('project 1'))
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitProductMock).toHaveBeenCalledWith({
-            name, visionStatement, problemStatement, tagIds: [2], projectIds: [20], projects: [], tags: []
+            name: '',
+            visionStatement: '',
+            problemStatement: '',
+            tags: [],
+            tagIds: [],
+            projects: [],
+            projectIds: [],
+            productManagerId: null
         })
     })
 
@@ -130,19 +117,19 @@ describe('<CreateOrUpdateProductPopup />', () => {
     })
 
     test('should call onSubmit for updateProduct', async() => {
+        jest.setTimeout(7000)
         const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
         selectProductByIdMock.mockReturnValue(returnedFoundProduct)
-        render(<CreateOrUpdateProductPopup id = {4} />)
+
+        const { rerender } = render(<CreateOrUpdateProductPopup id = {4} />)
 
         const name = 'My Edited Product'
         const visionStatement = 'New visionStatement'
         const problemStatement = 'To update all outdated software'
 
-
         const nameInput = screen.getByTestId('CreateOrUpdateProductPopup__input-name')
         const visionStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-vision')
         const problemStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-problem-statement')
-
 
         userEvent.clear(visionStatementInput)
         userEvent.clear(nameInput)
@@ -152,13 +139,15 @@ describe('<CreateOrUpdateProductPopup />', () => {
         userEvent.type(nameInput, name)
         userEvent.type(problemStatementInput, problemStatement)
 
+        rerender(<CreateOrUpdateProductPopup id = {4} />)
+
         fireEvent.click(screen.queryAllByTitle('Open')[1])
-        fireEvent.click(screen.getByText('project 2'))
+        fireEvent.click(await screen.findByText('project 2'))
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateProductMock).toHaveBeenCalledWith({
-            ...returnedFoundProduct, problemStatement, name, visionStatement, projectIds: [20, 21]
+            ...returnedFoundProduct, problemStatement, name, visionStatement, projectIds: [20, 21], productManagerId: 1
         })
     })
 })
