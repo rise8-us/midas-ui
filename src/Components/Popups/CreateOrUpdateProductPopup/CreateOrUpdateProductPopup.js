@@ -11,8 +11,10 @@ import ProductConstants from '../../../Redux/Products/constants'
 import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
 import { selectNoAppIdProjects } from '../../../Redux/Projects/selectors'
+import { requestFindUserBy } from '../../../Redux/Users/actions'
 import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
+import { SearchUsers } from '../../Search/SearchUsers'
 import { TagDropdown } from '../../TagDropdown'
 
 const filter = createFilterOptions()
@@ -20,7 +22,7 @@ const filter = createFilterOptions()
 function CreateOrUpdateProductPopup({ id }) {
     const dispatch = useDispatch()
 
-    const availableProjects = useSelector(selectNoAppIdProjects)
+    const noAppIdProjects = useSelector(selectNoAppIdProjects)
     const product = useSelector(state => selectProductById(state, id))
 
     const isCreate = product.id === undefined
@@ -35,6 +37,8 @@ function CreateOrUpdateProductPopup({ id }) {
     const [tags, setTags] = useState(product.tags)
     const [projects, setProjects] = useState(product.projects)
     const [problemStatement, setProblemStatement] = useState(product.problemStatement)
+    const [productManager, setProductManager] = useState()
+    const [availableProjects, setAvailableProjects] = useState(noAppIdProjects)
 
     const [nameError, setNameError] = useState([])
     const [tagsError, setTagsError] = useState([])
@@ -72,15 +76,26 @@ function CreateOrUpdateProductPopup({ id }) {
     const onClose = () => dispatch(closePopup(productConstant))
 
     const onSubmit = () => {
+        const productManagerId = productManager === undefined ? null : productManager.id
+
         dispatch(productRequest({
             ...product,
             name,
             visionStatement,
             problemStatement,
+            productManagerId,
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
         }))
     }
+
+    useEffect(() => {
+        if (product.tags.length > 0) {
+            let totalProjects = [...noAppIdProjects]
+            product.projects.map(project => totalProjects.push(project))
+            setAvailableProjects(totalProjects)
+        }
+    }, [noAppIdProjects, product])
 
     useEffect(() => {
         if (errors.length > 0) {
@@ -89,6 +104,14 @@ function CreateOrUpdateProductPopup({ id }) {
             setProjectsError(errors.filter(error => error.includes('Project with')))
         }
     }, [errors])
+
+    useEffect(() => {
+        product.productManagerId && dispatch(requestFindUserBy(`id:${product.productManagerId}`))
+            .then(unwrapResult)
+            .then(data => {
+                setProductManager(data[0])
+            })
+    }, [])
 
     return (
         <Popup
@@ -128,6 +151,12 @@ function CreateOrUpdateProductPopup({ id }) {
                     onChange = {onProblemStatementChange}
                     margin = 'dense'
                     multiline
+                />
+                <SearchUsers
+                    onChange = {(_e, values) => setProductManager(values)}
+                    title = 'Product Manager'
+                    growFrom = '100%'
+                    value = {productManager}
                 />
                 <TagDropdown
                     defaultTags = {tags}
