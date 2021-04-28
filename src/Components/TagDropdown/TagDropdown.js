@@ -1,4 +1,5 @@
 import { TextField } from '@material-ui/core'
+import { ArrowDropDown } from '@material-ui/icons'
 import { Autocomplete } from '@material-ui/lab'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
@@ -7,7 +8,9 @@ import { selectAllTags } from '../../Redux/Tags/selectors'
 import FormatErrors from '../../Utilities/FormatErrors'
 import { Tag } from '../Tag'
 
-function TagDropdown({ defaultTags, error, onChange }) {
+function TagDropdown(props) {
+    const { defaultTags, error, onChange, label, deletable, disableUnderline, ...autocompleteProps } = props
+
     const allTags = useSelector(selectAllTags)
 
     const [tags, setTags] = useState(defaultTags)
@@ -37,6 +40,7 @@ function TagDropdown({ defaultTags, error, onChange }) {
 
     return (
         <Autocomplete
+            {...autocompleteProps}
             multiple
             options = {allTags}
             getOptionLabel = {(option) => option.label}
@@ -48,15 +52,19 @@ function TagDropdown({ defaultTags, error, onChange }) {
                 <Tag
                     key = {index}
                     {...tag}
-                    onDelete = {() => onRemoveTag(tag.id)}
+                    onDelete = {deletable ? () => onRemoveTag(tag.id) : null}
                 />
             )}
             renderInput = {(params) =>
                 <TextField
                     {...params}
-                    label = 'Add Tag(s)'
+                    label = {label}
                     margin = 'dense'
                     error = { error.length > 0 }
+                    InputProps = {{
+                        ...params.InputProps,
+                        disableUnderline,
+                    }}
                     helperText = {<FormatErrors errors = {error}/>}
                 />
             }
@@ -67,7 +75,25 @@ function TagDropdown({ defaultTags, error, onChange }) {
 TagDropdown.propTypes = {
     defaultTags: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
-    error: PropTypes.array.isRequired
+    error: PropTypes.array.isRequired,
+    disabled: PropTypes.bool,
+    freeSolo: PropTypes.bool,
+    disableClearable: PropTypes.bool,
+    label: PropTypes.string,
+    deletable: PropTypes.bool,
+    disableUnderline: PropTypes.bool,
+    popupIcon: PropTypes.node
+}
+
+TagDropdown.defaultProps = {
+    disabled: false,
+    freeSolo: false,
+    disableClearable: false,
+    label: null,
+    deletable: true,
+    disableUnderline: false,
+    popupIcon: <ArrowDropDown />
+
 }
 
 export default TagDropdown
