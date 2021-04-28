@@ -5,6 +5,7 @@ import {
 import { CreateOrUpdateProductPopup } from './index'
 
 describe('<CreateOrUpdateProductPopup />', () => {
+    jest.setTimeout(10000)
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
@@ -117,29 +118,23 @@ describe('<CreateOrUpdateProductPopup />', () => {
     })
 
     test('should call onSubmit for updateProduct', async() => {
-        jest.setTimeout(7000)
+
         const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
         selectProductByIdMock.mockReturnValue(returnedFoundProduct)
 
-        const { rerender } = render(<CreateOrUpdateProductPopup id = {4} />)
+        render(<CreateOrUpdateProductPopup id = {4} />)
 
         const name = 'My Edited Product'
         const visionStatement = 'New visionStatement'
-        const problemStatement = 'To update all outdated software'
 
         const nameInput = screen.getByTestId('CreateOrUpdateProductPopup__input-name')
         const visionStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-vision')
-        const problemStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-problem-statement')
 
         userEvent.clear(visionStatementInput)
         userEvent.clear(nameInput)
-        userEvent.clear(problemStatementInput)
 
         userEvent.type(visionStatementInput, visionStatement)
         userEvent.type(nameInput, name)
-        userEvent.type(problemStatementInput, problemStatement)
-
-        rerender(<CreateOrUpdateProductPopup id = {4} />)
 
         fireEvent.click(screen.queryAllByTitle('Open')[1])
         fireEvent.click(await screen.findByText('project 2'))
@@ -147,7 +142,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateProductMock).toHaveBeenCalledWith({
-            ...returnedFoundProduct, problemStatement, name, visionStatement, projectIds: [20, 21], productManagerId: 1
+            ...returnedFoundProduct, name, visionStatement, projectIds: [20, 21], productManagerId: 1
         })
     })
 })

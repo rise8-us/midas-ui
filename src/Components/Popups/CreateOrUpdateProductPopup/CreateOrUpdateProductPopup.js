@@ -36,7 +36,6 @@ function CreateOrUpdateProductPopup({ id }) {
     const [visionStatement, setVisionStatement] = useState(product.visionStatement)
     const [tags, setTags] = useState(product.tags)
     const [projects, setProjects] = useState(product.projects)
-    const [problemStatement, setProblemStatement] = useState(product.problemStatement)
     const [productManager, setProductManager] = useState()
     const [availableProjects, setAvailableProjects] = useState(noAppIdProjects)
 
@@ -46,7 +45,6 @@ function CreateOrUpdateProductPopup({ id }) {
 
     const onNameChange = (e) => setName(e.target.value)
     const onVisionChange = (e) => setVisionStatement(e.target.value)
-    const onProblemStatementChange = (e) => setProblemStatement(e.target.value)
     const onTagsChange = (value) => setTags(value)
 
     const onSelectProjects = (_e, values) => {
@@ -63,6 +61,7 @@ function CreateOrUpdateProductPopup({ id }) {
             })).then(unwrapResult)
                 .then(results => {
                     newValues.push(results)
+                    setAvailableProjects([...availableProjects, results])
                     setProjects(newValues)
                 })
                 .catch(rejectedValueOrSerializedError => {
@@ -82,7 +81,6 @@ function CreateOrUpdateProductPopup({ id }) {
             ...product,
             name,
             visionStatement,
-            problemStatement,
             productManagerId,
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
@@ -90,12 +88,12 @@ function CreateOrUpdateProductPopup({ id }) {
     }
 
     useEffect(() => {
-        if (product.tags.length > 0) {
+        if (product.projects.length > 0) {
             let totalProjects = [...noAppIdProjects]
             product.projects.map(project => totalProjects.push(project))
             setAvailableProjects(totalProjects)
         }
-    }, [noAppIdProjects, product])
+    }, [])
 
     useEffect(() => {
         if (errors.length > 0) {
@@ -142,21 +140,12 @@ function CreateOrUpdateProductPopup({ id }) {
                     margin = 'dense'
                     multiline
                 />
-                <TextField
-                    label = 'Problem Statement'
-                    inputProps = {{
-                        'data-testid': 'CreateOrUpdateProductPopup__input-problem-statement'
-                    }}
-                    value = {problemStatement}
-                    onChange = {onProblemStatementChange}
-                    margin = 'dense'
-                    multiline
-                />
                 <SearchUsers
                     onChange = {(_e, values) => setProductManager(values)}
                     title = 'Product Manager'
                     growFrom = '100%'
                     value = {productManager}
+                    freeSolo = {true}
                 />
                 <TagDropdown
                     defaultTags = {tags}

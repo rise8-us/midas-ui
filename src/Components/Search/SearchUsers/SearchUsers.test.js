@@ -3,6 +3,7 @@ import { fireEvent, render, screen, useDispatchMock, userEvent } from '../../../
 import { SearchUsers } from './index'
 
 describe('<SearchUsers />', () => {
+    jest.setTimeout(10000)
 
     const allUsers = [
         {
@@ -23,11 +24,8 @@ describe('<SearchUsers />', () => {
     test('should render default', async() => {
         render(<SearchUsers />)
 
-        const input = screen.getByDisplayValue('')
-        userEvent.type(input, 'test')
-        fireEvent.click(await screen.findByText('foobar'))
-
-        expect(screen.getByDisplayValue('foobar')).toBeInTheDocument()
+        expect(screen.getByText(/Search users/i)).toBeInTheDocument()
+        expect(screen.getByDisplayValue('')).toBeInTheDocument()
     })
 
     test('should render props', () => {
@@ -35,27 +33,6 @@ describe('<SearchUsers />', () => {
 
         expect(screen.getByText('test title')).toBeInTheDocument()
         expect(screen.getByDisplayValue('foobar')).toBeInTheDocument()
-    })
-
-    // test('should render no options text', async() => {
-    //     useDispatchMock().mockResolvedValue({ payload: [] })
-    //     render(<SearchUsers value = {allUsers[1]} title = 'test title'/>)
-
-    //     const input = screen.getByDisplayValue('foobar')
-    //     userEvent.type(input, 'test')
-    //     expect(await screen.findByText('No user(s) found…')).toBeInTheDocument()
-    // })
-
-    test('should render options on select', async() => {
-        render(<SearchUsers value = {allUsers[1]} title = 'test title'/>)
-
-        const input = screen.getByDisplayValue('foobar')
-        userEvent.type(input, 'test')
-
-        const longString = 'jsmith (Jon Jacob Jingle Hiemer Smith)'
-
-        expect(await screen.findByText('foobar')).toBeInTheDocument()
-        expect(await screen.findByText(longString)).toBeInTheDocument()
     })
 
     test('shoulld call onChange prop', async() => {
@@ -68,7 +45,6 @@ describe('<SearchUsers />', () => {
         fireEvent.click(await screen.findByText('foobar'))
 
         expect(onChangePropMock).toHaveBeenCalledTimes(1)
-
     })
 
 })
