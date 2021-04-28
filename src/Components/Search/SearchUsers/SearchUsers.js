@@ -43,7 +43,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function SearchUsers({ growFrom, onChange, title, value }) {
+function SearchUsers(props) {
+    const { growFrom, onChange, title, value, variant, disableUnderline, ...otherProps } = props
+
     const classes = useStyles({ growFrom })
     const dispatch = useDispatch()
 
@@ -100,6 +102,7 @@ function SearchUsers({ growFrom, onChange, title, value }) {
 
     return (
         <Autocomplete
+            {...otherProps}
             options = {options}
             noOptionsText = {getNoOptionsText()}
             handleHomeEndKeys
@@ -114,9 +117,9 @@ function SearchUsers({ growFrom, onChange, title, value }) {
             onChange = {onUserChange}
             renderInput = {(params) =>
                 <TextField
+                    variant = {variant}
                     {...params}
                     label = {title}
-                    variant = 'standard'
                     margin = 'dense'
                     classes = {{
                         root: classes.inputRoot,
@@ -125,9 +128,13 @@ function SearchUsers({ growFrom, onChange, title, value }) {
                     }}
                     InputProps = {{
                         ...params.InputProps,
-                        endAdornment: isSearching ? <CircularProgress color = 'inherit' size = {20} /> : null,
+                        endAdornment: isSearching ?
+                            <CircularProgress color = 'inherit' size = {20} />
+                            :
+                            <>{params.InputProps.endAdornment}</>,
                         startAdornment: open ? <Search className = {classes.searchIcon}/> : null,
                         onChange: handleSubmit,
+                        disableUnderline,
                         style: { paddingRight: '8px' },
                         'data-testid': 'SearchUser__input'
                     }}
@@ -146,14 +153,22 @@ SearchUsers.propTypes = {
         id: PropTypes.number,
         username: PropTypes.string,
         displayName: PropTypes.string
-    })
+    }),
+    freeSolo: PropTypes.bool,
+    disableClearable: PropTypes.bool,
+    disableUnderline: PropTypes.bool,
+    variant: PropTypes.string
 }
 
 SearchUsers.defaultProps = {
     onChange: undefined,
     growFrom: '50%',
     title: 'Search users',
-    value: undefined
+    value: undefined,
+    freeSolo: false,
+    disableClearable: false,
+    disableUnderline: false,
+    variant: 'standard'
 }
 
 export default SearchUsers
