@@ -110,7 +110,7 @@ function SearchUsers(props) {
             onOpen = {() => setOpen(true)}
             onClose = {() => setOpen(false)}
             getOptionLabel = {getOptionLabel}
-            getOptionSelected = {(option, value) => option.id === value.id}
+            getOptionSelected = {(option, selectedValue) => option.id === selectedValue.id}
             loading = {isSearching}
             loadingText = 'Searching…'
             value = {selectedUser ?? null}

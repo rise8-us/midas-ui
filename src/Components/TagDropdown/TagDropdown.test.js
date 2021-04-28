@@ -26,12 +26,8 @@ describe('<TagDropdown />', () => {
     test('should handle tag changes', async() => {
         render(<TagDropdown defaultTags = {[allTags[0]]} error = {[]} onChange = {onTagsChange} />)
 
-        fireEvent.click(await screen.findByTitle('Open'))
-
-        const option = screen.getByText('Tag 2')
-
-        expect(option).toBeInTheDocument()
-        fireEvent.click(option)
+        fireEvent.click(screen.getByTitle('Open'))
+        fireEvent.click(screen.getByText('Tag 2'))
 
         expect(screen.getByText('Tag 1')).toBeInTheDocument()
     })
@@ -58,10 +54,21 @@ describe('<TagDropdown />', () => {
         expect(screen.queryByText('label 1')).not.toBeInTheDocument()
     })
 
-    test('should handle remove all tags', async() => {
+    test('should not delete tag', () => {
+        render(<TagDropdown
+            defaultTags = {[allTags[0], allTags[2]]}
+            error = {[]}
+            onChange = {onTagsChange}
+            deletable = {false}
+        />)
+
+        expect(screen.queryByText('delete')).not.toBeInTheDocument()
+    })
+
+    test('should handle remove all tags', () => {
         render(<TagDropdown defaultTags = {[allTags[0], allTags[2]]} error = {[]} onChange = {onTagsChange} />)
 
-        fireEvent.click(await screen.findByTitle('Clear'))
+        fireEvent.click(screen.getByTitle('Clear'))
 
         expect(screen.queryByText('Tag 1')).not.toBeInTheDocument()
         expect(screen.queryByText('label 1')).not.toBeInTheDocument()

@@ -23,7 +23,6 @@ describe('<Product>', () => {
                 color: ''
             }
         ]
-
     }
 
     beforeEach(() => {
@@ -77,5 +76,16 @@ describe('<Product>', () => {
         })
     })
 
+    test('should display error messages', () => {
+        const state = {
+            errors: {
+                'products/updateOne': [
+                    'Tag error'
+                ]
+            }
+        }
+        render(<Product />, { initialState: state })
+        expect(screen.getByText('Tag error')).toBeInTheDocument()
+    })
 
 })
