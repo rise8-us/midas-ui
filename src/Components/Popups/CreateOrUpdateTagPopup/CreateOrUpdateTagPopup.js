@@ -60,7 +60,7 @@ function CreateOrUpdateTagPopup({ id }) {
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
-                    label = 'Tag Label'
+                    label = 'Label'
                     data-testid = 'CreateOrUpdateTagPopup__input-label'
                     value = {label}
                     onChange = {onLabelChange}

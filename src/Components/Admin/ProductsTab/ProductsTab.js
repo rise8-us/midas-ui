@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, makeStyles } from '@material-ui/core'
+import { Box, Button, Chip, IconButton, makeStyles } from '@material-ui/core'
 import { Add, Archive, Edit, Unarchive } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -51,11 +51,9 @@ function ProductsTab() {
 
     const buildProjects = (projects) => {
         return (
-            <Box display = 'flex' flexDirection = 'row'>
+            <Box display = 'flex'>
                 {projects.map((project, index) => (
-                    <Box key = {index} paddingRight = '5px' >
-                        {project.name}
-                    </Box>
+                    <Chip variant = 'outlined' size = 'small' key = {index} label = {project.name} />
                 ))}
             </Box>
         )
@@ -93,7 +91,7 @@ function ProductsTab() {
                     className = {classes.button}
                     onClick = {createProduct}
                 >
-                            Add New Product
+                    Add New Product
                 </Button>
             </Box>
             <Table

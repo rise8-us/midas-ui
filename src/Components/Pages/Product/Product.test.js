@@ -48,13 +48,13 @@ describe('<Product>', () => {
         })
         render(<Product />)
 
-        fireEvent.click(screen.getByTestId('SaveAlt__icon'))
+        fireEvent.click(screen.getByTestId('Product__icon-page-action'))
         expect(screen.getByTestId('Product__input-name').querySelector('input')).toHaveValue('')
     })
 
     test('should call onSubmit for update product vision', () => {
         const { rerender } = render(<Product />)
-        fireEvent.click(screen.getByTestId('SaveAlt__icon'))
+        fireEvent.click(screen.getByTestId('Product__icon-page-action'))
 
         rerender(<Product />)
 
@@ -69,7 +69,7 @@ describe('<Product>', () => {
         userEvent.type(visionStatementInput, visionStatement)
         userEvent.type(nameInput, name)
 
-        fireEvent.click(screen.getByTestId('SaveOut__icon'))
+        fireEvent.click(screen.getByTestId('Product__icon-page-action'))
 
         expect(submitProductMock).toHaveBeenCalledWith({
             ...product, name, visionStatement

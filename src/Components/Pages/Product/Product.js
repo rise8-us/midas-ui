@@ -1,4 +1,4 @@
-import { Box, IconButton, makeStyles, TextField } from '@material-ui/core'
+import { IconButton, makeStyles, TextField } from '@material-ui/core'
 import { AddCircleOutline, Edit, SaveOutlined } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,32 +11,21 @@ import { getUrlParam } from '../../../Utilities/queryParams'
 import { Page } from '../../Page'
 
 const useStyles = makeStyles((theme) => ({
-    box: {
-        display: 'flex',
-        flexDirection: 'column',
+    root: {
+        margin: 15
     },
     row: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: '36px',
-        paddingBottom: '10px'
+        justifyContent: 'space-between'
     },
-    disabled: {
-        color: theme.palette.text.primary
+    h4: {
+        ...theme.typography.h4,
+        color: theme.palette.text.secondary,
     },
-    notDisabledh6: {
-        fontFamily: theme.typography.h6.fontFamily,
-        fontSize: theme.typography.h6.fontSize,
-        fontWeight: theme.typography.h6.fontWeight,
-        lineHeight: theme.typography.h6.lineHeight,
-        color: theme.palette.text.secondary
-    },
-    notDisabledh4: {
-        fontFamily: theme.typography.h4.fontFamily,
-        fontSize: theme.typography.h4.fontSize,
-        fontWeight: theme.typography.h4.fontWeight,
-        lineHeight: theme.typography.h4.lineHeight
+    h6: {
+        ...theme.typography.h6,
+        color: theme.palette.text.secondary,
     },
     icon: {
         height: 42
@@ -63,6 +52,22 @@ function Product() {
     const onNameChange = (e) => !isDisabled && setName(e.target.value)
     const onTagsChange = (value) => setTags(value)
 
+    const submitUpdate = () => {
+        setName(name)
+        setVision(visionStatement)
+        dispatch(requestUpdateProduct({
+            ...product,
+            name,
+            visionStatement,
+            tagIds: Object.values(tags.map(t => t.id))
+        }))
+    }
+
+    const handlePageAction = () => {
+        !isDisabled && submitUpdate()
+        setDisabled(!isDisabled)
+    }
+
     useEffect(() => {
         if (!loaded && product.id === id) {
             setVision(product.visionStatement)
@@ -78,77 +83,58 @@ function Product() {
         }
     }, [errors])
 
-    const onSubmit = () => {
-        setName(name)
-        setVision(visionStatement)
-        dispatch(requestUpdateProduct({
-            ...product,
-            name,
-            visionStatement,
-            tagIds: Object.values(tags.map(t => t.id))
-        }))
-        setDisabled(!isDisabled)
-    }
-
     return (
-        <Page >
-            <Box className = {classes.row}>
-                <Box className = {classes.box} >
+        <Page>
+            <div className = {classes.root}>
+                <div className = {classes.row}>
                     <TextField
-                        disabled = {isDisabled}
                         InputProps = {{
                             disableUnderline: isDisabled,
-                            autoFocus: true,
+                            readOnly: isDisabled,
                             'data-testid': 'Product__input-name',
-                            className: classes.notDisabledh4,
-                            classes: {
-                                disabled: classes.disabled
-                            }
+                            className: classes.h4,
                         }}
                         value = {name}
                         onChange = {onNameChange}
                     />
+                    <IconButton
+                        className = {classes.icon}
+                        data-testid = 'Product__icon-page-action'
+                        onClick = {handlePageAction}
+                        color = 'secondary'
+                    >
+                        {isDisabled ? <Edit /> : <SaveOutlined />}
+                    </IconButton>
+                </div>
+                <div className = {classes.row}>
                     <TextField
-                        disabled = {isDisabled}
                         InputProps = {{
                             disableUnderline: isDisabled,
+                            readOnly: isDisabled,
                             'data-testid': 'Product__input-vision',
-                            className: classes.notDisabledh6
+                            className: classes.h6,
+                            spellCheck: true,
                         }}
+                        hiddenLabel
                         value = {visionStatement}
                         onChange = {onVisionChange}
                         multiline
+                        style = {{ width: '100%' }}
                     />
-                </Box>
-                {isDisabled ?
-                    <IconButton
-                        className = {classes.icon}
-                        data-testid = 'SaveAlt__icon'
-                        onClick = {() => setDisabled(!isDisabled)}>
-                        <Edit />
-                    </IconButton> :
-                    <IconButton
-                        className = {classes.icon}
-                        data-testid = 'SaveOut__icon'
-                        color = 'secondary'
-                        onClick = {onSubmit}
-                    >
-                        <SaveOutlined />
-                    </IconButton>
-                }
-            </Box>
-            <Box width = 'fit-content' paddingLeft = '35px'>
-                <TagDropdown
-                    defaultTags = {tags}
-                    error = {tagsError}
-                    onChange = {onTagsChange}
-                    freeSolo = {isDisabled}
-                    disableClearable = {isDisabled}
-                    deletable = {!isDisabled}
-                    disableUnderline = {isDisabled}
-                    popupIcon = {<AddCircleOutline color = 'secondary' />}
-                />
-            </Box>
+                </div>
+                <div className = {classes.row} >
+                    <TagDropdown
+                        defaultTags = {tags}
+                        error = {tagsError}
+                        onChange = {onTagsChange}
+                        freeSolo = {isDisabled}
+                        disableClearable = {isDisabled}
+                        deletable = {!isDisabled}
+                        disableUnderline = {true}
+                        popupIcon = {<AddCircleOutline color = 'secondary' />}
+                    />
+                </div>
+            </div>
         </Page>
     )
 }
