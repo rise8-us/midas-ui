@@ -111,6 +111,7 @@ function CreateOrUpdateProjectPopup({ id }) {
                     defaultTags = {tags}
                     error = {tagsError}
                     onChange = {onTagsChange}
+                    label = 'Tag(s)'
                 />
             </Box>
         </Popup>

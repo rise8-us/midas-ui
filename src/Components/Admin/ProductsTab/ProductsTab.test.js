@@ -7,13 +7,7 @@ import { ProductsTab } from './index'
 describe('<ProductsTab />', () => {
 
     const allProducts = {
-        id: 0,
         name: 'Product Test',
-        description: 'desc 1',
-        visionStatement: 'This is a vision',
-        gitlabProductId: 1234567,
-        tagIds: [1],
-        projectIds: [2],
         isArchived: false,
         tags: [
             { id: 1,

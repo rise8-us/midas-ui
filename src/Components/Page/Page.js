@@ -37,9 +37,11 @@ function Page({ children }) {
     const open = useSelector(state => state.app.navBarOpen)
 
     const pages = [
-        { label: 'Home', icon: <Home data-testid = 'Page__icon'/>,
-            onClick: () => history.push('/home') },
         {
+            label: 'Home',
+            icon: <Home data-testid = 'Page__icon'/>,
+            onClick: () => history.push('/home')
+        }, {
             label: 'Projects',
             icon: <img
                 src = {projectIcon}
@@ -47,11 +49,12 @@ function Page({ children }) {
                 style = {{ maxBlockSize: '28px' }}
                 data-testid = 'Page__icon'/>,
             onClick: () => history.push('/projects')
-        },
-        { label: 'Tags', icon: <LocalOffer title = 'tags' data-testid = 'Page__icon'/>,
-            onClick: () => history.push('/tags') }
+        }, {
+            label: 'Tags',
+            icon: <LocalOffer title = 'tags' data-testid = 'Page__icon'/>,
+            onClick: () => history.push('/tags')
+        }
     ]
-
 
     return (
         <>

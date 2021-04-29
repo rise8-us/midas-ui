@@ -151,6 +151,7 @@ function CreateOrUpdateProductPopup({ id }) {
                     defaultTags = {tags}
                     error = {tagsError}
                     onChange = {onTagsChange}
+                    label = 'Tag(s)'
                 />
                 <Autocomplete
                     multiple
@@ -164,7 +165,7 @@ function CreateOrUpdateProductPopup({ id }) {
                     renderInput = {(params) =>
                         <TextField
                             {...params}
-                            label = 'Add Project(s)'
+                            label = 'Project(s)'
                             margin = 'dense'
                             error = {projectsError.length > 0}
                             helperText = {<FormatErrors errors = {projectsError}/>}
