@@ -15,11 +15,16 @@ function TagDropdown(props) {
 
     const [tags, setTags] = useState(defaultTags)
 
-    const onRemoveTag = (tagId) => setTags(tags.filter(t => t.id !== tagId))
+    const onRemoveTag = (tagId) => {
+        const newTags = tags.filter(t => t.id !== tagId)
+        setTags(newTags)
+        typeof onChange === 'function' && onChange(newTags)
+    }
 
     const onSelectTag = (_e, values) => {
         if (values.length === 0) {
             setTags([])
+            typeof onChange === 'function' && onChange([])
             return
         }
 
@@ -30,13 +35,18 @@ function TagDropdown(props) {
             !tag.label.includes(selectedValue[1])
         )
 
-        if (existingTag.length === 0) setTags(values)
-        else setTags(values.filter(tag => !tag.label.includes(existingTag[0].label)))
+        let newTags
+
+        if (existingTag.length === 0) newTags = [...values]
+        else newTags = values.filter(tag => !tag.label.includes(existingTag[0].label))
+
+        setTags(newTags)
+        typeof onChange === 'function' && onChange(newTags)
     }
 
     useEffect(() => {
-        onChange(tags)
-    }, [tags])
+        setTags(defaultTags)
+    }, [defaultTags])
 
     return (
         <Autocomplete
@@ -75,7 +85,7 @@ function TagDropdown(props) {
 TagDropdown.propTypes = {
     defaultTags: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
-    error: PropTypes.array.isRequired,
+    error: PropTypes.array,
     disabled: PropTypes.bool,
     freeSolo: PropTypes.bool,
     disableClearable: PropTypes.bool,
@@ -88,12 +98,12 @@ TagDropdown.propTypes = {
 TagDropdown.defaultProps = {
     disabled: false,
     freeSolo: false,
+    error: [],
     disableClearable: false,
     label: null,
     deletable: true,
     disableUnderline: false,
     popupIcon: <ArrowDropDown />
-
 }
 
 export default TagDropdown
