@@ -5,6 +5,6 @@ import { OGSMTab } from './index'
 describe('<OGSMTab>', () => {
     test('Has correct text', () => {
         render(<OGSMTab />)
-        expect(screen.getAllByText(/objective/i)).toHaveLength(2)
+        expect(screen.getAllByText(/objective/i)).toHaveLength(1)
     })
 })

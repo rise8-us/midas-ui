@@ -7,7 +7,8 @@ export const darkTheme = createMuiTheme({
         type: 'dark',
         appColor: '#d4af37',
         primary: {
-            main: '#26c6da',
+            main: '#d4af37',
+            reactBlue: '#26c6da',
         },
         secondary: {
             main: '#818b98',

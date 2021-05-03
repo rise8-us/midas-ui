@@ -15,7 +15,15 @@ const mockState = {
             projectIds: [2],
             isArchived: false,
             portfolioId: 2,
-            tagIds: [7]
+            tagIds: [7],
+            tags: [
+                {
+                    id: 7,
+                    label: 'Some tags',
+                    description: null,
+                    color: ''
+                }
+            ]
         },
         5: {
             id: 5,
@@ -53,14 +61,12 @@ afterEach(() => {
 })
 
 test('selectProductById - returns product object', () => {
-    selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
     selectProjectByIdMock.mockReturnValue(mockState.projects[2])
 
     const returnedProduct = {
         ...mockState.products[4],
         visionStatement: '',
         problemStatement: '',
-        tags: [{ ...mockState.tags[7] }],
         projects: [{ ...mockState.projects[2] }]
 
     }

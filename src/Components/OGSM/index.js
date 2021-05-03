@@ -1,3 +1,5 @@
+export { OGSMCreate } from './OGSMCreate'
 export { OGSMHeader } from './OGSMHeader'
-export { OGSMStrategy } from './OGSMStrategy'
+export { OGSMMeasure } from './OGSMMeasure'
 export { OGSMTab } from './OGSMTab'
+
