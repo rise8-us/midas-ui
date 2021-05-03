@@ -1,5 +1,4 @@
 import { selectProjectById } from '../Projects/selectors'
-import { selectTagsByIds } from '../Tags/selectors'
 
 export const selectProductById = (state, id) => {
     const product = state.products[id]
@@ -11,12 +10,10 @@ export const selectProductById = (state, id) => {
         projects: []
     }
 
-    const tags = selectTagsByIds(state, product.tagIds)
     const projects = product.projectIds.map(pId => selectProjectById(state, pId))
 
     const updatedProduct = {
         ...product,
-        tags,
         projects,
         visionStatement: product.visionStatement ?? '',
         problemStatement: product.problemStatement ?? '',

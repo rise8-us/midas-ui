@@ -23,9 +23,12 @@ function ProjectsTab() {
     const dispatch = useDispatch()
     const allProjects = useSelector(selectProjects)
 
-    const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup'))
-    const updateProject = (id) => dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id }))
-    const archiveProject = (id, isArchived) => dispatch(requestArchiveProject({ id, isArchived: !isArchived }))
+    const createProject = () =>
+        dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup'))
+    const updateProject = (id) =>
+        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id }))
+    const archiveProject = (id, isArchived) =>
+        dispatch(requestArchiveProject({ id, isArchived: !isArchived }))
 
     const buildRows = () => {
         return allProjects.map(project => ({

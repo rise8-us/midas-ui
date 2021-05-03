@@ -11,22 +11,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function OGSMStrategy({ detail, completed }) {
+function OGSMMeasure({ detail, completed }) {
     const classes = useStyles()
 
     return (
-        <Card title = 'strategy'>
+        <Card title = 'measure' style = {{ margin: '8px', width: 'fit-content' }}>
             <CardContent
-                data-testid = 'OGSMStrategy__content'
+                data-testid = 'OGSMMeasure__content'
                 className = {completed ? classes.completed : classes.failed}
             >
                 {detail}
             </CardContent>
         </Card>)
 }
-OGSMStrategy.propTypes = {
+OGSMMeasure.propTypes = {
     detail: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired
 }
 
-export default OGSMStrategy
+export default OGSMMeasure

@@ -50,7 +50,7 @@ describe('<ProjectsTab />', () => {
         fireEvent.click(screen.getByTitle('edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProjectConstants.UPDATE_PROJECT, 'UpdateProjectPopup', { id: allProjects.id })
+            ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id: allProjects.id })
     })
 
     test('Should fire archive tag', () => {
@@ -75,7 +75,7 @@ describe('<ProjectsTab />', () => {
 
         fireEvent.click(screen.getByText('Add New Project'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateProjectPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup')
     })
 
 })
