@@ -1,19 +1,21 @@
 import React from 'react'
-import { render, screen } from '../../../Utilities/test-utils'
+import { render, screen, userEvent } from '../../../Utilities/test-utils'
 import { OGSMMeasure } from './index'
 
 describe('<OGSMMeasure>', () => {
-    test('renders background green', () => {
-        render(<OGSMMeasure detail = 'test detail' completed = {true}/>)
+    test('renders ', () => {
+        render(<OGSMMeasure detail = 'test detail'/>)
 
         expect(screen.getByText('test detail')).toBeInTheDocument()
-        expect(screen.getByText('test detail')).toHaveStyle({ 'background-color': 'rgb(76, 175, 80)' })
     })
 
-    test('renders background red', () => {
-        render(<OGSMMeasure detail = 'test detail' completed = {false}/>)
+    test('should call onChange', () => {
+        const onChangeMock = jest.fn()
 
-        expect(screen.getByText('test detail')).toHaveStyle({ 'background-color': 'rgb(244, 67, 54)' })
+        render(<OGSMMeasure detail = 'test detail' onChange = {onChangeMock}/>)
+        userEvent.type(screen.getByDisplayValue('test detail'), 'change detail')
+
+        expect(screen.getByDisplayValue(/change detail/)).toBeInTheDocument()
     })
 
 })
