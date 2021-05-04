@@ -1,2 +1,2 @@
-export { default as OGSMMeasure } from './OGSMMeasure';
+export { default as OGSMMeasure } from './OGSMMeasure'
 

@@ -2,11 +2,7 @@ import { Accordion, AccordionDetails, Box, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Add } from '@material-ui/icons'
 import React, { useState } from 'react'
-import { OGSMHeader, OGSMMeasure } from '../'
-import { OGSMCreate } from '../OGSMCreate'
-
-// TODO: get rid of divider line between accordions that are collapsed
-// TODO: shrink header from 64px minHeight to 36px
+import { OGSMCreate, OGSMHeader, OGSMMeasure } from '../'
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -60,10 +56,10 @@ function OGSMTab() {
                 className = {classes.button}
                 variant = 'outlined'
                 startIcon = {<Add/>}
-                color = 'primary'
+                color = {!showCreate ? 'primary' : 'secondary'}
                 onClick = {() => setShowCreate(!showCreate)}
             >
-                Add a new OGSM
+                {!showCreate ? 'Add a new OGSM' : 'Cancel OGSM creation'}
             </Button>
             { showCreate &&
                 <OGSMCreate productId = {0}/>

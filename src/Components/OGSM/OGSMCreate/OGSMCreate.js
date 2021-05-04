@@ -1,7 +1,7 @@
-import { Accordion, AccordionDetails, Button, makeStyles, Typography } from '@material-ui/core'
-import PropTypes from 'prop-types'
+import { Accordion, AccordionActions, AccordionDetails, Button, makeStyles } from '@material-ui/core'
 import React, { useState } from 'react'
 import { OGSMHeader } from '../OGSMHeader'
+import { OGSMMeasure } from '../OGSMMeasure'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,16 +34,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function OGSMCreate({ productId }) {
+function OGSMCreate() {
     const classes = useStyles()
 
-    const [objective, setObjective] = useState('')
-    const [goals, setGoals] = useState([''])
-    const [strategies, setStrategies] = useState([''])
-    // const [goals, setGoals] = useState([''])
+    const [objective, setObjective] = useState('Enter objective here...')
+    const [goals, setGoals] = useState(['Enter goal here...'])
+    const [strategies, setStrategies] = useState(['Enter strategy here...'])
+    const [measures, setMeasures] = useState(['Enter measurement here...'])
 
     const accordionInnerProps = {
         className: classes.innerAccordion,
+        defaultExpanded: true,
         classes: {
             root: classes.accordionRoot
         },
@@ -54,7 +55,7 @@ function OGSMCreate({ productId }) {
 
     const addGoal = () => {
         const newGoals = [...goals]
-        newGoals.push('Enter new goal here...')
+        newGoals.push('Enter another goal here...')
         setGoals(newGoals)
     }
 
@@ -66,7 +67,7 @@ function OGSMCreate({ productId }) {
 
     const addStrategy = () => {
         const newStrategies = [...strategies]
-        newStrategies.push('Enter new strategy here...')
+        newStrategies.push('Enter another strategy here...')
         setStrategies(newStrategies)
     }
 
@@ -76,18 +77,20 @@ function OGSMCreate({ productId }) {
         setStrategies(newStrategies)
     }
 
+    const addMeasure = () => {
+        const newMeasures = [...measures]
+        newMeasures.push('Enter another measure here...')
+        setMeasures(newMeasures)
+    }
+
+    const onMeasureChange = (newMeasure, idx) => {
+        let newMeasures = [...measures]
+        newMeasures[idx] = newMeasure
+        setMeasures(newMeasures)
+    }
+
     return (
         <div className = {classes.root}>
-            <Typography
-                className = {classes.heading}
-                variant = 'h6'
-                color = 'textSecondary'
-                style = {{
-                    display: 'none'
-                }}
-            >
-                Create OGSM for product: {productId}
-            </Typography>
             <Accordion TransitionProps = {{ unmountOnExit: true }} className = {classes.outerAccordion} defaultExpanded>
                 <OGSMHeader
                     category = 'Objective'
@@ -95,57 +98,61 @@ function OGSMCreate({ productId }) {
                     onChange = {(val) => setObjective(val)}
                     autoFocus = {true}
                 />
-                { objective.length > 0 &&
-                    <AccordionDetails className = {classes.accordionDetails} style = {{ marginBottom: '16px' }}>
-                        { goals.map((goal, index) => (
-                            <Accordion {...accordionInnerProps} key = {index}>
-                                <OGSMHeader
-                                    category = 'Goal'
-                                    detail = {goal}
-                                    onChange = {(val) => onGoalChange(val, index)}
-                                />
-                                <AccordionDetails className = {classes.accordionDetails}>
-                                    { strategies.map((goal, index1) => (
-                                        <Accordion {...accordionInnerProps} key = {index1}>
-                                            <OGSMHeader
-                                                category = 'Strategy'
-                                                detail = {goal}
-                                                onChange = {(val) => onStrategyChange(val, index1)}
-                                            />
-                                        </Accordion>
-                                    ))}
-                                    { strategies[0].length > 0 &&
-                                        <Button
-                                            style = {{ margin: '8px' }}
-                                            variant = 'text'
-                                            color = 'primary'
-                                            onClick = {addStrategy}
-                                        >
-                                            Add another strategy...
-                                        </Button>
-                                    }
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                        { goals[0].length > 0 &&
-                            <Button
-                                style = {{ margin: '8px' }}
-                                variant = 'text'
-                                color = 'primary'
-                                onClick = {addGoal}
-                            >
-                                Add another goal...
-                            </Button>
-                        }
-                    </AccordionDetails>
-                }
+                <AccordionDetails className = {classes.accordionDetails} style = {{ marginBottom: '16px' }}>
+                    { goals.map((goal, x) => (
+                        <Accordion {...accordionInnerProps} key = {x}>
+                            <OGSMHeader
+                                category = 'Goal'
+                                detail = {goal}
+                                onChange = {(val) => onGoalChange(val, x)}
+                            />
+                            <AccordionDetails className = {classes.accordionDetails}>
+                                { strategies.map((goal, y) => (
+                                    <Accordion {...accordionInnerProps} key = {y}>
+                                        <OGSMHeader
+                                            category = 'Strategy'
+                                            detail = {goal}
+                                            onChange = {(val) => onStrategyChange(val, y)}
+                                        />
+                                        <AccordionDetails className = {classes.accordionDetails}>
+                                            {measures.map((measure, z) => (
+                                                <OGSMMeasure
+                                                    detail = {measure}
+                                                    onChange = {onMeasureChange}
+                                                    key = {z}
+                                                />
+                                            ))}
+                                            <Button
+                                                style = {{ margin: '8px' }}
+                                                variant = 'text'
+                                                color = 'primary'
+                                                onClick = {addMeasure}
+                                            >Add another measurement...</Button>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                ))}
+                                <Button
+                                    style = {{ margin: '8px' }}
+                                    variant = 'text'
+                                    color = 'primary'
+                                    onClick = {addStrategy}
+                                >Add another strategy...</Button>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                    <Button
+                        style = {{ margin: '8px' }}
+                        variant = 'text'
+                        color = 'primary'
+                        onClick = {addGoal}
+                    >Add another goal...</Button>
+                </AccordionDetails>
+                <AccordionActions style = {{ justifyContent: 'end' }}>
+                    <Button size = 'small' color = 'primary' variant = 'outlined'>Add OGSM</Button>
+                </AccordionActions>
             </Accordion>
         </div>
     )
-}
-
-OGSMCreate.propTypes = {
-    productId: PropTypes.number.isRequired,
 }
 
 export default OGSMCreate

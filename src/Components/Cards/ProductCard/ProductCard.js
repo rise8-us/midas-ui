@@ -15,7 +15,7 @@ import { Tag } from '../../Tag'
 const useStyles = makeStyles(theme => ({
     link: {
         '&:hover': {
-            color: theme.palette.text.secondary,
+            color: theme.palette.primary.main,
             cursor: 'pointer'
         },
         height: 40
