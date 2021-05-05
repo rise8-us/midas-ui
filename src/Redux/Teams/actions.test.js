@@ -15,7 +15,7 @@ describe('Team action thunks', () => {
         store.clearActions()
     })
 
-    it('requestFetchAllTeams : fulfilled', async() => {
+    test('requestFetchAllTeams : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchAllTeams())
 
@@ -26,7 +26,7 @@ describe('Team action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllTeams.fulfilled.toString())
     })
 
-    it('requestFetchAllTeams : rejected', async() => {
+    test('requestFetchAllTeams : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestFetchAllTeams())
 
@@ -34,7 +34,7 @@ describe('Team action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllTeams.rejected.toString())
     })
 
-    it('requestCreateTeam : fulfilled', async() => {
+    test('requestCreateTeam : fulfilled', async() => {
         const team = { name: 'starship9', gitlabGroupId: 1 }
 
         handleThunkRequest.mockResolvedValueOnce()
@@ -47,7 +47,7 @@ describe('Team action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateTeam.fulfilled.toString())
     })
 
-    it('requestCreateTeam : rejected', async() => {
+    test('requestCreateTeam : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestCreateTeam({ id: 1, name: 'starship9', gitlabGroupId: 1 }))
 
@@ -55,7 +55,7 @@ describe('Team action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateTeam.rejected.toString())
     })
 
-    it('requestUpdateTeam : fulfilled', async() => {
+    test('requestUpdateTeam : fulfilled', async() => {
         const requestBody = { name: 'starship9', gitlabGroupId: 1 }
         const team = { id: 1, ...requestBody }
 
@@ -69,7 +69,7 @@ describe('Team action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateTeam.fulfilled.toString())
     })
 
-    it('requestUpdateTeam : rejected', async() => {
+    test('requestUpdateTeam : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateTeam({ id: 1, name: 'starship9', gitlabGroupId: 1 }))
 

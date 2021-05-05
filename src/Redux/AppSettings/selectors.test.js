@@ -11,17 +11,17 @@ const mockState = {
     }
 }
 
-it('should return object', () => {
+test('should return object', () => {
     const roles = selectors.selectRoles(mockState)
     expect(roles).toBeInstanceOf(Object)
 })
 
-it('should return array', () => {
+test('should return array', () => {
     const roles = selectors.selectRolesAsArray(mockState)
     expect(roles).toBeInstanceOf(Array)
 })
 
-it('should return empty array', () => {
+test('should return empty array', () => {
     const roles = selectors.selectRolesAsArray({ app: { roles: { } } })
     expect(roles).toBeInstanceOf(Array)
 })

@@ -26,7 +26,7 @@ test('should handle initial state', () => {
     expect(reducer(undefined, {})).toEqual({})
 })
 
-it('fetches all tags', () => {
+test('fetches all tags', () => {
     const actions = [{ type: reduxActions.requestFetchAllTags.fulfilled, payload: [
         {
             id: 0,

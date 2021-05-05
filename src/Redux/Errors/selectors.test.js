@@ -8,13 +8,13 @@ describe('Error Selector', () => {
         }
     }
 
-    it('should return array of type', () => {
+    test('should return array of type', () => {
         const errors = selectors.selectRequestErrors(mockState, 'type/getUser')
         expect(errors).toBeInstanceOf(Array)
         expect(errors).toEqual(error)
     })
 
-    it('should return empty array', () => {
+    test('should return empty array', () => {
         const errors = selectors.selectRequestErrors(mockState, 'type/doesNotExist')
         expect(errors).toBeInstanceOf(Array)
         expect(errors).toHaveLength(0)

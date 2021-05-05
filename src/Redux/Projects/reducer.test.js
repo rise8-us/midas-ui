@@ -19,11 +19,11 @@ const updatedProjectJourney = { id: 1, projectJourneyMap: 2 }
 const archiveProject = { id: 1, isArchived: false }
 
 describe('Projects Reducer', () => {
-    it('should handle initial state', () => {
+    test('should handle initial state', () => {
         expect(reducer(undefined, {})).toEqual({})
     })
 
-    it('fetches all projects', () => {
+    test('fetches all projects', () => {
         const actions = [{ type: reduxActions.requestFetchAllProjects.fulfilled, payload: allProjectsResponse }]
         const state = actions.reduce(reducer, {})
 
@@ -32,25 +32,25 @@ describe('Projects Reducer', () => {
         expect(Object.keys(state)).toHaveLength(2)
     })
 
-    it('Create Project', () => {
+    test('Create Project', () => {
         const actions = [{ type: reduxActions.requestCreateProject.fulfilled, payload: allProjectsResponse[0] }]
         const state = actions.reduce(reducer, {})
         expect(state).toEqual({ 1: allProjectsResponse[0] })
     })
 
-    it('Update Project', () => {
+    test('Update Project', () => {
         const actions = [{ type: reduxActions.requestUpdateProject.fulfilled, payload: updatedProject }]
         const state = actions.reduce(reducer, { 1: allProjectsResponse[0] })
         expect(state).toEqual({ 1: updatedProject })
     })
 
-    it('Update Project Journey', () => {
+    test('Update Project Journey', () => {
         const actions = [{ type: reduxActions.requestUpdateJourneyMapById.fulfilled, payload: updatedProjectJourney }]
         const state = actions.reduce(reducer, { 1: allProjectsResponse[0] })
         expect(state).toEqual({ 1: updatedProjectJourney })
     })
 
-    it('Archive Project', () => {
+    test('Archive Project', () => {
         const actions = [{ type: reduxActions.requestArchiveProject.fulfilled, payload: archiveProject }]
         const state = actions.reduce(reducer, { 1: allProjectsResponse[0] })
         expect(state).toEqual({ 1: archiveProject })

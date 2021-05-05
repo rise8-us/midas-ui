@@ -16,29 +16,29 @@ const comments = [
 ]
 
 describe('Comments Reducer', () => {
-    it('should handle initial state', () => {
+    test('should handle initial state', () => {
         expect(reducer(undefined, {})).toEqual({})
     })
 
-    it('Searchs Comment', () => {
+    test('Searchs Comment', () => {
         const actions = [{ type: reduxActions.requestSearchComments.fulfilled, payload: [comments[0]] }]
         const state = actions.reduce(reducer, {})
         expect(state[2]).toEqual(comments[0])
     })
 
-    it('Create Comment', () => {
+    test('Create Comment', () => {
         const actions = [{ type: reduxActions.requestCreateComment.fulfilled, payload: comments[0] }]
         const state = actions.reduce(reducer, {})
         expect(state).toEqual({ 2: comments[0] })
     })
 
-    it('Update Comment', () => {
+    test('Update Comment', () => {
         const actions = [{ type: reduxActions.requestUpdateComment.fulfilled, payload: comments[1] }]
         const state = actions.reduce(reducer, { 2: comments[0] })
         expect(state).toEqual({ 2: comments[1] })
     })
 
-    it('Delete Comment', () => {
+    test('Delete Comment', () => {
         const actions = [{ type: reduxActions.requestDeleteComment.fulfilled, payload: comments[1] }]
         const state = actions.reduce(reducer, { 2: comments[0] })
         expect(state).toEqual({ })
