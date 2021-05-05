@@ -12,16 +12,16 @@ export const requestFetchAllProducts = createAsyncThunk(
 
 export const requestCreateProduct = createAsyncThunk(
     Constants.CREATE_PRODUCT,
-    async(project, { rejectWithValue }) => {
-        const request = { endpoint: '/api/products', method: 'POST', body: project }
+    async(product, { rejectWithValue }) => {
+        const request = { endpoint: '/api/products', method: 'POST', body: product }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
 
 export const requestUpdateProduct = createAsyncThunk(
     Constants.UPDATE_PRODUCT,
-    async(project, { rejectWithValue }) => {
-        const { id, ...body } = project
+    async(product, { rejectWithValue }) => {
+        const { id, ...body } = product
         const request = { endpoint: `/api/products/${id}`, method: 'PUT', body }
         return handleThunkRequest(request, rejectWithValue)
     }

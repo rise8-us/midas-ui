@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import appSettingsReducer from './AppSettings/reducer'
+import assertionReducer from './Assertions/reducer'
 import authReducer from './Auth/reducer'
 import commentReducer from './Comments/reducer'
 import errorReducer from './Errors/reducer'
+import objectiveReducer from './Objectives/reducer'
 import popupReducer from './Popups/reducer'
 import productReducer from './Products/reducer'
 import projectReducer from './Projects/reducer'
@@ -21,4 +23,6 @@ export const rootReducer = combineReducers({
     tags: tagReducer,
     teams: teamReducer,
     users: userReducer,
+    objectives: objectiveReducer,
+    assertions: assertionReducer
 })

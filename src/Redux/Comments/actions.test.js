@@ -15,7 +15,7 @@ describe('Comment action thunks', () => {
         store.clearActions()
     })
 
-    it('requestSearchComments : fulfilled', async() => {
+    test('requestSearchComments : fulfilled', async() => {
         const searchRequest = 'parentId:3'
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestSearchComments(searchRequest))
@@ -27,7 +27,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestSearchComments.fulfilled.toString())
     })
 
-    it('requestSearchComments : rejected', async() => {
+    test('requestSearchComments : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestSearchComments())
 
@@ -35,7 +35,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestSearchComments.rejected.toString())
     })
 
-    it('requestCreateComment : fulfilled', async() => {
+    test('requestCreateComment : fulfilled', async() => {
         const createRequest = { parentId: null, assertionId: 1, text: 'test' }
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestCreateComment(createRequest))
@@ -47,7 +47,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateComment.fulfilled.toString())
     })
 
-    it('requestFetchAllProducts : rejected', async() => {
+    test('requestFetchAllProducts : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestCreateComment())
 
@@ -55,7 +55,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateComment.rejected.toString())
     })
 
-    it('requestUpdateComment : fulfilled', async() => {
+    test('requestUpdateComment : fulfilled', async() => {
         const updateRequest = { parentId: null, assertionId: 1, text: 'test' }
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestUpdateComment({ ...updateRequest, id: 2 }))
@@ -67,7 +67,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateComment.fulfilled.toString())
     })
 
-    it('requestUpdateComment : rejected', async() => {
+    test('requestUpdateComment : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateComment())
 
@@ -75,7 +75,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateComment.rejected.toString())
     })
 
-    it('requestDeleteComment : fulfilled', async() => {
+    test('requestDeleteComment : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestDeleteComment(1))
 
@@ -86,7 +86,7 @@ describe('Comment action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestDeleteComment.fulfilled.toString())
     })
 
-    it('requestDeleteComment : rejected', async() => {
+    test('requestDeleteComment : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestDeleteComment())
 

@@ -12,11 +12,11 @@ const allTeamsResponse = [
 ]
 
 describe('Teams Reducer', () => {
-    it('should handle initial state', () => {
+    test('should handle initial state', () => {
         expect(reducer(undefined, {})).toEqual({})
     })
 
-    it('fetches all teams', () => {
+    test('fetches all teams', () => {
         const actions = [{ type: reduxActions.requestFetchAllTeams.fulfilled, payload: allTeamsResponse }]
         const state = actions.reduce(reducer, {})
 
@@ -25,13 +25,13 @@ describe('Teams Reducer', () => {
         expect(Object.keys(state)).toHaveLength(2)
     })
 
-    it('Create Team', () => {
+    test('Create Team', () => {
         const actions = [{ type: reduxActions.requestCreateTeam.fulfilled, payload: allTeamsResponse[0] }]
         const state = actions.reduce(reducer, {})
         expect(state).toEqual({ 1: allTeamsResponse[0] })
     })
 
-    it('Update Team', () => {
+    test('Update Team', () => {
         const actions = [{ type: reduxActions.requestUpdateTeam.fulfilled, payload: allTeamsResponse[0] }]
         const state = actions.reduce(reducer, {})
         expect(state).toEqual({ 1: allTeamsResponse[0] })

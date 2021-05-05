@@ -15,7 +15,7 @@ describe('Product action thunks', () => {
         store.clearActions()
     })
 
-    it('requestFetchAllProducts : fulfilled', async() => {
+    test('requestFetchAllProducts : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchAllProducts())
 
@@ -26,7 +26,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllProducts.fulfilled.toString())
     })
 
-    it('requestFetchAllProducts : rejected', async() => {
+    test('requestFetchAllProducts : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestFetchAllProducts())
 
@@ -34,7 +34,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllProducts.rejected.toString())
     })
 
-    it('requestCreateProduct : fulfilled', async() => {
+    test('requestCreateProduct : fulfilled', async() => {
         const Product = { name: 'starship9', description: 'foo' }
 
         handleThunkRequest.mockResolvedValueOnce()
@@ -47,7 +47,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateProduct.fulfilled.toString())
     })
 
-    it('requestCreateProduct : rejected', async() => {
+    test('requestCreateProduct : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestCreateProduct({ id: 1, name: 'starship9', description: 'foo' }))
 
@@ -55,7 +55,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateProduct.rejected.toString())
     })
 
-    it('requestUpdateProduct : fulfilled', async() => {
+    test('requestUpdateProduct : fulfilled', async() => {
         const requestBody = { name: 'starship9', description: 'foo' }
         const Product = { id: 1, ...requestBody }
 
@@ -69,7 +69,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateProduct.fulfilled.toString())
     })
 
-    it('requestUpdateProduct : rejected', async() => {
+    test('requestUpdateProduct : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateProduct())
 
@@ -77,7 +77,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateProduct.rejected.toString())
     })
 
-    it('requestArchiveProduct : fulfilled', async() => {
+    test('requestArchiveProduct : fulfilled', async() => {
         const requestBody = {  id: 1, isArchived: false }
 
         handleThunkRequest.mockResolvedValueOnce()
@@ -90,7 +90,7 @@ describe('Product action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestArchiveProduct.fulfilled.toString())
     })
 
-    it('requestArchiveProduct : rejected', async() => {
+    test('requestArchiveProduct : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestArchiveProduct())
 

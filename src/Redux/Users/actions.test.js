@@ -14,7 +14,7 @@ describe('User action thunks', () => {
         store.clearActions()
     })
 
-    it('requestGetOneUser : fulfilled', async() => {
+    test('requestGetOneUser : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchOneUser(1))
 
@@ -25,7 +25,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchOneUser.fulfilled.toString())
     })
 
-    it('requestGetOneUser : rejected', async() => {
+    test('requestGetOneUser : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestFetchOneUser(1))
 
@@ -33,7 +33,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchOneUser.rejected.toString())
     })
 
-    it('requestUpdateUser : fulfilled', async() => {
+    test('requestUpdateUser : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestUpdateUser({ id: 1, username: 'yoda' }))
 
@@ -44,7 +44,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateUser.fulfilled.toString())
     })
 
-    it('requestUpdateUserRoles : fulfilled', async() => {
+    test('requestUpdateUserRoles : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestUpdateUserRoles({ id: 1, roles: 1 }))
 
@@ -55,7 +55,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateUserRoles.fulfilled.toString())
     })
 
-    it('requestUpdateUserRoles : rejected', async() => {
+    test('requestUpdateUserRoles : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateUserRoles({ id: 1, roles: 1 }))
 
@@ -63,7 +63,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateUserRoles.rejected.toString())
     })
 
-    it('requestUpdateUser : rejected', async() => {
+    test('requestUpdateUser : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateUser({}))
 
@@ -71,7 +71,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateUser.rejected.toString())
     })
 
-    it('requestFindUserBy : fulfilled', async() => {
+    test('requestFindUserBy : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFindUserBy('id:1'))
 
@@ -82,7 +82,7 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFindUserBy.fulfilled.toString())
     })
 
-    it('requestFindUserBy : rejected', async() => {
+    test('requestFindUserBy : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestFindUserBy('id:3a'))
 

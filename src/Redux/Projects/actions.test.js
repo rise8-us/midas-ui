@@ -15,7 +15,7 @@ describe('Project action thunks', () => {
         store.clearActions()
     })
 
-    it('requestFetchAllProjects : fulfilled', async() => {
+    test('requestFetchAllProjects : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchAllProjects())
 
@@ -26,7 +26,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllProjects.fulfilled.toString())
     })
 
-    it('requestFetchAllProjects : rejected', async() => {
+    test('requestFetchAllProjects : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestFetchAllProjects())
 
@@ -34,7 +34,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllProjects.rejected.toString())
     })
 
-    it('requestCreateProject : fulfilled', async() => {
+    test('requestCreateProject : fulfilled', async() => {
         const project = { name: 'starship9', description: 'foo' }
 
         handleThunkRequest.mockResolvedValueOnce()
@@ -47,7 +47,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateProject.fulfilled.toString())
     })
 
-    it('requestCreateProject : rejected', async() => {
+    test('requestCreateProject : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestCreateProject({ id: 1, name: 'starship9', description: 'foo' }))
 
@@ -55,7 +55,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestCreateProject.rejected.toString())
     })
 
-    it('requestUpdateProject : fulfilled', async() => {
+    test('requestUpdateProject : fulfilled', async() => {
         const requestBody = { name: 'starship9', description: 'foo' }
         const project = { id: 1, ...requestBody }
 
@@ -69,7 +69,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateProject.fulfilled.toString())
     })
 
-    it('requestUpdateProject : rejected', async() => {
+    test('requestUpdateProject : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateProject())
 
@@ -77,7 +77,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateProject.rejected.toString())
     })
 
-    it('requestUpdateJourneyMapById : fulfilled', async() => {
+    test('requestUpdateJourneyMapById : fulfilled', async() => {
         const requestBody = { id: 1, projectJourneyMap: 3 }
 
         handleThunkRequest.mockResolvedValueOnce()
@@ -90,7 +90,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateJourneyMapById.fulfilled.toString())
     })
 
-    it('requestUpdateJourneyMapById : rejected', async() => {
+    test('requestUpdateJourneyMapById : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestUpdateJourneyMapById())
 
@@ -98,7 +98,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateJourneyMapById.rejected.toString())
     })
 
-    it('requestArchiveProject : fulfilled', async() => {
+    test('requestArchiveProject : fulfilled', async() => {
         const requestBody = {  id: 1, isArchived: false }
 
         handleThunkRequest.mockResolvedValueOnce()
@@ -111,7 +111,7 @@ describe('Project action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestArchiveProject.fulfilled.toString())
     })
 
-    it('requestArchiveProject : rejected', async() => {
+    test('requestArchiveProject : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
         await store.dispatch(actions.requestArchiveProject())
 
