@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
 
 function Product() {
     const classes = useStyles()
+
     const id = parseInt(getUrlParam('products'))
 
     // const [value, setValue] = useState('ogsm')
@@ -34,7 +35,7 @@ function Product() {
                     */}
                     <Divider variant = 'fullWidth' />
                     { value === 'ogsm' &&
-                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><OGSMTab /></Suspense>
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><OGSMTab productId = {id}/></Suspense>
                     }
                 </>
             </div>

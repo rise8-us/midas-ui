@@ -14,7 +14,7 @@ const allObjectivesResponse = [
 const updatedObjective = { id: 1, name: 'foo' }
 
 describe('Objectives Reducer', () => {
-    
+
     test('fetches Assertions', () => {
         const actions = [{ type: reduxActions.requestFetchObjectives.fulfilled, payload: allObjectivesResponse }]
         const state = actions.reduce(reducer, {})
@@ -23,9 +23,15 @@ describe('Objectives Reducer', () => {
         expect(state[2]).toEqual(allObjectivesResponse[1])
         expect(Object.keys(state)).toHaveLength(2)
     })
-    
+
     test('should handle initial state', () => {
-        expect(reducer(undefined, {})).toEqual({})
+        expect(reducer(undefined, {})).toEqual({
+            creation: {
+                text: '',
+                productId: null,
+                assertionDTOs: {}
+            }
+        })
     })
 
     test('Create Objective', () => {

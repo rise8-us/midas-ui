@@ -3,11 +3,6 @@ import { render, screen, userEvent } from '../../../Utilities/test-utils'
 import { OGSMMeasure } from './index'
 
 describe('<OGSMMeasure>', () => {
-    test('renders ', () => {
-        render(<OGSMMeasure detail = 'test detail'/>)
-
-        expect(screen.getByText('test detail')).toBeInTheDocument()
-    })
 
     test('should call onChange', () => {
         const onChangeMock = jest.fn()
@@ -16,6 +11,15 @@ describe('<OGSMMeasure>', () => {
         userEvent.type(screen.getByDisplayValue('test detail'), 'change detail')
 
         expect(screen.getByDisplayValue(/change detail/)).toBeInTheDocument()
+    })
+
+    test('should be readOnly', () => {
+        const onChangeMock = jest.fn()
+
+        render(<OGSMMeasure detail = 'test detail' readOnly onChange = {onChangeMock}/>)
+        userEvent.type(screen.getByText('test detail'), 'change detail')
+
+        expect(onChangeMock).toHaveBeenCalledTimes(0)
     })
 
 })
