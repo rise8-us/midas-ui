@@ -24,25 +24,28 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 6
     },
     summaryRoot: {
-        minHeight: 42,
-        height: 42,
+        minHeight: 48,
+        height: 48,
         '&.Mui-expanded': {
-            height: 42,
-            minHeight: 42
+            height: 48,
+            minHeight: 48
         }
     }
 }))
 
 const expandIcon = (cat) => {
     return (
-        <ExpandMore data-testid = {`OGSMHeader__icon-${cat}`}/>
+        <ExpandMore data-testid = {`OGSMHeader__icon-expand-${cat}`}/>
     )
 }
 
-function OGSMHeader({ category, detail, onChange, autoFocus, editable, onSave, defaultEditable }) {
+function OGSMHeader(props) {
+    const { category, detail, autoFocus, defaultEditable, editable, ...actions } = props
+    const { onClick, onSave, onChange, onEditClick } = actions
+
     const classes = useStyles()
 
-    const canEdit = typeof onChange === 'function' || defaultEditable
+    const canEdit = typeof onChange === 'function' && defaultEditable
     const canPerformChange = typeof onChange === 'function'
     const canPerformSave = typeof onSave === 'function'
 
@@ -57,8 +60,9 @@ function OGSMHeader({ category, detail, onChange, autoFocus, editable, onSave, d
     }
 
     const onEditClicked = (event) => {
-        setChangeable(!changeable)
         event.stopPropagation()
+        typeof onEditClick === 'function' && onEditClick(!changeable)
+        setChangeable(!changeable)
     }
 
     const onRestoreClicked = (event) => {
@@ -82,6 +86,12 @@ function OGSMHeader({ category, detail, onChange, autoFocus, editable, onSave, d
             classes = {{
                 root: classes.summaryRoot
             }}
+            IconButtonProps = {{
+                style: {
+                    padding: '8px'
+                }
+            }}
+            onClick = {onClick}
         >
             <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary'>
                 {category}:
@@ -145,6 +155,8 @@ OGSMHeader.propTypes = {
     editable: PropTypes.bool,
     onChange: PropTypes.func,
     onSave: PropTypes.func,
+    onClick: PropTypes.func,
+    onEditClick: PropTypes.func,
     defaultEditable: PropTypes.bool
 }
 
@@ -154,6 +166,8 @@ OGSMHeader.defaultProps = {
     editable: false,
     onChange: undefined,
     onSave: undefined,
+    onClick: undefined,
+    onEditClick: undefined,
     defaultEditable: false
 }
 

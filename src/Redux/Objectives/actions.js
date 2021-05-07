@@ -5,7 +5,7 @@ import Constants from './constants'
 export const requestFetchObjectives = createAsyncThunk(
     Constants.FETCH_OGSMS,
     async(query, { rejectWithValue }) => {
-        const request = { endpoint: `/api/objectives?search=${query}}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/objectives?search=${query}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

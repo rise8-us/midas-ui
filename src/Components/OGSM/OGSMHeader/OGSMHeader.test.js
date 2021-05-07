@@ -13,7 +13,7 @@ describe('<OGSMHeader>', () => {
 
     test('should call onChange & update value', () => {
         const onChangeMock = jest.fn()
-        render(<OGSMHeader category = 'cat' detail = 'devils' onChange = {onChangeMock}/>)
+        render(<OGSMHeader category = 'cat' detail = 'devils' defaultEditable onChange = {onChangeMock}/>)
 
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details')
 
@@ -42,5 +42,14 @@ describe('<OGSMHeader>', () => {
 
         fireEvent.click(screen.getByTitle('save'))
         expect(OnSaveMock).toHaveBeenCalledWith('in the details')
+    })
+
+    test('should call onEditClick', () => {
+        const onEditClickMock = jest.fn()
+        render(<OGSMHeader category = 'cat' detail = 'devils' editable onEditClick = {onEditClickMock}/>)
+
+        fireEvent.click(screen.getByTitle('edit'))
+
+        expect(onEditClickMock).toHaveBeenCalledWith(true)
     })
 })

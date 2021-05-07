@@ -17,10 +17,8 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 4
     }
 }))
-function OGSMMeasure({ detail, onChange }) {
+function OGSMMeasure({ detail, onChange, readOnly }) {
     const classes = useStyles()
-
-    const creatable = typeof onChange === 'function'
 
     const [value, setValue] = useState(detail)
 
@@ -28,21 +26,16 @@ function OGSMMeasure({ detail, onChange }) {
         const val = event.target.value
 
         setValue(val)
-        onChange(val)
+        typeof onChange === 'function' && onChange(val)
     }
 
+
     return (
-        <Box title = 'measurement' padding = {1}>
-            { creatable ?
+        <Box title = 'measurement' padding = {1} width = '100%' style = {{ paddingRight: '42px' }}>
+            { !readOnly ?
                 <TextField
-                    style = {{
-                        width: '100%',
-                        paddingRight: '48px'
-                    }}
                     fullWidth
                     InputProps = {{
-                        disableUnderline: true,
-                        readOnly: !creatable,
                         className: classes.creatableDetail,
                     }}
                     value = {value}
@@ -52,7 +45,7 @@ function OGSMMeasure({ detail, onChange }) {
                     {detail}
                 </TextField>
                 :
-                <Typography >
+                <Typography variant = 'h6'>
                     {value}
                 </Typography>
             }
@@ -62,10 +55,12 @@ function OGSMMeasure({ detail, onChange }) {
 
 OGSMMeasure.propTypes = {
     detail: PropTypes.string.isRequired,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    readOnly: PropTypes.bool
 }
 
 OGSMMeasure.defaultProps = {
-    onChange: undefined
+    onChange: undefined,
+    readOnly: false
 }
 export default OGSMMeasure

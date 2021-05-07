@@ -1,8 +1,12 @@
-import { Accordion, AccordionDetails, Box, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Add } from '@material-ui/icons'
-import React, { useState } from 'react'
-import { OGSMCreate, OGSMHeader, OGSMMeasure } from '../'
+import PropTypes from 'prop-types'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { OGSMView } from '../'
+import { requestFetchObjectives } from '../../../Redux/Objectives/actions'
+import { selectObjectivesByProductId } from '../../../Redux/Objectives/selectors'
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -13,42 +17,27 @@ const useStyles = makeStyles((theme) => ({
     },
     root: {
         marginTop: 16,
+        paddingBottom: 48,
         width: '100%',
-    },
-    outerAccordion: {
-        margin: '16px 0'
-    },
-    innerAccordion: {
-        width: '100%',
-        boxShadow: 'none'
-    },
-    accordionDetails: {
-        borderLeft: 'solid 1px',
-        borderColor: theme.palette.text.secondary,
-        marginLeft: theme.spacing(2),
-        paddingRight: 0
-    },
-    accordionRoot: {
-        '&:before': {
-            display: 'none',
-        }
     }
 }))
 
-function OGSMTab() {
+function OGSMTab({ productId }) {
     const classes = useStyles()
+    const dispatch = useDispatch()
 
     const [showCreate, setShowCreate] = useState(false)
 
-    const accordionInnerProps = {
-        className: classes.innerAccordion,
-        classes: {
-            root: classes.accordionRoot
-        },
-        TransitionProps: {
-            unmountOnExit: true
-        }
-    }
+    const objectives = useSelector(state => selectObjectivesByProductId(state, productId),
+        (left, right) => left.length === right.length)
+
+    useEffect(() => {
+        dispatch(requestFetchObjectives(`product.id:${productId}`))
+    }, [])
+
+    useEffect(() => {
+        if (showCreate) setShowCreate(false)
+    }, [objectives])
 
     return (
         <div className = {classes.root}>
@@ -62,65 +51,17 @@ function OGSMTab() {
                 {!showCreate ? 'Add a new OGSM' : 'Cancel OGSM creation'}
             </Button>
             { showCreate &&
-                <OGSMCreate productId = {0}/>
+                <OGSMView create productId = {productId}/>
             }
-            <Accordion
-                TransitionProps = {{ unmountOnExit: true }}
-                className = {classes.outerAccordion}
-                classes = {{ root: classes.accordionRoot }}
-            >
-                <OGSMHeader
-                    category = 'Objective'
-                    detail = 'Add an OSGM view'
-                />
-                <AccordionDetails className = {classes.accordionDetails} style = {{ marginBottom: '16px' }}>
-                    <Box display = 'flex' flexDirection = 'column' width = '100%'>
-                        <Accordion {...accordionInnerProps}>
-                            <OGSMHeader
-                                category = 'Goal'
-                                detail = 'Render the OGSM display'
-                            />
-                            <AccordionDetails className = {classes.accordionDetails}>
-                                <Box display = 'flex' flexDirection = 'column' width = '100%'>
-                                    <Accordion {...accordionInnerProps}>
-                                        <OGSMHeader
-                                            category = 'Strategy'
-                                            detail = 'Build all the things'
-                                        />
-                                        <AccordionDetails
-                                            className = {classes.accordionDetails}
-                                            style = {{
-                                                display: 'flex',
-                                                flexWrap: 'wrap',
-                                                flexDirection: 'column'
-                                            }}
-                                        >
-                                            <OGSMMeasure
-                                                detail = 'Add OGSM slice to API'
-                                                completed = {true}
-                                            />
-                                            <OGSMMeasure
-                                                detail = 'Add Assertions slice to API'
-                                                completed = {true}
-                                            />
-                                            <OGSMMeasure
-                                                detail = 'Add comments slice to API'
-                                                completed = {true}
-                                            />
-                                            <OGSMMeasure
-                                                detail = 'Build OGSM view on UI'
-                                                completed = {false}
-                                            />
-                                        </AccordionDetails>
-                                    </Accordion>
-                                </Box>
-                            </AccordionDetails>
-                        </Accordion>
-                    </Box>
-                </AccordionDetails>
-            </Accordion>
+            {objectives.map((objective, index) => (
+                <OGSMView key = {index} id = {objective.id} productId = {productId}/>
+            ))}
         </div>
     )
+}
+
+OGSMTab.propTypes = {
+    productId: PropTypes.number.isRequired
 }
 
 export default OGSMTab

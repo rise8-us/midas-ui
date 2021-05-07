@@ -1,5 +1,8 @@
-export { OGSMCreate } from './OGSMCreate'
+export { AddAnotherAssertion } from './AddAnotherAssertion'
+export { AssertionAccordion } from './AssertionAccordion'
+export { OGSMGoal } from './OGSMGoal'
 export { OGSMHeader } from './OGSMHeader'
 export { OGSMMeasure } from './OGSMMeasure'
+export { OGSMStrategy } from './OGSMStrategy'
 export { OGSMTab } from './OGSMTab'
-
+export { OGSMView } from './OGSMView'
