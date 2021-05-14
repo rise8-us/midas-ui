@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkRequest } from '../../Utilities/requests'
 import Constants from './constants'
 
-export const requestFetchAssertions = createAsyncThunk(
-    Constants.FETCH_ASSERTIONS,
+export const requestSearchAssertions = createAsyncThunk(
+    Constants.SEARCH_ASSERTIONS,
     async(query, { rejectWithValue }) => {
         const request = { endpoint: `/api/assertions?search=${query}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)

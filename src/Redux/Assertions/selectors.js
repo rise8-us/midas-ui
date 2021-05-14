@@ -5,18 +5,19 @@ export const selectAssertionById = (state, id) => {
     return assertion
 }
 
-export const selectAssertionsByObjectiveIdAndType = (state, objectiveId, type) => {
-    const allAssertions = state.assertions
-    if (allAssertions.length === 0) return []
-
-    return Object.values(allAssertions).filter(a =>
-        a.objectiveId === objectiveId &&
-        a.type === type.toUpperCase())
-}
-
 export const selectAssertionsByParentId = (state, parentId) => {
     const allAssertions = state.assertions
-    if (allAssertions.length === 0) return []
 
     return Object.values(allAssertions).filter(a => a.parentId === parentId)
+}
+
+export const selectAssertionsByType = (state, type) => {
+    if (typeof type !== 'string') return []
+    const allAssertions = state.assertions
+
+    return Object.values(allAssertions).filter(assertion => assertion.type === type.toUpperCase())
+}
+
+export const selectAssertionsByTypeAndProductId = (state, type, productId) => {
+    return selectAssertionsByType(state, type).filter(assertion => assertion.productId === productId)
 }

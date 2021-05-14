@@ -23,8 +23,10 @@ function ProductsTab() {
     const dispatch = useDispatch()
     const allProducts = useSelector(selectProducts)
 
-    const createProduct = () => dispatch(openPopup(ProductConstants.CREATE_PRODUCT, 'CreateProductPopup'))
-    const updateProduct = (id) => dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'UpdateProductPopup', { id }))
+    const createProduct = () => dispatch(
+        openPopup(ProductConstants.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
+    const updateProduct = (id) => dispatch(
+        openPopup(ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id }))
     const archiveProduct = (id, isArchived) => dispatch(requestArchiveProduct({ id, isArchived: !isArchived }))
 
     const buildRows = () => {

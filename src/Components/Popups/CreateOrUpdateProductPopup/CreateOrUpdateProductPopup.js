@@ -33,7 +33,7 @@ function CreateOrUpdateProductPopup({ id }) {
     const errors = useSelector(state => selectRequestErrors(state, productConstant))
 
     const [name, setName] = useState(product.name)
-    const [visionStatement, setVisionStatement] = useState(product.visionStatement)
+    const [description, setDescription] = useState(product.description)
     const [tags, setTags] = useState(product.tags)
     const [projects, setProjects] = useState(product.projects)
     const [productManager, setProductManager] = useState()
@@ -44,7 +44,7 @@ function CreateOrUpdateProductPopup({ id }) {
     const [projectsError, setProjectsError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
-    const onVisionChange = (e) => setVisionStatement(e.target.value)
+    const onDescriptionChange = (e) => setDescription(e.target.value)
     const onTagsChange = (value) => setTags(value)
 
     const onSelectProjects = (_e, values) => {
@@ -80,7 +80,7 @@ function CreateOrUpdateProductPopup({ id }) {
         dispatch(productRequest({
             ...product,
             name,
-            visionStatement,
+            description,
             productManagerId,
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
@@ -131,12 +131,13 @@ function CreateOrUpdateProductPopup({ id }) {
                     required
                 />
                 <TextField
-                    label = 'Vision'
+                    label = 'Description'
+                    placeholder = {`What's the purpose of ${name ? name : 'this product'}?`}
                     inputProps = {{
-                        'data-testid': 'CreateOrUpdateProductPopup__input-vision'
+                        'data-testid': 'CreateOrUpdateProductPopup__input-description'
                     }}
-                    value = {visionStatement}
-                    onChange = {onVisionChange}
+                    value = {description}
+                    onChange = {onDescriptionChange}
                     margin = 'dense'
                     multiline
                 />
@@ -150,6 +151,7 @@ function CreateOrUpdateProductPopup({ id }) {
                 <TagDropdown
                     defaultTags = {tags}
                     error = {tagsError}
+                    deletable
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
                 />
@@ -165,10 +167,16 @@ function CreateOrUpdateProductPopup({ id }) {
                     renderInput = {(params) =>
                         <TextField
                             {...params}
-                            label = 'Project(s)'
+                            label = 'Gitlab Project(s)'
                             margin = 'dense'
                             error = {projectsError.length > 0}
-                            helperText = {<FormatErrors errors = {projectsError}/>}
+                            placeholder = {'Project(s) that have CTF pipeline'}
+                            helperText = {
+                                projectsError.length > 0 ?
+                                    <FormatErrors errors = {projectsError}/>
+                                    :
+                                    'Don\'t see what you\'re looking for? Add it by typing it.'
+                            }
                             data-testid = 'CreateOrUpdateProductPopup__input-projects'
                         />
                     }

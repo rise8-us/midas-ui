@@ -1,6 +1,15 @@
 import React from 'react'
-import { render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { Product } from './index'
+
+jest.mock('../../Tabs/ProjectsTab/ProjectsTab',
+    () => function testing() { return (<div>ProjectsTab</div>) })
+
+jest.mock('../../Tabs/AssertionsTab/AssertionsTab',
+    () => function testing() { return (<div>AssertionsTab</div>) })
+
+jest.mock('../../Page/Page',
+    () => function testing({ children }) { return (<div>{children}</div>) })
 
 describe('<Product>', () => {
 
@@ -11,7 +20,6 @@ describe('<Product>', () => {
         id: 0,
         name: 'Product 1',
         visionStatement: 'great vision',
-        problemStatement: 'great problem',
         tagIds: [4],
         tags: [
             {   id: 4,
@@ -28,11 +36,18 @@ describe('<Product>', () => {
         selectProductByIdMock.mockReturnValue(product)
     })
 
-    test('Has correct text', () => {
+    test('should have correct header text', () => {
         render(<Product />)
         expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('Product 1')
         expect(screen.getByText('great vision')).toBeInTheDocument()
         expect(screen.getByText('Some tags')).toBeInTheDocument()
+    })
+
+    test('should render projects tab', () => {
+        render(<Product />)
+
+        fireEvent.click(screen.getByText(/projects/i))
+        expect(screen.getByText('ProjectsTab')).toBeInTheDocument()
     })
 
 })

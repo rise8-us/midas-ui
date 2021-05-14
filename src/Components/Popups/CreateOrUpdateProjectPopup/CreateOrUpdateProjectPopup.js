@@ -110,6 +110,7 @@ function CreateOrUpdateProjectPopup({ id }) {
                 <TagDropdown
                     defaultTags = {tags}
                     error = {tagsError}
+                    deletable
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
                 />

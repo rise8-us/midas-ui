@@ -121,6 +121,7 @@ function SearchUsers(props) {
                     {...params}
                     label = {title}
                     margin = 'dense'
+                    placeholder = 'username, display name, or email'
                     classes = {{
                         root: classes.inputRoot,
                         input: classes.inputInput,

@@ -62,7 +62,7 @@ function PathToProdStepper({ step, padding }) {
     const steps = ['COT', 'Pipelines', 'CTF', 'Prod']
 
     return (
-        <div style = {{ margin: '0 -10%', width: '120%', padding: '0px' }} >
+        <div style = {{ width: '100%' }} >
             <IconStepper
                 steps = {steps}
                 icons = {StepIcons}
@@ -80,7 +80,7 @@ PathToProdStepper.propTypes = {
 }
 
 PathToProdStepper.defaultProps = {
-    padding: '20px'
+    padding: '20px 0'
 }
 
 export default PathToProdStepper

@@ -57,8 +57,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
 
         expect(submitProductMock).toHaveBeenCalledWith({
             name: '',
-            visionStatement: '',
-            problemStatement: '',
+            description: '',
             tags: [],
             tagIds: [],
             projects: [],
@@ -127,7 +126,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
     //     const problemStatement = 'To update all outdated software'
 
     //     const nameInput = screen.getByTestId('CreateOrUpdateProductPopup__input-name')
-    //     const visionStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-vision')
+    //     const visionStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-description')
     //     const problemStatementInput = screen.getByTestId('CreateOrUpdateProductPopup__input-problem-statement')
 
     //     userEvent.clear(visionStatementInput)

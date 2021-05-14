@@ -15,23 +15,23 @@ describe('Assertion action thunks', () => {
         store.clearActions()
     })
 
-    test('requestFetchAssertions : fulfilled', async() => {
+    test('requestSearchAssertions : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestFetchAssertions('objective.id:1'))
+        await store.dispatch(actions.requestSearchAssertions('objective.id:1'))
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/assertions?search=objective.id:1')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
-        expect(store.getActions()[0].type).toEqual(actions.requestFetchAssertions.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestFetchAssertions.fulfilled.toString())
+        expect(store.getActions()[0].type).toEqual(actions.requestSearchAssertions.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSearchAssertions.fulfilled.toString())
     })
 
-    test('requestFetchAssertions : rejected', async() => {
+    test('requestSearchAssertions : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
-        await store.dispatch(actions.requestFetchAssertions())
+        await store.dispatch(actions.requestSearchAssertions())
 
-        expect(store.getActions()[0].type).toEqual(actions.requestFetchAssertions.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestFetchAssertions.rejected.toString())
+        expect(store.getActions()[0].type).toEqual(actions.requestSearchAssertions.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSearchAssertions.rejected.toString())
     })
 
     test('requestCreateAssertion : fulfilled', async() => {
