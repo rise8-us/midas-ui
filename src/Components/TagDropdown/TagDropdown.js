@@ -9,7 +9,7 @@ import FormatErrors from '../../Utilities/FormatErrors'
 import { Tag } from '../Tag'
 
 function TagDropdown(props) {
-    const { defaultTags, error, onChange, label, deletable, disableUnderline, ...autocompleteProps } = props
+    const { defaultTags, error, onChange, label, deletable, disableUnderline, options, ...autocompleteProps } = props
 
     const allTags = useSelector(selectAllTags)
 
@@ -52,7 +52,7 @@ function TagDropdown(props) {
         <Autocomplete
             {...autocompleteProps}
             multiple
-            options = {allTags}
+            options = {options ?? allTags}
             getOptionLabel = {(option) => option.label}
             getOptionSelected = {(option, value) => option.id === value.id}
             onChange = {onSelectTag}
@@ -84,7 +84,7 @@ function TagDropdown(props) {
 
 TagDropdown.propTypes = {
     defaultTags: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     error: PropTypes.array,
     disabled: PropTypes.bool,
     freeSolo: PropTypes.bool,
@@ -92,7 +92,12 @@ TagDropdown.propTypes = {
     label: PropTypes.string,
     deletable: PropTypes.bool,
     disableUnderline: PropTypes.bool,
-    popupIcon: PropTypes.node
+    popupIcon: PropTypes.node,
+    options: PropTypes.arrayOf(PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        description: PropTypes.string,
+        color: PropTypes.string.isRequired
+    }))
 }
 
 TagDropdown.defaultProps = {
@@ -101,9 +106,11 @@ TagDropdown.defaultProps = {
     error: [],
     disableClearable: false,
     label: null,
-    deletable: true,
+    deletable: false,
     disableUnderline: false,
-    popupIcon: <ArrowDropDown />
+    popupIcon: <ArrowDropDown />,
+    options: undefined,
+    onChange: undefined
 }
 
 export default TagDropdown

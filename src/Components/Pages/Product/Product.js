@@ -1,9 +1,9 @@
-import { Divider, makeStyles } from '@material-ui/core'
-import React, { Suspense } from 'react'
+import { Divider, makeStyles, Tab, Tabs } from '@material-ui/core'
+import React, { Suspense, useState } from 'react'
 import { getUrlParam } from '../../../Utilities/queryParams'
-import { OGSMTab } from '../../OGSM'
 import { Page } from '../../Page'
 import { ProductHeader } from '../../ProductHeader'
+import { AssertionsTab, ProjectsTab } from '../../Tabs'
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -11,31 +11,35 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-// TODO: re-enable tabs once works begins on kata improvement
 
 function Product() {
     const classes = useStyles()
 
     const id = parseInt(getUrlParam('products'))
 
-    // const [value, setValue] = useState('ogsm')
-    const value = 'ogsm'
+    const [value, setValue] = useState('ogsm')
 
-    // const handleChange = (_e, newValue) => setValue(newValue)
+    const handleChange = (_e, newValue) => setValue(newValue)
 
     return (
         <Page>
             <div className = {classes.root}>
                 <ProductHeader id = {id} />
                 <>
-                    {/*
                     <Tabs value = {value} onChange = {handleChange} >
-                        <Tab label = 'OGSM(s)' value = 'ogsm' disableRipple/>
+                        <Tab label = 'OGSMs' value = 'ogsm' disableRipple/>
+                        <Tab label = 'projects' value = 'projects' disableRipple/>
                     </Tabs>
-                    */}
                     <Divider variant = 'fullWidth' />
                     { value === 'ogsm' &&
-                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><OGSMTab productId = {id}/></Suspense>
+                        <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                            <AssertionsTab productId = {id}/>
+                        </Suspense>
+                    }
+                    { value === 'projects' &&
+                        <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                            <ProjectsTab id = {id} />
+                        </Suspense>
                     }
                 </>
             </div>

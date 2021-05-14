@@ -47,7 +47,12 @@ describe('<TagDropdown />', () => {
     })
 
     test('should delete tag', async() => {
-        render(<TagDropdown defaultTags = {[allTags[0], allTags[2]]} error = {[]} onChange = {onTagsChange} />)
+        render(<TagDropdown
+            defaultTags = {[allTags[0], allTags[2]]}
+            deletable
+            error = {[]}
+            onChange = {onTagsChange} />
+        )
 
         fireEvent.click(await screen.findByTitle('delete'))
 
@@ -59,7 +64,6 @@ describe('<TagDropdown />', () => {
             defaultTags = {[allTags[0], allTags[2]]}
             error = {[]}
             onChange = {onTagsChange}
-            deletable = {false}
         />)
 
         expect(screen.queryByText('delete')).not.toBeInTheDocument()

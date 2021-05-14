@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function Tag({ label, description, color, onDelete }) {
+function Tag({ label, description, color, onDelete, onClick }) {
     const classes = useStyles()
     const theme = useTheme()
 
@@ -46,6 +46,7 @@ function Tag({ label, description, color, onDelete }) {
             variant = 'outlined'
             size = 'small'
             onDelete = {onDelete}
+            onClick = {onClick}
         />
     )
 
@@ -56,6 +57,7 @@ function Tag({ label, description, color, onDelete }) {
             display = 'flex'
             flexDirection = 'row'
             flexWrap = 'none'
+            onClick = {onClick}
         >
             <Typography
                 variant = 'body2'
@@ -123,11 +125,13 @@ Tag.propTypes = {
     label: PropTypes.string.isRequired,
     description: PropTypes.string,
     color: PropTypes.string.isRequired,
-    onDelete: PropTypes.func
+    onDelete: PropTypes.func,
+    onClick: PropTypes.func,
 }
 
 Tag.defaultProps = {
     description: null,
-    onDelete: undefined
+    onDelete: undefined,
+    onClick: undefined,
 }
 export default Tag

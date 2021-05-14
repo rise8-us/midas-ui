@@ -61,7 +61,7 @@ describe('<ProductHeader>', () => {
         const visionStatement = 'New visionStatement'
 
         const nameInput = screen.getByTestId('ProductHeader__input-name').querySelector('input')
-        const visionStatementInput = screen.getByTestId('ProductHeader__input-vision').querySelector('textarea')
+        const visionStatementInput = screen.getByTestId('ProductHeader__input-description').querySelector('textarea')
         userEvent.clear(nameInput)
         userEvent.clear(visionStatementInput)
 
@@ -83,7 +83,7 @@ describe('<ProductHeader>', () => {
         })
 
         const nameInput = screen.getByTestId('ProductHeader__input-name').querySelector('input')
-        const visionStatementInput = screen.getByTestId('ProductHeader__input-vision').querySelector('textarea')
+        const visionStatementInput = screen.getByTestId('ProductHeader__input-description').querySelector('textarea')
         userEvent.clear(nameInput)
         userEvent.clear(visionStatementInput)
 

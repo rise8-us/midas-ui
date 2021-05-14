@@ -42,12 +42,15 @@ const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
         <Dialog
             onClose = {onClose}
             data-testid = 'Popup__dialog'
+            disableBackdropClick
+            disableEscapeKeyDown
             open
             scroll = 'paper'
             PaperProps = {{ style: { width: '395px' } }}
         >
-            <DialogTitle disableTypography className = {classes.dialogTitle}>
+            <DialogTitle disableTypography className = {classes.dialogTitle} >
                 <Typography variant = 'h6'>{title}</Typography>
+                <Typography variant = 'caption' color = 'textSecondary'>* are required</Typography>
                 <IconButton
                     data-testid = 'Popup__button-close'
                     className = {classes.closeButton}

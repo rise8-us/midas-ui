@@ -37,23 +37,23 @@ function ProductHeader({ id }) {
     const errors = useSelector(state => selectRequestErrors(state, ProductConstants.UPDATE_PRODUCT))
 
     const [isDisabled, setDisabled] = useState(true)
-    const [visionStatement, setVision] = useState(product.visionStatement)
+    const [description, setVision] = useState(product.description)
     const [name, setName] = useState(product.name)
     const [tags, setTags] = useState(product.tags)
     const [loaded, setLoaded] = useState(false)
     const [nameError, setNameError] = useState([])
 
-    const onVisionChange = (e) => !isDisabled && setVision(e.target.value)
+    const onDescriptionChange = (e) => !isDisabled && setVision(e.target.value)
     const onNameChange = (e) => !isDisabled && setName(e.target.value)
     const onTagsChange = (value) => setTags(value)
 
     const submitUpdate = () => {
         setName(name)
-        setVision(visionStatement)
+        setVision(description)
         dispatch(requestUpdateProduct({
             ...product,
             name,
-            visionStatement,
+            description,
             tagIds: Object.values(tags.map(t => t.id))
         }))
     }
@@ -65,13 +65,13 @@ function ProductHeader({ id }) {
 
     const handleRevertAction = () => {
         setName(product.name)
-        setVision(product.visionStatement)
+        setVision(product.description)
         setTags(product.tags)
     }
 
     useEffect(() => {
         if (!loaded && product.id === id) {
-            setVision(product.visionStatement)
+            setVision(product.description)
             setName(product.name)
             setTags(product.tags)
             setLoaded(true)
@@ -124,13 +124,14 @@ function ProductHeader({ id }) {
                     InputProps = {{
                         disableUnderline: isDisabled,
                         readOnly: isDisabled,
-                        'data-testid': 'ProductHeader__input-vision',
+                        'data-testid': 'ProductHeader__input-description',
                         className: classes.h6,
                         spellCheck: true,
                     }}
                     hiddenLabel
-                    value = {visionStatement}
-                    onChange = {onVisionChange}
+                    placeholder = 'Description not set...'
+                    value = {description}
+                    onChange = {onDescriptionChange}
                     multiline
                     style = {{ width: '100%' }}
                 />
