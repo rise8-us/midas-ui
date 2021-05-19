@@ -10,7 +10,7 @@ const mockStore = {
 
 test('should handle initial state', () => {
     expect(reducer(undefined, {})).toEqual({
-        navBarOpen: false,
+        navBarOpen: true,
         classification: {},
         roles: {},
         projectJourneyMap: {}

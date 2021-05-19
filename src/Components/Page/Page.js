@@ -1,12 +1,11 @@
 import { makeStyles, useTheme } from '@material-ui/core'
-import { Home, LocalOffer } from '@material-ui/icons'
+import { GpsFixed, Home, LocalOffer } from '@material-ui/icons'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import appLogo from '../../Assets/appLogo.png'
-import projectIcon from '../../Assets/project.png'
 import { selectUserLoggedIn } from '../../Redux/Auth/selectors'
 import { AppBar } from '../AppBar'
 import { SideBar } from '../SideBar'
@@ -42,11 +41,9 @@ function Page({ children }) {
             icon: <Home data-testid = 'Page__icon'/>,
             onClick: () => history.push('/home')
         }, {
-            label: 'Projects',
-            icon: <img
-                src = {projectIcon}
+            label: 'CtF Tracker',
+            icon: <GpsFixed
                 title = 'projects'
-                style = {{ maxBlockSize: '28px' }}
                 data-testid = 'Page__icon'/>,
             onClick: () => history.push('/projects')
         }, {

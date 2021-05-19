@@ -5,10 +5,8 @@ export const convertRolesLongToRolesMap = (userRolesLong) => {
     const allRoles = selectRolesAsArray(store.getState())
 
     if (Object.keys(allRoles).length === 0) return { }
-    const longAsBit = userRolesLong.toString(2)
     return allRoles.map(role => {
-        const permissionBit = Math.pow(2, role.offset).toString(2)
-        return { [role.name]: Boolean(permissionBit & longAsBit) }
+        return { [role.name]: Boolean(Math.pow(2, role.offset) & userRolesLong) }
     }).reduce((roles, role) => {
         return { ...roles, ...role }
     })
