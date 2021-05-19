@@ -49,7 +49,7 @@ test('should return data', () => {
 
     const output = bitwise.convertRolesLongToRolesMap(roleLongInput)
 
-    expect(output).toEqual({ ROLE1: false, ROLE2: true, ROLE3: false, ROLE4: true })
+    expect(output).toEqual({ ROLE1: false, ROLE2: true, ROLE3: false, ROLE4: false })
 })
 
 test('no App roles should return 0', () => {

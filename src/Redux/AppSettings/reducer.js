@@ -4,7 +4,7 @@ import { requestFetchInit } from '../Init/actions'
 const appSettingsSlice = createSlice({
     name: 'app',
     initialState: {
-        navBarOpen: false,
+        navBarOpen: true,
         roles: {},
         classification: {},
         projectJourneyMap: {}
