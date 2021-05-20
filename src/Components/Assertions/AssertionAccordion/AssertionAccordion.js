@@ -122,7 +122,6 @@ AssertionAccordion.defaultProps = {
         onClick: undefined,
         onEditClick: undefined,
         defaultEditable: false,
-        status: 'Not Started'
     },
     addAnotherButtonProps: {
         label: '',
