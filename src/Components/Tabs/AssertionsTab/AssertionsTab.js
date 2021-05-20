@@ -9,7 +9,7 @@ import useAssertionRoot from '../../../Hooks/useAssertionRoot'
 import { requestCreateAssertion, requestSearchAssertions } from '../../../Redux/Assertions/actions'
 import { selectAssertionsByTypeAndProductId } from '../../../Redux/Assertions/selectors'
 import { deleteAssertion } from '../../../Redux/ModifiedAssertions/reducer'
-import { Assertion } from '../../Assertions'
+import { Assertion, AssertionComments } from '../../Assertions'
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -23,6 +23,22 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         paddingBottom: theme.spacing(6),
         width: '100%',
+        display: 'flex',
+        flexDirection: 'row'
+    },
+    assertion: {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+        }),
+    },
+    comments: {
+        marginTop: 72,
+        marginLeft: theme.spacing(1),
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+        }),
     }
 }))
 
@@ -32,6 +48,7 @@ function AssertionsTab({ productId }) {
 
     const [showCreate, setShowCreate] = useState(false)
 
+    const showComments = useSelector(state => state.app.assertionCommentsOpen)
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => left.length === right.length)
     const buildTree = useAssertionRoot('OBJECTIVE_0')
@@ -54,16 +71,17 @@ function AssertionsTab({ productId }) {
 
     return (
         <div className = {classes.root}>
-            <Button
-                className = {classes.button}
-                variant = 'outlined'
-                startIcon = {<Add/>}
-                color = {!showCreate ? 'primary' : 'secondary'}
-                onClick = {() => setShowCreate(!showCreate)}
-            >
-                {!showCreate ? 'Add a new OGSM' : 'Cancel OGSM creation'}
-            </Button>
-            { showCreate &&
+            <div style = {{ width: showComments ? 'calc(100% - 350px)' : '100%' }} className = {classes.assertion}>
+                <Button
+                    className = {classes.button}
+                    variant = 'outlined'
+                    startIcon = {<Add/>}
+                    color = {!showCreate ? 'primary' : 'secondary'}
+                    onClick = {() => setShowCreate(!showCreate)}
+                >
+                    {!showCreate ? 'Add a new OGSM' : 'Cancel OGSM creation'}
+                </Button>
+                { showCreate &&
                 <Assertion
                     create
                     index = {0}
@@ -78,20 +96,26 @@ function AssertionsTab({ productId }) {
                         onClick: submitOGSM
                     }}
                 />
-            }
-            {objectives.map((objective, index) => (
-                <div style = {{ margin: '16px 0' }} key = {index}>
-                    <Assertion
-                        index = {index + 1}
-                        defaultText = 'Enter new objective here...'
-                        order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
-                        outerRoot
-                        id = {objective.id}
-                        productId = {productId}
-                        defaultExpanded
-                    />
+                }
+                {objectives.map((objective, index) => (
+                    <div style = {{ margin: '16px 0' }} key = {index}>
+                        <Assertion
+                            index = {index + 1}
+                            defaultText = 'Enter new objective here...'
+                            order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
+                            outerRoot
+                            id = {objective.id}
+                            productId = {productId}
+                            defaultExpanded
+                        />
+                    </div>
+                ))}
+            </div>
+            { showComments &&
+                <div className = {classes.comments} style = {{ width: showComments ? '350px' : 0 }}>
+                    <AssertionComments assertionId = {showComments}/>
                 </div>
-            ))}
+            }
         </div>
     )
 }

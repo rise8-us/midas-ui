@@ -1,3 +1,4 @@
+import * as reduxCommentActions from '../Comments/actions'
 import * as reduxActions from './actions'
 import reducer from './reducer'
 
@@ -5,15 +6,18 @@ const allAssertionsResponse = [
     {
         id: 1,
         text: 'Assertion1',
-        children: []
+        children: [],
+        commentIds: []
     }, {
         id: 2,
         text: 'Assertion2',
-        children: [{ id: 3 }]
+        children: [{ id: 3 }],
+        commentIds: []
     }
 ]
 
 const updatedAssertion = { id: 1, name: 'foo', children: [{ id: 4, children: [] }] }
+const commentDTO = { id: 42, assertionId: 1, text: '###COMPLETED' }
 
 describe('Assertions Reducer', () => {
 
@@ -42,6 +46,14 @@ describe('Assertions Reducer', () => {
         expect(state).toEqual({
             1: { ...updatedAssertion, children: [4] },
             4: { id: 4, children: [] }
+        })
+    })
+
+    test('update assertion should walk children', () => {
+        const actions = [{ type: reduxCommentActions.requestCreateComment.fulfilled, payload: commentDTO }]
+        const state = actions.reduce(reducer, { 1: allAssertionsResponse[0] })
+        expect(state).toEqual({
+            1: { ...allAssertionsResponse[0], status: 'COMPLETED', commentIds: [42] },
         })
     })
 

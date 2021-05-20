@@ -1,8 +1,11 @@
-import { Box, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
+import { Badge, Box, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
-import { Edit, ExpandMore, Restore, Save } from '@material-ui/icons'
+import { Chat, Edit, ExpandMore, Restore, Save } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
+import { requestSearchComments } from '../../../Redux/Comments/actions'
 import { Tag } from '../../Tag'
 
 const statuses = [
@@ -74,10 +77,11 @@ const expandIcon = (cat) => {
 }
 
 function AssertionHeader(props) {
-    const { category, detail, autoFocus, defaultEditable, editable, status, ...actions } = props
+    const { id, category, detail, autoFocus, defaultEditable, editable, status, commentCount, ...actions } = props
     const { onClick, onSave, onChange, onEditClick } = actions
 
     const classes = useStyles()
+    const dispatch = useDispatch()
 
     const canEdit = typeof onChange === 'function' && defaultEditable
     const canPerformChange = typeof onChange === 'function'
@@ -115,6 +119,13 @@ function AssertionHeader(props) {
     const onFocus = (event) => {
         event.stopPropagation()
         event.target.setSelectionRange(0, event.target.value.length)
+    }
+
+    const onCommentClick = (event) => {
+        event.stopPropagation()
+        dispatch(requestSearchComments(`assertion.id:${id}`))
+
+        dispatch(setAssertionComment(id))
     }
 
     return (
@@ -162,12 +173,14 @@ function AssertionHeader(props) {
                                 <IconButton
                                     color = 'secondary'
                                     title = 'save'
+                                    size = 'small'
                                     onClick = {onSaveClicked}
                                 ><Save /></IconButton>
                             }
                             <IconButton
                                 color = 'secondary'
                                 title = 'restore'
+                                size = 'small'
                                 onClick = {onRestoreClicked}
                             ><Restore /></IconButton>
                         </>
@@ -176,8 +189,26 @@ function AssertionHeader(props) {
                         <IconButton
                             color = 'secondary'
                             title = 'edit'
+                            size = 'small'
                             onClick = {onEditClicked}
                         ><Edit /></IconButton>
+                    }
+                    {id &&
+                        <Badge
+                            badgeContent = {commentCount}
+                            overlap = 'circle'
+                            color = 'primary'
+                            style = {{ marginRight: '8px' }}
+                            onClick = {onCommentClick}
+                        >
+                            <IconButton
+                                color = 'secondary'
+                                title = 'update'
+                                size = 'small'
+                            >
+                                <Chat />
+                            </IconButton>
+                        </Badge>
                     }
                     {status &&
                         <div style = {{ margin: 'auto' }}>
@@ -195,6 +226,8 @@ function AssertionHeader(props) {
 }
 
 AssertionHeader.propTypes = {
+    id: PropTypes.number,
+    commentCount: PropTypes.number,
     category: PropTypes.string.isRequired,
     detail: PropTypes.string,
     status: PropTypes.string,
@@ -209,6 +242,8 @@ AssertionHeader.propTypes = {
 }
 
 AssertionHeader.defaultProps = {
+    id: undefined,
+    commentCount: 0,
     detail: '',
     status: undefined,
     autoFocus: false,

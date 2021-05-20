@@ -81,6 +81,8 @@ function AssertionAccordion({ accordionHeaderProps, addAnotherButtonProps, outer
 
 AssertionAccordion.propTypes = {
     accordionHeaderProps: PropTypes.shape({
+        id: PropTypes.number,
+        commentCount: PropTypes.number,
         category: PropTypes.string,
         detail: PropTypes.string,
         autoFocus: PropTypes.bool,
@@ -110,6 +112,8 @@ AssertionAccordion.propTypes = {
 
 AssertionAccordion.defaultProps = {
     accordionHeaderProps: {
+        id: undefined,
+        commentCount: 0,
         detail: '',
         autoFocus: false,
         editable: false,

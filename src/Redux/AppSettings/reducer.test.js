@@ -1,25 +1,47 @@
 import { requestFetchInit } from '../Init/actions'
-import reducer, { toggleNavBarOpen } from './reducer'
+import reducer, { setAssertionComment, toggleNavBar } from './reducer'
 
 const mockStore = {
     navBarOpen: false,
+    assertionCommentsOpen: 2,
     roles: {},
     classification: {},
-    projectJourneyMap: {}
+    projectJourneyMap: {},
+    assertionStatus: {}
 }
 
 test('should handle initial state', () => {
     expect(reducer(undefined, {})).toEqual({
         navBarOpen: true,
+        assertionCommentsOpen: null,
         classification: {},
         roles: {},
-        projectJourneyMap: {}
+        projectJourneyMap: {},
+        assertionStatus: {}
     })
 })
 
-test('should handle toggleNavBarOpen', () => {
+test('should handle setAssertionComment', () => {
     expect(
-        reducer(mockStore, { type: toggleNavBarOpen.type, payload: {} })
+        reducer(mockStore, { type: setAssertionComment.type, payload: 1 })
+    ).toEqual({
+        ...mockStore,
+        assertionCommentsOpen: 1
+    })
+})
+
+test('should set setAssertionComment to null', () => {
+    expect(
+        reducer(mockStore, { type: setAssertionComment.type, payload: 2 })
+    ).toEqual({
+        ...mockStore,
+        assertionCommentsOpen: null
+    })
+})
+
+test('should handle toggleNavBar', () => {
+    expect(
+        reducer(mockStore, { type: toggleNavBar.type, payload: {} })
     ).toEqual({
         ...mockStore,
         navBarOpen: true
@@ -39,7 +61,8 @@ test('sets init info', () => {
         },
         projectJourneyMap: [{
             name: 'foo'
-        }]
+        }],
+        assertionStatus: [{ name: 'foo' }],
     }
 
     const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
@@ -48,4 +71,5 @@ test('sets init info', () => {
     expect(state.classification).toEqual(initResponse.classification)
     expect(state.roles.ADMIN).toEqual(initResponse.roles[0])
     expect(state.projectJourneyMap.foo).toEqual(initResponse.projectJourneyMap[0])
+    expect(state.assertionStatus.foo).toEqual(initResponse.assertionStatus[0])
 })
