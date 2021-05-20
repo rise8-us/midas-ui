@@ -1,10 +1,12 @@
 import { Paper } from '@material-ui/core'
+import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AssertionStatusDropdown } from '../'
 import useScroll from '../../../Hooks/useScroll'
 import useWindowSize from '../../../Hooks/useWindowSize'
+import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
 import { requestCreateComment } from '../../../Redux/Comments/actions'
 import { AddComment, CommentsList } from '../../Comments/'
 
@@ -24,7 +26,14 @@ function AssertionComments({ assertionId }) {
         dispatch(requestCreateComment({
             assertionId,
             text: `${value}###${selectedStatus}`
-        }))
+        })).then(unwrapResult).then(() => {
+            dispatch(requestUpdateAssertion({
+                id: assertionId,
+                text: assertion.text,
+                children: [],
+                status: selectedStatus
+            }))
+        })
     }
 
     useLayoutEffect(() => {

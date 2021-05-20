@@ -4,42 +4,10 @@ import { Chat, Edit, ExpandMore, Restore, Save } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestSearchComments } from '../../../Redux/Comments/actions'
 import { Tag } from '../../Tag'
-
-const statuses = [
-    {
-        name: 'NOT_STARTED',
-        label: 'Not Started',
-        color: '#969696'
-    },
-    {
-        name: 'STARTED',
-        label: 'Started',
-        color: '#00FFd4'
-    },
-    {
-        name: 'ON_TRACK',
-        label: 'On Track',
-        color: '#8bc34a'
-    },
-    {
-        name: 'NEEDS_ATTENTION',
-        label: 'Needs Attention',
-        color: '#ff9800'
-    },
-    {
-        name: 'AT_RISK',
-        label: 'At Risk',
-        color: '#e91e63'
-    },
-    {
-        name: 'COMPLETED',
-        label: 'Completed',
-        color: '#0fcf50'
-    }
-]
 
 const useStyles = makeStyles((theme) => ({
     heading: {
@@ -83,11 +51,13 @@ function AssertionHeader(props) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const statuses = useAssertionStatuses()
+
     const canEdit = typeof onChange === 'function' && defaultEditable
     const canPerformChange = typeof onChange === 'function'
     const canPerformSave = typeof onSave === 'function'
 
-    const defaultTag =  statuses.filter(t => t.name === status)
+    const defaultTag = statuses.filter(t => t.name === status)[0]
 
     const [value, setValue] = useState(detail)
     const [changeable, setChangeable] = useState(canEdit)
@@ -210,11 +180,11 @@ function AssertionHeader(props) {
                             </IconButton>
                         </Badge>
                     }
-                    {status &&
+                    {defaultTag &&
                         <div style = {{ margin: 'auto' }}>
                             <Tag
-                                label = {`status::${defaultTag[0].label}`}
-                                color = {defaultTag[0].color}
+                                label = {`status::${defaultTag?.label}`}
+                                color = {defaultTag?.color}
                             />
                         </div>
 

@@ -54,7 +54,19 @@ describe('<AssertionHeader>', () => {
     })
 
     test('should see status', () => {
-        render(<AssertionHeader category = 'cat' detail = 'devils' status = 'STARTED'/>)
+        render(<AssertionHeader category = 'cat' detail = 'devils' status = 'STARTED'/>, {
+            initialState: {
+                app: {
+                    assertionStatus: {
+                        STARTED: {
+                            name: 'STARTED',
+                            label: 'Started',
+                            color: '#000000'
+                        }
+                    }
+                }
+            }
+        })
 
         expect(screen.getByText('Started')).toBeInTheDocument()
     })
