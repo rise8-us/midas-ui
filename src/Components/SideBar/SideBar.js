@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleNavBarOpen } from '../../Redux/AppSettings/reducer'
+import { toggleNavBar } from '../../Redux/AppSettings/reducer'
 
 const constStyle = {
     overflowX: 'hidden',
@@ -53,7 +53,7 @@ function SideBar({ pages }) {
 
     const open = useSelector((state) => state.app.navBarOpen)
 
-    const handleDrawer = () => dispatch(toggleNavBarOpen())
+    const handleDrawer = () => dispatch(toggleNavBar())
 
     return (
         <Drawer

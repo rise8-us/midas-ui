@@ -6,11 +6,11 @@ import { ProjectCard } from '../../Cards'
 
 function ProjectsTab({ id }) {
     const product = useSelector(state => selectProductById(state, id))
-    const projects = product.projects.filter(p => !p.isArchived)
+    const projects = product.projects?.filter(p => !p.isArchived)
 
     return (
         <div style = {{ display: 'flex' }}>
-            {projects.length > 0 &&
+            {projects?.length > 0 &&
                 projects.map(project => (
                     <ProjectCard id = {project.id} key = {project.id}/>
                 ))

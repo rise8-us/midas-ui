@@ -39,7 +39,7 @@ describe('<Product>', () => {
     test('should have correct header text', () => {
         render(<Product />)
         expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('Product 1')
-        expect(screen.getByText('great vision')).toBeInTheDocument()
+        expect(screen.getByPlaceholderText('Description not set...')).toBeInTheDocument()
         expect(screen.getByText('Some tags')).toBeInTheDocument()
     })
 

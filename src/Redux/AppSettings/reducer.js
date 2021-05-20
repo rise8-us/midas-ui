@@ -5,13 +5,18 @@ const appSettingsSlice = createSlice({
     name: 'app',
     initialState: {
         navBarOpen: true,
+        assertionCommentsOpen: null,
         roles: {},
         classification: {},
-        projectJourneyMap: {}
+        projectJourneyMap: {},
+        assertionStatus: {},
     },
     reducers: {
-        toggleNavBarOpen: (state) => {
+        toggleNavBar: (state) => {
             state.navBarOpen = !state.navBarOpen
+        },
+        setAssertionComment: (state, action) => {
+            state.assertionCommentsOpen = action.payload === state.assertionCommentsOpen ? null : action.payload
         }
     },
     extraReducers: {
@@ -23,10 +28,13 @@ const appSettingsSlice = createSlice({
             action.payload.projectJourneyMap.map(pjm => {
                 state.projectJourneyMap[pjm.name] = pjm
             })
+            action.payload.assertionStatus.map(status => {
+                state.assertionStatus[status.name] = status
+            })
         }
     }
 })
 
-export const { toggleNavBarOpen } = appSettingsSlice.actions
+export const { toggleNavBar, setAssertionComment } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer

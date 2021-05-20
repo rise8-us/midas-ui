@@ -12,7 +12,7 @@ describe('<ProductHeader>', () => {
     const product = {
         id: 0,
         name: 'Product 1',
-        visionStatement: 'great vision',
+        description: 'great vision',
         problemStatement: 'great problem',
         tagIds: [4],
         tags: [
@@ -32,14 +32,13 @@ describe('<ProductHeader>', () => {
     test('Has correct text', () => {
         render(<ProductHeader id = {0}/>)
         expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('Product 1')
-        expect(screen.getByText('great vision')).toBeInTheDocument()
         expect(screen.getByText('Some tags')).toBeInTheDocument()
     })
 
     test('should have empty text', () => {
         selectProductByIdMock.mockReturnValue({
             name: '',
-            visionStatement: '',
+            description: '',
             problemStatement: '',
             tags: [],
             projects: []
@@ -58,20 +57,20 @@ describe('<ProductHeader>', () => {
         })
 
         const name = 'My Edited Product'
-        const visionStatement = 'New visionStatement'
+        const description = 'New description'
 
         const nameInput = screen.getByTestId('ProductHeader__input-name').querySelector('input')
         const visionStatementInput = screen.getByTestId('ProductHeader__input-description').querySelector('textarea')
         userEvent.clear(nameInput)
         userEvent.clear(visionStatementInput)
 
-        userEvent.type(visionStatementInput, visionStatement)
+        userEvent.type(visionStatementInput, description)
         userEvent.type(nameInput, name)
 
         fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
 
         expect(submitProductMock).toHaveBeenCalledWith({
-            ...product, name, visionStatement
+            ...product, name, description
         })
     })
 

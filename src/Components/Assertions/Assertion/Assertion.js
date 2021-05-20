@@ -37,7 +37,7 @@ function Assertion({ id, create, defaultText, parentIndex, index, order,
     const assertionLookup = useSelector(state => selectAssertionById(state, id))
 
     const childAssertions = useSelector(state => selectAssertionsByParentId(state, id))
-    const newAssertion = create || typeof assertionLookup.id !== 'number'
+    const newAssertion = create || typeof assertionLookup?.id !== 'number'
 
     const currentAssertion = newAssertion ? defaultAssertion : { ...assertionLookup, ...assertionDetails }
 
@@ -88,6 +88,8 @@ function Assertion({ id, create, defaultText, parentIndex, index, order,
     return (
         <AssertionAccordion
             accordionHeaderProps = {{
+                id: currentAssertion.id,
+                commentCount: currentAssertion.commentIds?.length,
                 category,
                 detail: text,
                 editable: !create,
