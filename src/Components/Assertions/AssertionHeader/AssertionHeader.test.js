@@ -8,7 +8,7 @@ describe('<AssertionHeader>', () => {
         render(<AssertionHeader category = 'category' detail = 'detail'/>)
 
         expect(screen.getByText(/category:/)).toBeInTheDocument()
-        expect(screen.getByText(/detail/)).toBeInTheDocument()
+        expect(screen.getByDisplayValue(/detail/)).toBeInTheDocument()
     })
 
     test('should call onChange & update value', () => {

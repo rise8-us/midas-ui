@@ -4,14 +4,14 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useAssertionRoot from '../../../Hooks/useAssertionRoot'
 import useDebounce from '../../../Hooks/useDebounce'
-import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
+import { requestDeleteAssertion, requestUpdateAssertion } from '../../../Redux/Assertions/actions'
 import { selectAssertionById, selectAssertionsByParentId } from '../../../Redux/Assertions/selectors'
 import { modifyAssertion } from '../../../Redux/ModifiedAssertions/reducer'
 import { AddAnotherAssertion } from '../AddAnotherAssertion'
 import { AssertionAccordion } from '../AssertionAccordion'
 
-function Assertion({ id, create, defaultText, parentIndex, index, order,
-    defaultEditable, defaultExpanded, productId, outerRoot, outerRootButtonProps }) {
+const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, order,
+    defaultEditable, defaultExpanded, productId, outerRoot, outerRootButtonProps }) => {
 
     const dispatch = useDispatch()
     const subOrder = [...order]
@@ -64,6 +64,10 @@ function Assertion({ id, create, defaultText, parentIndex, index, order,
         dispatch(requestUpdateAssertion(buildTree)).then(unwrapResult).then(setChangeable(false))
     }
 
+    const onDeleteClick = () => {
+        dispatch(requestDeleteAssertion(id))
+    }
+
     useEffect(() => {
         const updatedEntry = {
             text: textDebounce,
@@ -97,6 +101,7 @@ function Assertion({ id, create, defaultText, parentIndex, index, order,
                 onChange: setText,
                 status: currentAssertion.status,
                 onSave: id > 1 ? onSaveClick : undefined,
+                onDelete: id > 1 ? onDeleteClick : undefined,
                 onEditClick: setChangeable,
                 exitEditOnSave: true
             }}
@@ -132,7 +137,7 @@ function Assertion({ id, create, defaultText, parentIndex, index, order,
             </>
         </AssertionAccordion>
     )
-}
+})
 
 Assertion.propTypes = {
     defaultText: PropTypes.string,

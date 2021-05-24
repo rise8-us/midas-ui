@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     wrap: {
         margin: theme.spacing(1),
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column-reverse',
         overflowY: 'auto',
         '&::-webkit-scrollbar': {
             width: '12px'

@@ -16,16 +16,10 @@ describe('<AssertionStatusDropdown>', () => {
         const onChangeMock = jest.fn()
         render(<AssertionStatusDropdown onChange = {onChangeMock}/>, { initialState: mockState })
 
-        fireEvent.click(screen.getByTitle(/open/i))
+        fireEvent.click(screen.getByText(/not started/i))
         fireEvent.click(screen.getByText(/completed/i))
 
         expect(onChangeMock).toHaveBeenCalledWith('COMPLETED')
-    })
-
-    test('should have red border on error', () => {
-        render(<AssertionStatusDropdown error/>, { initialState: mockState })
-
-        expect(screen.getByTestId('AssertionStatusDropdown__input')).toHaveStyle('border: solid 1px red')
     })
 
 })

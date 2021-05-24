@@ -14,7 +14,7 @@ describe('<AssertionAccordion>', () => {
         )
 
         expect(screen.getByText(/cat:/)).toBeInTheDocument()
-        expect(screen.getByText(/dog/)).toBeInTheDocument()
+        expect(screen.getByDisplayValue(/dog/)).toBeInTheDocument()
         expect(screen.queryByText(/Hello Valheim/)).not.toBeInTheDocument()
     })
 

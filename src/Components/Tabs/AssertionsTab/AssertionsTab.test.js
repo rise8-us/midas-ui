@@ -32,7 +32,7 @@ describe('<AssertionsTab>', () => {
     test('should not render ProjectCards', () => {
         render(<AssertionsTab productId = {0}/>)
 
-        expect(screen.getByText('Yolo goal')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('Yolo goal')).toBeInTheDocument()
     })
 
     // test.only('should call submitOGSM', async() => {

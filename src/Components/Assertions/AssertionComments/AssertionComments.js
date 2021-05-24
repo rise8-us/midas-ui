@@ -1,11 +1,12 @@
 import { Paper } from '@material-ui/core'
 import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AssertionStatusDropdown } from '../'
 import useScroll from '../../../Hooks/useScroll'
 import useWindowSize from '../../../Hooks/useWindowSize'
+import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
 import { requestCreateComment } from '../../../Redux/Comments/actions'
 import { AddComment, CommentsList } from '../../Comments/'
@@ -20,18 +21,19 @@ function AssertionComments({ assertionId }) {
 
     const assertion = useSelector(state => state.assertions[assertionId])
 
-    const [selectedStatus, setSelectedStatus] = useState(assertion.status)
+    const selectedStatus = useSelector(state => state.app.assertionStatus[assertion?.status ?? 'NOT_STARTED'])
+    const [status, setStatus] = useState(selectedStatus?.name ?? 'NOT_STARTED')
 
     const handleSubmit = (value) => {
         dispatch(requestCreateComment({
             assertionId,
-            text: `${value}###${selectedStatus}`
+            text: `${value}###${status}`
         })).then(unwrapResult).then(() => {
             dispatch(requestUpdateAssertion({
                 id: assertionId,
                 text: assertion.text,
                 children: [],
-                status: selectedStatus
+                status: status
             }))
         })
     }
@@ -41,6 +43,15 @@ function AssertionComments({ assertionId }) {
         if (offsetTop > scroll) ref.current.style.height = `${maxHeight - offsetTop + scroll}px`
         else ref.current.style.height = `${maxHeight}px`
     }, [scroll])
+
+    useEffect(() => {
+        status !== selectedStatus.name && setStatus(selectedStatus.name)
+    }, [selectedStatus])
+
+    if (assertion === undefined) {
+        dispatch(setAssertionComment(null))
+        return null
+    }
 
     return (
         <Paper
@@ -61,8 +72,7 @@ function AssertionComments({ assertionId }) {
                 additionalNode = {
                     <AssertionStatusDropdown
                         option = {selectedStatus}
-                        onChange = {setSelectedStatus}
-                        error = {selectedStatus.length === 0}
+                        onChange = {setStatus}
                     />
                 }
                 onSubmit = {handleSubmit}

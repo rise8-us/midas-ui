@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectTreeByNodeId } from '../Redux/ModifiedAssertions/selectors'
 
-function useAssertionRoot(value) {
+function useAssertionRoot(value, type) {
     const [root, setRoot] = useState()
 
-    const assertion = useSelector(state => selectTreeByNodeId(state, value, 'new'),
+    const assertion = useSelector(state => selectTreeByNodeId(state, value, type ?? 'new'),
         (current, incoming) => objectHash(current) === objectHash(incoming))
 
     useEffect(() => {
