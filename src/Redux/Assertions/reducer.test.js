@@ -1,4 +1,3 @@
-import * as reduxCommentActions from '../Comments/actions'
 import * as reduxActions from './actions'
 import reducer from './reducer'
 
@@ -17,7 +16,6 @@ const allAssertionsResponse = [
 ]
 
 const updatedAssertion = { id: 1, name: 'foo', children: [{ id: 4, children: [] }] }
-const commentDTO = { id: 42, assertionId: 1, text: '###COMPLETED' }
 
 describe('Assertions Reducer', () => {
 
@@ -49,12 +47,10 @@ describe('Assertions Reducer', () => {
         })
     })
 
-    test('update assertion should walk children', () => {
-        const actions = [{ type: reduxCommentActions.requestCreateComment.fulfilled, payload: commentDTO }]
-        const state = actions.reduce(reducer, { 1: allAssertionsResponse[0] })
-        expect(state).toEqual({
-            1: { ...allAssertionsResponse[0], status: 'COMPLETED', commentIds: [42] },
-        })
+    test('should delete assertion from state', () => {
+        const actions = [{ type: reduxActions.requestDeleteAssertion.fulfilled, payload: { id: 1 } }]
+        const state = actions.reduce(reducer, { 1: { id: 1 } })
+        expect(state).toEqual({ })
     })
 
 })

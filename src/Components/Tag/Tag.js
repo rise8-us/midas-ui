@@ -5,6 +5,7 @@ import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
     scopedChip: {
+        direction: 'ltr',
         border: '1px solid',
         backgroundColor: 'transparent',
         height: '20px',

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as commentActions from '../Comments/actions'
 import * as actions from './actions'
 
 const addChildren = (state, assertion) => {
@@ -25,15 +24,7 @@ const assertionSlice = createSlice({
         },
         [actions.requestCreateAssertion.fulfilled]: (state, action) => addChildren(state, action.payload),
         [actions.requestUpdateAssertion.fulfilled]: (state, action) => addChildren(state, action.payload),
-        [commentActions.requestCreateComment.fulfilled]: (state, action) => {
-            const assertion = {
-                ...state[action.payload.assertionId],
-                status: action.payload.text.split('###')[1]
-            }
-            assertion.commentIds.push(action.payload.id)
-
-            state[assertion.id] = assertion
-        },
+        [actions.requestDeleteAssertion.fulfilled]: (state, action) => void(delete state[action.payload.id])
     }
 })
 

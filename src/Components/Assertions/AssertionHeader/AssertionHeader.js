@@ -1,13 +1,15 @@
 import { Badge, Box, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
-import { Chat, Edit, ExpandMore, Restore, Save } from '@material-ui/icons'
+import { Chat, Delete, Edit, ExpandMore, Restore, Save } from '@material-ui/icons'
+import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
-import { requestSearchComments } from '../../../Redux/Comments/actions'
-import { Tag } from '../../Tag'
+import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
+import { requestCreateComment, requestSearchComments } from '../../../Redux/Comments/actions'
+import { AssertionStatusDropdown } from '../AssertionStatusDropdown'
 
 const useStyles = makeStyles((theme) => ({
     heading: {
@@ -31,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     summaryRoot: {
         minHeight: 48,
         height: 48,
+        width: '100%',
         '&.Mui-expanded': {
             height: 48,
             minHeight: 48
@@ -46,7 +49,7 @@ const expandIcon = (cat) => {
 
 function AssertionHeader(props) {
     const { id, category, detail, autoFocus, defaultEditable, editable, status, commentCount, ...actions } = props
-    const { onClick, onSave, onChange, onEditClick } = actions
+    const { onClick, onSave, onChange, onDelete, onEditClick } = actions
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -56,6 +59,7 @@ function AssertionHeader(props) {
     const canEdit = typeof onChange === 'function' && defaultEditable
     const canPerformChange = typeof onChange === 'function'
     const canPerformSave = typeof onSave === 'function'
+    const canPerformDelete = typeof onDelete === 'function'
 
     const defaultTag = statuses.filter(t => t.name === status)[0]
 
@@ -91,11 +95,46 @@ function AssertionHeader(props) {
         event.target.setSelectionRange(0, event.target.value.length)
     }
 
-    const onCommentClick = (event) => {
+    const onCommentClicked = (event) => {
         event.stopPropagation()
         dispatch(requestSearchComments(`assertion.id:${id}`))
 
         dispatch(setAssertionComment(id))
+    }
+
+    const onStatusChange = (val) => {
+        dispatch(requestUpdateAssertion({
+            id,
+            text: value,
+            status: val,
+            children: []
+        })).then(unwrapResult).then(() => dispatch(requestCreateComment({
+            assertionId: id,
+            text: `###${val}`
+        })))
+    }
+
+    const onDeleteClicked = (event) => {
+        event.stopPropagation()
+        onDelete(event)
+    }
+
+    const onTextClick = (event) => {
+        event.stopPropagation()
+        !changeable && onEditClicked(event)
+        !changeable && onCommentClicked(event)
+    }
+
+    const handleEnter = (event) => {
+        if (event.key === 'Enter') {
+            onSave(value)
+            setChangeable(prev => !prev)
+        } else if (event.key === 'Escape') {
+            onValueChange({ target: { value: detail } })
+            setChangeable(prev => !prev)
+            typeof onEditClick === 'function' && onEditClick(!changeable)
+        }
+
     }
 
     return (
@@ -114,28 +153,29 @@ function AssertionHeader(props) {
             <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary'>
                 {category}:
             </Typography>
-            <Box display = 'flex' justifyContent = 'space-between' flexGrow = {1}>
-                {changeable ?
-                    <TextField
-                        autoFocus = {autoFocus}
-                        fullWidth
-                        InputProps = {{
-                            disableUnderline: !changeable,
-                            readOnly: !changeable,
-                            className: classes.creatableDetail,
-                        }}
-                        value = {value}
-                        onChange = {onValueChange}
-                        onClick = {event => event.stopPropagation()}
-                        onFocus = {onFocus}
-                    >
-                        {detail}
-                    </TextField>
-                    :
-                    <Typography variant = 'h6' className = {classes.detail}>
-                        {value}
-                    </Typography>
-                }
+            <Box display = 'flex' justifyContent = 'space-between' width = '100%'>
+                <TextField
+                    autoFocus = {autoFocus}
+                    fullWidth
+                    title = {value}
+                    InputProps = {{
+                        disableUnderline: !changeable,
+                        readOnly: !changeable,
+                        className: classes.creatableDetail,
+                    }}
+                    inputProps = {{
+                        style: {
+                            textOverflow: 'ellipsis'
+                        }
+                    }}
+                    value = {value}
+                    onKeyDown = {handleEnter}
+                    onChange = {onValueChange}
+                    onClick = {onTextClick}
+                    onFocus = {onFocus}
+                >
+                    {detail}
+                </TextField>
                 <Box display = 'flex' flexDirection = 'row'>
                     {editable && changeable &&
                         <>
@@ -163,13 +203,21 @@ function AssertionHeader(props) {
                             onClick = {onEditClicked}
                         ><Edit /></IconButton>
                     }
+                    {editable && canPerformDelete &&
+                        <IconButton
+                            color = 'secondary'
+                            title = 'delete'
+                            size = 'small'
+                            onClick = {onDeleteClicked}
+                        ><Delete /></IconButton>
+                    }
                     {id &&
                         <Badge
                             badgeContent = {commentCount}
                             overlap = 'circle'
                             color = 'primary'
                             style = {{ marginRight: '8px' }}
-                            onClick = {onCommentClick}
+                            onClick = {onCommentClicked}
                         >
                             <IconButton
                                 color = 'secondary'
@@ -181,13 +229,10 @@ function AssertionHeader(props) {
                         </Badge>
                     }
                     {defaultTag &&
-                        <div style = {{ margin: 'auto' }}>
-                            <Tag
-                                label = {`status::${defaultTag?.label}`}
-                                color = {defaultTag?.color}
-                            />
-                        </div>
-
+                        <AssertionStatusDropdown
+                            option = {defaultTag}
+                            onChange = {onStatusChange}
+                        />
                     }
                 </Box>
             </Box>
@@ -205,6 +250,7 @@ AssertionHeader.propTypes = {
     editable: PropTypes.bool,
     onChange: PropTypes.func,
     onSave: PropTypes.func,
+    onDelete: PropTypes.func,
     onClick: PropTypes.func,
     onEditClick: PropTypes.func,
     defaultEditable: PropTypes.bool,
@@ -221,6 +267,7 @@ AssertionHeader.defaultProps = {
     onChange: undefined,
     onSave: undefined,
     onClick: undefined,
+    onDelete: undefined,
     onEditClick: undefined,
     defaultEditable: false,
     exitEditOnSave: false
