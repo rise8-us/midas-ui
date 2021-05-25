@@ -17,13 +17,14 @@ describe('<AssertionsTab>', () => {
         text: 'Yolo goal',
         type: 'GOAL',
         status: 'NOT_STARTED',
-        children: []
+        children: [],
+        commentIds: []
     }
 
     beforeEach(() => {
         selectAssertionsByTypeAndProductIdMock
             .mockReturnValueOnce([])
-            .mockReturnValue([{ id: 1 }])
+            .mockReturnValue([{ id: 1, commentIds: [] }])
 
         requestSearchAssertionsMock.mockReturnValue({ type: '/', payload: {} })
         selectAssertionByIdMock.mockReturnValueOnce(objective)

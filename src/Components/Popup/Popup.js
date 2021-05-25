@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
+const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, onSubmit, onClose }) => {
     const classes = useStyles()
 
     return (
@@ -44,13 +44,18 @@ const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
             data-testid = 'Popup__dialog'
             disableBackdropClick
             disableEscapeKeyDown
-            open
+            open = {open}
             scroll = 'paper'
             PaperProps = {{ style: { width: '395px' } }}
         >
             <DialogTitle disableTypography className = {classes.dialogTitle} >
                 <Typography variant = 'h6'>{title}</Typography>
-                <Typography variant = 'caption' color = 'textSecondary'>* are required</Typography>
+                {subtitle &&
+                    <Typography variant = 'caption' color = 'textSecondary'>{subtitle}</Typography>
+                }
+                {!hideRequiredText &&
+                    <Typography variant = 'caption' color = 'textSecondary'>* are required</Typography>
+                }
                 <IconButton
                     data-testid = 'Popup__button-close'
                     className = {classes.closeButton}
@@ -89,8 +94,11 @@ const Popup = ({ children, submitText, title, onSubmit, onClose }) => {
 
 Popup.propTypes = {
     title: PropTypes.string.isRequired,
+    open: PropTypes.bool,
+    subtitle: PropTypes.string,
     submitText: PropTypes.string,
     onSubmit: PropTypes.func,
+    hideRequiredText: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.element,
@@ -99,7 +107,10 @@ Popup.propTypes = {
 }
 
 Popup.defaultProps = {
+    open: true,
     submitText: 'Submit',
+    subtitle: null,
+    hideRequiredText: false,
     onSubmit: undefined
 }
 
