@@ -1,6 +1,6 @@
 import { Card, ClickAwayListener, makeStyles, Popper, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
 import { Tag } from '../../Tag'
 
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function AssertionStatusDropdown({ option, onChange }) {
+function AssertionStatusDropdown({ option, onChange, onClick }) {
     const classes = useStyles()
 
     const allStatuses = useAssertionStatuses()
@@ -33,10 +33,15 @@ function AssertionStatusDropdown({ option, onChange }) {
     }
 
     const togglePopper = (event) => {
-        event.stopPropagation()
         setAnchorEl(anchorEl ? null : event.currentTarget)
         setOpen(prev => !prev)
+
+        typeof onClick === 'function' && onClick(event)
     }
+
+    useEffect(() => {
+        setSelectStatus(option)
+    }, [option])
 
     return (
         <div style = {{ cursor: 'pointer', margin: 'auto 0' }}>
@@ -78,6 +83,7 @@ AssertionStatusDropdown.propTypes = {
         color: PropTypes.string,
         name: PropTypes.string
     }),
+    onClick: PropTypes.func,
     onChange: PropTypes.func
 }
 
@@ -87,6 +93,7 @@ AssertionStatusDropdown.defaultProps = {
         label: 'Not Started',
         color: '#c3c3c3'
     },
+    onClick: undefined,
     onChange: undefined
 }
 

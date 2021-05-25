@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import App from './App'
 import store from './Redux/store'
 import { darkTheme } from './Styles/materialThemes'
+import './Styles/scrollbar.css'
 
 // expose store when run in Cypress
 if (window.Cypress) {

@@ -9,6 +9,7 @@ import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
 import { requestCreateComment, requestSearchComments } from '../../../Redux/Comments/actions'
+import { ConfirmationPopup } from '../../Popups/ConfirmationPopup'
 import { AssertionStatusDropdown } from '../AssertionStatusDropdown'
 
 const useStyles = makeStyles((theme) => ({
@@ -65,6 +66,7 @@ function AssertionHeader(props) {
 
     const [value, setValue] = useState(detail)
     const [changeable, setChangeable] = useState(canEdit)
+    const [openConfirmation, setOpenConfirmation] = useState(false)
 
     const onValueChange = (event) => {
         const val = event.target.value
@@ -103,26 +105,47 @@ function AssertionHeader(props) {
     }
 
     const onStatusChange = (val) => {
-        dispatch(requestUpdateAssertion({
-            id,
-            text: value,
-            status: val,
-            children: []
-        })).then(unwrapResult).then(() => dispatch(requestCreateComment({
+        dispatch(requestCreateComment({
             assertionId: id,
             text: `###${val}`
-        })))
+        })).then(unwrapResult).then(() => {
+            dispatch(setAssertionComment(id))
+            dispatch(requestUpdateAssertion({
+                id,
+                text: value,
+                status: val,
+                children: []
+            }))
+        })
+    }
+
+    const onStatusClick = (event) => {
+        event.stopPropagation()
     }
 
     const onDeleteClicked = (event) => {
         event.stopPropagation()
-        onDelete(event)
+        setOpenConfirmation(true)
     }
 
     const onTextClick = (event) => {
         event.stopPropagation()
         !changeable && onEditClicked(event)
         !changeable && onCommentClicked(event)
+    }
+
+    const handlePopup = () => setOpenConfirmation(prev => !prev)
+
+    const handlePopupCancel = (event) => {
+        event.stopPropagation()
+        handlePopup()
+    }
+
+    const handlePopupConfirm = (event) => {
+        event.stopPropagation()
+        handlePopup()
+
+        typeof onDelete === 'function' && onDelete(event)
     }
 
     const handleEnter = (event) => {
@@ -230,12 +253,21 @@ function AssertionHeader(props) {
                     }
                     {defaultTag &&
                         <AssertionStatusDropdown
+                            onClick = {onStatusClick}
                             option = {defaultTag}
                             onChange = {onStatusChange}
                         />
                     }
                 </Box>
             </Box>
+            {openConfirmation &&
+                <ConfirmationPopup
+                    open = {openConfirmation}
+                    onConfirm = {handlePopupConfirm}
+                    onCancel = {handlePopupCancel}
+                    detail = {`You are about to delete '${category}: ${value}'`}
+                />
+            }
         </AccordionSummary>
     )
 }
