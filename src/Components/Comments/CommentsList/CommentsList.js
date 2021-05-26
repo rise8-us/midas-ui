@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Comment } from '../'
+import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
 import { selectCommentsByAssertionId } from '../../../Redux/Comments/selectors'
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +30,7 @@ function CommentsList({ assertionId, commentProps }) {
     const classes = useStyles()
 
     const comments = useSelector(state => selectCommentsByAssertionId(state, assertionId))
+    const userLoggedIn = useSelector(selectUserLoggedIn)
 
     return (
         <Box className = {classes.wrap}>
@@ -36,10 +38,11 @@ function CommentsList({ assertionId, commentProps }) {
                 <Comment
                     key = {index}
                     id = {comment.id}
-                    authorId = {comment.author.id}
                     author = {comment.author?.displayName ?? comment.author?.email ?? comment.author?.username}
                     text = {comment.text}
                     lastEdit = {comment.lastEdit ?? comment.creationDate}
+                    canEdit = {userLoggedIn.id === comment.author.id}
+                    modified = {comment.lastEdit ? true : false}
                     {...commentProps}
                 />
             ))}

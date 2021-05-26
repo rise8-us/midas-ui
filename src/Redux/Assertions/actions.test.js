@@ -77,4 +77,22 @@ describe('Assertion action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateAssertion.rejected.toString())
     })
 
+    test('requestDeleteAssertion : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestDeleteAssertion(1))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/assertions/1')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('DELETE')
+        expect(store.getActions()[0].type).toEqual(actions.requestDeleteAssertion.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestDeleteAssertion.fulfilled.toString())
+    })
+
+    test('requestDeleteAssertion : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestDeleteAssertion())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestDeleteAssertion.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestDeleteAssertion.rejected.toString())
+    })
 })

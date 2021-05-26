@@ -22,4 +22,19 @@ describe('<AssertionStatusDropdown>', () => {
         expect(onChangeMock).toHaveBeenCalledWith('COMPLETED')
     })
 
+    test('should handle no color', () => {
+        render(<AssertionStatusDropdown option = {{ label: 'Started' }}/>)
+
+        expect(screen.getByText(/started/i)).toHaveStyle('color: #ffffff')
+    })
+
+    test('should call onClick prop', () => {
+        const onClickMock = jest.fn()
+        render(<AssertionStatusDropdown onClick = {onClickMock}/>)
+
+        fireEvent.click(screen.getByText(/not started/i))
+
+        expect(onClickMock).toHaveBeenCalled()
+    })
+
 })
