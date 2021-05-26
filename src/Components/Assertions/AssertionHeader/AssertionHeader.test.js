@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, userEvent } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
@@ -69,5 +69,24 @@ describe('<AssertionHeader>', () => {
         })
 
         expect(screen.getByText('Started')).toBeInTheDocument()
+    })
+
+    test('should show commentCount', () => {
+        render(<AssertionHeader category = 'cat' detail = 'devils' commentCount = {1} id = {1}/>)
+
+        expect(screen.getByText('1')).toBeInTheDocument()
+    })
+
+    test('should call comment dispatches', () => {
+        useDispatchMock().mockReturnValue({})
+        const requestSearchCommentsMock = useModuleMock('Redux/Comments/actions', 'requestSearchComments')
+        const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
+
+        render(<AssertionHeader category = 'cat' detail = 'devils' id = {1}/>)
+
+        fireEvent.click(screen.getByTitle('comment'))
+
+        expect(requestSearchCommentsMock).toHaveBeenCalledWith('assertion.id:1')
+        expect(setAssertionCommentMock).toHaveBeenCalledWith(1)
     })
 })

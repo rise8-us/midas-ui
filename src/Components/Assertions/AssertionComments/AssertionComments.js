@@ -38,6 +38,11 @@ function AssertionComments({ assertionId }) {
         })
     }
 
+    if (assertion === undefined) {
+        dispatch(setAssertionComment(null))
+        return null
+    }
+
     useLayoutEffect(() => {
         const offsetTop = ref.current?.offsetTop - 80
         if (offsetTop > scroll) ref.current.style.height = `${maxHeight - offsetTop + scroll}px`
@@ -45,13 +50,9 @@ function AssertionComments({ assertionId }) {
     }, [scroll])
 
     useEffect(() => {
-        status !== selectedStatus.name && setStatus(selectedStatus.name)
+        selectedStatus && status !== selectedStatus.name && setStatus(selectedStatus.name)
     }, [selectedStatus])
 
-    if (assertion === undefined) {
-        dispatch(setAssertionComment(null))
-        return null
-    }
 
     return (
         <Paper

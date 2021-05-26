@@ -34,11 +34,16 @@ describe('<CommentsList>', () => {
         }
     ]
 
+
     const selectCommentsByAssertionIdMock = useModuleMock('Redux/Comments/selectors', 'selectCommentsByAssertionId')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
+
+    beforeEach(() => {
+        selectCommentsByAssertionIdMock.mockReturnValue(commentsList)
+        selectUserLoggedInMock.mockReturnValue({ id: 11 })
+    })
 
     test('should render', () => {
-        selectCommentsByAssertionIdMock.mockReturnValue(commentsList)
-
         render(<CommentsList assertionId = {0}/>)
 
         expect(screen.getByText('Joe Smith')).toBeInTheDocument()
@@ -46,8 +51,15 @@ describe('<CommentsList>', () => {
         expect(screen.getByText('jsmith')).toBeInTheDocument()
 
         expect(screen.getByText('now')).toBeInTheDocument()
-        expect(screen.getByText('now +2')).toBeInTheDocument()
+        expect(screen.getByText('now +2 (edited)')).toBeInTheDocument()
         expect(screen.queryByText('orig')).not.toBeInTheDocument()
+    })
+
+
+    test('should render vertMore icon', () => {
+        render(<CommentsList assertionId = {0}/>)
+
+        expect(screen.getByTitle(/more/i)).toBeInTheDocument()
     })
 
 })

@@ -244,7 +244,7 @@ function AssertionHeader(props) {
                         >
                             <IconButton
                                 color = 'secondary'
-                                title = 'update'
+                                title = 'comment'
                                 size = 'small'
                             >
                                 <Chat />

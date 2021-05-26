@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Popup } from '../../Popup'
 
 function ConfirmationPopup({ onConfirm, onCancel, detail, open }) {
@@ -17,13 +17,15 @@ function ConfirmationPopup({ onConfirm, onCancel, detail, open }) {
         typeof onCancel === 'function' && onCancel(event)
     }
 
+    useEffect(() => isOpen !== open && setIsOpen(open), [open])
+
     return (
         <Popup
             hideRequiredText
-            title = {'Are you sure?'}
+            title = 'Are you sure?'
             open = {isOpen}
             subtitle = 'Please confirm or cancel'
-            submitText = 'Confirm'
+            submitText = 'confirm'
             onClose = {handleCancel}
             onSubmit = {handleConfirm}
         >

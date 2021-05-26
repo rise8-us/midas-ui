@@ -112,7 +112,7 @@ function AssertionsTab({ productId }) {
                 ))}
             </div>
             { showComments &&
-                <div className = {classes.comments} style = {{ width: showComments ? '350px' : 0 }}>
+                <div className = {classes.comments} style = {{ width: '350px' }}>
                     <AssertionComments assertionId = {showComments}/>
                 </div>
             }
