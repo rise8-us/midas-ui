@@ -1,4 +1,4 @@
-import { Box, TextField } from '@material-ui/core'
+import { Box, InputAdornment, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { CirclePicker } from 'react-color'
@@ -29,6 +29,27 @@ function ColorPicker({ onChange, errors, initialColor }) {
                 helperText = { errors[0] ?? '' }
                 onChange = {onColorInputChange}
                 margin = 'dense'
+                InputProps = {{
+                    startAdornment: (
+                        <InputAdornment position = 'start' style = {{ alignSelf: 'baseline' }}>
+                            <input
+                                type = 'color'
+                                value = {color}
+                                onChange = {onColorInputChange}
+                                disableUnderline
+                                style = {{
+                                    width: '24px',
+                                    height: '24px',
+                                    margin: 'auto 0',
+                                    padding: 0,
+                                    border: 'none',
+                                    backgroundColor: 'transparent',
+                                    cursor: 'pointer'
+                                }}
+                            />
+                        </InputAdornment>
+                    ),
+                }}
             />
             <Box display = 'flex' justifyContent = 'space-around' style = {{ paddingTop: '20px' }}>
                 <CirclePicker

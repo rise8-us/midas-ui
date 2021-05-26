@@ -16,6 +16,12 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             display: 'block'
         }
+    },
+    account: {
+        padding: '0 8px',
+        '&:hover': {
+            borderRadius: theme.spacing(1)
+        }
     }
 }))
 
@@ -58,23 +64,28 @@ function AppBar({ height, appColor, appName, appLogo, user }) {
                 }
                 <div style = {{ flexGrow: 1 }} />
                 {user.isAdmin &&
-                    <IconButton
-                        color = 'default'
-                        data-testid = 'AppBar__icon-admin'
-                        onClick = {() => history.push('/admin')}
-                    >
-                        <Gavel />
-                    </IconButton>
+                    <div style = {{ margin: '0 16px' }}>
+                        <IconButton
+                            color = 'secondary'
+                            data-testid = 'AppBar__icon-admin'
+                            onClick = {() => history.push('/admin')}
+                            size = 'small'
+                        >
+                            <Gavel />
+                        </IconButton>
+                    </div>
                 }
                 {user.id &&
-                    <IconButton
-                        edge = 'end'
-                        color = 'default'
-                        data-testid = 'AppBar__icon-account'
-                        onClick = {() => history.push('/account')}
-                    >
-                        <AccountCircle />
-                    </IconButton>
+                        <IconButton
+                            edge = 'end'
+                            color = 'secondary'
+                            data-testid = 'AppBar__icon-account'
+                            onClick = {() => history.push('/account')}
+                            className = {classes.account}
+                        >
+                            {user.displayName}
+                            <AccountCircle style = {{ marginLeft: '4px' }}/>
+                        </IconButton>
                 }
             </Toolbar>
         </AppBarMUI>
@@ -88,6 +99,7 @@ AppBar.propTypes = {
     appLogo: PropTypes.string,
     user: PropTypes.shape({
         id: PropTypes.number,
+        displayName: PropTypes.string,
         isAdmin: PropTypes.bool
     })
 }
@@ -99,7 +111,8 @@ AppBar.defaultProps = {
     appLogo: null,
     user: {
         id: null,
-        isAdmin: false
+        isAdmin: false,
+        displayName: ''
     }
 }
 

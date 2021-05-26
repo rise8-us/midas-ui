@@ -61,6 +61,7 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
     }
 
     const onSaveClick = () => {
+        setKids(childAssertions)
         dispatch(requestUpdateAssertion(buildTree)).then(unwrapResult).then(setChangeable(false))
     }
 
@@ -113,7 +114,7 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
         >
             <>
                 {kids.map((kid, key) => {
-                    const creation = create && kid.id === undefined
+                    const creation = create || kid.id === undefined
                     return (
                         <Assertion
                             key = {key}

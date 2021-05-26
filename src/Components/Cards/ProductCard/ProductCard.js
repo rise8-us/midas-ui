@@ -55,6 +55,7 @@ function ProductCard({ id }) {
                     onClick: goToProductsPage,
                     className: classes.link,
                 }}
+                subheader = {product.description}
                 style = {{ backgroundColor: '#FF00FF05' }}
                 action = {
                     <IconButton

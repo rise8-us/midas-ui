@@ -30,7 +30,7 @@ function Home() {
     return (
         <Page>
             <Box display = 'flex' flexDirection = 'column'>
-                <Box display = 'flex'>
+                <Box display = 'flex' alignItems = 'center'>
                     <Typography variant = 'h6' color = 'textSecondary' style = {{ padding: '20px' }}>
                         Measuring Inception to Production
                     </Typography>
