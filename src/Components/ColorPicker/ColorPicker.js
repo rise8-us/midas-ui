@@ -36,7 +36,6 @@ function ColorPicker({ onChange, errors, initialColor }) {
                                 type = 'color'
                                 value = {color}
                                 onChange = {onColorInputChange}
-                                disableUnderline
                                 style = {{
                                     width: '24px',
                                     height: '24px',
