@@ -50,7 +50,7 @@ function AssertionComments({ assertionId }) {
     }, [scroll])
 
     useEffect(() => {
-        selectedStatus && status !== selectedStatus.name && setStatus(selectedStatus.name)
+        selectedStatus && setStatus(selectedStatus.name)
     }, [selectedStatus])
 
 
@@ -66,6 +66,7 @@ function AssertionComments({ assertionId }) {
                 flexDirection: 'column',
                 justifyContent: 'space-between'
             }}
+            data-testid = 'AssertionComment__paper'
         >
             <CommentsList assertionId = {assertionId} commentProps = {{ handleStatusUpdates: true }}/>
             <AddComment

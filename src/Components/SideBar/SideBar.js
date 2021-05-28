@@ -75,7 +75,7 @@ function SideBar({ pages }) {
                     {pages.map((page) => (
                         <ListItem button key = {page.label} onClick = {page.onClick} data-testid = 'SideBar__link'>
                             <ListItemIcon>{page.icon}</ListItemIcon>
-                            <ListItemText primary = {page.label} />
+                            <ListItemText primary = {page.label} style = {{ whiteSpace: 'nowrap' }}/>
                         </ListItem>
                     ))}
                 </List>

@@ -97,10 +97,14 @@ describe('<CreateOrUpdateProjectPopup />', () => {
         userEvent.type(descriptionInput, description)
         userEvent.type(gitlabProjectIdInput, gitlabProjectId)
         userEvent.type(nameInput, name)
+
+        fireEvent.click(screen.getByTitle('Open'))
+        fireEvent.click(screen.getAllByText('Tag 1')[1])
+
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateProjectMock).toHaveBeenCalledWith({
-            ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [1, 13]
+            ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13]
         })
     })
 
