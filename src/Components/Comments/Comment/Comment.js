@@ -9,7 +9,7 @@ import EditCommentOptions from '../EditCommentOptions/EditCommentOptions'
 
 const useStyles = makeStyles(() => ({
     clickable: {
-        '&hover': {
+        '&:hover': {
             cursor: 'pointer',
             textDecoration: 'underline'
         }

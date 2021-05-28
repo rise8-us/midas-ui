@@ -4,10 +4,11 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProductConstant from '../../../Redux/Products/constants'
-import { selectUnarchivedProductIds } from '../../../Redux/Products/selectors'
+import { selectUnarchivedProducts } from '../../../Redux/Products/selectors'
 import TagConstants from '../../../Redux/Tags/constants'
 import { ProductCard } from '../../Cards'
 import { Page } from '../../Page'
+import { SearchProducts } from '../../Search'
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -22,7 +23,22 @@ function Home() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const allProductIds = useSelector(selectUnarchivedProductIds)
+    const allProduct = useSelector(selectUnarchivedProducts)
+    const filterString = useSelector(state => state.filters.homePage.filterString).toLowerCase()
+
+    const filteredProducts = allProduct.filter(product => {
+        if (product.name.toLowerCase().includes(filterString)) return true
+        else if (product.description.toLowerCase().includes(filterString)) return true
+        else {
+            const projects = product.projects.filter(project => {
+                if (project.name.toLowerCase().includes(filterString)) return true
+                else if (project.description.toLowerCase().includes(filterString)) return true
+            })
+
+            if (projects.length > 0) return true
+            else return false
+        }
+    })
 
     const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
     const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
@@ -55,6 +71,14 @@ function Home() {
                     </div>
                 </Box>
                 <Box
+                    display = 'flex'
+                    alignItems = 'center'
+                    flexGrow = {1}
+                    style = {{ padding: '0 20px 20px' }}
+                >
+                    <SearchProducts growFrom = '100%'/>
+                </Box>
+                <Box
                     display = 'grid'
                     justifyContent = 'center'
                     gridTemplateColumns = 'repeat(auto-fit, 450px)'
@@ -63,8 +87,8 @@ function Home() {
                     gridAutoFlow = 'row'
                     style = {{ marginBottom: '40px', padding: '0 30px' }}
                 >
-                    {allProductIds.map((id) => (
-                        <ProductCard key = {id} id = {id}/>
+                    {filteredProducts.map((product) => (
+                        <ProductCard key = {product.id} id = {product.id}/>
                     ))}
                 </Box>
             </Box>

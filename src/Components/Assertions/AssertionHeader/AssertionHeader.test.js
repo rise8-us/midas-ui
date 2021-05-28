@@ -1,5 +1,7 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import {
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
+} from '../../../Utilities/test-utils'
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
@@ -32,6 +34,15 @@ describe('<AssertionHeader>', () => {
         expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
     })
 
+    test('should edit and restore w/out buttons', () => {
+        useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
+
+        render(<AssertionHeader category = 'cat' detail = 'devils' editable/>)
+        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{esc}')
+
+        expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
+    })
+
     test('should edit and save', () => {
         const OnSaveMock = jest.fn()
         render(<AssertionHeader category = 'cat' detail = 'devils' editable onSave = {OnSaveMock}/>)
@@ -41,6 +52,17 @@ describe('<AssertionHeader>', () => {
         expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
 
         fireEvent.click(screen.getByTitle('save'))
+        expect(OnSaveMock).toHaveBeenCalled()
+    })
+
+    test('should edit and save w/out buttons', () => {
+        const OnSaveMock = jest.fn()
+        useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
+
+        render(<AssertionHeader category = 'cat' detail = 'devils' editable onSave = {OnSaveMock}/>)
+        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
+
+        expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
         expect(OnSaveMock).toHaveBeenCalled()
     })
 
@@ -88,5 +110,59 @@ describe('<AssertionHeader>', () => {
 
         expect(requestSearchCommentsMock).toHaveBeenCalledWith('assertion.id:1')
         expect(setAssertionCommentMock).toHaveBeenCalledWith(1)
+    })
+
+    test('should cancel delete ogsm', () => {
+        const onDeleteMock = jest.fn()
+        render(<AssertionHeader category = 'cat' detail = 'devils' editable onDelete = {onDeleteMock}/>)
+
+        fireEvent.click(screen.getByTitle('delete'))
+        fireEvent.click(screen.getByText('cancel'))
+
+        expect(onDeleteMock).not.toHaveBeenCalled()
+    })
+
+    test('should confirm delete ogsm', () => {
+        const onDeleteMock = jest.fn()
+        render(<AssertionHeader category = 'cat' detail = 'devils' editable onDelete = {onDeleteMock}/>)
+
+        fireEvent.click(screen.getByTitle('delete'))
+        fireEvent.click(screen.getByText('confirm'))
+
+        expect(onDeleteMock).toHaveBeenCalled()
+    })
+
+    test('should update status', () => {
+        useDispatchMock().mockResolvedValue({ data: { payload: {} } })
+        const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
+        const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
+        const requestUpdateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestUpdateAssertion')
+
+        const mockState = {
+            app: {
+                assertionStatus: {
+                    NOT_STARTED: { name: 'NOT_STARTED', label: 'Not Started', color: '#000000' },
+                    STARTED: { name: 'STARTED', label: 'Started', color: '#000000' },
+                    COMPLETED: { name: 'COMPLETED', label: 'Completed', color: '#000000' }
+                }
+            }
+        }
+
+        render(
+            <AssertionHeader category = 'cat' detail = 'devils' id = {1} status = 'NOT_STARTED'/>,
+            { initialState: mockState }
+        )
+
+        fireEvent.click(screen.getByText('Not Started'))
+        useDispatchMock().mockReturnValueOnce({ data: { payload: {} } })
+        fireEvent.click(screen.getByText('Completed'))
+
+        expect(requestCreateCommentMock).toHaveBeenCalledWith({ assertionId: 1, text: '###COMPLETED' })
+        waitFor(() => {
+            expect(setAssertionCommentMock).toHaveBeenCalledWith(1)
+            expect(requestUpdateAssertionMock).toHaveBeenCalledWith(
+                { id: 1, text: 'devils', status: 'COMPLETED', children: [] }
+            )
+        })
     })
 })
