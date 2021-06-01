@@ -68,6 +68,7 @@ function Comment({ id, author, lastEdit, text, handleStatusUpdates, canEdit, mod
             padding: '0 2px'
         }
     }
+
     return (
         <Box display = 'flex' flexDirection = 'column' id = {id} margin = '4px' style = {{ marginBottom: '16px' }}>
             <div style = {{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>

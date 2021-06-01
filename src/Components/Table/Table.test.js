@@ -17,7 +17,7 @@ describe('<Table />', () => {
     ]
 
     test('data display', () => {
-        render(<Table columns = {columns} rows = {rows} />)
+        render(<Table columns = {columns} rows = {rows} slantHeaders/>)
 
         expect(screen.getByText('column 1')).toBeInTheDocument()
         expect(screen.getByText('column 2')).toBeInTheDocument()
@@ -30,7 +30,7 @@ describe('<Table />', () => {
     })
 
     test('should have transparent background', () => {
-        render(<Table columns = {columns} rows = {rows} transparent align = 'right' />)
+        render(<Table columns = {columns} rows = {rows} transparent disableRowDividers align = 'right' />)
 
         expect(screen.getByTestId('Table__paper')).toHaveStyle('background-color: transparent')
     })

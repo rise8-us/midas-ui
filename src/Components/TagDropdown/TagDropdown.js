@@ -9,7 +9,8 @@ import FormatErrors from '../../Utilities/FormatErrors'
 import { Tag } from '../Tag'
 
 function TagDropdown(props) {
-    const { defaultTags, error, onChange, label, deletable, disableUnderline, options, ...autocompleteProps } = props
+    const { defaultTags, error, onChange, label, deletable, disableUnderline, options, type,
+        ...autocompleteProps } = props
 
     const allTags = useSelector(selectAllTags)
 
@@ -58,6 +59,9 @@ function TagDropdown(props) {
             onChange = {onSelectTag}
             value = {tags}
             defaultValue = {tags}
+            style = {{
+                minWidth: '250px',
+            }}
             renderTags = {(value) => value.map((tag, index) =>
                 <Tag
                     key = {index}
@@ -74,6 +78,7 @@ function TagDropdown(props) {
                     InputProps = {{
                         ...params.InputProps,
                         disableUnderline,
+                        type,
                     }}
                     helperText = {<FormatErrors errors = {error}/>}
                 />
@@ -97,7 +102,8 @@ TagDropdown.propTypes = {
         label: PropTypes.string.isRequired,
         description: PropTypes.string,
         color: PropTypes.string.isRequired
-    }))
+    })),
+    type: PropTypes.string
 }
 
 TagDropdown.defaultProps = {
@@ -110,7 +116,8 @@ TagDropdown.defaultProps = {
     disableUnderline: false,
     popupIcon: <ArrowDropDown />,
     options: undefined,
-    onChange: undefined
+    onChange: undefined,
+    type: 'text'
 }
 
 export default TagDropdown

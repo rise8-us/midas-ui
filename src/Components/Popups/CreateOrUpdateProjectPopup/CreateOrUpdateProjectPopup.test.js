@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
 } from '../../../Utilities/test-utils'
 import { CreateOrUpdateProjectPopup } from './index'
 
@@ -11,6 +11,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     const submitUpdateProjectMock = useModuleMock('Redux/Projects/actions', 'requestUpdateProject')
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
+    const requestSearchProductMock = useModuleMock('Redux/Products/actions', 'requestSearchProduct')
 
     const returnedTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },
@@ -34,7 +35,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     }
 
     beforeEach(() => {
-        useDispatchMock().mockReturnValue({})
+        useDispatchMock().mockResolvedValue({ data: {} })
         selectAllTagsMock.mockReturnValue(returnedTags)
     })
 
@@ -69,6 +70,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     })
 
     test('should call onSubmit for createProject', () => {
+        requestSearchProductMock.mockReturnValue({})
         selectProjectByIdMock.mockReturnValue(returnedNewProject)
         render(<CreateOrUpdateProjectPopup />)
 
@@ -81,7 +83,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
     test('should call onSubmit for updateProject', () => {
         selectProjectByIdMock.mockReturnValue(returnedFoundProject)
-        render(<CreateOrUpdateProjectPopup id = {4} />)
+        render(<CreateOrUpdateProjectPopup id = {4} parentId = {1}/>)
 
         const name = 'My Edited Project'
         const gitlabProjectId = '15550'
@@ -104,8 +106,9 @@ describe('<CreateOrUpdateProjectPopup />', () => {
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateProjectMock).toHaveBeenCalledWith({
-            ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13]
+            ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13], productId: 1
         })
+        waitFor(() => { expect(requestSearchProductMock).toHaveBeenCalledTimes(1) })
     })
 
     test('should close popup', () => {

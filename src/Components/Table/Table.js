@@ -1,6 +1,6 @@
 import {
     Box,
-    makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableHead, TableRow, useTheme
+    makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableHead, TableRow, Typography, useTheme
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
-    showHeaders, onRowClick, invertLastColumnAlign }) {
+    showHeaders, onRowClick, invertLastColumnAlign, disableRowDividers, slantHeaders }) {
 
     const classes = useStyles()
     const theme = useTheme()
@@ -41,8 +41,9 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
             style = {{
                 width: tableWidth,
                 margin: 'auto',
-                backgroundColor: `${transparent ? 'transparent' : 'default'}`
+                backgroundColor: transparent ? 'transparent' : 'default'
             }}
+            elevation = {disableRowDividers ? 0 : 1}
         >
             <MUITable { ...stickyHeader }>
                 {showHeaders &&
@@ -52,8 +53,20 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                 <TableCell
                                     key = {index}
                                     align = {getAlign(columns.length, index)}
+                                    style = {{
+                                        borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)',
+                                    }}
                                 >
-                                    {column}
+                                    <Typography
+                                        style = {{
+                                            width: 'fit-content',
+                                            fontSize: '.875rem',
+                                            fontWeight: '500',
+                                            lineHeight: '1.5rem',
+                                            transform: slantHeaders ? 'rotate(-45deg)' : 'unset',
+                                            transformOrigin: slantHeaders ? 'left center' : 'unset'
+                                        }}
+                                    >{column}</Typography>
                                 </TableCell>
                             ))}
                         </TableRow>
@@ -68,7 +81,8 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                 data-testid = 'Table__row'
                                 onClick = {() => { typeof onRowClick === 'function' && onRowClick(row.data) }}
                                 style = {{
-                                    cursor: typeof onRowClick === 'function' ? 'pointer' : 'inherit'
+                                    cursor: typeof onRowClick === 'function' ? 'pointer' : 'inherit',
+                                    borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)'
                                 }}
                             >
                                 {columns.map((column, idx) => (
@@ -76,6 +90,9 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                         key = {`${index}-${idx}`}
                                         align = {getAlign(columns.length, idx)}
                                         className = {column.length === 0 ? classes.actions  : classes.regular }
+                                        style = {{
+                                            borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)'
+                                        }}
                                     >
                                         <Box
                                             display = 'flex'
@@ -116,7 +133,9 @@ Table.propTypes = {
     align: PropTypes.string,
     transparent: PropTypes.bool,
     onRowClick: PropTypes.func,
-    invertLastColumnAlign: PropTypes.bool
+    invertLastColumnAlign: PropTypes.bool,
+    slantHeaders: PropTypes.bool,
+    disableRowDividers: PropTypes.bool
 }
 
 Table.defaultProps = {
@@ -127,7 +146,9 @@ Table.defaultProps = {
     align: 'left',
     tableWidth: '75vw',
     transparent: false,
-    onRowClick: undefined
+    onRowClick: undefined,
+    slantHeaders: false,
+    disableRowDividers: false
 }
 
 export default Table

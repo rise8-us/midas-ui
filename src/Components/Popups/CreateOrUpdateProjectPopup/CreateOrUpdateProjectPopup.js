@@ -1,9 +1,11 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
+import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
+import { requestSearchProduct } from '../../../Redux/Products/actions'
 import { requestCreateProject, requestUpdateProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectProjectById } from '../../../Redux/Projects/selectors'
@@ -19,7 +21,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-function CreateOrUpdateProjectPopup({ id }) {
+function CreateOrUpdateProjectPopup({ id, parentId }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
@@ -48,14 +50,19 @@ function CreateOrUpdateProjectPopup({ id }) {
 
     const onClose = () => dispatch(closePopup(projectConstant))
 
-    const onSubmit = () =>
-        dispatch(projectRequest({
+    const onSubmit = () => {
+        let data = {
             ...project,
             name,
             gitlabProjectId,
             description,
             tagIds: Object.values(tags.map(t => t.id))
-        }))
+        }
+        if (parentId !== null) data.productId = parentId
+        dispatch(projectRequest(data)).then(unwrapResult).then(() =>
+            parentId && dispatch(requestSearchProduct(`id:${parentId}`))
+        )
+    }
 
     useEffect(() => {
         if (errors.length > 0) {
@@ -120,11 +127,13 @@ function CreateOrUpdateProjectPopup({ id }) {
 }
 
 CreateOrUpdateProjectPopup.propTypes = {
-    id: PropTypes.number
+    id: PropTypes.number,
+    parentId: PropTypes.number
 }
 
 CreateOrUpdateProjectPopup.defaultProps = {
-    id: null
+    id: null,
+    parentId: null
 }
 
 export default CreateOrUpdateProjectPopup
