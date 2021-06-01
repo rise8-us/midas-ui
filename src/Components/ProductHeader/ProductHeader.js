@@ -142,7 +142,8 @@ function ProductHeader({ id }) {
                     error = {[]}
                     onChange = {onTagsChange}
                     freeSolo = {isDisabled}
-                    disableClearable = {isDisabled}
+                    disabled = {isDisabled}
+                    disableClearable = {true}
                     deletable = {!isDisabled}
                     disableUnderline = {true}
                     popupIcon = {<AddCircleOutline color = 'secondary' />}

@@ -46,4 +46,13 @@ describe('Products Reducer', () => {
         const state = actions.reduce(reducer, { 1: allProductsResponse[0] })
         expect(state).toEqual({ 1: archiveProduct })
     })
+
+    test('searches for products', () => {
+        const actions = [{ type: reduxActions.requestSearchProduct.fulfilled, payload: allProductsResponse }]
+        const state = actions.reduce(reducer, {})
+
+        expect(state[1]).toEqual(allProductsResponse[0])
+        expect(state[2]).toEqual(allProductsResponse[1])
+        expect(Object.keys(state)).toHaveLength(2)
+    })
 })

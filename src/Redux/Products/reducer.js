@@ -7,8 +7,8 @@ const productSlice = createSlice({
     reducers: { },
     extraReducers: {
         [actions.requestFetchAllProducts.fulfilled]: (state, action) => {
-            action.payload.forEach(Product => {
-                state[Product.id] = Product
+            action.payload.forEach(product => {
+                state[product.id] = product
             })
         },
         [actions.requestCreateProduct.fulfilled]: (state, action) => {
@@ -19,7 +19,12 @@ const productSlice = createSlice({
         },
         [actions.requestArchiveProduct.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
-        }
+        },
+        [actions.requestSearchProduct.fulfilled]: (state, action) => {
+            action.payload.forEach(product => {
+                state[product.id] = product
+            })
+        },
     }
 })
 
