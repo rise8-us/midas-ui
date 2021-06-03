@@ -1,20 +1,25 @@
 import { Box, Card, CardContent, CardHeader, IconButton, Tooltip, useTheme } from '@material-ui/core'
-import { ChevronLeft, ChevronRight, Edit } from '@material-ui/icons'
+import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import useSonarqubeRatings from '../../../Hooks/useSonarqubeRatings'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectProjectById } from '../../../Redux/Projects/selectors'
 import { PathToProdStepper } from '../../PathToProdStepper'
+import { SonarqubeIndicator } from '../../SonarqubeIndicator'
 import { Tag } from '../../Tag'
 
 function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
 
+    const sonarqube = useSonarqubeRatings()
+
     const project = useSelector(state => selectProjectById(state, id))
+    const coverage = project.coverage ?? {}
 
     const calcStep = () => Math.log2(project.projectJourneyMap + 1)
 
@@ -69,7 +74,7 @@ function ProjectCard({ id }) {
                             onClick = {() => handleProgress(1)}
                             color = 'secondary'
                             data-testid = 'ProjectCard__button-forward'
-                            disabled = {project.projectJourneyMap === 15}
+                            disabled = {project.projectJourneyMap === 7}
                             style = {{ height: '48px', margin: 'auto' }}
                             disableRipple
                         >
@@ -79,11 +84,46 @@ function ProjectCard({ id }) {
                 </Tooltip>
             </Box>
             <CardContent>
-                <Box display = 'flex' flexWrap = 'wrap'>
-                    {project.tags.map((tag, index) => (
-                        <Tag { ...tag } key = {index}/>
-                    ))}
+                <Box display = 'flex' justifyContent = 'space-between' padding = {1}>
+                    <SonarqubeIndicator
+                        title = 'Coverage'
+                        value = {coverage.testCoverage ?? '?'}
+                        adornment = { coverage.coverageChange !== 0 &&
+                            coverage.coverageChange !== undefined &&
+                            <TrendingUp
+                                fontSize = 'small'
+                                style = {{
+                                    margin: 'auto',
+                                    transform: coverage.coverageChange < 0 ? 'scaleY(-1)' : 'unset',
+                                    color: coverage.coverageChange < 0 ? theme.palette.error.main :
+                                        theme.palette.success.main
+                                }}
+                            />
+                        }
+                    />
+                    <SonarqubeIndicator
+                        title = 'Security'
+                        value = {coverage.securityRating ?? '?'}
+                        tooltip = {sonarqube.security[coverage.securityRating]?.description ?? ''}
+                    />
+                    <SonarqubeIndicator
+                        title = 'Reliability'
+                        value = {coverage.reliabilityRating ?? '?'}
+                        tooltip = {sonarqube.reliability[coverage.reliabilityRating]?.description ?? ''}
+                    />
+                    <SonarqubeIndicator
+                        title = 'Maintainability'
+                        value = {coverage.maintainabilityRating ?? '?'}
+                        tooltip = {sonarqube.maintainability[coverage.maintainabilityRating]?.description ?? ''}
+                    />
                 </Box>
+                {project.tags?.length > 0 &&
+                    <Box display = 'flex' flexWrap = 'wrap' marginTop = {2}>
+                        {project.tags.map((tag, index) => (
+                            <Tag { ...tag } key = {index}/>
+                        ))}
+                    </Box>
+                }
             </CardContent>
         </Card>
     )

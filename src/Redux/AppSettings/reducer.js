@@ -10,6 +10,9 @@ const appSettingsSlice = createSlice({
         classification: {},
         projectJourneyMap: {},
         assertionStatus: {},
+        sonarqubeReliability: {},
+        sonarqubeMaintainability: {},
+        sonarqubeSecurity: {},
     },
     reducers: {
         toggleNavBar: (state) => {
@@ -30,6 +33,15 @@ const appSettingsSlice = createSlice({
             })
             action.payload.assertionStatus.map(status => {
                 state.assertionStatus[status.name] = status
+            })
+            action.payload.sonarqubeReliability.map(sonarqube => {
+                state.sonarqubeReliability[sonarqube.name] = sonarqube
+            })
+            action.payload.sonarqubeMaintainability.map(sonarqube => {
+                state.sonarqubeMaintainability[sonarqube.name] = sonarqube
+            })
+            action.payload.sonarqubeSecurity.map(sonarqube => {
+                state.sonarqubeSecurity[sonarqube.name] = sonarqube
             })
         }
     }

@@ -5,7 +5,7 @@ import {
 import { CreateOrUpdateProductPopup } from './index'
 
 describe('<CreateOrUpdateProductPopup />', () => {
-    jest.setTimeout(10000)
+    jest.setTimeout(15000)
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')

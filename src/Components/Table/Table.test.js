@@ -36,7 +36,7 @@ describe('<Table />', () => {
     })
 
     test('should have strikeThrough style', () => {
-        render(<Table columns = {columns} rows = {rows} />)
+        render(<Table columns = {columns} rows = {rows} align = 'center'/>)
 
         expect(screen.getByText('one')).toHaveStyle('text-decoration-line: line-through')
     })
