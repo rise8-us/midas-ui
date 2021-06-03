@@ -29,6 +29,7 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
     const end = align === 'left' ? 'right' : 'left'
 
     const getAlign = (columnsLength, currentIndex) => {
+        if (align !== 'left' || align !== 'right') return align
         return invertLastColumnAlign ?
             columnsLength - 1 !== currentIndex ? align : end
             :
@@ -59,7 +60,6 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                 >
                                     <Typography
                                         style = {{
-                                            width: 'fit-content',
                                             fontSize: '.875rem',
                                             fontWeight: '500',
                                             lineHeight: '1.5rem',
@@ -95,7 +95,6 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                         }}
                                     >
                                         <Box
-                                            display = 'flex'
                                             flexDirection = {
                                                 columns.length - 1 === idx && column.length === 0 ?
                                                     'row-reverse' : 'row'

@@ -59,7 +59,7 @@ StepIcons.propTypes = {
 
 function PathToProdStepper({ step, padding }) {
 
-    const steps = ['COT', 'Pipelines', 'CTF', 'Prod']
+    const steps = ['Jira onboarding request submitted', 'Pipelines', 'CTF']
 
     return (
         <div style = {{ width: '100%' }} >

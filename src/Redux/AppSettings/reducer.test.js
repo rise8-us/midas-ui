@@ -7,7 +7,10 @@ const mockStore = {
     roles: {},
     classification: {},
     projectJourneyMap: {},
-    assertionStatus: {}
+    assertionStatus: {},
+    sonarqubeReliability: {},
+    sonarqubeMaintainability: {},
+    sonarqubeSecurity: {},
 }
 
 test('should handle initial state', () => {
@@ -17,7 +20,10 @@ test('should handle initial state', () => {
         classification: {},
         roles: {},
         projectJourneyMap: {},
-        assertionStatus: {}
+        assertionStatus: {},
+        sonarqubeReliability: {},
+        sonarqubeMaintainability: {},
+        sonarqubeSecurity: {},
     })
 })
 
@@ -62,7 +68,10 @@ test('sets init info', () => {
         projectJourneyMap: [{
             name: 'foo'
         }],
-        assertionStatus: [{ name: 'foo' }],
+        assertionStatus: [{ name: 'foo0' }],
+        sonarqubeReliability: [{ name: 'foo1' }],
+        sonarqubeMaintainability: [{ name: 'foo2' }],
+        sonarqubeSecurity: [{ name: 'foo3' }],
     }
 
     const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
@@ -71,5 +80,8 @@ test('sets init info', () => {
     expect(state.classification).toEqual(initResponse.classification)
     expect(state.roles.ADMIN).toEqual(initResponse.roles[0])
     expect(state.projectJourneyMap.foo).toEqual(initResponse.projectJourneyMap[0])
-    expect(state.assertionStatus.foo).toEqual(initResponse.assertionStatus[0])
+    expect(state.assertionStatus.foo0).toEqual(initResponse.assertionStatus[0])
+    expect(state.sonarqubeReliability.foo1).toEqual(initResponse.sonarqubeReliability[0])
+    expect(state.sonarqubeMaintainability.foo2).toEqual(initResponse.sonarqubeMaintainability[0])
+    expect(state.sonarqubeSecurity.foo3).toEqual(initResponse.sonarqubeSecurity[0])
 })
