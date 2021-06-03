@@ -42,32 +42,18 @@ describe('<Home>', () => {
         expect(screen.getAllByText('Product Card mock')).toHaveLength(2)
     })
 
-    test('filter by name', () => {
-        render(<Home />, { initialState: { filters: { homePage: { filterString: '1n' } } } })
+    test('should filter results', () => {
+        const { rerender } = render(<Home />, { initialState: { filters: { homePage: { filterString: '1n' } } } })
+        expect(screen.getAllByText('Product Card mock')).toHaveLength(1) // product name
 
-        expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
-        expect(screen.getAllByText('Product Card mock')).toHaveLength(1)
-    })
+        rerender(<Home />, { initialState: { filters: { homePage: { filterString: '2d' } } } })
+        expect(screen.getAllByText('Product Card mock')).toHaveLength(1) // product description
 
-    test('filter by description', () => {
-        render(<Home />, { initialState: { filters: { homePage: { filterString: '2d' } } } })
+        rerender(<Home />, { initialState: { filters: { homePage: { filterString: 'p1' } } } })
+        expect(screen.getAllByText('Product Card mock')).toHaveLength(1) // project name
 
-        expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
-        expect(screen.getAllByText('Product Card mock')).toHaveLength(1)
-    })
-
-    test('filter by product name', () => {
-        render(<Home />, { initialState: { filters: { homePage: { filterString: 'p1' } } } })
-
-        expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
-        expect(screen.getAllByText('Product Card mock')).toHaveLength(1)
-    })
-
-    test('filter by product description', () => {
-        render(<Home />, { initialState: { filters: { homePage: { filterString: 'p2' } } } })
-
-        expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
-        expect(screen.getAllByText('Product Card mock')).toHaveLength(1)
+        rerender(<Home />, { initialState: { filters: { homePage: { filterString: 'p2' } } } })
+        expect(screen.getAllByText('Product Card mock')).toHaveLength(1) // project description
     })
 
     test('Add Product calls openPopup', () => {
