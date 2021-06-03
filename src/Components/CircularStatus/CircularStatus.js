@@ -19,7 +19,7 @@ function CircularStatus(props) {
                             color: titleColor,
                         }}
                     >{title}</Typography>
-                    {titleAdornment && titleAdornment}
+                    {titleAdornment}
                 </div>
             }
             <div style = {{ alignSelf: 'center' }}>

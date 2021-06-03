@@ -27,12 +27,12 @@ function Home() {
     const filterString = useSelector(state => state.filters.homePage.filterString).toLowerCase()
 
     const filteredProducts = allProduct.filter(product => {
-        if (product.name.toLowerCase().includes(filterString)) return true
-        else if (product.description.toLowerCase().includes(filterString)) return true
+        if (product.name.toLowerCase().includes(filterString) ||
+            product.description.toLowerCase().includes(filterString)) return true
         else {
             const projects = product.projects.filter(project => {
-                if (project.name.toLowerCase().includes(filterString)) return true
-                else if (project.description.toLowerCase().includes(filterString)) return true
+                if (project.name.toLowerCase().includes(filterString) ||
+                    project.description.toLowerCase().includes(filterString)) return true
             })
 
             if (projects.length > 0) return true

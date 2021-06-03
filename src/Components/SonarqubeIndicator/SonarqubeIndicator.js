@@ -6,11 +6,10 @@ import { CircularStatus } from '../CircularStatus'
 function SonarqubeIndicator({ title, value, adornment, tooltip }) {
     const theme = useTheme()
 
-    const determineColor = (value) => {
-
-        if (value === 'A' || value >= 80) return theme.palette.success.main
-        else if (['B', 'C'].includes(value) || value >= 55) return theme.palette.warning.main
-        else if (['D', 'E'].includes(value) || value < 55) return theme.palette.error.main
+    const determineColor = (indicatorValue) => {
+        if (indicatorValue === 'A' || indicatorValue >= 80) return theme.palette.success.main
+        else if (['B', 'C'].includes(indicatorValue) || indicatorValue >= 55) return theme.palette.warning.main
+        else if (['D', 'E'].includes(indicatorValue) || indicatorValue < 55) return theme.palette.error.main
         else return theme.palette.info.main
     }
 

@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function SeachBar(props) {
+function SearchBar(props) {
     const { growFrom, enableUnderline, disableClearable, search, height, ...textFieldProps } = props
 
     const classes = useStyles({ growFrom, height })
@@ -96,7 +96,7 @@ function SeachBar(props) {
     )
 }
 
-SeachBar.propTypes = {
+SearchBar.propTypes = {
     onChange: PropTypes.func,
     growFrom: PropTypes.string,
     enableUnderline: PropTypes.bool,
@@ -109,7 +109,7 @@ SeachBar.propTypes = {
     variant: PropTypes.oneOf(['standard', 'outlined', 'filled']),
 }
 
-SeachBar.defaultProps = {
+SearchBar.defaultProps = {
     onChange: undefined,
     growFrom: '50%',
     enableUnderline: false,
@@ -122,4 +122,4 @@ SeachBar.defaultProps = {
     variant: 'standard',
 }
 
-export default SeachBar
+export default SearchBar

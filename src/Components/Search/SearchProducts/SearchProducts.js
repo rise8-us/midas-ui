@@ -4,7 +4,7 @@ import { setHomePageFilterString } from '../../../Redux/Filters/reducer'
 import { SearchBar } from '../SearchBar'
 
 
-function SeachProducts() {
+function SearchProducts() {
     const dispatch = useDispatch()
 
     const search = async(searchString) => {
@@ -20,4 +20,4 @@ function SeachProducts() {
     )
 }
 
-export default SeachProducts
+export default SearchProducts
