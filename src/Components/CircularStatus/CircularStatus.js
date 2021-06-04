@@ -43,7 +43,7 @@ function CircularStatus(props) {
                                 textAlign: 'center',
                                 color: displayValueColor,
                             }}
-                        >{displayValue}</Typography>
+                        >{isNaN(displayValue) ? displayValue : parseInt(displayValue)}</Typography>
                     </Tooltip>
                 </Box>
             </div>

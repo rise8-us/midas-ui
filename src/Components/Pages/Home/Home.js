@@ -30,13 +30,13 @@ function Home() {
         if (product.name.toLowerCase().includes(filterString) ||
             product.description.toLowerCase().includes(filterString)) return true
         else {
-            const projects = product.projects.filter(project => {
-                if (project.name.toLowerCase().includes(filterString) ||
-                    project.description.toLowerCase().includes(filterString)) return true
-            })
+            const projects = product.projects.filter(project =>
+                project.name.toLowerCase().includes(filterString) ||
+                project.description.toLowerCase().includes(filterString)
+            )
 
             if (projects.length > 0) return true
-            else return false
+            return false
         }
     })
 
