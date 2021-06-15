@@ -5,6 +5,7 @@ import authReducer from './Auth/reducer'
 import commentReducer from './Comments/reducer'
 import errorReducer from './Errors/reducer'
 import filterReducer from './Filters/reducer'
+import gitlabConfigReducer from './GitlabConfigs/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
 import popupReducer from './Popups/reducer'
 import productReducer from './Products/reducer'
@@ -20,11 +21,12 @@ export const rootReducer = combineReducers({
     comments: commentReducer,
     errors: errorReducer,
     filters: filterReducer,
+    gitlabConfigs: gitlabConfigReducer,
     modifiedAssertions: modifiedAssertionsReducer,
     popups: popupReducer,
     products: productReducer,
     projects: projectReducer,
     tags: tagReducer,
     teams: teamReducer,
-    users: userReducer,
+    users: userReducer
 })
