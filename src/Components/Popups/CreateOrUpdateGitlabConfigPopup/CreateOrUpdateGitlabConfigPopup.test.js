@@ -15,7 +15,7 @@ describe('<CreateOrUpdateGitlabConfigPopup />', () => {
         id: 4,
         name: 'Config Test',
         description: 'IL2',
-        baseUrl: 'http://foo.bar'
+        baseUrl: 'https://foo.bar'
     }
 
     const returnedNewGitlabConfig = {
@@ -69,7 +69,7 @@ describe('<CreateOrUpdateGitlabConfigPopup />', () => {
         render(<CreateOrUpdateGitlabConfigPopup id = {4} />)
 
         const name = 'My Edited GitlabConfig'
-        const baseUrl = 'http://foo.bar.baz'
+        const baseUrl = 'https://foo.bar.baz'
         const description = 'New Description'
 
         const nameInput = screen.getByTestId('CreateOrUpdateGitlabConfigPopup__input-name')

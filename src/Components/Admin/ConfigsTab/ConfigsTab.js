@@ -32,9 +32,9 @@ function ConfigsTab() {
                 config.name,
                 config.description,
                 config.baseUrl,
-                buildActions(config.id, config.isArchived)
+                buildActions(config.id)
             ],
-            properties: { strikeThrough: config.isArchived }
+            properties: { strikeThrough: false }
         }))
     }
 

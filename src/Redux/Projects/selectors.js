@@ -11,14 +11,12 @@ export const selectProjectById = (state, id) => {
 
     const tags = selectTagsByIds(state, project.tagIds)
 
-    const updatedProject = {
+    return {
         ...project,
         tags,
         description: project.description ?? '',
         gitlabProjectId: project.gitlabProjectId ?? '',
     }
-
-    return updatedProject
 }
 
 export const selectProjects = (state) => {

@@ -6,28 +6,18 @@ const mockState = {
         4: {
             id: 4,
             name: 'New Config',
-            description: 'IL2',
-            baseUrl: 'http://foo.bar'
+            description: 'IL2'
         },
         5: {
             id: 5,
             name: 'New Config2',
-            description: 'IL4',
-            baseUrl: 'http://foo.bar.baz'
+            description: 'IL4'
         }
     }
 }
 
 test('selectGitlabConfigById - returns config object', () => {
-    const returnedConfig = {
-        ...mockState.gitlabConfigs[4]
-    }
-    const config = selectors.selectGitlabConfigById(mockState, 4)
-    expect(config).toEqual({
-        ...returnedConfig,
-        description: 'IL2',
-        baseUrl: 'http://foo.bar'
-    })
+    expect(selectors.selectGitlabConfigById(mockState, 4)).toEqual(mockState.gitlabConfigs[4])
 })
 
 test('selectGitlabConfigById - null id returns object with keys', () => {
@@ -39,15 +29,10 @@ test('selectGitlabConfigById - null id returns object with keys', () => {
 })
 
 test('selectGitlabConfigs - returns config array', () => {
-
-    const configOne = {
-        id: 4,
-        name: 'New Config',
-        description: 'IL2',
-        baseUrl: 'http://foo.bar'
-    }
     const configs = selectors.selectGitlabConfigs(mockState)
-    expect(configs[0]).toEqual(configOne)
+    expect(configs).toBeInstanceOf(Array)
+    expect(configs).toHaveLength(2)
+    expect(configs[0]).toEqual(mockState.gitlabConfigs[4])
 })
 
 test('selectGitlabConfigs - returns empty array', () => {

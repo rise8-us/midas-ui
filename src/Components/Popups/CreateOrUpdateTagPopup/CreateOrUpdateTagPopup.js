@@ -18,10 +18,10 @@ import { Tag } from '../../Tag'
 function CreateOrUpdateTagPopup({ id, type }) {
     const dispatch = useDispatch()
 
-    const tagTypeTooltip = 'This will only allow the tag to be available at certain levels. \
-A Project is the smallest component in a product. It typically has a gitlab pipeline and CTF associated \
-with it. A Product is a collection of projects; typically composed of a front and backend project, but it is \
-not confined to only that. A Portfolio is a collection of Products.'
+    const tagTypeTooltip = 'This will only allow the tag to be available at certain levels. ' +
+        'A Project is the smallest component in a Product. It typically has a gitlab pipeline and CTF associated ' +
+        'with it. A Product is a collection of Projects; typically composed of a front and backend project, ' +
+        'but it is not confined to only that. A Portfolio is a collection of Products.'
 
     const tag = useSelector(state => selectTagById(state, id))
     const tagTypes = useSelector(selectTagTypes)

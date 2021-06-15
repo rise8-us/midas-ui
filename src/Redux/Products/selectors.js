@@ -11,13 +11,11 @@ export const selectProductById = (state, id) => {
 
     const projects = product.projectIds.map(pId => selectProjectById(state, pId))
 
-    const updatedProduct = {
+    return {
         ...product,
         projects,
         description: product.description ?? '',
     }
-
-    return updatedProduct
 }
 
 export const selectProducts = (state) => {
