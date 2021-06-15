@@ -10,7 +10,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
     const submitUpdateProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
-    const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
+    const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const selectNoAppIdProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectNoAppIdProjects')
 
     const returnedTags = [
@@ -40,7 +40,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
-        selectAllTagsMock.mockReturnValue(returnedTags)
+        selectTagsByTypesMock.mockReturnValue(returnedTags)
         selectNoAppIdProjectsMock.mockReturnValue(returnedProjects)
     })
 

@@ -41,10 +41,8 @@ function Page({ children }) {
             icon: <Home data-testid = 'Page__icon'/>,
             onClick: () => history.push('/home')
         }, {
-            label: 'CtF Tracker',
-            icon: <GpsFixed
-                title = 'projects'
-                data-testid = 'Page__icon'/>,
+            label: 'Projects',
+            icon: <GpsFixed title = 'projects' data-testid = 'Page__icon'/>,
             onClick: () => history.push('/projects')
         }, {
             label: 'Tags',

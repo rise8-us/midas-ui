@@ -6,7 +6,7 @@ import { TagDropdown } from './index'
 
 describe('<TagDropdown />', () => {
 
-    const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
+    const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
 
     const allTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },
@@ -20,7 +20,7 @@ describe('<TagDropdown />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        selectAllTagsMock.mockReturnValue(allTags)
+        selectTagsByTypesMock.mockReturnValue(allTags)
     })
 
     test('should handle tag changes', async() => {

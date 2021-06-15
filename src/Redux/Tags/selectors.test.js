@@ -6,19 +6,22 @@ const mockState = {
             id: 0,
             label: 'Tag 1',
             description: 'description',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            tagType: 'ALL'
         },
         1: {
             id: 1,
             detail: 'Tag 2',
             description: 'description',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            tagType: 'PRODUCT'
         }
     }
 }
 
 test('should return empty object', () => {
-    expect(selectors.selectTagById({ tags: {} }, 0)).toEqual({ label: '', description: '', color: '#' })
+    expect(selectors.selectTagById({ tags: {} }, 0))
+        .toEqual({ label: '', description: '', color: '#', tagType: 'ALL' })
 })
 
 test('should return empty object', () => {
@@ -38,4 +41,11 @@ test('should return array of tag', () => {
     expect(tagsByIds).toBeInstanceOf(Array)
     expect(tagsByIds).toHaveLength(1)
     expect(tagsByIds[0]).toEqual(mockState.tags[1])
+})
+
+test('should return array of tags', () => {
+    const tagsByIds = selectors.selectTagsByTypes(mockState, ['ALL'])
+
+    expect(tagsByIds).toBeInstanceOf(Array)
+    expect(tagsByIds).toHaveLength(1)
 })

@@ -3,7 +3,6 @@ import GitlabConfigConstants from '../../../Redux/GitlabConfigs/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { ConfigsTab } from './index'
 
-
 describe('<GitlabConfigsTab />', () => {
 
     const allGitlabConfigs = {

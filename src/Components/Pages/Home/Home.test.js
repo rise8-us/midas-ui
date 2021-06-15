@@ -69,6 +69,7 @@ describe('<Home>', () => {
 
         fireEvent.click(screen.getByText('Add New Tag'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(
+            TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'PRODUCT' })
     })
 })

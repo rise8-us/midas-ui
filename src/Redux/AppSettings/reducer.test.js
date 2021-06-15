@@ -11,19 +11,21 @@ const mockStore = {
     sonarqubeReliability: {},
     sonarqubeMaintainability: {},
     sonarqubeSecurity: {},
+    tagTypes: []
 }
 
 test('should handle initial state', () => {
     expect(reducer(undefined, {})).toEqual({
-        navBarOpen: true,
         assertionCommentsOpen: null,
-        classification: {},
-        roles: {},
-        projectJourneyMap: {},
         assertionStatus: {},
-        sonarqubeReliability: {},
+        classification: {},
+        navBarOpen: true,
+        projectJourneyMap: {},
+        roles: {},
         sonarqubeMaintainability: {},
+        sonarqubeReliability: {},
         sonarqubeSecurity: {},
+        tagTypes: [],
     })
 })
 
@@ -72,6 +74,7 @@ test('sets init info', () => {
         sonarqubeReliability: [{ name: 'foo1' }],
         sonarqubeMaintainability: [{ name: 'foo2' }],
         sonarqubeSecurity: [{ name: 'foo3' }],
+        tagTypes: ['foo', 'bar']
     }
 
     const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
@@ -84,4 +87,5 @@ test('sets init info', () => {
     expect(state.sonarqubeReliability.foo1).toEqual(initResponse.sonarqubeReliability[0])
     expect(state.sonarqubeMaintainability.foo2).toEqual(initResponse.sonarqubeMaintainability[0])
     expect(state.sonarqubeSecurity.foo3).toEqual(initResponse.sonarqubeSecurity[0])
+    expect(state.tagTypes).toEqual(['foo', 'bar'])
 })

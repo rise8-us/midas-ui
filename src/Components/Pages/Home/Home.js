@@ -41,7 +41,7 @@ function Home() {
     })
 
     const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
-    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'PRODUCT' }))
 
     return (
         <Page>
