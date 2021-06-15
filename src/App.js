@@ -5,6 +5,7 @@ import { Banner } from './Components/Banner'
 import { Account, Admin, Home, PageNotFound, Product, Projects, Tags } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
+import { requestFetchAllGitlabConfigs } from './Redux/GitlabConfigs/actions'
 import { requestFetchInit } from './Redux/Init/actions'
 import { requestFetchAllProducts } from './Redux/Products/actions'
 import { requestFetchAllProjects } from './Redux/Projects/actions'
@@ -22,6 +23,7 @@ function App() {
             dispatch(requestFetchAllProjects())
             dispatch(requestFetchAllTags())
             dispatch(requestFetchAllProducts())
+            dispatch(requestFetchAllGitlabConfigs())
         }
 
         async function whoami() {
