@@ -4,7 +4,7 @@ import { Autocomplete } from '@material-ui/lab'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { selectAllTags } from '../../Redux/Tags/selectors'
+import { selectTagsByTypes } from '../../Redux/Tags/selectors'
 import FormatErrors from '../../Utilities/FormatErrors'
 import { Tag } from '../Tag'
 
@@ -12,7 +12,7 @@ function TagDropdown(props) {
     const { defaultTags, error, onChange, label, deletable, disableUnderline, options, type,
         ...autocompleteProps } = props
 
-    const allTags = useSelector(selectAllTags)
+    const allTags = useSelector(state => selectTagsByTypes(state, type))
 
     const [tags, setTags] = useState(defaultTags)
 
@@ -78,7 +78,6 @@ function TagDropdown(props) {
                     InputProps = {{
                         ...params.InputProps,
                         disableUnderline,
-                        type,
                     }}
                     helperText = {<FormatErrors errors = {error}/>}
                 />
@@ -103,7 +102,7 @@ TagDropdown.propTypes = {
         description: PropTypes.string,
         color: PropTypes.string.isRequired
     })),
-    type: PropTypes.string
+    type: PropTypes.arrayOf(PropTypes.oneOf(['ALL', 'PROJECT', 'PRODUCT', 'PORTFOLIO', 'GITLAB']))
 }
 
 TagDropdown.defaultProps = {
@@ -117,7 +116,7 @@ TagDropdown.defaultProps = {
     popupIcon: <ArrowDropDown />,
     options: undefined,
     onChange: undefined,
-    type: 'text'
+    type: ['ALL']
 }
 
 export default TagDropdown

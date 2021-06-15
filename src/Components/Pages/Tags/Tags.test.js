@@ -9,8 +9,8 @@ describe('<Tags />', () => {
         id: 1,
         label: 'Horizon One',
         description: 'New Tag',
-        color: '#ff5722'
-
+        color: '#ff5722',
+        type: 'ALL'
     }
 
     const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
@@ -57,7 +57,12 @@ describe('<Tags />', () => {
 
         fireEvent.click(screen.getByText('Add New Tag'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(
+            TagConstants.CREATE_TAG,
+            'CreateOrUpdateTagPopup',
+            { type: 'ALL' }
+
+        )
     })
 
 })

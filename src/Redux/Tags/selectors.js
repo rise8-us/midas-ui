@@ -3,7 +3,8 @@ export const selectTagById = (state, id) => {
     if (!tag) return {
         label: '',
         description: '',
-        color: '#'
+        color: '#',
+        tagType: 'ALL'
     }
     return tag
 }
@@ -18,4 +19,8 @@ export const selectTagsByIds = (state, ids) => {
     const allTags = selectAllTags(state)
 
     return allTags.filter(tag => ids.includes(tag.id))
+}
+
+export const selectTagsByTypes = (state, types) => {
+    return selectAllTags(state).filter(t => types.includes(t.tagType))
 }

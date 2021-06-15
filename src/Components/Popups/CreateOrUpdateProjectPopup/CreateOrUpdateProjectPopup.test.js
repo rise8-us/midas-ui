@@ -10,7 +10,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     const submitCreateProjectMock = useModuleMock('Redux/Projects/actions', 'requestCreateProject')
     const submitUpdateProjectMock = useModuleMock('Redux/Projects/actions', 'requestUpdateProject')
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
-    const selectAllTagsMock = useModuleMock('Redux/Tags/selectors', 'selectAllTags')
+    const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const requestSearchProductMock = useModuleMock('Redux/Products/actions', 'requestSearchProduct')
 
     const returnedTags = [
@@ -36,7 +36,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ data: {} })
-        selectAllTagsMock.mockReturnValue(returnedTags)
+        selectTagsByTypesMock.mockReturnValue(returnedTags)
     })
 
     test('should render found project', () => {

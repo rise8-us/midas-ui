@@ -146,6 +146,7 @@ function ProductHeader({ id }) {
                     disableClearable = {true}
                     deletable = {!isDisabled}
                     disableUnderline = {true}
+                    type = {['ALL', 'PRODUCT']}
                     popupIcon = {<AddCircleOutline color = 'secondary' />}
                 />
             </div>

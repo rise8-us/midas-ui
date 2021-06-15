@@ -6,6 +6,7 @@ import useWindowSize from '../../../Hooks/useWindowSize'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectUnarchivedProjects } from '../../../Redux/Projects/selectors'
+import TagConstants from '../../../Redux/Tags/constants'
 import { ProjectCard } from '../../Cards'
 import { Page } from '../../Page'
 
@@ -31,6 +32,7 @@ function Projects() {
     const allProjects = useSelector(selectUnarchivedProjects)
 
     const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'PROJECT' }))
 
     const setButtonWidth = () => ({
         width: `${cardWidth * cardsOnRow + (theme.spacing(2) * (cardsOnRow - 1))}px`,
@@ -55,12 +57,20 @@ function Projects() {
                             style = {setButtonWidth()}
                         >
                             <Button
-                                variant = 'outlined'
+                                variant = 'text'
                                 startIcon = {<Add/>}
                                 className = {classes.button}
                                 onClick = {createProject}
                             >
                                 Add New Project
+                            </Button>
+                            <Button
+                                variant = 'text'
+                                startIcon = {<Add/>}
+                                className = {classes.button}
+                                onClick = {createTag}
+                            >
+                                Add New Tag
                             </Button>
                         </Box>
                     </div>

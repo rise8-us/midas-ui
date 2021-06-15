@@ -4,15 +4,16 @@ import { requestFetchInit } from '../Init/actions'
 const appSettingsSlice = createSlice({
     name: 'app',
     initialState: {
-        navBarOpen: true,
         assertionCommentsOpen: null,
-        roles: {},
-        classification: {},
-        projectJourneyMap: {},
         assertionStatus: {},
-        sonarqubeReliability: {},
+        classification: {},
+        navBarOpen: true,
+        projectJourneyMap: {},
+        roles: {},
         sonarqubeMaintainability: {},
+        sonarqubeReliability: {},
         sonarqubeSecurity: {},
+        tagTypes: [],
     },
     reducers: {
         toggleNavBar: (state) => {
@@ -25,6 +26,7 @@ const appSettingsSlice = createSlice({
     extraReducers: {
         [requestFetchInit.fulfilled]: (state, action) => {
             state.classification = action.payload.classification
+            state.tagTypes = action.payload.tagTypes
             action.payload.roles.map(role => {
                 state.roles[role.name] = role
             })

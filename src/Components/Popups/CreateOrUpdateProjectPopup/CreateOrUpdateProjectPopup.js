@@ -120,6 +120,7 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
                     deletable
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
+                    type = {['ALL', 'PROJECT']}
                 />
             </Box>
         </Popup>

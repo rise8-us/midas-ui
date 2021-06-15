@@ -9,28 +9,35 @@ describe('<CreateOrUpdateTagPopup />', () => {
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitCreateTagMock = useModuleMock('Redux/Tags/actions', 'requestCreateTag')
     const submitUpdateTagMock = useModuleMock('Redux/Tags/actions', 'requestUpdateTag')
+    const selectTagTypesMock = useModuleMock('Redux/AppSettings/selectors', 'selectTagTypes')
+    const getTagMock = useModuleMock('Redux/Tags/selectors', 'selectTagById')
 
     const returnedFoundTag = {
         id: 4,
         label: 'My Tag',
         color: '#696696',
-        description: 'Description'
+        description: 'Description',
+        tagType: 'ALL'
     }
 
     const returnedNewTag = {
         label: '',
         color: '#',
-        description: ''
+        description: '',
+        tagType: 'ALL'
     }
 
     const updatedData = {
         label: 'foobar',
         description: 'sassafras',
-        color: '#e91e63'
+        color: '#e91e63',
+        tagType: 'ALL'
     }
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
+        selectTagTypesMock.mockReturnValue(['ALL', 'FOO'])
+        getTagMock.mockReturnValue(returnedNewTag)
     })
 
     test('should render properly', () => {
@@ -77,7 +84,6 @@ describe('<CreateOrUpdateTagPopup />', () => {
     })
 
     test('should call onSubmit for updateTag', () => {
-        const getTagMock = useModuleMock('Redux/Tags/selectors', 'selectTagById')
         getTagMock.mockReturnValue(returnedFoundTag)
         render(<CreateOrUpdateTagPopup id = {4} />)
 
@@ -96,14 +102,25 @@ describe('<CreateOrUpdateTagPopup />', () => {
         userEvent.type(descriptionInput, updatedData.description)
         fireEvent.click(colorPicker)
         userEvent.type(labelInput, updatedData.label)
+
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateTagMock).toHaveBeenCalledWith({ ...returnedFoundTag, ...updatedData })
     })
 
+    test('should handle default types and changes', () => {
+        render(<CreateOrUpdateTagPopup type = 'ALL' />)
+
+        fireEvent.click(screen.getByTitle('Open'))
+        fireEvent.click(screen.getByText('FOO'))
+        fireEvent.click(screen.getByText('Submit'))
+
+        expect(submitCreateTagMock).toHaveBeenCalledWith(
+            { color: undefined, description: '', label: '', tagType: 'FOO' }
+        )
+    })
+
     test('should close popup', () => {
-        const getTagMock = useModuleMock('Redux/Tags/selectors', 'selectTagById')
-        getTagMock.mockReturnValue(returnedNewTag)
         render(<CreateOrUpdateTagPopup />)
 
         fireEvent.click(screen.getByTestId('Popup__button-close'))

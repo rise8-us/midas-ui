@@ -34,7 +34,7 @@ function ColorPicker({ onChange, errors, initialColor }) {
                         <InputAdornment position = 'start' style = {{ alignSelf: 'baseline' }}>
                             <input
                                 type = 'color'
-                                value = {color}
+                                value = {validHex(color) ? color : '#FFFFFF'}
                                 onChange = {onColorInputChange}
                                 style = {{
                                     width: '24px',

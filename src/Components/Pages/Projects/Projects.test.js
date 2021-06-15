@@ -1,5 +1,6 @@
 import React from 'react'
 import ProjectConstants from '../../../Redux/Projects/constants'
+import TagConstants from '../../../Redux/Tags/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { Projects } from './index'
 
@@ -50,6 +51,15 @@ describe('<Projects>', () => {
         fireEvent.click(screen.getByText('Add New Project'))
 
         expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup')
+    })
+
+    test('Add Tag calls openPopup', () => {
+        render(<Projects />)
+
+        fireEvent.click(screen.getByText('Add New Tag'))
+
+        expect(openPopupMock).toHaveBeenCalledWith(
+            TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'PROJECT' })
     })
 
 })

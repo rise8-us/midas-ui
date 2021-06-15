@@ -27,11 +27,11 @@ function Tags() {
 
     const user = useSelector(selectUserLoggedIn)
 
-    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup'))
+    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'ALL' }))
 
     const buildRows = () => {
         return allTags.map(tag => ({
-            data: [buildTag(tag), tag.description, buildColor(tag.color), buildActions(tag.id)],
+            data: [buildTag(tag), tag.description, tag.tagType, buildColor(tag.color), buildActions(tag.id)],
             properties: {},
         }))
     }
@@ -88,7 +88,7 @@ function Tags() {
                 </Box>
                 <Table
                     rows = {buildRows()}
-                    columns = {['Tag', 'Description', 'Color', '']}
+                    columns = {['Tag', 'Description', 'Type', 'Color', '']}
                 />
             </div>
         </Page>
