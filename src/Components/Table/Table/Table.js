@@ -1,9 +1,7 @@
-import {
-    Box,
-    makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableHead, TableRow, Typography, useTheme
-} from '@material-ui/core'
+import { Box, makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableRow, useTheme } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { TableHeaders } from '../'
 
 // NOTE: reference - MUI Sticky Header Table -- https://codesandbox.io/s/x17ef?file=/demo.js:1069-1212
 // Can handle pagination if/when it needs to be implemented.
@@ -20,20 +18,35 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
+const calculateSettings = (transparent, disableRowDividers, onRowClick, align) => {
+    return {
+        backgroundColor: transparent ? 'transparent' : 'default',
+        elevation: disableRowDividers ? 0 : 1,
+        rowCursor: typeof onRowClick === 'function' ? 'pointer' : 'inherit',
+        borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)',
+        end: align === 'left' ? 'right' : 'left'
+    }
+}
+
+const getCellAlign = (align, end, invertLastColumnAlign, max, current) => {
+    if (!['left', 'right'].includes(align)) return align
+
+    if (invertLastColumnAlign && max - 1 === current) return end
+    else return align
+}
+
 function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
-    showHeaders, onRowClick, invertLastColumnAlign, disableRowDividers, slantHeaders }) {
+    disableHeaders, onRowClick, invertLastColumnAlign, disableRowDividers, slantHeaders }) {
 
     const classes = useStyles()
     const theme = useTheme()
 
-    const end = align === 'left' ? 'right' : 'left'
+    const tableSettings = calculateSettings(transparent, disableRowDividers, onRowClick, align)
+
+    const end = tableSettings.end
 
     const getAlign = (columnsLength, currentIndex) => {
-        if (align !== 'left' || align !== 'right') return align
-        return invertLastColumnAlign ?
-            columnsLength - 1 !== currentIndex ? align : end
-            :
-            align
+        return getCellAlign(align, end, invertLastColumnAlign, columnsLength, currentIndex)
     }
 
     return (
@@ -42,36 +55,19 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
             style = {{
                 width: tableWidth,
                 margin: 'auto',
-                backgroundColor: transparent ? 'transparent' : 'default'
+                backgroundColor: tableSettings.backgroundColor
             }}
-            elevation = {disableRowDividers ? 0 : 1}
+            elevation = {tableSettings.elevation}
         >
             <MUITable { ...stickyHeader }>
-                {showHeaders &&
-                    <TableHead>
-                        <TableRow>
-                            {columns.map((column, index) => (
-                                <TableCell
-                                    key = {index}
-                                    align = {getAlign(columns.length, index)}
-                                    style = {{
-                                        borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)',
-                                    }}
-                                >
-                                    <Typography
-                                        style = {{
-                                            fontSize: '.875rem',
-                                            fontWeight: '500',
-                                            lineHeight: '1.5rem',
-                                            transform: slantHeaders ? 'rotate(-45deg)' : 'unset',
-                                            transformOrigin: slantHeaders ? 'left center' : 'unset'
-                                        }}
-                                    >{column}</Typography>
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                }
+                <TableHeaders
+                    show = {!disableHeaders}
+                    columns = {columns}
+                    align = {align}
+                    lastColumnAlign = {invertLastColumnAlign ? end : align}
+                    borderBottom = {tableSettings.borderBottom}
+                    slantHeaders = {slantHeaders}
+                />
                 <TableBody>
                     {rows.map((row, index) => {
                         return (
@@ -81,8 +77,8 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                 data-testid = 'Table__row'
                                 onClick = {() => { typeof onRowClick === 'function' && onRowClick(row.data) }}
                                 style = {{
-                                    cursor: typeof onRowClick === 'function' ? 'pointer' : 'inherit',
-                                    borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)'
+                                    cursor: tableSettings.rowCursor,
+                                    borderBottom: tableSettings.borderBottom
                                 }}
                             >
                                 {columns.map((column, idx) => (
@@ -91,10 +87,11 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                         align = {getAlign(columns.length, idx)}
                                         className = {column.length === 0 ? classes.actions  : classes.regular }
                                         style = {{
-                                            borderBottom: disableRowDividers ? 'none' : '1px solid rgb(19, 22, 23)'
+                                            borderBottom: tableSettings.borderBottom
                                         }}
                                     >
                                         <Box
+                                            display = 'flex'
                                             flexDirection = {
                                                 columns.length - 1 === idx && column.length === 0 ?
                                                     'row-reverse' : 'row'
@@ -126,7 +123,7 @@ Table.propTypes = {
             strikeThrough: PropTypes.bool
         })
     })).isRequired,
-    showHeaders: PropTypes.bool,
+    disableHeaders: PropTypes.bool,
     stickyHeader: PropTypes.bool,
     tableWidth: PropTypes.string,
     align: PropTypes.string,
@@ -138,7 +135,7 @@ Table.propTypes = {
 }
 
 Table.defaultProps = {
-    showHeaders: true,
+    disableHeaders: false,
     invertLastColumnAlign: false,
     stickyHeader: true,
     maxHeight: '440px',
