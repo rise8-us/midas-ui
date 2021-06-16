@@ -44,16 +44,17 @@ describe('<CreateOrUpdateProductPopup />', () => {
         selectNoAppIdProjectsMock.mockReturnValue(returnedProjects)
     })
 
-    test('should render properly', () => {
+    test('should render properly', async() => {
         render(<CreateOrUpdateProductPopup />)
 
-        expect(screen.getByText('Create Product')).toBeInTheDocument()
+        expect(await screen.findByText('Create Product')).toBeInTheDocument()
     })
 
     test('should call onSubmit', async() => {
+        useDispatchMock().mockResolvedValue({ payload: [] })
         render(<CreateOrUpdateProductPopup />)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(await screen.findByText('Submit'))
 
         expect(submitProductMock).toHaveBeenCalledWith({
             name: '',
@@ -66,15 +67,15 @@ describe('<CreateOrUpdateProductPopup />', () => {
         })
     })
 
-    test('should close popup', () => {
+    test('should close popup', async() => {
         render(<CreateOrUpdateProductPopup />)
 
-        fireEvent.click(screen.getByTestId('Popup__button-close'))
+        fireEvent.click(await screen.findByTestId('Popup__button-close'))
 
         expect(closePopupMock).toHaveBeenCalled()
     })
 
-    test('should display error messages', () => {
+    test('should display error messages', async() => {
         const state = {
             errors: {
                 'products/createOne': [
@@ -87,7 +88,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
         }
         render(<CreateOrUpdateProductPopup />, { initialState: state })
 
-        expect(screen.getByText('product name')).toBeInTheDocument()
+        expect(await screen.findByText('product name')).toBeInTheDocument()
         expect(screen.getByText('Tag error')).toBeInTheDocument()
         expect(screen.getByText(/Project with error 1/i)).toBeInTheDocument()
         expect(screen.getByText(/Project with error 2/i)).toBeInTheDocument()

@@ -8,7 +8,7 @@ describe('<GitlabConfigsTab />', () => {
     const allGitlabConfigs = {
         name: 'Config Test',
         description: 'IL2',
-        baseUrl: 'http://foo.bar'
+        baseUrl: 'https://foo.bar'
     }
 
     const selectAllGitlabConfigsMock = useModuleMock('Redux/GitlabConfigs/selectors', 'selectGitlabConfigs')
