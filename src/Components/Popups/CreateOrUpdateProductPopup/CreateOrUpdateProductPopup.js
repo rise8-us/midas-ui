@@ -19,18 +19,26 @@ import { TagDropdown } from '../../TagDropdown'
 
 const filter = createFilterOptions()
 
+const initDetails = (create) => {
+    return {
+        isCreate: create,
+        title: create ? 'Create Product' : 'Update Product',
+        constant: create ? ProductConstants.CREATE_PRODUCT : ProductConstants.UPDATE_PRODUCT,
+        request: (data) => create ? requestCreateProduct(data) : requestUpdateProduct(data)
+    }
+}
+
+const searchErrors = (errors, searchString) => errors.filter(error => error.includes(searchString))
+
 function CreateOrUpdateProductPopup({ id }) {
     const dispatch = useDispatch()
 
     const noAppIdProjects = useSelector(selectNoAppIdProjects)
     const product = useSelector(state => selectProductById(state, id))
 
-    const isCreate = product.id === undefined
-    const popupTitle = isCreate ? 'Create Product' : 'Update Product'
-    const productConstant = isCreate ? ProductConstants.CREATE_PRODUCT : ProductConstants.UPDATE_PRODUCT
-    const productRequest = (data) => isCreate ? requestCreateProduct(data) : requestUpdateProduct(data)
+    const context = initDetails(product.id === undefined)
 
-    const errors = useSelector(state => selectRequestErrors(state, productConstant))
+    const errors = useSelector(state => selectRequestErrors(state, context.constant))
 
     const [name, setName] = useState(product.name)
     const [description, setDescription] = useState(product.description)
@@ -38,10 +46,6 @@ function CreateOrUpdateProductPopup({ id }) {
     const [projects, setProjects] = useState(product.projects)
     const [productManager, setProductManager] = useState()
     const [availableProjects, setAvailableProjects] = useState(noAppIdProjects)
-
-    const [nameError, setNameError] = useState([])
-    const [tagsError, setTagsError] = useState([])
-    const [projectsError, setProjectsError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
@@ -64,20 +68,17 @@ function CreateOrUpdateProductPopup({ id }) {
                     setAvailableProjects([...availableProjects, results])
                     setProjects(newValues)
                 })
-                .catch(rejectedValueOrSerializedError => {
-                    setProjectsError([rejectedValueOrSerializedError])
-                })
         } else {
             setProjects(values)
         }
     }
 
-    const onClose = () => dispatch(closePopup(productConstant))
+    const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
-        const productManagerId = productManager === undefined ? null : productManager.id
+        const productManagerId = productManager?.id ?? null
 
-        dispatch(productRequest({
+        dispatch(context.request({
             ...product,
             name,
             description,
@@ -88,23 +89,15 @@ function CreateOrUpdateProductPopup({ id }) {
     }
 
     useEffect(() => {
-        if (product.projects.length > 0) {
+        product.projects.forEach(project => {
             let totalProjects = [...noAppIdProjects]
-            product.projects.map(project => totalProjects.push(project))
+            totalProjects.push(project)
             setAvailableProjects(totalProjects)
-        }
+        })
     }, [])
 
     useEffect(() => {
-        if (errors.length > 0) {
-            setNameError(errors.filter(error => error.includes('name')))
-            setTagsError(errors.filter(error => error.includes('Tag')))
-            setProjectsError(errors.filter(error => error.includes('Project with')))
-        }
-    }, [errors])
-
-    useEffect(() => {
-        product.productManagerId && dispatch(requestFindUserBy(`id:${product.productManagerId}`))
+        dispatch(requestFindUserBy(`id:${product?.productManagerId}`))
             .then(unwrapResult)
             .then(data => {
                 setProductManager(data[0])
@@ -113,7 +106,7 @@ function CreateOrUpdateProductPopup({ id }) {
 
     return (
         <Popup
-            title = {popupTitle}
+            title = {context.title}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
@@ -125,14 +118,14 @@ function CreateOrUpdateProductPopup({ id }) {
                     }}
                     value = {name}
                     onChange = {onNameChange}
-                    error = { nameError.length > 0 }
-                    helperText = {<FormatErrors errors = {nameError}/>}
+                    error = {searchErrors(errors, 'name').length > 0}
+                    helperText = {<FormatErrors errors = {searchErrors(errors, 'name')}/>}
                     margin = 'dense'
                     required
                 />
                 <TextField
                     label = 'Description'
-                    placeholder = {`What's the purpose of ${name ? name : 'this product'}?`}
+                    placeholder = {`What's the purpose of ${name ?? 'this product'}?`}
                     inputProps = {{
                         'data-testid': 'CreateOrUpdateProductPopup__input-description'
                     }}
@@ -150,7 +143,7 @@ function CreateOrUpdateProductPopup({ id }) {
                 />
                 <TagDropdown
                     defaultTags = {tags}
-                    error = {tagsError}
+                    error = {searchErrors(errors, 'Tag')}
                     deletable
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
@@ -170,11 +163,11 @@ function CreateOrUpdateProductPopup({ id }) {
                             {...params}
                             label = 'Gitlab Project(s)'
                             margin = 'dense'
-                            error = {projectsError.length > 0}
+                            error = {searchErrors(errors, 'Project with').length > 0}
                             placeholder = {'Project(s) that have CTF pipeline'}
                             helperText = {
-                                projectsError.length > 0 ?
-                                    <FormatErrors errors = {projectsError}/>
+                                searchErrors(errors, 'Project with').length > 0 ?
+                                    <FormatErrors errors = {searchErrors(errors, 'Project with')}/>
                                     :
                                     'Don\'t see what you\'re looking for? Add it by typing it.'
                             }
