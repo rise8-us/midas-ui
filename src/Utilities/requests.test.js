@@ -42,7 +42,7 @@ describe('requests', () => {
         }
         axios.mockResolvedValueOnce(response)
         const request = { endpoint: '/api/teams', method: 'GET', body: data }
-        const result = await requestUtils.handleThunkRequest(request, () => {})
+        const result = await requestUtils.handleThunkRequest(request, () => { /* Empty */ })
         expect(result).toEqual(data)
     })
 

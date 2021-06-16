@@ -7,7 +7,7 @@ jest.mock('./Components/PopupManager/PopupManager', () => function testing() { r
 
 describe('<App />', () => {
 
-    const consoleSpy = jest.spyOn(console, 'error').mockReturnValue(() => {})
+    const consoleSpy = jest.spyOn(console, 'error').mockReturnValue(() => { /* Empty */ })
 
     test('Has correct text', async() => {
         useDispatchMock().mockReturnValue({ meta: { requestStatus: 'fulfilled' }, payload: [{}] })

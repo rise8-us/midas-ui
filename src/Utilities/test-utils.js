@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { render as rtlRender } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-// import React from 'react'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import { rootReducer } from '../Redux/reducers'
@@ -47,3 +46,4 @@ export * from '@testing-library/user-event'
 export { userEvent }
 // override render method
 export { render }
+

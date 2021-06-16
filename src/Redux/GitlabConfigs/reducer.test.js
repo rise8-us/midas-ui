@@ -5,14 +5,10 @@ const allConfigsResponse = [
     {
         id: 4,
         name: 'New Config',
-        description: 'IL2',
-        baseUrl: 'http://foo.bar'
     },
     {
         id: 5,
         name: 'New Config2',
-        description: 'IL4',
-        baseUrl: 'http://foo.bar.baz'
     }
 ]
 
