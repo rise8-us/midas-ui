@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, userEvent } from '../../Utilities/test-utils'
+import { render, screen, userEvent } from '../../../Utilities/test-utils'
 import { Table } from './index'
 
 describe('<Table />', () => {
@@ -33,6 +33,13 @@ describe('<Table />', () => {
         render(<Table columns = {columns} rows = {rows} transparent disableRowDividers align = 'right' />)
 
         expect(screen.getByTestId('Table__paper')).toHaveStyle('background-color: transparent')
+    })
+
+    test('should not render headers', () => {
+        render(<Table columns = {columns} rows = {rows} disableHeaders/>)
+
+        expect(screen.queryByText('column 1')).not.toBeInTheDocument()
+        expect(screen.queryByText('column 2')).not.toBeInTheDocument()
     })
 
     test('should have strikeThrough style', () => {
