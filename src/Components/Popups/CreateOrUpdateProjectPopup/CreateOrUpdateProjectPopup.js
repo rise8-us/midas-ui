@@ -1,9 +1,11 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
+import { selectGitlabConfigById, selectGitlabConfigs } from '../../../Redux/GitlabConfigs/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestSearchProduct } from '../../../Redux/Products/actions'
 import { requestCreateProject, requestUpdateProject } from '../../../Redux/Projects/actions'
@@ -21,18 +23,28 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const initDetails = (create) => {
+    return {
+        isCreate: create,
+        title: create ? 'Create Project' : 'Update Project',
+        constant: create ? ProjectConstants.CREATE_PROJECT : ProjectConstants.UPDATE_PROJECT,
+        request: (data) => create ? requestCreateProject(data) : requestUpdateProject(data)
+    }
+}
+
 function CreateOrUpdateProjectPopup({ id, parentId }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
     const project = useSelector(state => selectProjectById(state, id))
 
-    const isCreate = project.id === undefined
-    const popupTitle = isCreate ? 'Create Project' : 'Update Project'
-    const projectConstant = isCreate ? ProjectConstants.CREATE_PROJECT : ProjectConstants.UPDATE_PROJECT
-    const projectRequest = (data) => isCreate ? requestCreateProject(data) : requestUpdateProject(data)
+    const context = initDetails(project.id === undefined)
 
-    const errors = useSelector(state => selectRequestErrors(state, projectConstant))
+    const errors = useSelector(state => selectRequestErrors(state, context.constant))
+    const allGitlabConfigs = useSelector(selectGitlabConfigs)
+
+    const orginalGitlabConfig = useSelector(state => selectGitlabConfigById(state, project.id))
+    const [gitlabConfig, setGitlabConfig] = useState(orginalGitlabConfig.id !== undefined ? orginalGitlabConfig : null)
 
     const [name, setName] = useState(project.name)
     const [gitlabProjectId, setGitlabProjectId] = useState(project.gitlabProjectId)
@@ -44,11 +56,12 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
     const [tagsError, setTagsError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
+    const onGitlabConfigChange = (_e, value) => setGitlabConfig(value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
     const onTagsChange = (value) => setTags(value)
 
-    const onClose = () => dispatch(closePopup(projectConstant))
+    const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
         let data = {
@@ -56,10 +69,11 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
             name,
             gitlabProjectId,
             description,
+            gitlabConfigId: gitlabConfig?.id ?? null,
             tagIds: Object.values(tags.map(t => t.id))
         }
         if (parentId !== null) data.productId = parentId
-        dispatch(projectRequest(data)).then(unwrapResult).then(() =>
+        dispatch(context.request(data)).then(unwrapResult).then(() =>
             parentId && dispatch(requestSearchProduct(`id:${parentId}`))
         )
     }
@@ -74,7 +88,7 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
 
     return (
         <Popup
-            title = {popupTitle}
+            title = {context.title}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
@@ -90,6 +104,23 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
                     helperText = {<FormatErrors errors = {nameError}/>}
                     margin = 'dense'
                     required
+                />
+                <Autocomplete
+                    value = {gitlabConfig}
+                    onChange = {onGitlabConfigChange}
+                    options = {allGitlabConfigs}
+                    getOptionLabel = {option => option.name}
+                    renderInput = {(params) =>
+                        <TextField
+                            {...params}
+                            label = 'Gitlab server'
+                            InputProps = {{
+                                ...params.InputProps,
+                                readOnly: true,
+                            }}
+                            margin = 'dense'
+                        />
+                    }
                 />
                 <TextField
                     label = 'Gitlab Project Id'
@@ -115,11 +146,11 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
                     multiline
                 />
                 <TagDropdown
+                    label = 'Tag(s)'
                     defaultTags = {tags}
                     error = {tagsError}
                     deletable
                     onChange = {onTagsChange}
-                    label = 'Tag(s)'
                     type = {['ALL', 'PROJECT']}
                 />
             </Box>

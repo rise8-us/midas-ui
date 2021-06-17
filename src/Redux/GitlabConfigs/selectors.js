@@ -13,5 +13,5 @@ export const selectGitlabConfigs = (state) => {
     const allConfigs = state.gitlabConfigs
     if (!allConfigs) return []
 
-    return Object.keys(allConfigs).map(id => selectGitlabConfigById(state, id))
+    return Object.values(allConfigs)
 }

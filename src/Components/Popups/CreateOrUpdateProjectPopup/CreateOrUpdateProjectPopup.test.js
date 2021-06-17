@@ -12,10 +12,17 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const requestSearchProductMock = useModuleMock('Redux/Products/actions', 'requestSearchProduct')
+    const selectGitlabConfigByIdMock = useModuleMock('Redux/GitlabConfigs/selectors', 'selectGitlabConfigById')
+    const selectGitlabConfigsMock = useModuleMock('Redux/GitlabConfigs/selectors', 'selectGitlabConfigs')
 
     const returnedTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },
         { id: 13, label: 'Tag 2', description: '', color: '#000000' },
+    ]
+
+    const returnedGitlabConfigs = [
+        { id: 11, name: 'conf1' },
+        { id: 12, name: 'conf2' }
     ]
 
     const returnedFoundProject = {
@@ -37,6 +44,8 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ data: {} })
         selectTagsByTypesMock.mockReturnValue(returnedTags)
+        selectGitlabConfigsMock.mockReturnValue(returnedGitlabConfigs)
+        selectGitlabConfigByIdMock.mockReturnValue(returnedGitlabConfigs[0])
     })
 
     test('should render found project', () => {
@@ -71,13 +80,14 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
     test('should call onSubmit for createProject', () => {
         requestSearchProductMock.mockReturnValue({})
+        selectGitlabConfigByIdMock.mockReturnValue({ name: '' })
         selectProjectByIdMock.mockReturnValue(returnedNewProject)
         render(<CreateOrUpdateProjectPopup />)
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitCreateProjectMock).toHaveBeenCalledWith({
-            ...returnedNewProject, tagIds: []
+            ...returnedNewProject, tagIds: [], gitlabConfigId: null
         })
     })
 
@@ -100,13 +110,17 @@ describe('<CreateOrUpdateProjectPopup />', () => {
         userEvent.type(gitlabProjectIdInput, gitlabProjectId)
         userEvent.type(nameInput, name)
 
-        fireEvent.click(screen.getByTitle('Open'))
+        fireEvent.click(screen.getAllByTitle('Open')[0])
+        fireEvent.click(screen.getByText('conf2'))
+
+        fireEvent.click(screen.getAllByTitle('Open')[1])
         fireEvent.click(screen.getAllByText('Tag 1')[1])
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateProjectMock).toHaveBeenCalledWith({
-            ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13], productId: 1
+            ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13], productId: 1,
+            gitlabConfigId: 12
         })
         waitFor(() => { expect(requestSearchProductMock).toHaveBeenCalledTimes(1) })
     })
