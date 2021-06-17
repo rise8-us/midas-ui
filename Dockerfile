@@ -1,12 +1,14 @@
-FROM registry.il2.dso.mil/platform-one/devops/pipeline-templates/ironbank/nodejs14:14.16.0 AS builder
+FROM registry.il2.dso.mil/platform-one/devops/pipeline-templates/ironbank/nodejs14:14.16.1 AS builder
 
-USER node
+USER root
 
 WORKDIR /app
 
 COPY . .
 
-RUN yarn install --frozen--lockfile && yarn build
+RUN yarn install --frozen-lockfile && yarn build
+
+USER node
 
 # Stage 2
 FROM registry.il2.dso.mil/platform-one/devops/pipeline-templates/base-image/harden-nginx-19:1.19.6
