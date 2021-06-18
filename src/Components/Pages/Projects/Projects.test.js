@@ -1,6 +1,5 @@
 import React from 'react'
 import ProjectConstants from '../../../Redux/Projects/constants'
-import TagConstants from '../../../Redux/Tags/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
 import { Projects } from './index'
 
@@ -39,10 +38,20 @@ describe('<Projects>', () => {
         selectProjectByIdMock.mockReturnValue(project)
     })
 
-    test('Has correct text', () => {
+    test('should render', () => {
         render(<Projects />)
 
         expect(screen.getByText('Add New Project')).toBeInTheDocument()
+    })
+
+    test('should filter results', () => {
+        render(<Projects />, { initialState: { filters: { appBar: { filterString: 'project' } } } })
+        expect(screen.getByText('project 1')).toBeInTheDocument()
+    })
+
+    test('should filter out results', () => {
+        render(<Projects />, { initialState: { filters: { appBar: { filterString: 'nope' } } } })
+        expect(screen.queryByText('project 1')).not.toBeInTheDocument()
     })
 
     test('Add Project calls openPopup', () => {
@@ -51,15 +60,6 @@ describe('<Projects>', () => {
         fireEvent.click(screen.getByText('Add New Project'))
 
         expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup')
-    })
-
-    test('Add Tag calls openPopup', () => {
-        render(<Projects />)
-
-        fireEvent.click(screen.getByText('Add New Tag'))
-
-        expect(openPopupMock).toHaveBeenCalledWith(
-            TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'PROJECT' })
     })
 
 })

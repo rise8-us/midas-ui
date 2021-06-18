@@ -4,3 +4,7 @@ export const getUrlParam = (param) => {
     let paramIndex = pathArray.indexOf(param)
     return pathArray[paramIndex + 1]
 }
+
+export const getRoot = () => {
+    return window.location.pathname.split('/')[1]
+}
