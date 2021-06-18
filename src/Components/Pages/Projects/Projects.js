@@ -3,10 +3,10 @@ import { Add } from '@material-ui/icons'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useWindowSize from '../../../Hooks/useWindowSize'
+import { selectAppBarFilter } from '../../../Redux/Filters/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectUnarchivedProjects } from '../../../Redux/Projects/selectors'
-import TagConstants from '../../../Redux/Tags/constants'
 import { ProjectCard } from '../../Cards'
 import { Page } from '../../Page'
 
@@ -30,9 +30,11 @@ function Projects() {
     const [cardsOnRow, setCardsOnRow] = useState(1)
 
     const allProjects = useSelector(selectUnarchivedProjects)
+    const filterString = useSelector(selectAppBarFilter).toLowerCase()
+
+    const filteredProducts = allProjects.filter(project => project.name.toLowerCase().includes(filterString))
 
     const createProject = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup'))
-    const createTag = () => dispatch(openPopup(TagConstants.CREATE_TAG, 'CreateOrUpdateTagPopup', { type: 'PROJECT' }))
 
     const setButtonWidth = () => ({
         width: `${cardWidth * cardsOnRow + (theme.spacing(2) * (cardsOnRow - 1))}px`,
@@ -64,17 +66,9 @@ function Projects() {
                             >
                                 Add New Project
                             </Button>
-                            <Button
-                                variant = 'text'
-                                startIcon = {<Add/>}
-                                className = {classes.button}
-                                onClick = {createTag}
-                            >
-                                Add New Tag
-                            </Button>
                         </Box>
                     </div>
-                    {allProjects.map((project, index) => (
+                    {filteredProducts.map((project, index) => (
                         <ProjectCard key = {index} id = {project.id}/>
                     ))}
                 </Box>

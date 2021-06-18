@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function Home() {
+function Products() {
     const dispatch = useDispatch()
     const classes = useStyles()
 
@@ -28,15 +28,6 @@ function Home() {
     const filteredProducts = allProduct.filter(product => {
         if (product.name.toLowerCase().includes(filterString) ||
             product.description.toLowerCase().includes(filterString)) return true
-        else {
-            const projects = product.projects.filter(project =>
-                project.name.toLowerCase().includes(filterString) ||
-                project.description.toLowerCase().includes(filterString)
-            )
-
-            if (projects.length > 0) return true
-            return false
-        }
     })
 
     const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
@@ -78,4 +69,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Products

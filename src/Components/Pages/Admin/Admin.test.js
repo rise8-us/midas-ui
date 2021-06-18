@@ -11,6 +11,9 @@ jest.mock('../../Admin/ProjectsTab/ProjectsTab',
 jest.mock('../../Admin/ProductsTab/ProductsTab',
     () => function testing() { return (<div>Admin Page Product Tab Test</div>) })
 
+jest.mock('../../Admin/ConfigsTab/ConfigsTab',
+    () => function testing() { return (<div>Admin Page Configs Tab Test</div>) })
+
 describe('<Admin />', () => {
 
     test('should render correctly', () => {
@@ -43,6 +46,14 @@ describe('<Admin />', () => {
         fireEvent.click(screen.getByText('products'))
 
         expect(await screen.findByText('Admin Page Product Tab Test')).toBeInTheDocument()
+    })
+
+    test('should call ConfigsTab component', async() => {
+        render(<Admin />)
+
+        fireEvent.click(screen.getByText('configs'))
+
+        expect(await screen.findByText('Admin Page Configs Tab Test')).toBeInTheDocument()
     })
 
 })

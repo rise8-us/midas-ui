@@ -1,6 +1,9 @@
-import reducer, { setHomePageFilterString } from './reducer'
+import reducer, { setAppBarFilterString, setHomePageFilterString } from './reducer'
 
 const initialState = {
+    appBar: {
+        filterString: ''
+    },
     homePage: {
         filterString: ''
     }
@@ -15,4 +18,11 @@ test('should set home page filter string', () => {
     const state = actions.reduce(reducer, initialState)
 
     expect(state.homePage.filterString).toEqual('string')
+})
+
+test('should set appBar filter string', () => {
+    const actions = [{ type: setAppBarFilterString, payload: 'appBar' }]
+    const state = actions.reduce(reducer, initialState)
+
+    expect(state.appBar.filterString).toEqual('appBar')
 })
