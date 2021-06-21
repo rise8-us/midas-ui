@@ -9,7 +9,7 @@ jest.mock('../../Cards/ProductCard/ProductCard', () =>
 describe('<Home>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
-    const selectAppBarFilterMock = useModuleMock('Redux/filters/selectors', 'selectAppBarFilter')
+    const selectAppBarFilterMock = useModuleMock('Redux/Filters/selectors', 'selectAppBarFilter')
     const selectUnarchivedProductsMock =
         useModuleMock('Redux/Products/selectors', 'selectUnarchivedProducts')
 
