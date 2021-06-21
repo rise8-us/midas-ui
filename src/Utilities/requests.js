@@ -30,3 +30,7 @@ export const createAxiosRequest = (routeSuffix, method, body) => {
     if (body) request.data = body
     return request
 }
+
+export const subscribe = (selectedStompClient, topic, callback) => {
+    selectedStompClient.subscribe('/topic' + topic, callback,)
+}

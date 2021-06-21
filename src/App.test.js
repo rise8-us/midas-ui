@@ -4,6 +4,7 @@ import App from './App'
 import { render, screen, useDispatchMock } from './Utilities/test-utils'
 
 jest.mock('./Components/PopupManager/PopupManager', () => function testing() { return (<div/>) })
+jest.mock('./Components/WebsocketProvider/WebsocketProvider', () => function testing() {  return (<div/>) })
 
 describe('<App />', () => {
 
@@ -23,7 +24,7 @@ describe('<App />', () => {
             }
         })
 
-        expect(await screen.findByText('MIDAS')).toBeInTheDocument()
+        expect(await screen.findAllByText(/not connected to server/i)).toHaveLength(2)
     })
 
     test('Init fetch fails throws error', async() => {

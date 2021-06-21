@@ -3,6 +3,10 @@ import { act } from 'react-dom/test-utils'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
 import { AssertionComments } from './index'
 
+jest.mock('../../Comments/Comment/Comment', () => function testing() {
+    return (<div>Comment</div>)
+})
+
 describe('<AssertionComments>', () => {
 
     const mockState = {
@@ -16,11 +20,13 @@ describe('<AssertionComments>', () => {
         assertions: {
             1: {
                 text: 'foobar',
-                status: 'STARTED'
+                status: 'STARTED',
+                commentIds: [14, 15]
             },
             3: {
                 text: 'foobar',
-                status: 'AT_RISK'
+                status: 'AT_RISK',
+                commentIds: [10, 11, 12]
             }
         }
     }

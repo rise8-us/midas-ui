@@ -1,11 +1,12 @@
 import { Box, makeStyles, TextField, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
-import { requestUpdateComment } from '../../../Redux/Comments/actions'
+import { requestDeleteComment, requestUpdateComment } from '../../../Redux/Comments/actions'
+import { selectCommentById } from '../../../Redux/Comments/selectors'
 import { Tag } from '../../Tag'
-import EditCommentOptions from '../EditCommentOptions/EditCommentOptions'
+import { EditCommentOptions } from '../EditCommentOptions'
 
 const useStyles = makeStyles(() => ({
     clickable: {
@@ -30,11 +31,17 @@ const parseStatus = (statusReceived) => {
         </>
     )
 }
-function Comment({ id, author, lastEdit, text, handleStatusUpdates, canEdit, modified }) {
+
+function Comment({ id, handleStatusUpdates, viewerId }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const [body, status] = text.split('###')
+    const comment = useSelector(state => selectCommentById(state, id))
+
+    const [body, status] = comment?.text?.split('###')
+    const canEdit = comment.author?.id === viewerId
+    const modified = comment.lastEdit ? true : false
+    const lastEdit = comment.lastEdit ?? comment.creationDate
 
     const [editable, setEditable] = useState(false)
     const [content, setContent] = useState(body)
@@ -45,6 +52,11 @@ function Comment({ id, author, lastEdit, text, handleStatusUpdates, canEdit, mod
 
     const onEditClick = () => {
         setEditable(prev => !prev)
+    }
+
+    const onDeleteClick = () => {
+        setEditable(false)
+        dispatch(requestDeleteComment(id))
     }
 
     const onSave = () => {
@@ -62,6 +74,10 @@ function Comment({ id, author, lastEdit, text, handleStatusUpdates, canEdit, mod
         else if (event.key === 'Escape') onExit()
     }
 
+    useEffect(() => {
+        setContent(body)
+    }, [body])
+
     const typoProps = {
         variant: 'caption',
         style: {
@@ -73,16 +89,17 @@ function Comment({ id, author, lastEdit, text, handleStatusUpdates, canEdit, mod
         <Box display = 'flex' flexDirection = 'column' id = {id} margin = '4px' style = {{ marginBottom: '16px' }}>
             <div style = {{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <Typography color = 'textSecondary' style = {{ fontWeight: 'bold' }}>
-                    {author}
+                    {comment.author?.displayName || comment.author?.email || comment.author?.username}
                 </Typography>
                 <div style = {{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant = 'caption' color = 'textSecondary'>
-                        {lastEdit.split(':', 2).toString().replace(',', ':')} {modified && '(edited)'}
+                        {lastEdit?.split(':', 2).toString().replace(',', ':')} {modified && '(edited)'}
                     </Typography>
                     {canEdit &&
                         <EditCommentOptions
                             canAccess = {canEdit}
                             onEditClick = {onEditClick}
+                            onDeleteClick = {onDeleteClick}
                         />
                     }
                 </div>
@@ -130,18 +147,12 @@ function Comment({ id, author, lastEdit, text, handleStatusUpdates, canEdit, mod
 
 Comment.propTypes = {
     id: PropTypes.number.isRequired,
-    author: PropTypes.string.isRequired,
-    lastEdit: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
+    viewerId: PropTypes.number.isRequired,
     handleStatusUpdates: PropTypes.bool,
-    canEdit: PropTypes.bool,
-    modified: PropTypes.bool
 }
 
 Comment.defaultProps = {
     handleStatusUpdates: false,
-    canEdit: false,
-    modified: false
 }
 
 export default Comment

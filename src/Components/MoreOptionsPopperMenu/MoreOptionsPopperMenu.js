@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         padding: '3px 8px',
         '&:hover': {
-            backgroundColor: theme.palette.subtext
+            backgroundColor: theme.palette.grey[800]
         }
     },
     card: {
-        width: '150px',
+        width: '180px',
         backgroundColor: theme.palette.background.default
     }
 }))
@@ -56,7 +56,7 @@ function MoreOptionsPopperMenu({ options }) {
                                 key = {option.text}
                                 onClick = {e => handleOptionClick(e, option.onClick)}
                             >
-                                <Typography color = 'textSecondary'>{option.text}</Typography>
+                                <Typography style = {{ color: option.color }}>{option.text}</Typography>
                                 {option.icon}
                             </div>
                         ))}
@@ -71,7 +71,8 @@ MoreOptionsPopperMenu.propTypes = {
     options: PropTypes.arrayOf(PropTypes.shape({
         icon: PropTypes.node,
         text: PropTypes.string,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        color: PropTypes.string
     }))
 }
 
@@ -79,7 +80,8 @@ MoreOptionsPopperMenu.defaultProps = {
     options: [{
         icon: undefined,
         text: 'No options',
-        onClick: undefined
+        onClick: undefined,
+        color: 'inherit'
     }]
 }
 

@@ -4,7 +4,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Comment } from '../'
 import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
-import { selectCommentsByAssertionId } from '../../../Redux/Comments/selectors'
 
 const useStyles = makeStyles(theme => ({
     wrap: {
@@ -25,36 +24,26 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function CommentsList({ assertionId, commentProps }) {
-
+function CommentsList({ commentProps, commentIds }) {
     const classes = useStyles()
 
-    const comments = useSelector(state => selectCommentsByAssertionId(state, assertionId))
     const userLoggedIn = useSelector(selectUserLoggedIn)
+    const commentsListSorted = Array.from(commentIds).sort((a, b) => b - a)
 
     return (
         <Box className = {classes.wrap}>
-            {comments.map((comment, index) => (
-                <Comment
-                    key = {index}
-                    id = {comment.id}
-                    author = {comment.author?.displayName ?? comment.author?.email ?? comment.author?.username}
-                    text = {comment.text}
-                    lastEdit = {comment.lastEdit ?? comment.creationDate}
-                    canEdit = {userLoggedIn.id === comment.author.id}
-                    modified = {comment.lastEdit ? true : false}
-                    {...commentProps}
-                />
+            {commentsListSorted.map(id => (
+                <Comment {...commentProps} id = {id} key = {id} viewerId = {userLoggedIn.id}/>
             ))}
         </Box>
     )
 }
 
 CommentsList.propTypes = {
-    assertionId: PropTypes.number.isRequired,
+    commentIds: PropTypes.arrayOf(PropTypes.number).isRequired,
     commentProps: PropTypes.shape({
         handleStatusUpdates: PropTypes.bool
-    })
+    }),
 }
 
 CommentsList.defaultProps = {

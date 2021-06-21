@@ -23,4 +23,6 @@ const commentsSlice = createSlice({
     }
 })
 
+export const { requestDeleteComment, requestUpdateComment } = actions
+
 export default commentsSlice.reducer

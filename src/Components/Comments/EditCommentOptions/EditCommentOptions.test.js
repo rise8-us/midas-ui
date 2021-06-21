@@ -21,4 +21,14 @@ describe('<EditCommentOptions>', () => {
         expect(screen.queryByTitle('more')).not.toBeInTheDocument()
     })
 
+    test('should handle onDelete', () => {
+        const onDeleteClickMock = jest.fn()
+        render(<EditCommentOptions onEditClick = {jest.fn} onDeleteClick = {onDeleteClickMock} canAccess/>)
+
+        fireEvent.click(screen.getByTitle('more'))
+        fireEvent.click(screen.getByText(/delete/i))
+
+        expect(onDeleteClickMock).toHaveBeenCalled()
+    })
+
 })

@@ -68,7 +68,10 @@ function AssertionComments({ assertionId }) {
             }}
             data-testid = 'AssertionComment__paper'
         >
-            <CommentsList assertionId = {assertionId} commentProps = {{ handleStatusUpdates: true }}/>
+            <CommentsList
+                commentProps = {{ handleStatusUpdates: true }}
+                commentIds = {assertion.commentIds}
+            />
             <AddComment
                 assertionId = {assertionId}
                 additionalNode = {
