@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { Banner } from './Components/Banner'
 import { Account, Admin, Home, PageNotFound, Product, Products, Projects, Tags } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
+import { WebsocketProvider } from './Components/WebsocketProvider'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchAllGitlabConfigs } from './Redux/GitlabConfigs/actions'
 import { requestFetchInit } from './Redux/Init/actions'
@@ -36,21 +37,23 @@ function App() {
 
     return (
         <Banner>
-            <PopupManager />
-            <Switch>
-                {/* unsecured Routes */}
-                <Route exact path = '/'>
-                    <Redirect to = '/home'/>
-                </Route>
-                <Route exact path = '/home' component = {Home} />
-                <Route exact path = '/products' component = {Products} />
-                <Route exact path = '/projects' component = {Projects} />
-                <Route exact path = '/account' component = {Account} />
-                <Route exact path = '/tags' component = {Tags} />
-                <Route exact path = '/products/:productId' component = {Product} />
-                {user.isAdmin && <Route exact path = '/admin' component = {Admin} />}
-                <Route component = {PageNotFound} />
-            </Switch>
+            <WebsocketProvider>
+                <PopupManager />
+                <Switch>
+                    {/* unsecured Routes */}
+                    <Route exact path = '/'>
+                        <Redirect to = '/home'/>
+                    </Route>
+                    <Route exact path = '/home' component = {Home} />
+                    <Route exact path = '/products' component = {Products} />
+                    <Route exact path = '/projects' component = {Projects} />
+                    <Route exact path = '/account' component = {Account} />
+                    <Route exact path = '/tags' component = {Tags} />
+                    <Route exact path = '/products/:productId' component = {Product} />
+                    {user.isAdmin && <Route exact path = '/admin' component = {Admin} />}
+                    <Route component = {PageNotFound} />
+                </Switch>
+            </WebsocketProvider>
         </Banner>
     )
 }

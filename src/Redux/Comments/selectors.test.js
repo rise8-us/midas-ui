@@ -39,3 +39,16 @@ test('selectCommentsByAssertionId - returns array of comments', () => {
         { id: 2, assertionId: 1 }
     ])
 })
+
+test('selectCommentById - returns object', () => {
+    const results = selectors.selectCommentById(mockState, 12)
+
+    expect(results).toBeInstanceOf(Object)
+    expect(results).toEqual({ text: '', author: {} })
+})
+
+test('selectCommentById - returns comment', () => {
+    const results = selectors.selectCommentById(mockState, 2)
+
+    expect(results).toEqual(mockState.comments[2])
+})

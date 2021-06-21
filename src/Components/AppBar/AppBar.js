@@ -32,7 +32,8 @@ const useStyles = makeStyles(theme => ({
     page: {
         fontWeight: 'bold',
         cursor: 'pointer',
-        margin: `0 ${theme.spacing(2)}px`
+        margin: `0 ${theme.spacing(2)}px`,
+        whiteSpace: 'noWrap'
     },
     search: {
         position: 'relative',

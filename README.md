@@ -14,7 +14,12 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
 ```json
 {
     ...
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "all",
+    "explorer.confirmDelete": false,
+    "workbench.iconTheme": "vscode-icons",
     "editor.codeActionsOnSave": {
+        "source.fixAll": false,
         "source.organizeImports": true,
     },
     "eslint.codeAction.showDocumentation": {
@@ -22,7 +27,18 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
     },
     "eslint.packageManager": "yarn",
     "jest.showCoverageOnLoad": true,
-    "jest.pathToJest": "npm test -- --coverage"
+    "jest.jestCommandLine": "react-scripts test --coverage",
+    "explorer.confirmDragAndDrop": false,
+    "editor.minimap.enabled": false,
+    "vsicons.dontShowNewVersionMessage": true,
+    "prettier.printWidth": 120,
+    "prettier.semi": false,
+    "prettier.singleQuote": true,
+    "prettier.trailingComma": "none",
+    "git.enableSmartCommit": true,
+    "sonarlint.rules": {
+    },
+
 }
 ```
 
