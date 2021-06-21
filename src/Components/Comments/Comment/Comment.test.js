@@ -4,7 +4,7 @@ import { Comment } from './index'
 
 describe('<Comment>', () => {
 
-    const selectCommentByIdMock = useModuleMock('Redux/comments/selectors', 'selectCommentById')
+    const selectCommentByIdMock = useModuleMock('Redux/Comments/selectors', 'selectCommentById')
 
     test('should render', () => {
         selectCommentByIdMock.mockReturnValue({

@@ -147,7 +147,7 @@ function CreateOrUpdateProductPopup({ id }) {
                     deletable
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
-                    type = {['ALL', 'PROJECT']}
+                    type = {['ALL', 'PRODUCT']}
                 />
                 <Autocomplete
                     multiple

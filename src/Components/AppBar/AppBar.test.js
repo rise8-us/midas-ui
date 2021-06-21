@@ -15,9 +15,9 @@ jest.mock('react-router-dom', () => ({
 
 describe('<AppBar />', () => {
 
-    const selectUserLoggedInMock = useModuleMock('Redux/auth/selectors', 'selectUserLoggedIn')
-    const selectAppBarFilterMock = useModuleMock('Redux/filters/selectors', 'selectAppBarFilter')
-    const setAppBarFilterStringMock = useModuleMock('Redux/filters/reducer', 'setAppBarFilterString')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
+    const selectAppBarFilterMock = useModuleMock('Redux/Filters/selectors', 'selectAppBarFilter')
+    const setAppBarFilterStringMock = useModuleMock('Redux/Filters/reducer', 'setAppBarFilterString')
     const getRootMock = useModuleMock('Utilities/queryParams', 'getRoot')
 
     beforeEach(() => {
