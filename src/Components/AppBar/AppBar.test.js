@@ -35,7 +35,7 @@ describe('<AppBar />', () => {
         expect(screen.getByText('Dashboard (TBA)')).toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
-        expect(screen.getByText('Portfolios (TBA)')).toBeInTheDocument()
+        expect(screen.getByText('Portfolios')).toBeInTheDocument()
 
         expect(screen.getByTitle('tags')).toBeInTheDocument()
         expect(screen.queryByTitle('account')).not.toBeInTheDocument()
@@ -104,7 +104,7 @@ describe('<AppBar />', () => {
         fireEvent.click(screen.getByText('Products'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/products')
 
-        fireEvent.click(screen.getByText('Portfolios (TBA)'))
+        fireEvent.click(screen.getByText('Portfolios'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios')
     })
 })

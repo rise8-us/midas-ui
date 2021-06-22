@@ -84,7 +84,7 @@ function AppBar({ height, appName }) {
             label: 'Products',
             path: 'products'
         }, {
-            label: 'Portfolios (TBA)',
+            label: 'Portfolios',
             path: 'portfolios'
         }
     ]
@@ -96,7 +96,6 @@ function AppBar({ height, appName }) {
                 height: height,
                 justifyContent: 'center',
                 boxShadow: 'none',
-                borderBottom: `solid 1px ${theme.palette.appColor}`,
                 backgroundColor: theme.palette.background.default
             }}
         >

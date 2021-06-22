@@ -1,5 +1,5 @@
 import {
-    Box, Card, CardActions, CardContent, CardHeader, Divider, IconButton, makeStyles, Typography
+    Box, Card, CardActions, CardContent, CardHeader, IconButton, makeStyles, Typography
 } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
 import PropTypes from 'prop-types'
@@ -13,6 +13,11 @@ import { PathToProdStepper } from '../../PathToProdStepper'
 import { Tag } from '../../Tag'
 
 const useStyles = makeStyles(theme => ({
+    card: {
+        width: '450px',
+        height: 'fit-content',
+        backgroundColor: theme.palette.grey[1100]
+    },
     link: {
         '&:hover': {
             color: theme.palette.primary.main,
@@ -46,7 +51,7 @@ function ProductCard({ id }) {
     })
 
     return (
-        <Card style = {{ width: '450px', height: 'fit-content' }} ref = {ref}>
+        <Card ref = {ref} className = {classes.card}>
             <CardHeader
                 title = {product.name}
                 titleTypographyProps = {{
@@ -56,7 +61,6 @@ function ProductCard({ id }) {
                     className: classes.link,
                 }}
                 subheader = {product.description}
-                style = {{ backgroundColor: '#FF00FF05' }}
                 action = {
                     <IconButton
                         onClick = {updateProductPopup}
@@ -69,7 +73,6 @@ function ProductCard({ id }) {
             />
             { hasProjects &&
                 <>
-                    <Divider variant = 'fullWidth' />
                     <CardContent>
                         {product.projects.map((project, index) => (
                             <Box key = {index} style = {{ paddingBottom: '30px' }}>
@@ -84,13 +87,7 @@ function ProductCard({ id }) {
             }
             { hasTags &&
                 <>
-                    <Divider variant = 'fullWidth' />
-                    <CardActions
-                        style = {{
-                            backgroundColor: hasProjects ? '#FF00FF05' : 'inherit',
-                            padding: '5px 16px'
-                        }}
-                    >
+                    <CardActions style = {{ padding: '5px 16px' }}>
                         <Box display = 'flex' flexWrap = 'wrap' >
                             {product.tags.map((tag, index) => (
                                 <Tag { ...tag } key = {index}/>

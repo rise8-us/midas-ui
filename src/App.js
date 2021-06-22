@@ -8,6 +8,7 @@ import { WebsocketProvider } from './Components/WebsocketProvider'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchAllGitlabConfigs } from './Redux/GitlabConfigs/actions'
 import { requestFetchInit } from './Redux/Init/actions'
+import { requestFetchAllPortfolios } from './Redux/Portfolios/actions'
 import { requestFetchAllProducts } from './Redux/Products/actions'
 import { requestFetchAllProjects } from './Redux/Projects/actions'
 import { requestFetchAllTags } from './Redux/Tags/actions'
@@ -24,6 +25,7 @@ function App() {
             dispatch(requestFetchAllProjects())
             dispatch(requestFetchAllTags())
             dispatch(requestFetchAllProducts())
+            dispatch(requestFetchAllPortfolios())
             dispatch(requestFetchAllGitlabConfigs())
         }
 
