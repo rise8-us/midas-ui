@@ -38,12 +38,6 @@ describe('<Projects>', () => {
         selectProjectByIdMock.mockReturnValue(project)
     })
 
-    test('should render', () => {
-        render(<Projects />)
-
-        expect(screen.getByText('Add New Project')).toBeInTheDocument()
-    })
-
     test('should filter results', () => {
         render(<Projects />, { initialState: { filters: { appBar: { filterString: 'project' } } } })
         expect(screen.getByText('project 1')).toBeInTheDocument()
@@ -57,7 +51,7 @@ describe('<Projects>', () => {
     test('Add Project calls openPopup', () => {
         render(<Projects />)
 
-        fireEvent.click(screen.getByText('Add New Project'))
+        fireEvent.click(screen.getByTitle(/add/i))
 
         expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup')
     })

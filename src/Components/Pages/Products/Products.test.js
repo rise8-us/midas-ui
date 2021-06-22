@@ -37,7 +37,6 @@ describe('<Products>', () => {
     test('Has correct text', () => {
         render(<Products />)
 
-        expect(screen.getByText('Measuring Inception to Production')).toBeInTheDocument()
         expect(screen.getAllByText('Product Card mock')).toHaveLength(2)
     })
 
@@ -52,7 +51,7 @@ describe('<Products>', () => {
     test('Add Product calls openPopup', () => {
         render(<Products />)
 
-        fireEvent.click(screen.getByText('Add New Product'))
+        fireEvent.click(screen.getByTitle(/add/i))
 
         expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateOrUpdateProductPopup')
     })

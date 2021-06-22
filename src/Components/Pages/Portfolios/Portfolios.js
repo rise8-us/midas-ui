@@ -1,26 +1,19 @@
 import { Box } from '@material-ui/core'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectAppBarFilter } from '../../../Redux/Filters/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
-import ProductConstant from '../../../Redux/Products/constants'
-import { selectUnarchivedProducts } from '../../../Redux/Products/selectors'
-import { ProductCard } from '../../Cards'
+import PortfolioConstant from '../../../Redux/Portfolios/constants'
+import { selectUnarchivedPortfolios } from '../../../Redux/Portfolios/selectors'
+import { PortfolioCard } from '../../Cards'
 import { FloatingActionButton } from '../../FloatingActionButton'
 import { Page } from '../../Page'
 
-function Products() {
+function Portfolios() {
     const dispatch = useDispatch()
 
-    const allProduct = useSelector(selectUnarchivedProducts)
-    const filterString = useSelector(selectAppBarFilter).toLowerCase()
+    const allPortfolios = useSelector(selectUnarchivedPortfolios)
 
-    const filteredProducts = allProduct.filter(product => {
-        if (product.name.toLowerCase().includes(filterString) ||
-            product.description.toLowerCase().includes(filterString)) return true
-    })
-
-    const create = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
+    const create = () => dispatch(openPopup(PortfolioConstant.CREATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup'))
 
     return (
         <Page>
@@ -34,8 +27,8 @@ function Products() {
                     gridAutoFlow = 'row'
                     style = {{ marginBottom: '40px', padding: '0 30px' }}
                 >
-                    {filteredProducts.map((product) => (
-                        <ProductCard key = {product.id} id = {product.id}/>
+                    {allPortfolios.map((portfolio) => (
+                        <PortfolioCard key = {portfolio.id} id = {portfolio.id}/>
                     ))}
                 </Box>
             </Box>
@@ -44,4 +37,4 @@ function Products() {
     )
 }
 
-export default Products
+export default Portfolios

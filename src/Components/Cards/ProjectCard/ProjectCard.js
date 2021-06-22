@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardHeader, IconButton, Tooltip, useTheme } from '@material-ui/core'
+import { Box, Card, CardContent, CardHeader, IconButton, makeStyles, Tooltip, useTheme } from '@material-ui/core'
 import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -12,9 +12,25 @@ import { PathToProdStepper } from '../../PathToProdStepper'
 import { SonarqubeIndicator } from '../../SonarqubeIndicator'
 import { Tag } from '../../Tag'
 
+const useStyles = makeStyles(theme => ({
+    card: {
+        width: '450px',
+        height: '100%',
+        backgroundColor: theme.palette.grey[1100]
+    },
+    link: {
+        '&:hover': {
+            color: theme.palette.primary.main,
+            cursor: 'pointer'
+        },
+        height: 40
+    }
+}))
+
 function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
+    const classes = useStyles()
 
     const sonarqube = useSonarqubeRatings()
 
@@ -38,7 +54,7 @@ function ProjectCard({ id }) {
     }
 
     return (
-        <Card style = {{ width: '450px', margin: theme.spacing(1) }}>
+        <Card className = {classes.card}>
             <CardHeader
                 title = {project.name}
                 titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
