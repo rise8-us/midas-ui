@@ -8,6 +8,7 @@ import filterReducer from './Filters/reducer'
 import gitlabConfigReducer from './GitlabConfigs/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
 import popupReducer from './Popups/reducer'
+import portfolioReducer from './Portfolios/reducer'
 import productReducer from './Products/reducer'
 import projectReducer from './Projects/reducer'
 import tagReducer from './Tags/reducer'
@@ -25,6 +26,7 @@ export const rootReducer = combineReducers({
     modifiedAssertions: modifiedAssertionsReducer,
     popups: popupReducer,
     products: productReducer,
+    portfolios: portfolioReducer,
     projects: projectReducer,
     tags: tagReducer,
     teams: teamReducer,

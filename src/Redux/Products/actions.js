@@ -5,7 +5,7 @@ import Constants from './constants'
 export const requestFetchAllProducts = createAsyncThunk(
     Constants.FETCH_ALL_PRODUCTS,
     async(_, { rejectWithValue }) => {
-        const request = { endpoint: '/api/products', method: 'GET', body: {} }
+        const request = { endpoint: '/api/products?search=type:PRODUCT', method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
@@ -13,7 +13,7 @@ export const requestFetchAllProducts = createAsyncThunk(
 export const requestSearchProduct = createAsyncThunk(
     Constants.SEARCH_PRODUCT,
     async(search, { rejectWithValue }) => {
-        const request = { endpoint: `/api/products?search=${search}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/products?search=type:PRODUCT AND ${search}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
