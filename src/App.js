@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { Banner } from './Components/Banner'
-import { Account, Admin, Home, PageNotFound, Product, Products, Projects, Tags } from './Components/Pages'
+import { Account, Admin, Home, PageNotFound, Portfolios, Product, Products, Projects, Tags } from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { WebsocketProvider } from './Components/WebsocketProvider'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
@@ -48,6 +48,7 @@ function App() {
                     </Route>
                     <Route exact path = '/home' component = {Home} />
                     <Route exact path = '/products' component = {Products} />
+                    <Route exact path = '/portfolios' component = {Portfolios} />
                     <Route exact path = '/projects' component = {Projects} />
                     <Route exact path = '/account' component = {Account} />
                     <Route exact path = '/tags' component = {Tags} />
