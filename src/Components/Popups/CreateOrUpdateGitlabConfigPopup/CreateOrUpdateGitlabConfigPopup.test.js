@@ -61,7 +61,7 @@ describe('<CreateOrUpdateGitlabConfigPopup />', () => {
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitCreateGitlabConfigMock).toHaveBeenCalledWith({
-            name: '', description: '', baseUrl: '' })
+            name: '', description: '', baseUrl: '', token: null })
     })
 
     test('should call onSubmit to Update gitlabConfig', () => {
@@ -71,10 +71,12 @@ describe('<CreateOrUpdateGitlabConfigPopup />', () => {
         const name = 'My Edited GitlabConfig'
         const baseUrl = 'https://foo.bar.baz'
         const description = 'New Description'
+        const token = 'themostsupersecrettoken'
 
         const nameInput = screen.getByTestId('CreateOrUpdateGitlabConfigPopup__input-name')
         const descriptionInput = screen.getByTestId('CreateOrUpdateGitlabConfigPopup__input-description')
         const baseUrlInput = screen.getByTestId('CreateOrUpdateGitlabConfigPopup__input-baseUrl')
+        const tokenInput = screen.getByTestId('CreateOrUpdateGitlabConfigPopup__input-token')
 
         userEvent.clear(descriptionInput)
         userEvent.clear(baseUrlInput)
@@ -83,11 +85,12 @@ describe('<CreateOrUpdateGitlabConfigPopup />', () => {
         userEvent.type(descriptionInput, description)
         userEvent.type(baseUrlInput, baseUrl)
         userEvent.type(nameInput, name)
+        userEvent.type(tokenInput, token)
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateGitlabConfigMock).toHaveBeenCalledWith({
-            ...returnedFoundGitlabConfig, name, description, baseUrl })
+            ...returnedFoundGitlabConfig, name, description, baseUrl, token })
     })
 
     test('should close popup', () => {
