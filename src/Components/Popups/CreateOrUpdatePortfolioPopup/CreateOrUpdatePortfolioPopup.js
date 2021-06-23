@@ -8,6 +8,7 @@ import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreatePortfolio, requestUpdatePortfolio } from '../../../Redux/Portfolios/actions'
 import PortfolioConstants from '../../../Redux/Portfolios/constants'
 import { selectPortfolioById } from '../../../Redux/Portfolios/selectors'
+import { selectAvailableProducts } from '../../../Redux/Products/selectors'
 import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
 import { TagDropdown } from '../../TagDropdown'
@@ -31,11 +32,14 @@ function CreateOrUpdatePortfolioPopup({ id }) {
     const context = initDetails(portfolio.id === undefined)
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
+    const notAssignedProducts = useSelector(selectAvailableProducts)
 
     const [name, setName] = useState(portfolio.name)
     const [description, setDescription] = useState(portfolio.description)
     const [tags, setTags] = useState(portfolio.tags)
     const [products, setProducts] = useState(portfolio.products)
+
+    const availableProducts = notAssignedProducts.concat(portfolio.products)
 
     const onNameChange = (e) => setName(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
@@ -46,7 +50,16 @@ function CreateOrUpdatePortfolioPopup({ id }) {
     const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
-        console.log('todo')
+        dispatch(context.request({
+            ...portfolio,
+            name,
+            description,
+            productManagerId: null,
+            tagIds: Object.values(tags.map(t => t.id)),
+            childIds: Object.values(products.map(p => p.id)),
+            type: 'PORTFOLIO',
+            projectIds: []
+        }))
     }
 
     return (
@@ -90,7 +103,7 @@ function CreateOrUpdatePortfolioPopup({ id }) {
                 <Autocomplete
                     multiple
                     autoSelect
-                    options = {[{ name: 'option 1', id: 42 }]}
+                    options = {availableProducts}
                     getOptionLabel = {(option) => option.name}
                     getOptionSelected = {(option, value) => option.id === value.id}
                     onChange = {onSelectProducts}
@@ -101,8 +114,7 @@ function CreateOrUpdatePortfolioPopup({ id }) {
                             {...params}
                             label = 'Products'
                             margin = 'dense'
-                            error = {searchErrors(errors, 'Project with').length > 0}
-                            placeholder = {'Products that are associated with this portfolio'}
+                            placeholder = 'Products in this portfolio'
                         />
                     }
                 />

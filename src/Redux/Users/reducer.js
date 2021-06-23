@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setStateFromArray } from '../../Utilities/reduxHelpers'
 import { requestFetchInit } from '../Init/actions'
 import * as actions from './actions'
 
@@ -19,11 +20,7 @@ const userSlice = createSlice({
         [requestFetchInit.fulfilled]: (state, action) => {
             state[action.payload.userLoggedIn.id] = action.payload.userLoggedIn
         },
-        [actions.requestFindUserBy.fulfilled]: (state, action) => {
-            action.payload.forEach(u => {
-                state[u.id] = u
-            })
-        }
+        [actions.requestFindUserBy.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
     }
 })
 

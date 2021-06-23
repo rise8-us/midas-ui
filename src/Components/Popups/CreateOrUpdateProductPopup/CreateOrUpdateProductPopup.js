@@ -85,6 +85,7 @@ function CreateOrUpdateProductPopup({ id }) {
             productManagerId,
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
+            type: 'PRODUCT',
         }))
     }
 
@@ -97,7 +98,7 @@ function CreateOrUpdateProductPopup({ id }) {
     }, [])
 
     useEffect(() => {
-        dispatch(requestFindUserBy(`id:${product?.productManagerId}`))
+        dispatch(requestFindUserBy(`id:${product.productManagerId ?? null}`))
             .then(unwrapResult)
             .then(data => {
                 setProductManager(data[0])

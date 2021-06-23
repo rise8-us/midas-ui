@@ -5,7 +5,7 @@ const allProductsResponse = [
     {
         id: 1,
         name: 'Product1',
-        isArchived: false
+        isArchived: false,
     }, {
         id: 2,
         name: 'Product2',

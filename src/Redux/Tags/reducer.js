@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setStateFromArray } from '../../Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const tagsSlice = createSlice({
@@ -6,11 +7,7 @@ const tagsSlice = createSlice({
     initialState: {},
     reducers: {},
     extraReducers: {
-        [actions.requestFetchAllTags.fulfilled]: (state, action) => {
-            action.payload.forEach(tag => {
-                state[tag.id] = tag
-            })
-        },
+        [actions.requestFetchAllTags.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
         [actions.requestCreateTag.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
         },

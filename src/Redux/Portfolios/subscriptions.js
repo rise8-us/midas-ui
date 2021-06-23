@@ -1,13 +1,13 @@
 import { subscribe } from '../../Utilities/requests'
+import Constants from '../Products/constants'
 import store from '../store'
 import { requestUpdatePortfolio } from './actions'
-import Constants from './constants'
 
 const subscriptions = ({ stompClient }) => {
 
-    subscribe(stompClient, Constants.WS_UPDATE_PORTFOLIO, (msg) => {
+    subscribe(stompClient, Constants.WS_UPDATE_PRODUCT, (msg) => {
         let payload = JSON.parse(msg.body)
-        store.dispatch(requestUpdatePortfolio.fulfilled(payload))
+        payload.type === 'PORTFOLIO' && store.dispatch(requestUpdatePortfolio.fulfilled(payload))
     })
 }
 

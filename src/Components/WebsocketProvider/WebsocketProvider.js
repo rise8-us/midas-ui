@@ -5,12 +5,12 @@ import SockJS from 'sockjs-client'
 import assertionSubscriptions from '../../Redux/Assertions/subscriptions'
 import commentSubscriptions from '../../Redux/Comments/subscriptions'
 import gitlabConfigSubscriptions from '../../Redux/GitlabConfigs/subscriptions'
+import portfolioSubscriptions from '../../Redux/Portfolios/subscriptions'
 import productSubscriptions from '../../Redux/Products/subscriptions'
 import projectSubscriptions from '../../Redux/Projects/subscriptions'
 import tagSubscriptions from '../../Redux/Tags/subscriptions'
 import teamSubscriptions from '../../Redux/Teams/subscriptions'
 import { getAPIURL } from '../../Utilities/requests'
-
 
 const WebsocketContext = createContext({})
 
@@ -18,7 +18,7 @@ export const useWebsocket = () => useContext(WebsocketContext)
 
 let stompClient
 
-function WebsocketProvider(props) {
+function WebsocketProvider({ children }) {
 
     const [connected, setConnected] = useState(false)
 
@@ -36,13 +36,14 @@ function WebsocketProvider(props) {
 
     const onConnectSuccess = () => {
         setConnected(true)
-        assertionSubscriptions({ stompClient: stompClient })
-        commentSubscriptions({ stompClient: stompClient })
-        gitlabConfigSubscriptions({ stompClient: stompClient })
-        productSubscriptions({ stompClient: stompClient })
-        projectSubscriptions({ stompClient: stompClient })
-        tagSubscriptions({ stompClient: stompClient })
-        teamSubscriptions({ stompClient: stompClient })
+        assertionSubscriptions({ stompClient })
+        commentSubscriptions({ stompClient })
+        gitlabConfigSubscriptions({ stompClient })
+        productSubscriptions({ stompClient })
+        projectSubscriptions({ stompClient })
+        tagSubscriptions({ stompClient })
+        teamSubscriptions({ stompClient })
+        portfolioSubscriptions({ stompClient })
     }
 
     const onConnectFailure = (error) => {
@@ -65,7 +66,7 @@ function WebsocketProvider(props) {
 
     return (
         <WebsocketContext.Provider value = {{ connected: connected }}>
-            {props.children}
+            {children}
         </WebsocketContext.Provider>
     )
 }
