@@ -36,6 +36,7 @@ describe('<ProjectCard />', () => {
     })
 
     test('should fire updateProjectPopup', () => {
+        selectProjectByIdMock.mockReturnValue({ ...project, coverage: { coverageChange: 1 } })
         render(<ProjectCard id = {project.id}/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-edit'))
@@ -45,6 +46,7 @@ describe('<ProjectCard />', () => {
     })
 
     test('should fire updateProgress forward', () => {
+        selectProjectByIdMock.mockReturnValue({ ...project, coverage: { coverageChange: -1 } })
         render(<ProjectCard id = {project.id}/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-forward'))

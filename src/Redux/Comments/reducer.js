@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setStateFromArray } from '../../Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const commentsSlice = createSlice({
@@ -15,11 +16,7 @@ const commentsSlice = createSlice({
         [actions.requestDeleteComment.fulfilled]: (state, action) => {
             delete state[action.payload.id]
         },
-        [actions.requestSearchComments.fulfilled]: (state, action) => {
-            action.payload.forEach(comment => {
-                state[comment.id] = comment
-            })
-        }
+        [actions.requestSearchComments.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
     }
 })
 

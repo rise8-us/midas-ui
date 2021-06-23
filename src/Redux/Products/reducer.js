@@ -1,11 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setStateFromArray } from '../../Utilities/reduxHelpers'
 import * as actions from './actions'
-
-const setStateFromArray = (state, response) => {
-    response.forEach(product => {
-        state[product.id] = product
-    })
-}
 
 const productSlice = createSlice({
     name: 'products',

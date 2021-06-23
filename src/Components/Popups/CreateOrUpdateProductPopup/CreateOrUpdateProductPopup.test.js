@@ -63,7 +63,8 @@ describe('<CreateOrUpdateProductPopup />', () => {
             tagIds: [],
             projects: [],
             projectIds: [],
-            productManagerId: null
+            productManagerId: null,
+            type: 'PRODUCT'
         })
     })
 
@@ -133,8 +134,12 @@ describe('<CreateOrUpdateProductPopup />', () => {
         userEvent.type(descriptionInput, description)
         userEvent.type(nameInput, name)
 
+        fireEvent.click(screen.getAllByTitle(/open/i)[0])
+        fireEvent.click(screen.getByText(/Tag 2/i))
+
         useDispatchMock().mockReturnValueOnce({ data: { payload: {} } })
-        fireEvent.click(screen.queryAllByTitle('Open')[1])
+
+        fireEvent.click(screen.getAllByTitle('Open')[1])
         fireEvent.click(await screen.findByText('project 2'))
 
         fireEvent.click(screen.getByText('Submit'))
@@ -144,7 +149,9 @@ describe('<CreateOrUpdateProductPopup />', () => {
             name,
             description,
             projectIds: [20, 21],
-            productManagerId: 1
+            productManagerId: 1,
+            type: 'PRODUCT',
+            tagIds: [4, 13, 2]
         })
     })
 })

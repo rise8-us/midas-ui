@@ -32,3 +32,7 @@ export const selectUnarchivedProductIds = (state) => {
 export const selectUnarchivedProducts = (state) => {
     return selectProducts(state).filter(a => !a.isArchived)
 }
+
+export const selectAvailableProducts = (state) => {
+    return selectUnarchivedProducts(state).filter(p => p.parentId === null && p.type === 'PRODUCT')
+}

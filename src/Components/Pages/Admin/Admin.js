@@ -17,7 +17,7 @@ function Admin() {
         <Page>
             <>
                 <AppBar
-                    position = 'static'
+                    position = 'sticky'
                     style = {{
                         backgroundColor: theme.palette.background.default,
                         color: theme.palette.getContrastText(theme.palette.background.default),

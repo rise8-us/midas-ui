@@ -14,6 +14,7 @@ const mockState = {
             isArchived: false,
             portfolioId: 2,
             tagIds: [7],
+            parentId: 42,
             tags: [
                 {
                     id: 7,
@@ -21,7 +22,8 @@ const mockState = {
                     description: null,
                     color: ''
                 }
-            ]
+            ],
+            type: 'PRODUCT'
         },
         5: {
             id: 5,
@@ -30,7 +32,20 @@ const mockState = {
             projectIds: [3],
             isArchived: true,
             portfolioId: 4,
-            tagIds: [2]
+            parentId: null,
+            tagIds: [2],
+            type: 'PRODUCT'
+        },
+        6: {
+            id: 6,
+            name: 'Something Product',
+            description: 'Something Product',
+            projectIds: [3],
+            isArchived: false,
+            portfolioId: 4,
+            parentId: null,
+            tagIds: [2],
+            type: 'PRODUCT'
         },
     },
     tags: {
@@ -84,6 +99,8 @@ test('selectProducts - returns product array', () => {
         projectIds: [2],
         isArchived: false,
         portfolioId: 2,
+        parentId: 42,
+        type: 'PRODUCT',
         tagIds: [7],
         tags: [
             mockState.tags[7]
@@ -102,10 +119,14 @@ test('selectProducts - returns empty array', () => {
 })
 
 test('selectUnarchivedProducts - returns array with only unarchived products', () => {
-    expect(selectors.selectUnarchivedProducts(mockState)).toHaveLength(1)
+    expect(selectors.selectUnarchivedProducts(mockState)).toHaveLength(2)
 })
 
-test('selectUnarchivedProductIds - returns mockState.app[4]', () => {
-    expect(selectors.selectUnarchivedProductIds(mockState)).toHaveLength(1)
-    expect(selectors.selectUnarchivedProductIds(mockState)).toEqual([4])
+test('selectUnarchivedProductIds - returns array of numbers', () => {
+    expect(selectors.selectUnarchivedProductIds(mockState)).toHaveLength(2)
+    expect(selectors.selectUnarchivedProductIds(mockState)).toEqual([4, 6])
+})
+
+test('selectUnarchivedProducts - returns unarchived products & no parentId', () => {
+    expect(selectors.selectAvailableProducts(mockState)).toHaveLength(1)
 })

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setStateFromArray } from '../../Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const projectSlice = createSlice({
@@ -6,11 +7,7 @@ const projectSlice = createSlice({
     initialState: { },
     reducers: { },
     extraReducers: {
-        [actions.requestFetchAllProjects.fulfilled]: (state, action) => {
-            action.payload.forEach(project => {
-                state[project.id] = project
-            })
-        },
+        [actions.requestFetchAllProjects.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
         [actions.requestCreateProject.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
         },
