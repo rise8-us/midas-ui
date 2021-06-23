@@ -1,8 +1,9 @@
-import { Box, Card, CardContent, CardHeader, IconButton, makeStyles } from '@material-ui/core'
+import { Box, Card, CardContent, CardHeader, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React, { useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { openPopup } from '../../../Redux/Popups/actions'
 import PortfolioConstants from '../../../Redux/Portfolios/constants'
 import { selectPortfolioById } from '../../../Redux/Portfolios/selectors'
@@ -19,7 +20,6 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
             cursor: 'pointer'
         },
-        height: 40
     }
 }))
 
@@ -27,6 +27,7 @@ function PortfolioCard({ id }) {
     const dispatch = useDispatch()
     const classes = useStyles()
     const ref = useRef()
+    const history = useHistory()
 
     const portfolio = useSelector(state => selectPortfolioById(state, id))
 
@@ -43,6 +44,7 @@ function PortfolioCard({ id }) {
         <Card ref = {ref} className = {classes.card}>
             <CardHeader
                 title = {portfolio.name}
+                subheader = {portfolio.description}
                 titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
                 action = {
                     <IconButton
@@ -55,8 +57,43 @@ function PortfolioCard({ id }) {
                 }
             />
             <CardContent>
+                {portfolio.products.length > 0 ?
+                    <>
+                        <Box display = 'flex' justifyContent = 'space-between'>
+                            <Typography color = 'textSecondary'>Product Name</Typography>
+                            <Typography color = 'textSecondary'>Projects with CTF</Typography>
+                        </Box>
+                        <Divider />
+                    </>
+                    :
+                    <Typography color = 'textSecondary'>
+                        No products are currently assigned to this portfolio.
+                    </Typography>
+                }
+                {portfolio.products.map(product => {
+                    const ctfProjects = product.projects.map(p => p.projectJourneyMap === 7).length
+                    return (
+                        <Box
+                            key = {product.id}
+                            display = 'flex'
+                            justifyContent = 'space-between'
+                        >
+                            <Typography
+                                className = {classes.link}
+                                onClick = {() => history.push(`/products/${product.id}`)}
+                            >
+                                {product.name}
+                            </Typography>
+                            <Typography>
+                                {ctfProjects} / {product.projects.length}
+                            </Typography>
+                        </Box>
+                    )
+                })}
+            </CardContent>
+            <CardContent>
                 {portfolio.tags?.length > 0 &&
-                    <Box display = 'flex' flexWrap = 'wrap' marginTop = {2}>
+                    <Box display = 'flex' flexWrap = 'wrap' marginTop = {1}>
                         {portfolio.tags.map((tag, index) => (
                             <Tag { ...tag } key = {index}/>
                         ))}

@@ -43,7 +43,7 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const allGitlabConfigs = useSelector(selectGitlabConfigs)
 
-    const orginalGitlabConfig = useSelector(state => selectGitlabConfigById(state, project.id))
+    const orginalGitlabConfig = useSelector(state => selectGitlabConfigById(state, project.gitlabConfigId))
     const [gitlabConfig, setGitlabConfig] = useState(orginalGitlabConfig.id !== undefined ? orginalGitlabConfig : null)
 
     const [name, setName] = useState(project.name)

@@ -25,7 +25,7 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
     const [name, setName] = useState(config.name)
     const [baseUrl, setBaseUrl] = useState(config.baseUrl)
     const [description, setDescription] = useState(config.description)
-    const [token, setToken] = useState(config.token)
+    const [token, setToken] = useState(null)
 
     const [nameError, setNameError] = useState([])
 
