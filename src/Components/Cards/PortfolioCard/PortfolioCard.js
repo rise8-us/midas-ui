@@ -71,7 +71,7 @@ function PortfolioCard({ id }) {
                     </Typography>
                 }
                 {portfolio.products.map(product => {
-                    const ctfProjects = product.projects.map(p => p.projectJourneyMap === 7).length
+                    const ctfProjects = product.projects.filter(p => p.projectJourneyMap === 7).length
                     return (
                         <Box
                             key = {product.id}

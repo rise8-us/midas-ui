@@ -20,6 +20,9 @@ ReactDOM.render(
                 <Fragment>
                     <ThemeProvider theme = {darkTheme}>
                         <CssBaseline />
+                        {/* <React.StrictMode>
+                            <App />
+                        </React.StrictMode> */}
                         <App />
                     </ThemeProvider>
                 </Fragment>

@@ -11,7 +11,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
     const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
     const submitUpdateProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
-    const selectNoAppIdProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectNoAppIdProjects')
+    const selectProjectsWithNoProductIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectsWithNoProductId')
 
     const returnedTags = [
         { id: 4, label: 'Tag 1', description: '', color: '#000000' },
@@ -41,7 +41,7 @@ describe('<CreateOrUpdateProductPopup />', () => {
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
         selectTagsByTypesMock.mockReturnValue(returnedTags)
-        selectNoAppIdProjectsMock.mockReturnValue(returnedProjects)
+        selectProjectsWithNoProductIdMock.mockReturnValue(returnedProjects)
     })
 
     test('should render properly', async() => {
@@ -64,7 +64,8 @@ describe('<CreateOrUpdateProductPopup />', () => {
             projects: [],
             projectIds: [],
             productManagerId: null,
-            type: 'PRODUCT'
+            type: 'PRODUCT',
+            childIds: []
         })
     })
 
@@ -151,7 +152,8 @@ describe('<CreateOrUpdateProductPopup />', () => {
             projectIds: [20, 21],
             productManagerId: 1,
             type: 'PRODUCT',
-            tagIds: [4, 13, 2]
+            tagIds: [4, 13, 2],
+            childIds: []
         })
     })
 })

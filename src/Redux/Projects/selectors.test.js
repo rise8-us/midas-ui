@@ -89,6 +89,6 @@ test('selectUnarchivedProjects - returns empty array', () => {
     expect(selectors.selectUnarchivedProjects(mockState)).toHaveLength(1)
 })
 
-test('selectNoAppIdProjects - returns array of one', () => {
-    expect(selectors.selectNoAppIdProjects(mockState)).toHaveLength(1)
+test('selectProjectsWithNoProductId - returns array of one', () => {
+    expect(selectors.selectProjectsWithNoProductId(mockState)).toHaveLength(1)
 })
