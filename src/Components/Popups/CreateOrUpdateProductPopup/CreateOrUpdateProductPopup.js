@@ -10,7 +10,7 @@ import { requestCreateProduct, requestUpdateProduct } from '../../../Redux/Produ
 import ProductConstants from '../../../Redux/Products/constants'
 import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestCreateProject } from '../../../Redux/Projects/actions'
-import { selectNoAppIdProjects } from '../../../Redux/Projects/selectors'
+import { selectProjectsWithNoProductId } from '../../../Redux/Projects/selectors'
 import { requestFindUserBy } from '../../../Redux/Users/actions'
 import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
@@ -33,7 +33,7 @@ const searchErrors = (errors, searchString) => errors.filter(error => error.incl
 function CreateOrUpdateProductPopup({ id }) {
     const dispatch = useDispatch()
 
-    const noAppIdProjects = useSelector(selectNoAppIdProjects)
+    const projectsWithNoProductId = useSelector(selectProjectsWithNoProductId)
     const product = useSelector(state => selectProductById(state, id))
 
     const context = initDetails(product.id === undefined)
@@ -45,7 +45,7 @@ function CreateOrUpdateProductPopup({ id }) {
     const [tags, setTags] = useState(product.tags)
     const [projects, setProjects] = useState(product.projects)
     const [productManager, setProductManager] = useState()
-    const [availableProjects, setAvailableProjects] = useState(noAppIdProjects)
+    const [availableProjects, setAvailableProjects] = useState(product.projects.concat(projectsWithNoProductId))
 
     const onNameChange = (e) => setName(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
@@ -83,6 +83,7 @@ function CreateOrUpdateProductPopup({ id }) {
             name,
             description,
             productManagerId,
+            childIds: [],
             tagIds: Object.values(tags.map(t => t.id)),
             projectIds: Object.values(projects.map(p => p.id)),
             type: 'PRODUCT',
@@ -90,15 +91,7 @@ function CreateOrUpdateProductPopup({ id }) {
     }
 
     useEffect(() => {
-        product.projects.forEach(project => {
-            let totalProjects = [...noAppIdProjects]
-            totalProjects.push(project)
-            setAvailableProjects(totalProjects)
-        })
-    }, [])
-
-    useEffect(() => {
-        dispatch(requestFindUserBy(`id:${product.productManagerId ?? null}`))
+        product.productManagerId && dispatch(requestFindUserBy(`id:${product.productManagerId}`))
             .then(unwrapResult)
             .then(data => {
                 setProductManager(data[0])

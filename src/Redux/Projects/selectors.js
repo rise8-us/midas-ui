@@ -30,6 +30,6 @@ export const selectUnarchivedProjects = (state) => {
     return selectProjects(state).filter(p => !p.isArchived)
 }
 
-export const selectNoAppIdProjects = (state) => {
+export const selectProjectsWithNoProductId = (state) => {
     return selectProjects(state).filter(p => p.productId === null)
 }
