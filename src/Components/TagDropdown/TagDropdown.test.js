@@ -25,7 +25,11 @@ describe('<TagDropdown />', () => {
     })
 
     test('should handle tag changes', async() => {
-        render(<TagDropdown defaultTags = {[allTags[0]]} error = {[]} onChange = {onTagsChange} />)
+        render(<TagDropdown
+            defaultTags = {[allTags[0]]}
+            forcePopupIcon = {true}
+            onChange = {onTagsChange}
+        />)
 
         fireEvent.click(screen.getByTitle('Open'))
         fireEvent.click(screen.getByText('Tag 2'))
@@ -34,7 +38,11 @@ describe('<TagDropdown />', () => {
     })
 
     test('should allow only one scoped tag', async() => {
-        render(<TagDropdown defaultTags = {[allTags[0], allTags[2]]} error = {[]} onChange = {onTagsChange} />)
+        render(<TagDropdown
+            defaultTags = {[allTags[0], allTags[2]]}
+            forcePopupIcon = {true}
+            onChange = {onTagsChange}
+        />)
 
         expect(await screen.findByText('label 1')).toBeInTheDocument()
         fireEvent.click(screen.getByTitle('Open'))

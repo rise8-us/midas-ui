@@ -101,6 +101,7 @@ function CreateOrUpdatePortfolioPopup({ id }) {
                     type = {['ALL', 'PORTFOLIO']}
                     creatable
                     creatableType = 'PORTFOLIO'
+                    forcePopupIcon
                 />
                 <Autocomplete
                     multiple

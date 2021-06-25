@@ -150,6 +150,7 @@ function ProductHeader({ id }) {
                     popupIcon = {<AddCircleOutline color = 'secondary' />}
                     creatable
                     creatableType = 'PRODUCT'
+                    forcePopupIcon = {!isDisabled}
                 />
             </div>
         </>

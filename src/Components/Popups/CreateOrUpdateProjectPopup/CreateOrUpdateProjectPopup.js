@@ -154,6 +154,7 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
                     type = {['ALL', 'PROJECT']}
                     creatable
                     creatableType = 'PROJECT'
+                    forcePopupIcon
                 />
             </Box>
         </Popup>

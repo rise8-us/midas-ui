@@ -144,6 +144,7 @@ function CreateOrUpdateProductPopup({ id }) {
                     type = {['ALL', 'PRODUCT']}
                     creatable
                     creatableType = 'PRODUCT'
+                    forcePopupIcon
                 />
                 <Autocomplete
                     multiple

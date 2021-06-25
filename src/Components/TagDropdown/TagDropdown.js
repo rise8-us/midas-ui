@@ -14,7 +14,7 @@ const filter = createFilterOptions()
 
 function TagDropdown(props) {
     const { defaultTags, error, onChange, label, deletable, disableUnderline, options, type,
-        creatable, creatableType, ...autocompleteProps } = props
+        creatable, creatableType, forcePopupIcon, ...autocompleteProps } = props
 
     const dispatch = useDispatch()
 
@@ -75,16 +75,14 @@ function TagDropdown(props) {
             {...autocompleteProps}
             multiple
             freeSolo
-            forcePopupIcon
+            fullWidth
+            forcePopupIcon = {forcePopupIcon}
             options = {options ?? allTags}
             getOptionLabel = {(option) => option.label}
             getOptionSelected = {(option, value) => option.id === value.id}
             onChange = {onSelectTag}
             value = {tags}
             defaultValue = {tags}
-            style = {{
-                minWidth: '250px',
-            }}
             renderTags = {(value) => value.map((tag, index) =>
                 <Tag
                     key = {index}
@@ -135,6 +133,7 @@ TagDropdown.propTypes = {
         color: PropTypes.string.isRequired
     })),
     type: PropTypes.arrayOf(PropTypes.oneOf(['ALL', 'PROJECT', 'PRODUCT', 'PORTFOLIO', 'GITLAB'])),
+    forcePopupIcon: PropTypes.oneOf(['auto', true, false]),
     creatable: PropTypes.bool,
     creatableType: PropTypes.oneOf(['ALL', 'PROJECT', 'PRODUCT', 'PORTFOLIO']),
 }
@@ -151,6 +150,7 @@ TagDropdown.defaultProps = {
     options: undefined,
     onChange: undefined,
     type: ['ALL'],
+    forcePopupIcon: 'auto',
     creatable: false,
     creatableType: 'ALL'
 }
