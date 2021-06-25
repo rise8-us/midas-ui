@@ -52,6 +52,7 @@ function ProductHeader({ id }) {
         setVision(description)
         dispatch(requestUpdateProduct({
             ...product,
+            childIds: [],
             name,
             description,
             tagIds: Object.values(tags.map(t => t.id))
