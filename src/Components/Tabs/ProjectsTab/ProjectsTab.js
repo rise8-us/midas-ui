@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -43,11 +43,21 @@ ${product.name !== undefined ? product.name : 'this product'} •`
     }
 
     return (
-        <div style = {{ display: 'flex' }}>
+        <div>
             {projects?.length > 0 ?
-                projects.map(project => (
-                    <ProjectCard id = {project.id} key = {project.id}/>
-                ))
+                <Box
+                    display = 'grid'
+                    justifyContent = 'left'
+                    gridTemplateColumns = 'repeat(auto-fit, 450px)'
+                    gridAutoRows = '1fr'
+                    gridGap = '10px 10px'
+                    gridAutoFlow = 'row'
+                    style = {{ margin: '20px 0' }}
+                >
+                    {projects.map(project => (
+                        <ProjectCard id = {project.id} key = {project.id}/>
+                    ))}
+                </Box>
                 :
                 <div style = {{ display: 'inline-flex', padding: '12px 36px' }}>
                     <Typography {...typoProps} color = 'textSecondary'>{noProjectsString}</Typography>
