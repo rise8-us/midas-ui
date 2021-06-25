@@ -7,7 +7,6 @@ import { TagDropdown } from './index'
 describe('<TagDropdown />', () => {
 
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
-    // const requestCreateTagMock = useModuleMock('Redux/Tags/actions', 'requestCreateTag')
 
     const allTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },

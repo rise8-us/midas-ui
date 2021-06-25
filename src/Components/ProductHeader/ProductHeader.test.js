@@ -70,7 +70,7 @@ describe('<ProductHeader>', () => {
         fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
 
         expect(submitProductMock).toHaveBeenCalledWith({
-            ...product, name, description
+            ...product, name, description, childIds: []
         })
     })
 
