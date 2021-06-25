@@ -148,6 +148,8 @@ function ProductHeader({ id }) {
                     disableUnderline = {true}
                     type = {['ALL', 'PRODUCT']}
                     popupIcon = {<AddCircleOutline color = 'secondary' />}
+                    creatable
+                    creatableType = 'PRODUCT'
                 />
             </div>
         </>

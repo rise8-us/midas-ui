@@ -99,6 +99,8 @@ function CreateOrUpdatePortfolioPopup({ id }) {
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
                     type = {['ALL', 'PORTFOLIO']}
+                    creatable
+                    creatableType = 'PORTFOLIO'
                 />
                 <Autocomplete
                     multiple

@@ -56,7 +56,7 @@ function CreateOrUpdateProductPopup({ id }) {
 
         if (newProject.length > 0) {
             const newName = newProject[0].name.split('"')[1]
-            let newValues = values.filter(o => o.id !== -1)
+            const currentValues = values.filter(o => o.id !== -1)
 
             dispatch(requestCreateProject({
                 name: newName,
@@ -64,9 +64,9 @@ function CreateOrUpdateProductPopup({ id }) {
                 tagIds: []
             })).then(unwrapResult)
                 .then(results => {
-                    newValues.push(results)
+                    currentValues.push(results)
                     setAvailableProjects([...availableProjects, results])
-                    setProjects(newValues)
+                    setProjects(currentValues)
                 })
         } else {
             setProjects(values)
@@ -142,6 +142,8 @@ function CreateOrUpdateProductPopup({ id }) {
                     onChange = {onTagsChange}
                     label = 'Tag(s)'
                     type = {['ALL', 'PRODUCT']}
+                    creatable
+                    creatableType = 'PRODUCT'
                 />
                 <Autocomplete
                     multiple
