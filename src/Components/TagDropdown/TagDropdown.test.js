@@ -1,12 +1,13 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent
 } from '../../Utilities/test-utils'
 import { TagDropdown } from './index'
 
 describe('<TagDropdown />', () => {
 
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
+    // const requestCreateTagMock = useModuleMock('Redux/Tags/actions', 'requestCreateTag')
 
     const allTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },
@@ -82,6 +83,40 @@ describe('<TagDropdown />', () => {
         render(<TagDropdown defaultTags = {[allTags[0], allTags[2]]} error = {tagsError} onChange = {onTagsChange} />)
 
         expect(screen.getByText('Tag error')).toBeInTheDocument()
+    })
+
+    test('should call createTag action on creatable', async() => {
+        useDispatchMock().mockResolvedValue({ payload: {
+            label: 'Tag 142',
+            color: '#c2c2c2',
+        } })
+        render(<TagDropdown defaultTags = {[allTags[0]]} creatable />)
+
+        userEvent.type(screen.getByRole('textbox'), 'Tag 1')
+        expect(screen.getAllByText('Tag 1')).toHaveLength(2)
+
+        userEvent.type(screen.getByRole('textbox'), '42')
+        expect(screen.getByText('Add "Tag 142"')).toBeInTheDocument()
+
+        fireEvent.click(screen.getByText('Add "Tag 142"'))
+        expect(await screen.findByText('Tag 142')).toBeInTheDocument()
+    })
+
+    test('should handle scoped tag creation', async() => {
+        useDispatchMock().mockResolvedValue({ payload: {
+            label: 'scoped::label 3',
+            color: '#123456',
+        } })
+        render(<TagDropdown defaultTags = {[allTags[2]]} creatable />)
+        expect(screen.getByText('scoped')).toBeInTheDocument()
+        expect(screen.getByText('label 1')).toBeInTheDocument()
+
+        userEvent.type(screen.getByRole('textbox'), 'scoped::label 3')
+        fireEvent.click(screen.getByText('Add "scoped::label 3"'))
+
+        expect(await screen.findByText('scoped')).toBeInTheDocument()
+        expect(await screen.findByText('label 3')).toBeInTheDocument()
+        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
     })
 
 })

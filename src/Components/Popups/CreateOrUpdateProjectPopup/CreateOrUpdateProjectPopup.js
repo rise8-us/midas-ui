@@ -152,6 +152,8 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
                     deletable
                     onChange = {onTagsChange}
                     type = {['ALL', 'PROJECT']}
+                    creatable
+                    creatableType = 'PROJECT'
                 />
             </Box>
         </Popup>
