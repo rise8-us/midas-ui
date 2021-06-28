@@ -5,14 +5,17 @@ export const selectProductById = (state, id) => {
     if (!product) return {
         name: '',
         description: '',
+        tagIds: [],
         tags: [],
         projects: []
     }
 
     const projects = product.projectIds.map(pId => selectProjectById(state, pId))
+    const tagIds = product.tags.map(t => t.id)
 
     return {
         ...product,
+        tagIds,
         projects,
         description: product.description ?? '',
     }

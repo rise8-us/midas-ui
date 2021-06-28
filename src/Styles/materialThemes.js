@@ -63,14 +63,17 @@ export const darkTheme = createMuiTheme({
         MuiPaper: {
             outlined: {
                 border: '2px solid black'
-            },
+            }
+        },
+        MuiCard: {
             root: {
                 backgroundColor: '#FFFFFF0A'
             }
         },
         MuiDialog: {
             paper: {
-                minWidth: '350px'
+                minWidth: '350px',
+                backgroundColor: '#24292e'
             }
         },
         MuiTooltip: {
