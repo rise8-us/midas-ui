@@ -100,7 +100,7 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
                     inputProps = {{
                         'data-testid': 'CreateOrUpdateGitlabConfigPopup__input-token'
                     }}
-                    value = {token}
+                    value = {token ?? ''}
                     onChange = {onTokenChange}
                     margin = 'dense'
                     required

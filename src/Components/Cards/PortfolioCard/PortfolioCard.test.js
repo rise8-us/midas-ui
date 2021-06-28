@@ -13,6 +13,7 @@ jest.mock('react-router-dom', () => ({
 }))
 
 describe('<PortfolioCard />', () => {
+
     const portfolio = {
         id: 1,
         name: 'portfolio world',
