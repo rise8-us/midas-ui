@@ -34,6 +34,7 @@ const mockState = {
             portfolioId: 4,
             parentId: null,
             tagIds: [2],
+            tags: [],
             type: 'PRODUCT'
         },
         6: {
@@ -45,6 +46,7 @@ const mockState = {
             portfolioId: 4,
             parentId: null,
             tagIds: [2],
+            tags: [],
             type: 'PRODUCT'
         },
     },
