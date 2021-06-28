@@ -71,7 +71,7 @@ test('selectPortfolioById - returns empty object', () => {
     expect(selectors.selectPortfolioById(mockState, 2)).toBeInstanceOf(Object)
 })
 
-test('selectPortfolios - returns portfolio array', () => {
+test('selectAllPortfolios - returns portfolio array', () => {
     selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
     selectProductByIdMock.mockReturnValue(mockState.products[2])
 
@@ -90,12 +90,12 @@ test('selectPortfolios - returns portfolio array', () => {
         ]
 
     }
-    const portfolios = selectors.selectPortfolios(mockState)
+    const portfolios = selectors.selectAllPortfolios(mockState)
     expect(portfolios[0]).toEqual(portfolioOne)
 })
 
-test('selectPortfolios - returns empty array', () => {
-    expect(selectors.selectPortfolios({})).toBeInstanceOf(Array)
+test('selectAllPortfolios - returns empty array', () => {
+    expect(selectors.selectAllPortfolios({})).toBeInstanceOf(Array)
 })
 
 test('selectUnarchivedPortfolios - returns array with only unarchived portfolios', () => {
@@ -105,4 +105,9 @@ test('selectUnarchivedPortfolios - returns array with only unarchived portfolios
 test('selectUnarchivedPortfolioIds - returns mockState.app[4]', () => {
     expect(selectors.selectUnarchivedPortfolioIds(mockState)).toHaveLength(1)
     expect(selectors.selectUnarchivedPortfolioIds(mockState)).toEqual([4])
+})
+
+test('selectAllActivePortfoliosNameAndIds ', () => {
+    expect(selectors.selectAllActivePortfoliosNameAndIds(mockState))
+        .toEqual([{ id: 4, name: 'Midas Portfolio' }])
 })

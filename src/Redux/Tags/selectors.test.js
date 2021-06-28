@@ -11,7 +11,21 @@ const mockState = {
         },
         1: {
             id: 1,
-            detail: 'Tag 2',
+            label: 'Tag 2',
+            description: 'description',
+            color: '#FFFFFF',
+            tagType: 'PRODUCT'
+        },
+        2: {
+            id: 2,
+            label: 'stuff::things',
+            description: 'description',
+            color: '#FFFFFF',
+            tagType: 'PRODUCT'
+        },
+        3: {
+            id: 3,
+            label: 'things::stuff',
             description: 'description',
             color: '#FFFFFF',
             tagType: 'PRODUCT'
@@ -48,4 +62,10 @@ test('should return array of tags', () => {
 
     expect(tagsByIds).toBeInstanceOf(Array)
     expect(tagsByIds).toHaveLength(1)
+})
+
+test('should return array of one', () => {
+    expect(selectors.selectTagsByScope(mockState, 'stuff')).toHaveLength(1)
+    expect(selectors.selectTagsByScope(mockState, 'stuff')).toEqual([mockState.tags[2]])
+
 })

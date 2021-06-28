@@ -24,7 +24,7 @@ function Page({ children }) {
 
     return (
         <>
-            <AppBar appName = 'MIDAS' />
+            <AppBar />
             <div style = {{ padding: '68px 0 20px 0', height: '100%', overflowY: 'auto' }} className = {classes.page}>
                 {children}
             </div>
