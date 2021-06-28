@@ -63,6 +63,9 @@ export const darkTheme = createMuiTheme({
         MuiPaper: {
             outlined: {
                 border: '2px solid black'
+            },
+            root: {
+                backgroundColor: '#FFFFFF0A'
             }
         },
         MuiDialog: {

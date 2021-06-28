@@ -1,9 +1,10 @@
 import { AppBar as AppBarMUI, fade, IconButton, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core'
-import { AccountCircle, Fingerprint, Gavel, LocalOffer } from '@material-ui/icons'
+import { AccountCircle, Gavel, LocalOffer } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import MidasLogo from '../../Assets/MidasLogo.svg'
 import { selectUserLoggedIn } from '../../Redux/Auth/selectors'
 import { setAppBarFilterString } from '../../Redux/Filters/reducer'
 import { selectAppBarFilter } from '../../Redux/Filters/selectors'
@@ -60,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function AppBar({ height, appName }) {
+function AppBar({ height }) {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
@@ -76,7 +77,7 @@ function AppBar({ height, appName }) {
     const pages = [
         {
             label: 'Dashboard (TBA)',
-            path: 'home'
+            path: 'dashboard'
         }, {
             label: 'Projects',
             path: 'projects'
@@ -100,35 +101,9 @@ function AppBar({ height, appName }) {
             }}
         >
             <Toolbar style = {{ paddingLeft: '10px' }}>
-                <Fingerprint
-                    style = {{
-                        color: 'gold',
-                        cursor: 'pointer',
-                        height: '28px',
-                    }}
-                    title = 'logo'
-                    onClick = {goHome}
-                />
-                {appName &&
-                    <Typography
-                        variant = 'h4'
-                        style = {{
-                            backgroundImage: '-webkit-linear-gradient(#b08910 25%, #dee33f)',
-                            color: 'transparent',
-                            fontFamily: '-webkit-pictograph',
-                            fontSize: 'x-large',
-                            fontWeight: 'bold',
-                            WebkitBackgroundClip: 'text',
-                        }}
-                        className = {classes.title}
-                        color = 'textPrimary'
-                        onClick = {goHome}
-                    >
-                        {appName}
-                    </Typography>
-                }
+                <img src = {MidasLogo} onClick = {goHome} style = {{ cursor: 'pointer' }} data-testid = 'AppBar__logo'/>
                 <div style = {{ margin: '10px' }}/>
-                { pages.map(page => (
+                {pages.map(page => (
                     <div key = {page.label}>
                         <Typography
                             onClick = {() => history.push(`/${page.path}`)}
@@ -193,12 +168,10 @@ function AppBar({ height, appName }) {
 }
 
 AppBar.propTypes = {
-    appName: PropTypes.string,
     height: PropTypes.string,
 }
 
 AppBar.defaultProps = {
-    appName: null,
     height: '48px',
 }
 
