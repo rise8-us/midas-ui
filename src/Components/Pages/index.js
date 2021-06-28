@@ -1,5 +1,6 @@
 export { Account } from './Account'
 export { Admin } from './Admin'
+export { Dashboard } from './Dashboard'
 export { Home } from './Home'
 export { PageNotFound } from './PageNotFound'
 export { Portfolios } from './Portfolios'

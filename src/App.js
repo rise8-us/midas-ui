@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { Banner } from './Components/Banner'
-import { Account, Admin, Home, PageNotFound, Portfolios, Product, Products, Projects, Tags } from './Components/Pages'
+import * as Pages from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { WebsocketProvider } from './Components/WebsocketProvider'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
@@ -42,19 +42,17 @@ function App() {
             <WebsocketProvider>
                 <PopupManager />
                 <Switch>
-                    {/* unsecured Routes */}
-                    <Route exact path = '/'>
-                        <Redirect to = '/home'/>
-                    </Route>
-                    <Route exact path = '/home' component = {Home} />
-                    <Route exact path = '/products' component = {Products} />
-                    <Route exact path = '/portfolios' component = {Portfolios} />
-                    <Route exact path = '/projects' component = {Projects} />
-                    <Route exact path = '/account' component = {Account} />
-                    <Route exact path = '/tags' component = {Tags} />
-                    <Route exact path = '/products/:productId' component = {Product} />
-                    {user.isAdmin && <Route exact path = '/admin' component = {Admin} />}
-                    <Route component = {PageNotFound} />
+                    <Route exact path = '/'><Redirect to = '/home'/></Route>
+                    <Route exact path = '/account' component = {Pages.Account} />
+                    <Route exact path = '/dashboard' component = {Pages.Dashboard} />
+                    <Route exact path = '/home' component = {Pages.Home} />
+                    <Route exact path = '/portfolios' component = {Pages.Portfolios} />
+                    <Route exact path = '/products' component = {Pages.Products} />
+                    <Route exact path = '/products/:productId' component = {Pages.Product} />
+                    <Route exact path = '/projects' component = {Pages.Projects} />
+                    <Route exact path = '/tags' component = {Pages.Tags} />
+                    {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}
+                    <Route component = {Pages.PageNotFound} />
                 </Switch>
             </WebsocketProvider>
         </Banner>

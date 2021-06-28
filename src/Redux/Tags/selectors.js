@@ -24,3 +24,7 @@ export const selectTagsByIds = (state, ids) => {
 export const selectTagsByTypes = (state, types) => {
     return selectAllTags(state).filter(t => types.includes(t.tagType))
 }
+
+export const selectTagsByScope = (state, scope) => {
+    return selectAllTags(state).filter(tag => tag.label.split('::')[0] === scope)
+}
