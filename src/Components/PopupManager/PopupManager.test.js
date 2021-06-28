@@ -13,6 +13,7 @@ const popup = {
 }
 
 describe('PopupManager', () => {
+    jest.setTimeout(15000)
 
     beforeEach(async() => {
         useSelectorMock().mockReturnValue([])
