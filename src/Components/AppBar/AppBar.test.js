@@ -22,16 +22,16 @@ describe('<AppBar />', () => {
 
     beforeEach(() => {
         selectAppBarFilterMock.mockReturnValue('')
-        getRootMock.mockReturnValue('home')
+        getRootMock.mockReturnValue('products')
         useDispatchMock().mockReturnValue({})
     })
 
     test('should render no authd user', () => {
         selectUserLoggedInMock.mockReturnValue({})
 
-        render(<AppBar appName = 'Midas'/>)
+        render(<AppBar />)
 
-        expect(screen.getByText('Midas')).toBeInTheDocument()
+        expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
         expect(screen.getByText('Dashboard (TBA)')).toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
@@ -74,14 +74,11 @@ describe('<AppBar />', () => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
         render(
             <MemoryRouter>
-                <AppBar appName = 'APP'/>
+                <AppBar />
             </MemoryRouter>
         )
 
-        fireEvent.click(screen.getByTitle('logo'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/home')
-
-        fireEvent.click(screen.getByText('APP'))
+        fireEvent.click(screen.getByTestId('AppBar__logo'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/home')
 
         fireEvent.click(screen.getByTitle('tags'))
@@ -96,7 +93,7 @@ describe('<AppBar />', () => {
         // Page links
 
         fireEvent.click(screen.getByText('Dashboard (TBA)'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/home')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
 
         fireEvent.click(screen.getByText('Projects'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/projects')
