@@ -10,6 +10,7 @@ jest.mock('../../UserSettings/UserSettings',
     () => function testing() { return (<div>UserSettings test</div>) })
 
 describe('<UserTab />', () => {
+    jest.setTimeout(15000)
 
     const selectUserByIdMock = useModuleMock('Redux/Users/selectors', 'selectUserById')
 
