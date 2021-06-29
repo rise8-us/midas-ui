@@ -12,11 +12,12 @@ const useStyles = makeStyles(() => ({
     portfolioDescription: {
         fontWeight: 'bold',
         alignSelf: 'center',
-        width: '100%'
+        width: '100%',
+        margin: 'auto 0'
     },
     container: {
-        maxWidth: '40%',
-        minWidth: '350px',
+        maxWidth: '500px',
+        minWidth: '300px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between'
@@ -69,6 +70,7 @@ function Dashboard() {
                             minWidth: '175px',
                             marginRight: '24px',
                         }}
+                        startAngle = {270}
                         lineWidth = {20}
                         data = {buildData()}
                     />
