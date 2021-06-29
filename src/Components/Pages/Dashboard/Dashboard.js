@@ -2,6 +2,7 @@ import { Box, CardContent, Divider, makeStyles, Typography } from '@material-ui/
 import React, { useState } from 'react'
 import { PieChart } from 'react-minimal-pie-chart'
 import { useSelector } from 'react-redux'
+import AbmsLogo from '../../../Assets/ABMSAppsLogo.svg'
 import { selectAllActivePortfoliosNameAndIds, selectPortfolioById } from '../../../Redux/Portfolios/selectors'
 import { selectTagsByScope } from '../../../Redux/Tags/selectors'
 import { DashboardCard } from '../../Cards'
@@ -40,19 +41,33 @@ function Dashboard() {
     const buildData = () => {
         const data = []
         const totalProductsCount = selectedPortfolio.products.length
+        let accountedValue = 100
+        let unaccountedProducts = totalProductsCount
 
         horizonTags.map(t => {
             const productsWithTag = selectedPortfolio.products.filter(p => p.tagIds.includes(t.id))
+            const val = productsWithTag.length / totalProductsCount * 100
+
+            accountedValue -= val
+            unaccountedProducts -= productsWithTag.length
 
             data.push({
-                title: t.label,
+                title: `${t.label} - ${totalProductsCount} (${val}%)`,
                 color: t.color,
-                value: productsWithTag.length / totalProductsCount * 100
+                value: val,
             })
+        })
+
+        data.push({
+            title: `missing tags for ${unaccountedProducts} products`,
+            value: accountedValue,
+            color: '#93939320'
         })
 
         return data
     }
+
+    const data = buildData()
 
     return (
         <Page>
@@ -70,10 +85,16 @@ function Dashboard() {
                             minWidth: '175px',
                             marginRight: '24px',
                         }}
+                        radius = {43}
                         startAngle = {270}
                         lineWidth = {20}
-                        data = {buildData()}
+                        data = {data}
+                        segmentsStyle = {(index) => ({
+                            filter: `drop-shadow(0 0 4px ${data[index].color}`
+                        })}
+                        background = '#93939320'
                     />
+                    <img src = {AbmsLogo} style = {{ position: 'fixed', width: '100px', top: '220px', left: '72px' }}/>
                     <Box className = {classes.container}>
                         <Typography className = {classes.portfolioDescription}>
                             {selectedPortfolio.description ? selectedPortfolio.description : 'No description available'}
