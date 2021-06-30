@@ -1,5 +1,4 @@
 import React from 'react'
-import { act } from 'react-dom/test-utils'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
 import { AssertionComments } from './index'
 
@@ -15,7 +14,8 @@ describe('<AssertionComments>', () => {
                 NOT_STARTED: { name: 'NOT_STARTED', label: 'Not Started', color: '#000000' },
                 STARTED: { name: 'STARTED', label: 'Started', color: '#000000' },
                 COMPLETED: { name: 'COMPLETED', label: 'Completed', color: '#000000' }
-            }
+            },
+            pageScrollY: 0
         },
         assertions: {
             1: {
@@ -32,18 +32,15 @@ describe('<AssertionComments>', () => {
     }
 
     test('should set height', () => {
-        render(<AssertionComments assertionId = {3}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {3}/>, { initialState: {
+            assertions: { ...mockState.assertions },
+            app: {
+                assertionStatus: { ...mockState.app.assertionStatus },
+                pageScrollY: 600
+            }
+        } })
 
-        Object.defineProperty(window, 'pageYOffset', {
-            writable: true,
-            configurable: true,
-            value: -81,
-        })
-        act(() => {
-            window.dispatchEvent(new Event('scroll'))
-        })
-
-        expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 623px')
+        expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 712px')
     })
 
     test('should render', () => {

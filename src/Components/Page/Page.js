@@ -1,6 +1,8 @@
 import { makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setPageScrollY } from '../../Redux/AppSettings/reducer'
 import { AppBar } from '../AppBar'
 
 const useStyles = makeStyles(theme => ({
@@ -15,19 +17,22 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.divider,
             '-webkit-border-radius': '12px'
         },
-        padding: theme.spacing(2)
+        padding: '68px 0 20px 0',
+        overflowY: 'auto',
+        height: '100%',
     }
 }))
 
 function Page({ children }) {
     const classes = useStyles()
+    const dispatch = useDispatch()
+
+    const onScroll = (e) => dispatch(setPageScrollY(e.target.scrollTop))
 
     return (
         <>
             <AppBar />
-            <div style = {{ padding: '68px 0 20px 0', height: '100%', overflowY: 'auto' }} className = {classes.page}>
-                {children}
-            </div>
+            <div className = {classes.page} onScroll = {onScroll}>{children}</div>
         </>
     )
 }

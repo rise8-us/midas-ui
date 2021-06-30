@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
     },
     root: {
         marginTop: theme.spacing(2),
-        paddingBottom: theme.spacing(6),
         width: '100%',
         display: 'flex',
         flexDirection: 'row'

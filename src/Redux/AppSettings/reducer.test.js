@@ -1,5 +1,5 @@
 import { requestFetchInit } from '../Init/actions'
-import reducer, { setAssertionComment, toggleNavBar } from './reducer'
+import reducer, { setAssertionComment, setPageScrollY, toggleNavBar } from './reducer'
 
 const mockStore = {
     navBarOpen: false,
@@ -11,7 +11,8 @@ const mockStore = {
     sonarqubeReliability: {},
     sonarqubeMaintainability: {},
     sonarqubeSecurity: {},
-    tagTypes: []
+    tagTypes: [],
+    pageScrollY: 0,
 }
 
 test('should handle initial state', () => {
@@ -26,6 +27,7 @@ test('should handle initial state', () => {
         sonarqubeReliability: {},
         sonarqubeSecurity: {},
         tagTypes: [],
+        pageScrollY: 0,
     })
 })
 
@@ -53,6 +55,15 @@ test('should handle toggleNavBar', () => {
     ).toEqual({
         ...mockStore,
         navBarOpen: true
+    })
+})
+
+test('should handle pageScrollY', () => {
+    expect(
+        reducer(mockStore, { type: setPageScrollY.type, payload: 42 })
+    ).toEqual({
+        ...mockStore,
+        pageScrollY: 42
     })
 })
 

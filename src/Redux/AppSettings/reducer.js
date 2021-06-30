@@ -14,6 +14,7 @@ const appSettingsSlice = createSlice({
         sonarqubeReliability: {},
         sonarqubeSecurity: {},
         tagTypes: [],
+        pageScrollY: 0
     },
     reducers: {
         toggleNavBar: (state) => {
@@ -21,6 +22,9 @@ const appSettingsSlice = createSlice({
         },
         setAssertionComment: (state, action) => {
             state.assertionCommentsOpen = action.payload === state.assertionCommentsOpen ? null : action.payload
+        },
+        setPageScrollY: (state, action) => {
+            state.pageScrollY = action.payload
         }
     },
     extraReducers: {
@@ -49,6 +53,6 @@ const appSettingsSlice = createSlice({
     }
 })
 
-export const { toggleNavBar, setAssertionComment } = appSettingsSlice.actions
+export const { toggleNavBar, setAssertionComment, setPageScrollY } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer
