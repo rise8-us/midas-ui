@@ -1,4 +1,4 @@
-import { Card, ClickAwayListener, makeStyles, Popper, Typography } from '@material-ui/core'
+import { ClickAwayListener, makeStyles, Paper, Popper, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
@@ -58,7 +58,7 @@ function AssertionStatusDropdown({ option, onChange, onClick }) {
                 style = {{ zIndex: 2 }}
             >
                 <ClickAwayListener onClickAway = {togglePopper}>
-                    <Card style = {{ width: '150px' }} >
+                    <Paper style = {{ width: '150px' }} >
                         {allStatuses.filter(status => status.label !== selectStatus?.label).map(status => (
                             <Typography
                                 key = {status.name}
@@ -69,7 +69,7 @@ function AssertionStatusDropdown({ option, onChange, onClick }) {
                                 value = {status.label}
                             >{status.label}</Typography>
                         ))}
-                    </Card>
+                    </Paper>
                 </ClickAwayListener>
             </Popper>
         </div>

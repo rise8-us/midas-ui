@@ -36,7 +36,6 @@ export const darkTheme = createMuiTheme({
             CUI: '#2849b8',
             NOFORN: '#be4242',
             SCI: '#eff01a'
-
         },
         status: {
             success: '#46b058',
