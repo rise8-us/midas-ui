@@ -1,0 +1,1 @@
+export const getNumberOrZero = (value) => isNaN(value) ? 0 : value

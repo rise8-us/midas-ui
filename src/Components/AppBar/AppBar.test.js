@@ -32,7 +32,7 @@ describe('<AppBar />', () => {
         render(<AppBar />)
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
-        expect(screen.getByText('Dashboard (TBA)')).toBeInTheDocument()
+        expect(screen.getByText('Dashboard')).toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
         expect(screen.getByText('Portfolios')).toBeInTheDocument()
@@ -72,14 +72,11 @@ describe('<AppBar />', () => {
 
     test('should links navigate correctly', () => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
-        render(
-            <MemoryRouter>
-                <AppBar />
-            </MemoryRouter>
-        )
+
+        render(<MemoryRouter><AppBar /></MemoryRouter>)
 
         fireEvent.click(screen.getByTestId('AppBar__logo'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/home')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
 
         fireEvent.click(screen.getByTitle('tags'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/tags')
@@ -92,7 +89,7 @@ describe('<AppBar />', () => {
 
         // Page links
 
-        fireEvent.click(screen.getByText('Dashboard (TBA)'))
+        fireEvent.click(screen.getByText('Dashboard'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
 
         fireEvent.click(screen.getByText('Projects'))
