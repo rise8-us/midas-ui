@@ -71,12 +71,12 @@ function AppBar({ height }) {
     const user = useSelector(selectUserLoggedIn)
     const filterString = useSelector(selectAppBarFilter)
 
-    const goHome = () => history.push('/home')
+    const goHome = () => history.push('/dashboard')
     const search = (searchString) => dispatch(setAppBarFilterString(searchString))
 
     const pages = [
         {
-            label: 'Dashboard (TBA)',
+            label: 'Dashboard',
             path: 'dashboard'
         }, {
             label: 'Projects',

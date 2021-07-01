@@ -42,7 +42,7 @@ function App() {
             <WebsocketProvider>
                 <PopupManager />
                 <Switch>
-                    <Route exact path = '/'><Redirect to = '/home'/></Route>
+                    <Route exact path = '/'><Redirect to = '/dashboard'/></Route>
                     <Route exact path = '/account' component = {Pages.Account} />
                     <Route exact path = '/dashboard' component = {Pages.Dashboard} />
                     <Route exact path = '/home' component = {Pages.Home} />

@@ -2,11 +2,12 @@ import { Step, StepConnector, StepLabel, Stepper, Tooltip } from '@material-ui/c
 import PropTypes from 'prop-types'
 import React from 'react'
 
-function IconStepper({ icons, steps, currentStep, tooltip, padding }) {
+function IconStepper({ icons, steps, currentStep, tooltip, padding, orientation }) {
 
     return (
         <Stepper
             alternativeLabel
+            orientation = {orientation}
             activeStep = {currentStep}
             connector = {<StepConnector />}
             style = {{ padding, backgroundColor: 'inherit' }}
@@ -31,13 +32,15 @@ IconStepper.propTypes = {
     currentStep: PropTypes.number.isRequired,
     tooltip: PropTypes.bool,
     icons: PropTypes.func,
-    padding: PropTypes.string
+    padding: PropTypes.string,
+    orientation: PropTypes.oneOf(['vertical', 'horizontal'])
 }
 
 IconStepper.defaultProps = {
     icons: undefined,
     tooltip: false,
-    padding: '20px'
+    padding: '20px',
+    orientation: 'horizontal'
 }
 
 export default IconStepper
