@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-object-injection */
+/* eslint-disable security/detect-non-literal-require */
 /* eslint-disable react/prop-types */
 import { render as rtlRender } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'

@@ -8,7 +8,8 @@ module.exports = {
     },
     'extends': [
         'eslint:recommended',
-        'plugin:react/recommended'
+        'plugin:react/recommended',
+        'plugin:security/recommended',
     ],
     'parser': 'babel-eslint',
     'globals': {
@@ -23,7 +24,10 @@ module.exports = {
         'sourceType': 'module'
     },
     'plugins': [
-        'react'
+        'react',
+        'jam3',
+        'security',
+        'xss'
     ],
     'settings': {
         'react': {
@@ -31,6 +35,10 @@ module.exports = {
         }
     },
     'rules': {
+        'xss/no-location-href-assign': 2,
+        'security/detect-object-injection': 0,
+        'jam3/no-sanitizer-with-danger': 2,
+        'jam3/no-sanitizer-window-location': 2,
         'indent': ['warn', 4, {
             'ignoredNodes': ['TemplateLiteral']
         }],
