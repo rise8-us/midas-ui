@@ -7,6 +7,7 @@ import {
 } from '../../../Redux/Portfolios/selectors'
 import { selectTagsByScope } from '../../../Redux/Tags/selectors'
 import { getNumberOrZero } from '../../../Utilities/getNumberOrZero'
+import { BlockerList } from '../../BlockerList'
 import { DashboardCard } from '../../Cards'
 import { CtfStatistics } from '../../CtfStatistics'
 import { LegendItem } from '../../LegendItem'
@@ -18,6 +19,29 @@ const useStyles = makeStyles((theme) => ({
         margin: '0 25px',
         minWidth: '250px',
         paddingTop: theme.spacing(2)
+    },
+    container: {
+        overflowY: 'overlay',
+        marginBottom: theme.spacing(2),
+        '&::-webkit-scrollbar': {
+            width: '12px'
+        },
+        '&::-webkit-scrollbar-thumb': {
+            height: '15%',
+            border: '3px solid rgba(0, 0, 0, 0)',
+            backgroundClip: 'padding-box',
+            backgroundColor: theme.palette.divider,
+            '-webkit-border-radius': '12px'
+        }
+    },
+    ctfStatistics: {
+        [theme.breakpoints.up(1500)]: {
+            maxWidth: '600px',
+            flexBasis: 0
+        },
+        [theme.breakpoints.down(1500)]: {
+            maxWidth: '100%'
+        },
     }
 }))
 
@@ -38,21 +62,14 @@ export const buildCtfData = (projects, ctfSteps) => {
         .reverse()
         .map(step => {
             const stepBit = Math.pow(2, step.offset)
-            const projectsWithStep = []
-
-            projects.forEach((p, index) => {
-                if (p && stepBit & p.projectJourneyMap) {
-                    projectsWithStep.push(p)
-                    delete projects[index]
-                }
-            })
-
+            const projectsWithStep = projects.filter(p => stepBit & p.projectJourneyMap)
             const val = projectsWithStep.length / projectsCount * 100
 
             return ({
                 name: step.name,
                 value: getNumberOrZero(val),
-                count: projectsWithStep.length
+                count: projectsWithStep.length,
+                total: projectsCount
             })
         })
         .reverse()
@@ -71,7 +88,7 @@ export const buildScopedData = (products, scopedTags) => {
         unaccountedProducts -= productsWithTag.length
 
         return ({
-            title: `${t.label} - ${productsWithTag.length} (${val}%)`,
+            title: `${t.label} - ${productsWithTag.length} (${Number(val.toFixed(2))}%)`,
             color: t.color,
             value: getNumberOrZero(val),
         })
@@ -107,47 +124,61 @@ function Dashboard() {
 
     return (
         <Page>
-            <DashboardCard
-                title = 'Portfolio'
-                options = {options}
-                defaultOptionId = {selectedPortfolioId}
-                onChange = {setSelectedPortfolioId}
-            >
-                <CardContent style = {{ paddingTop: 0, display: 'flex' }}>
-                    <Grid container wrap = 'nowrap'>
-                        <Grid item>
-                            <PieChart
-                                data = {scopedData}
-                                label = {<img src = {AbmsLogo} style = {{ width: '100px' }}/>}
-                            />
-                        </Grid>
-                        <Grid
-                            container
-                            item
-                            direction = 'column'
-                            justify = 'space-between'
-                            className = {classes.portfolioInfoContainer}
-                        >
-                            <Grid item style = {{ margin: 'auto 0' }}>
-                                <Typography style = {{ fontWeight: 'bold' }}>
-                                    {selectedPortfolio?.description ?
-                                        selectedPortfolio.description : 'No description available'
-                                    }
-                                </Typography>
-                            </Grid>
-                            <Grid container item spacing = {2} style = {{ width: '100%', margin: '0 -8px' }}>
-                                {scopedTags.map(tag => (
-                                    <Grid item key = {tag.id} >
-                                        <LegendItem color = {tag.color} text = {tag.label.split('::')[1]}/>
+            <Grid container spacing = {2} style = {{ padding: '0 24px' }} >
+                <Grid item sm>
+                    <DashboardCard
+                        title = 'Portfolio'
+                        options = {options}
+                        defaultOptionId = {selectedPortfolioId}
+                        onChange = {setSelectedPortfolioId}
+                        minWidth = '960px'
+                    >
+                        <CardContent style = {{ paddingTop: 0, display: 'flex' }}>
+                            <Grid container wrap = 'nowrap'>
+                                <Grid item>
+                                    <PieChart
+                                        data = {scopedData}
+                                        label = {<img src = {AbmsLogo} style = {{ width: '100px' }}/>}
+                                    />
+                                </Grid>
+                                <Grid
+                                    container
+                                    item
+                                    direction = 'column'
+                                    className = {classes.portfolioInfoContainer}
+                                >
+                                    <Grid item style = {{ margin: 'auto 0' }}>
+                                        <Typography style = {{ fontWeight: 'bold' }}>
+                                            {selectedPortfolio?.description ?
+                                                selectedPortfolio.description : 'No description available'
+                                            }
+                                        </Typography>
                                     </Grid>
-                                ))}
+                                    <Grid container item spacing = {2} style = {{ margin: '0 -8px' }}>
+                                        {scopedTags.map(tag => (
+                                            <Grid item key = {tag.id} >
+                                                <LegendItem color = {tag.color} text = {tag.label.split('::')[1]}/>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Grid>
-                    <Divider orientation = 'vertical' style = {{ height: 'auto', margin: '0 16px' }}/>
-                    <CtfStatistics data = {ctfData} />
-                </CardContent>
-            </DashboardCard>
+                            <Divider orientation = 'vertical' style = {{ height: 'auto', margin: '0 16px' }}/>
+                            <CtfStatistics data = {ctfData} />
+                        </CardContent>
+                    </DashboardCard>
+                </Grid>
+                <Grid item xs className = {classes.ctfStatistics}>
+                    <DashboardCard
+                        title = 'Blockers'
+                        minWidth = '475px'
+                    >
+                        <CardContent className = {classes.container}>
+                            <BlockerList portfolioId = {selectedPortfolioId}/>
+                        </CardContent>
+                    </DashboardCard>
+                </Grid>
+            </Grid>
         </Page>
     )
 }

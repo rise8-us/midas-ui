@@ -54,7 +54,7 @@ function CtfStatistics({ data }) {
                     lineWidth = {10}
                     label = {<Typography variant = 'h5'>{Number(ctfStat.value.toFixed(2))}%</Typography>}
                 />
-                <Grid container wrap = 'nowrap' justify = 'center' spacing = {1}>
+                <Grid container wrap = 'nowrap' justifyContent = 'center' spacing = {1}>
                     <Grid item style = {{ textAlign: 'center' }}>
                         <Typography variant = 'subtitle2' style = {{ fontWeight: 'bold' }}>Platform One</Typography>
                     </Grid>
@@ -72,14 +72,23 @@ function CtfStatistics({ data }) {
                     {steps.map((label, index) => (
                         <Step key = {index}>
                             <StepLabel StepIconComponent = { () => <StepIcons index = {index} /> }>
-                                <Grid container justify = 'space-between' alignItems = 'center'>
+                                <Grid container alignItems = 'center' justifyContent = 'space-between'>
                                     <Grid item >
                                         <Typography variant = 'subtitle2' color = 'textSecondary'>{label}</Typography>
                                     </Grid>
                                     <Grid item>
-                                        <Typography variant = 'h5' color = 'textPrimary'>
-                                            {data[index]?.count ?? 0}
-                                        </Typography>
+                                        <div style = {{ display: 'flex', flexDirection: 'row' }}>
+                                            <Typography variant = 'h5' color = 'textPrimary'>
+                                                {data[index]?.count ?? 0}
+                                            </Typography>
+                                            <Typography
+                                                color = 'textSecondary'
+                                                variant = 'caption'
+                                                style = {{ paddingLeft: '4px' }}
+                                            >
+                                                / {data[index]?.total ?? 0}
+                                            </Typography>
+                                        </div>
                                     </Grid>
                                 </Grid>
                             </StepLabel>
@@ -96,7 +105,8 @@ CtfStatistics.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string,
         value: PropTypes.number,
-        count: PropTypes.number
+        count: PropTypes.number,
+        total: PropTypes.number,
     })).isRequired
 }
 

@@ -1,4 +1,4 @@
-import { CircularProgress, fade, IconButton, makeStyles, TextField } from '@material-ui/core'
+import { alpha, CircularProgress, IconButton, makeStyles, TextField } from '@material-ui/core'
 import { Close, Search } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         borderRadius: props.borderRadius,
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: fade(theme.palette.background.paper, 0.85)
+            backgroundColor: alpha(theme.palette.background.paper, 0.85)
         },
         width: props.growFrom,
         '&:focus-within': {

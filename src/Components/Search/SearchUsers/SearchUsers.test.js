@@ -3,7 +3,7 @@ import { fireEvent, render, screen, useDispatchMock, userEvent } from '../../../
 import { SearchUsers } from './index'
 
 describe('<SearchUsers />', () => {
-    jest.setTimeout(10000)
+    jest.setTimeout(15000)
 
     const allUsers = [
         {
@@ -17,11 +17,7 @@ describe('<SearchUsers />', () => {
         }
     ]
 
-    beforeEach(() => {
-        useDispatchMock().mockResolvedValue({ payload: allUsers })
-    })
-
-    test('should render default', async() => {
+    test('should render default', () => {
         render(<SearchUsers />)
 
         expect(screen.getByText(/Search users/i)).toBeInTheDocument()
@@ -36,7 +32,9 @@ describe('<SearchUsers />', () => {
     })
 
     test('shoulld call onChange prop', async() => {
+        useDispatchMock().mockResolvedValue({ payload: allUsers })
         const onChangePropMock = jest.fn()
+
         render(<SearchUsers onChange = {onChangePropMock}/>)
 
         const input = screen.getByDisplayValue('')

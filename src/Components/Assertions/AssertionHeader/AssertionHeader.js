@@ -237,7 +237,7 @@ function AssertionHeader(props) {
                     {id &&
                         <Badge
                             badgeContent = {commentCount}
-                            overlap = 'circle'
+                            overlap = 'circular'
                             color = 'primary'
                             style = {{ marginRight: '8px' }}
                             onClick = {onCommentClicked}

@@ -1,4 +1,4 @@
-import { CircularProgress, fade, makeStyles, TextField } from '@material-ui/core'
+import { alpha, CircularProgress, makeStyles, TextField } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
 import { Autocomplete } from '@material-ui/lab'
 import { unwrapResult } from '@reduxjs/toolkit'
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         color: 'inherit',
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: fade(theme.palette.background.paper, 0.85)
+            backgroundColor: alpha(theme.palette.background.paper, 0.85)
         },
         borderRadius: 3,
         width: props.growFrom,

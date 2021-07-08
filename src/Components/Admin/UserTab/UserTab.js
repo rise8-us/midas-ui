@@ -1,4 +1,4 @@
-import { Box, CircularProgress, fade, InputBase, makeStyles } from '@material-ui/core'
+import { alpha, Box, CircularProgress, InputBase, makeStyles } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
 import { unwrapResult } from '@reduxjs/toolkit'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
         color: 'inherit',
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: fade(theme.palette.background.paper, 0.85)
+            backgroundColor: alpha(theme.palette.background.paper, 0.85)
         },
         margin: theme.spacing(3, 3, 1, 3),
         borderRadius: 3,

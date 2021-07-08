@@ -1,8 +1,8 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createTheme } from '@material-ui/core/styles'
 
 // Generated using https://bareynol.github.io/mui-theme-creator/
 
-export const darkTheme = createMuiTheme({
+export const darkTheme = createTheme({
     palette: {
         type: 'dark',
         appColor: '#d4af37',

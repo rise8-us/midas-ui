@@ -6,6 +6,7 @@ import * as Pages from './Components/Pages'
 import { PopupManager } from './Components/PopupManager'
 import { WebsocketProvider } from './Components/WebsocketProvider'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
+import { requestFetchAllBlockedAssertions } from './Redux/BlockedAssertions/actions'
 import { requestFetchAllGitlabConfigs } from './Redux/GitlabConfigs/actions'
 import { requestFetchInit } from './Redux/Init/actions'
 import { requestFetchAllPortfolios } from './Redux/Portfolios/actions'
@@ -27,6 +28,7 @@ function App() {
             dispatch(requestFetchAllProducts())
             dispatch(requestFetchAllPortfolios())
             dispatch(requestFetchAllGitlabConfigs())
+            dispatch(requestFetchAllBlockedAssertions())
         }
 
         async function whoami() {

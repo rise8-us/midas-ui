@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import appSettingsReducer from './AppSettings/reducer'
 import assertionReducer from './Assertions/reducer'
 import authReducer from './Auth/reducer'
+import blockedAssertions from './BlockedAssertions/reducer'
 import commentReducer from './Comments/reducer'
 import errorReducer from './Errors/reducer'
 import filterReducer from './Filters/reducer'
@@ -19,6 +20,7 @@ export const rootReducer = combineReducers({
     app: appSettingsReducer,
     assertions: assertionReducer,
     auth: authReducer,
+    blockedAssertions: blockedAssertions,
     comments: commentReducer,
     errors: errorReducer,
     filters: filterReducer,
