@@ -25,7 +25,6 @@ module.exports = {
     },
     'plugins': [
         'react',
-        'jam3',
         'security',
         'xss'
     ],
@@ -37,8 +36,6 @@ module.exports = {
     'rules': {
         'xss/no-location-href-assign': 2,
         'security/detect-object-injection': 0,
-        'jam3/no-sanitizer-with-danger': 2,
-        'jam3/no-sanitizer-window-location': 2,
         'indent': ['warn', 4, {
             'ignoredNodes': ['TemplateLiteral']
         }],
@@ -65,6 +62,7 @@ module.exports = {
             'code': 120,
             'ignoreUrls': true
         }],
+        'no-unused-vars': 'warn',
         'react/no-unknown-property': [1, { }],
         'react/jsx-equals-spacing': [1, 'always'],
         'react/jsx-max-props-per-line': [1, { maximum: 1, when: 'multiline' }],

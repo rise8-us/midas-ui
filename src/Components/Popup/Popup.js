@@ -40,10 +40,7 @@ const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, 
 
     return (
         <Dialog
-            onClose = {onClose}
             data-testid = 'Popup__dialog'
-            disableBackdropClick
-            disableEscapeKeyDown
             open = {open}
             scroll = 'paper'
             PaperProps = {{ style: { width: '395px' } }}

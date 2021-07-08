@@ -33,7 +33,8 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function DashboardCard({ title, options, defaultOptionId, onChange, children }) {
+function DashboardCard(props) {
+    const { title, options, defaultOptionId, onChange, children, ...cardStyle } = props
     const classes = useStyles()
 
     const [selectedId, setSelectedId] = useState(defaultOptionId)
@@ -44,7 +45,7 @@ function DashboardCard({ title, options, defaultOptionId, onChange, children }) 
     }
 
     return (
-        <Card style = {{ margin: '20px', borderRadius: '16px' }}>
+        <Card style = {{ borderRadius: '16px', ...cardStyle }}>
             <CardContent style = {{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant = 'h6' className = {classes.title}>{title}</Typography>
                 {options.map(option => (
@@ -69,14 +70,24 @@ DashboardCard.propTypes = {
         id: PropTypes.number.isRequired
     })),
     onChange: PropTypes.func,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
+    width: PropTypes.string,
+    minWidth: PropTypes.string,
+    maxWidth: PropTypes.string,
+    height: PropTypes.string,
+    maxHeight: PropTypes.string,
 }
 
 DashboardCard.defaultProps = {
     defaultOptionId: null,
     options: [],
     onChange: null,
-    children: null
+    children: null,
+    width: 'initial',
+    minWidth: '600px',
+    maxWidth: 'unset',
+    height: '100%',
+    maxHeight: 'unset',
 }
 
 export default DashboardCard

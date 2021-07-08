@@ -1,6 +1,6 @@
 import React from 'react'
-import { render, screen, useModuleMock, fireEvent } from '../../../Utilities/test-utils'
-import { Dashboard, buildCtfData, buildScopedData, combinePortfolios, combineProducts } from './index'
+import { fireEvent, render, screen, useModuleMock } from '../../../Utilities/test-utils'
+import { buildCtfData, buildScopedData, combinePortfolios, combineProducts, Dashboard } from './index'
 
 describe('<Dashboard>', () => {
 
@@ -28,7 +28,6 @@ describe('<Dashboard>', () => {
 
         expect(screen.getByText('No description available')).toBeInTheDocument()
     })
-
 
     test('should handle undefined selectedPortfolio', () => {
         selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test' }])
@@ -172,16 +171,19 @@ describe('<Dashboard>', () => {
         const expectedResults = [
             {
                 name: 'COT',
-                value: 25,
-                count: 1
+                value: 75,
+                count: 3,
+                total: 4
             }, {
                 name: 'GIT_PIPELINE',
-                value: 25,
-                count: 1
+                value: 50,
+                count: 2,
+                total: 4
             }, {
                 name: 'CTF',
                 value: 25,
-                count: 1
+                count: 1,
+                total: 4
             }
         ]
 

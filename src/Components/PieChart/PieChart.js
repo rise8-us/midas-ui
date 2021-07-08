@@ -5,25 +5,24 @@ import { PieChart as ReactMinimalPieChart } from 'react-minimal-pie-chart'
 function PieChart({ size, data, label, ...PieChartProps }) {
     return (
         <div style = {{ height: size, width: size, minWidth: size, minHeight: size }}>
-            <ReactMinimalPieChart
-                {...PieChartProps}
-                animate
-                startAngle = {270}
-                data = {data}
-                background = '#93939320'
-                segmentsStyle = {(index) => ({
-                    filter: `drop-shadow(0 0 4px ${data[index]?.color}`
-                })}
-            />
             <div style = {{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 position: 'relative',
-                height: '95%',
-                bottom: size,
-            }}>
-                {label}
+                height: '100%',
+            }}>{label}</div>
+            <div style = {{ bottom: size, position: 'relative' }}>
+                <ReactMinimalPieChart
+                    {...PieChartProps}
+                    animate
+                    startAngle = {270}
+                    data = {data}
+                    background = '#93939320'
+                    segmentsStyle = {(index) => ({
+                        filter: `drop-shadow(0 0 4px ${data[index]?.color}`
+                    })}
+                />
             </div>
         </div>
     )
