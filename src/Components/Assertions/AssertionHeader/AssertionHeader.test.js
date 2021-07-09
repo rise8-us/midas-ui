@@ -13,28 +13,7 @@ describe('<AssertionHeader>', () => {
         expect(screen.getByDisplayValue(/detail/)).toBeInTheDocument()
     })
 
-    test('should call onChange & update value', () => {
-        const onChangeMock = jest.fn()
-        render(<AssertionHeader category = 'cat' detail = 'devils' defaultEditable onChange = {onChangeMock}/>)
-
-        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details')
-
-        expect(onChangeMock).toHaveBeenCalled()
-        expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
-    })
-
     test('should edit and restore', () => {
-        render(<AssertionHeader category = 'cat' detail = 'devils' editable/>)
-
-        fireEvent.click(screen.getByTitle('edit'))
-        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details')
-        expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
-
-        fireEvent.click(screen.getByTitle('restore'))
-        expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
-    })
-
-    test('should edit and restore w/out buttons', () => {
         useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
 
         render(<AssertionHeader category = 'cat' detail = 'devils' editable/>)
@@ -43,19 +22,8 @@ describe('<AssertionHeader>', () => {
         expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
     })
 
+
     test('should edit and save', () => {
-        const OnSaveMock = jest.fn()
-        render(<AssertionHeader category = 'cat' detail = 'devils' editable onSave = {OnSaveMock}/>)
-
-        fireEvent.click(screen.getByTitle('edit'))
-        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details')
-        expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
-
-        fireEvent.click(screen.getByTitle('save'))
-        expect(OnSaveMock).toHaveBeenCalled()
-    })
-
-    test('should edit and save w/out buttons', () => {
         const OnSaveMock = jest.fn()
         useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
 
@@ -66,16 +34,8 @@ describe('<AssertionHeader>', () => {
         expect(OnSaveMock).toHaveBeenCalled()
     })
 
-    test('should call onEditClick', () => {
-        const onEditClickMock = jest.fn()
-        render(<AssertionHeader category = 'cat' detail = 'devils' editable onEditClick = {onEditClickMock}/>)
-
-        fireEvent.click(screen.getByTitle('edit'))
-
-        expect(onEditClickMock).toHaveBeenCalledWith(true)
-    })
-
     test('should see status', () => {
+        useDispatchMock().mockReturnValueOnce()
         render(<AssertionHeader category = 'cat' detail = 'devils' status = 'STARTED'/>, {
             initialState: {
                 app: {
@@ -94,6 +54,7 @@ describe('<AssertionHeader>', () => {
     })
 
     test('should show commentCount', () => {
+        useDispatchMock().mockReturnValueOnce()
         render(<AssertionHeader category = 'cat' detail = 'devils' commentCount = {1} id = {1}/>)
 
         expect(screen.getByText('1')).toBeInTheDocument()
@@ -113,6 +74,7 @@ describe('<AssertionHeader>', () => {
     })
 
     test('should cancel delete ogsm', () => {
+        useDispatchMock().mockReturnValueOnce()
         const onDeleteMock = jest.fn()
         render(<AssertionHeader category = 'cat' detail = 'devils' editable onDelete = {onDeleteMock}/>)
 
@@ -123,6 +85,7 @@ describe('<AssertionHeader>', () => {
     })
 
     test('should confirm delete ogsm', () => {
+        useDispatchMock().mockReturnValueOnce()
         const onDeleteMock = jest.fn()
         render(<AssertionHeader category = 'cat' detail = 'devils' editable onDelete = {onDeleteMock}/>)
 
