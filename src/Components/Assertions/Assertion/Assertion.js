@@ -103,7 +103,7 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
                 status: assertionLookup?.status,
                 onSave: id > 1 ? onSaveClick : undefined,
                 onDelete: id > 1 ? onDeleteClick : undefined,
-                onEditClick: setChangeable,
+                onEdit: setChangeable,
                 exitEditOnSave: true
             }}
             outerRootButtonProps = {outerRootButtonProps}
