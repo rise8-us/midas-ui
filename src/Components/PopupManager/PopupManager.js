@@ -2,7 +2,12 @@ import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectOpenPopups } from '../../Redux/Popups/selectors'
 
-const importPopup = componentName => lazy(() => import(`../Popups/${componentName}/${componentName}`))
+const importPopup = componentName => lazy(() => {
+    const cleanComponentName = componentName.replace(/[^a-z0-9]/gi, '')
+
+    // eslint-disable-next-line no-unsanitized/method
+    return import(`../Popups/${cleanComponentName}/${cleanComponentName}`)
+})
 
 function PopupManager() {
     const [popups, setPopups] = useState([])

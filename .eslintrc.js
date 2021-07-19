@@ -8,6 +8,7 @@ module.exports = {
     },
     'extends': [
         'eslint:recommended',
+        'plugin:no-unsanitized/DOM',
         'plugin:react/recommended',
         'plugin:security/recommended',
     ],
@@ -64,6 +65,8 @@ module.exports = {
         }],
         'no-unused-vars': 'warn',
         'react/no-unknown-property': [1, { }],
+        'react/no-danger': 'warn',
+        'react/no-danger-with-children': 'warn',
         'react/jsx-equals-spacing': [1, 'always'],
         'react/jsx-max-props-per-line': [1, { maximum: 1, when: 'multiline' }],
         'react/jsx-uses-react': 'warn',
