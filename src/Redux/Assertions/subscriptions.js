@@ -12,7 +12,7 @@ const subscriptions = ({ stompClient }) => {
 
     subscribe(stompClient, Constants.WS_DELETE_ASSERTION, (msg) => {
         let payload = JSON.parse(msg.body)
-        store.dispatch(requestDeleteAssertion.fulfilled(payload.id))
+        store.dispatch(requestDeleteAssertion.fulfilled(payload))
     })
 
 }
