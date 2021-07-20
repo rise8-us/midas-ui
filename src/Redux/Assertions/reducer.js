@@ -24,7 +24,7 @@ const assertionSlice = createSlice({
         },
         [actions.requestCreateAssertion.fulfilled]: (state, action) => addChildren(state, action.payload),
         [actions.requestUpdateAssertion.fulfilled]: (state, action) => addChildren(state, action.payload),
-        [actions.requestDeleteAssertion.fulfilled]: (state, action) => delete state[action.payload.id]
+        [actions.requestDeleteAssertion.fulfilled]: (state, action) => { delete state[action.payload.id] }
     }
 })
 
