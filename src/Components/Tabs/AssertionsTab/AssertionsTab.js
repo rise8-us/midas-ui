@@ -90,6 +90,7 @@ function AssertionsTab({ productId }) {
                         productId = {productId}
                         defaultEditable = {true}
                         defaultExpanded = {true}
+                        quickSave = {false}
                         outerRootButtonProps = {{
                             label: 'submit ogsm',
                             onClick: submitOGSM
@@ -106,6 +107,7 @@ function AssertionsTab({ productId }) {
                             id = {objective.id}
                             productId = {productId}
                             defaultExpanded
+                            quickSave = {true}
                         />
                     </div>
                 ))}

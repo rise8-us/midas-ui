@@ -1,17 +1,19 @@
-import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useAssertionRoot from '../../../Hooks/useAssertionRoot'
 import useDebounce from '../../../Hooks/useDebounce'
-import { requestDeleteAssertion, requestUpdateAssertion } from '../../../Redux/Assertions/actions'
+import {
+    requestCreateAssertion,
+    requestDeleteAssertion,
+    requestUpdateAssertion
+} from '../../../Redux/Assertions/actions'
 import { selectAssertionById, selectAssertionsByParentId } from '../../../Redux/Assertions/selectors'
 import { modifyAssertion } from '../../../Redux/ModifiedAssertions/reducer'
-import { AddAnotherAssertion } from '../AddAnotherAssertion'
 import { AssertionAccordion } from '../AssertionAccordion'
 
 const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, order,
-    defaultEditable, defaultExpanded, productId, outerRoot, outerRootButtonProps }) => {
+    defaultEditable, defaultExpanded, productId, outerRoot, outerRootButtonProps,
+    assertionType, parentId, quickSave }) => {
 
     const dispatch = useDispatch()
     const subOrder = [...order]
@@ -44,25 +46,39 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
     const [childAssertionsLength, setChildAssertionLength] = useState(childAssertions.length)
     const [kids, setKids] = useState(newAssertion ? [defaultAssertion] : childAssertions)
     const [text, setText] = useState(currentAssertion.text)
-    const [changeable, setChangeable] = useState(false)
 
     const textDebounce = useDebounce(text, 500)
-    const buildTree = useAssertionRoot(currentAssertion.linkKey)
 
     const addKid = () => {
         const newKid = {
             parentId: currentAssertion.id,
             type: child,
             parentIndex: linkKey,
-            status: 'NOT_STARTED'
+            status: 'NOT_STARTED',
+            productId: productId
         }
         const newKidsOnTheBlock = [...kids, { ...newKid }]
         setKids(newKidsOnTheBlock)
     }
 
-    const onSaveClick = () => {
-        setKids(childAssertions)
-        dispatch(requestUpdateAssertion(buildTree)).then(unwrapResult).then(setChangeable(false))
+    const onSaveClick = (value) => {
+        if (currentAssertion.id === undefined) {
+            const newAssertion = {
+                text: value,
+                parentId: parentId,
+                status: 'NOT_STARTED',
+                productId: productId,
+                type: assertionType.toUpperCase(),
+                children: []
+            }
+            dispatch(requestCreateAssertion(newAssertion))
+        } else {
+            const updatedAssertion = {
+                ...currentAssertion,
+                text: value
+            }
+            dispatch(requestUpdateAssertion(updatedAssertion))
+        }
     }
 
     const onDeleteClick = () => {
@@ -101,10 +117,13 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
                 defaultEditable,
                 onChange: setText,
                 status: assertionLookup?.status,
-                onSave: id > 1 ? onSaveClick : undefined,
+                onSave: onSaveClick,
                 onDelete: id > 1 ? onDeleteClick : undefined,
-                onEdit: setChangeable,
-                exitEditOnSave: true
+                exitEditOnSave: true,
+                addChildAssertion: child ? addKid : undefined,
+                addChildAssertionLabel: child ? `add new ${child}` : undefined,
+                expandable: (!newAssertion && childAssertions.length > 0),
+                quickSave: quickSave
             }}
             outerRootButtonProps = {outerRootButtonProps}
             defaultExpanded = {defaultExpanded}
@@ -112,30 +131,28 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
             outerRoot = {outerRoot}
             create = {create}
         >
-            <>
-                {kids.map((kid, key) => {
-                    const creation = create || kid.id === undefined
-                    return (
-                        <Assertion
-                            key = {key}
-                            defaultText = {`Enter new ${child} here...`}
-                            index = {key}
-                            order = {subOrder}
-                            id = {kid.id}
-                            productId = {productId}
-                            parentIndex = {linkKey}
-                            create = {creation}
-                            defaultExpanded = {defaultExpanded}
-                            defaultEditable = {creation}
-                            editable = {!creation}
-                            outerRoot = {false}
-                        />
-                    )
-                })}
-                {child && (changeable || create) &&
-                    <AddAnotherAssertion label = {child} onClick = {addKid} />
-                }
-            </>
+            {kids.map((kid, key) => {
+                const creation = create || kid.id === undefined
+                return (
+                    <Assertion
+                        key = {key}
+                        defaultText = {`Enter new ${child} here...`}
+                        index = {key}
+                        order = {subOrder}
+                        assertionType = {kid.type}
+                        parentId = {kid.parentId}
+                        id = {kid.id}
+                        productId = {productId}
+                        parentIndex = {linkKey}
+                        create = {creation}
+                        defaultExpanded = {defaultExpanded}
+                        defaultEditable = {creation}
+                        editable = {!creation}
+                        outerRoot = {false}
+                        quickSave = {quickSave}
+                    />
+                )
+            })}
         </AssertionAccordion>
     )
 })
@@ -148,6 +165,9 @@ Assertion.propTypes = {
     id: PropTypes.number,
     parentIndex: PropTypes.string,
     create: PropTypes.bool,
+    assertionType: PropTypes.string,
+    parentId: PropTypes.number,
+    quickSave: PropTypes.bool,
     defaultExpanded: PropTypes.bool,
     defaultEditable: PropTypes.bool,
     outerRoot: PropTypes.bool,
@@ -160,6 +180,8 @@ Assertion.propTypes = {
 Assertion.defaultProps = {
     id: null,
     create: false,
+    assertionType: undefined,
+    parentId: undefined,
     parentIndex: null,
     defaultExpanded: false,
     defaultEditable: false,
@@ -169,6 +191,7 @@ Assertion.defaultProps = {
         label: 'add objective',
         onClick: undefined
     },
+    quickSave: true
 }
 
 export default Assertion

@@ -1,7 +1,7 @@
 import { Accordion, AccordionActions, AccordionDetails, Button, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { AddAnotherAssertion, AssertionHeader } from '../'
+import { AssertionHeader } from '../'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function AssertionAccordion({ accordionHeaderProps, addAnotherButtonProps, outerRootButtonProps,
-    canAddOption, children, defaultExpanded, expanded, outerRoot, create }) {
+function AssertionAccordion({ accordionHeaderProps, outerRootButtonProps,
+    children, defaultExpanded, expanded, outerRoot, create }) {
 
     const classes = useStyles()
 
@@ -58,22 +58,17 @@ function AssertionAccordion({ accordionHeaderProps, addAnotherButtonProps, outer
             >
                 {children}
             </AccordionDetails>
-            <AccordionActions
-                style = {{
-                    justifyContent: 'end',
-                    padding: outerRoot ? '16px' : 'initial'
-                }}
-            >
-                {canAddOption && <AddAnotherAssertion {...addAnotherButtonProps}/>}
-            </AccordionActions>
             {create && outerRoot &&
-                <Button
-                    size = 'small'
-                    color = 'primary'
-                    variant = 'outlined'
-                    style = {{ margin: '16px', marginTop: '-8px' }}
-                    onClick = {outerRootButtonProps.onClick}
-                >{outerRootButtonProps.label}</Button>
+                <AccordionActions>
+                    <Button
+                        size = 'small'
+                        color = 'primary'
+                        variant = 'outlined'
+                        onClick = {outerRootButtonProps.onClick}
+                    >
+                        {outerRootButtonProps.label}
+                    </Button>
+                </AccordionActions>
             }
         </Accordion>
     )
@@ -91,9 +86,13 @@ AssertionAccordion.propTypes = {
         onSave: PropTypes.func,
         onDelete: PropTypes.func,
         onClick: PropTypes.func,
-        onEditClick: PropTypes.func,
+        onEdit: PropTypes.func,
         defaultEditable: PropTypes.bool,
-        status: PropTypes.string
+        status: PropTypes.string,
+        addChildAssertion: PropTypes.func,
+        addChildAssertionLabel: PropTypes.string,
+        expandable: PropTypes.bool,
+        quickSave: PropTypes.bool
     }),
     addAnotherButtonProps: PropTypes.shape({
         label: PropTypes.string,
@@ -104,7 +103,6 @@ AssertionAccordion.propTypes = {
         onClick: PropTypes.func
     }),
     expanded: PropTypes.bool,
-    canAddOption: PropTypes.bool,
     defaultExpanded: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     outerRoot: PropTypes.bool,
@@ -122,8 +120,9 @@ AssertionAccordion.defaultProps = {
         onSave: undefined,
         onDelete: undefined,
         onClick: undefined,
-        onEditClick: undefined,
         defaultEditable: false,
+        expandable: true,
+        quickSave: true
     },
     addAnotherButtonProps: {
         label: '',
@@ -133,7 +132,6 @@ AssertionAccordion.defaultProps = {
         label: 'ADD OGSM',
         onClick: undefined
     },
-    canAddOption: false,
     defaultExpanded: false,
     expanded: undefined,
     outerRoot: false,
