@@ -1,17 +1,14 @@
 import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Add } from '@material-ui/icons'
-import { unwrapResult } from '@reduxjs/toolkit'
 import objectHash from 'object-hash'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useAssertionRoot from '../../../Hooks/useAssertionRoot'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
-import { requestCreateAssertion, requestSearchAssertions } from '../../../Redux/Assertions/actions'
+import { requestSearchAssertions } from '../../../Redux/Assertions/actions'
 import { selectAssertionsByTypeAndProductId } from '../../../Redux/Assertions/selectors'
-import { deleteAssertion } from '../../../Redux/ModifiedAssertions/reducer'
-import { Assertion, AssertionComments } from '../../Assertions'
+import { Assertion, AssertionComments, CreateAssertions } from '../../Assertions'
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -53,16 +50,6 @@ function AssertionsTab({ productId }) {
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => objectHash(left) === objectHash(right))
 
-    const buildTree = useAssertionRoot('OBJECTIVE_0')
-
-    const submitOGSM = () => {
-        dispatch(requestCreateAssertion(buildTree)).then(unwrapResult)
-            .then(() => {
-                deleteAssertion('objective_0')
-                setShowCreate(false)
-            })
-    }
-
     useEffect(() => {
         dispatch(requestSearchAssertions(`product.id:${productId}`))
         dispatch(setAssertionComment(null))
@@ -81,21 +68,7 @@ function AssertionsTab({ productId }) {
                     {!showCreate ? 'Add a new OGSM' : 'Cancel OGSM creation'}
                 </Button>
                 { showCreate &&
-                    <Assertion
-                        create
-                        index = {0}
-                        defaultText = 'Enter new objective here...'
-                        order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
-                        outerRoot
-                        productId = {productId}
-                        defaultEditable = {true}
-                        defaultExpanded = {true}
-                        quickSave = {false}
-                        outerRootButtonProps = {{
-                            label: 'submit ogsm',
-                            onClick: submitOGSM
-                        }}
-                    />
+                    <CreateAssertions productId = {productId} setShowCreate = {setShowCreate} />
                 }
                 {objectives.map((objective, index) => (
                     <div style = {{ margin: '16px 0' }} key = { objective.id}>

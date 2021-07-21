@@ -22,15 +22,24 @@ describe('<AssertionHeader>', () => {
         expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
     })
 
-
     test('should edit and save', () => {
         const OnSaveMock = jest.fn()
+        const OnChangeMock = jest.fn()
         useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
 
-        render(<AssertionHeader category = 'cat' detail = 'devils' editable onSave = {OnSaveMock}/>)
+        render(
+            <AssertionHeader
+                category = 'cat'
+                detail = 'devils'
+                editable
+                onSave = {OnSaveMock}
+                onChange = {OnChangeMock}
+            />
+        )
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
 
         expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
+        expect(OnChangeMock).toHaveBeenCalled()
         expect(OnSaveMock).toHaveBeenCalled()
     })
 
@@ -95,6 +104,21 @@ describe('<AssertionHeader>', () => {
         expect(onDeleteMock).toHaveBeenCalled()
     })
 
+    test('should call addChildAssertion', () => {
+        useDispatchMock().mockReturnValueOnce()
+        const onAddChildMock = jest.fn()
+        render(<AssertionHeader
+            category = 'cat'
+            detail = 'devils'
+            editable
+            addChildAssertion = {onAddChildMock}
+            addChildAssertionLabel = 'add me'
+        />)
+
+        fireEvent.click(screen.getByTitle('add me'))
+        expect(onAddChildMock).toHaveBeenCalled()
+    })
+
     test('should update status', () => {
         useDispatchMock().mockResolvedValue({ data: { payload: {} } })
         const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
@@ -127,20 +151,5 @@ describe('<AssertionHeader>', () => {
                 { id: 1, text: 'devils', status: 'COMPLETED', children: [] }
             )
         })
-    })
-
-    test('should call addChildAssertion button', () => {
-        useDispatchMock().mockReturnValueOnce()
-        const onAddChildMock = jest.fn()
-        render(<AssertionHeader
-            category = 'cat'
-            detail = 'devils'
-            editable
-            addChildAssertion = {onAddChildMock}
-            addChildAssertionLabel = 'add me'
-        />)
-
-        fireEvent.click(screen.getByTitle('add me'))
-        expect(onAddChildMock).toHaveBeenCalled()
     })
 })

@@ -52,8 +52,8 @@ const returnDisplay = (setDisplay) => setDisplay ? 'inherit' : 'none'
 
 function AssertionHeader(props) {
     const {
-        id, category, detail, autoFocus, defaultEditable, editable,
-        status, commentCount, addChildAssertionLabel, expandable, quickSave,
+        id, category, detail, defaultEditable, editable, status,
+        commentCount, addChildAssertionLabel, expandable, quickSave,
         ...actions
     } = props
     const { onClick, onSave, onChange, onDelete, addChildAssertion } = actions
@@ -87,6 +87,17 @@ function AssertionHeader(props) {
         setViewingComments(false)
     }
 
+    const onKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            canPerformChange && onChange(value)
+            quickSave && onSave(value)
+            setChangeable(false)
+        } else if (event.key === 'Escape') {
+            onValueChange({ target: { value: detail } })
+            setChangeable(false)
+        }
+    }
+
     const onFocus = (event) => {
         event.stopPropagation()
         event.target.setSelectionRange(0, event.target.value.length)
@@ -111,12 +122,12 @@ function AssertionHeader(props) {
         event.stopPropagation()
     }
 
-    const onDeleteClicked = (event) => {
+    const onDeleteClick = (event) => {
         event.stopPropagation()
         setOpenConfirmation(true)
     }
 
-    const onAddChildAssertionClicked = (event) => {
+    const onAddChildAssertionClick = (event) => {
         event.stopPropagation()
         addChildAssertion()
     }
@@ -128,6 +139,11 @@ function AssertionHeader(props) {
             setViewingComments(true)
             setChangeable(true)
         }
+    }
+
+    const onCommentsClick = (event) => {
+        event.stopPropagation()
+        setViewingComments(!viewingComments)
     }
 
     const handlePopup = () => setOpenConfirmation(prev => !prev)
@@ -142,16 +158,6 @@ function AssertionHeader(props) {
         handlePopup()
 
         typeof onDelete === 'function' && onDelete(event)
-    }
-
-    const handleEnter = (event) => {
-        if (event.key === 'Enter') {
-            onSave(value)
-            setChangeable(false)
-        } else if (event.key === 'Escape') {
-            onValueChange({ target: { value: detail } })
-            setChangeable(false)
-        }
     }
 
     useEffect(() => {
@@ -182,7 +188,7 @@ function AssertionHeader(props) {
             <Box display = 'flex' justifyContent = 'space-between' width = '100%'>
                 <div style = {{ width: '100%' }}>
                     <TextField
-                        autoFocus = {autoFocus}
+                        autoFocus = {id === undefined}
                         fullWidth
                         title = {value}
                         InputProps = {{
@@ -196,7 +202,7 @@ function AssertionHeader(props) {
                             }
                         }}
                         value = {value}
-                        onKeyDown = {quickSave ? handleEnter : undefined}
+                        onKeyDown = {onKeyDown}
                         onChange = {onValueChange}
                         onClick = {onTextClick}
                         onFocus = {onFocus}
@@ -215,7 +221,7 @@ function AssertionHeader(props) {
                             bottom: '13px',
                             zIndex: 1,
                             left: '8px',
-                            display: returnDisplay(changeable && quickSave)
+                            display: returnDisplay(changeable)
                         }}
                     >
                         enter to save • escape to revert
@@ -227,7 +233,7 @@ function AssertionHeader(props) {
                             color = 'secondary'
                             title = {addChildAssertionLabel}
                             size = 'small'
-                            onClick = {onAddChildAssertionClicked}
+                            onClick = {onAddChildAssertionClick}
                         ><Add /></IconButton>
                     }
                     {editable && canPerformDelete &&
@@ -235,7 +241,7 @@ function AssertionHeader(props) {
                             color = 'secondary'
                             title = 'delete'
                             size = 'small'
-                            onClick = {onDeleteClicked}
+                            onClick = {onDeleteClick}
                         ><Delete /></IconButton>
                     }
                     {id &&
@@ -244,7 +250,7 @@ function AssertionHeader(props) {
                             overlap = 'circular'
                             color = 'primary'
                             style = {{ marginRight: '8px' }}
-                            onClick = {() => setViewingComments(prev => !prev)}
+                            onClick = {onCommentsClick}
                         >
                             <IconButton
                                 color = 'secondary'
@@ -282,7 +288,6 @@ AssertionHeader.propTypes = {
     category: PropTypes.string.isRequired,
     detail: PropTypes.string,
     status: PropTypes.string,
-    autoFocus: PropTypes.bool,
     editable: PropTypes.bool,
     onChange: PropTypes.func,
     onSave: PropTypes.func,
@@ -301,7 +306,6 @@ AssertionHeader.defaultProps = {
     commentCount: 0,
     detail: '',
     status: undefined,
-    autoFocus: false,
     editable: false,
     onChange: undefined,
     onSave: undefined,
