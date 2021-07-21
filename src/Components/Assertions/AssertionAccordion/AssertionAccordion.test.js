@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen } from '../../../Utilities/test-utils'
+import { render, screen } from '../../../Utilities/test-utils'
 import { AssertionAccordion } from './index'
 
 describe('<AssertionAccordion>', () => {

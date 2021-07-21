@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
+    fireEvent, render, screen, useModuleMock,
 } from '../../../Utilities/test-utils'
 import { AssertionsTab } from './index'
 
@@ -12,7 +12,6 @@ jest.mock('../../Assertions/AssertionComments/AssertionComments',
 
 describe('<AssertionsTab>', () => {
 
-    const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
     const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
     const requestSearchAssertionsMock = useModuleMock('Redux/Assertions/actions', 'requestSearchAssertions')
     const selectAssertionsByTypeAndProductIdMock =
@@ -53,17 +52,4 @@ describe('<AssertionsTab>', () => {
 
         expect(screen.getByText('AssertionCommentsComponent')).toBeInTheDocument()
     })
-
-    test('should call submitOGSM', async() => {
-        requestCreateAssertionMock.mockReturnValue({ type: '/', payload: {} })
-        useDispatchMock().mockResolvedValue({ data: {} })
-        render(<AssertionsTab productId = {0}/>)
-
-        fireEvent.click(screen.getByText(/add a new ogsm/i))
-        fireEvent.click(screen.getByText(/submit ogsm/i))
-
-        await waitForElementToBeRemoved(() => screen.getByText(/submit ogsm/i))
-        expect(screen.getByText(/add a new ogsm/i)).toBeInTheDocument()
-    })
-
 })

@@ -12,7 +12,7 @@ import { modifyAssertion } from '../../../Redux/ModifiedAssertions/reducer'
 import { AssertionAccordion } from '../AssertionAccordion'
 
 const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, order,
-    defaultEditable, defaultExpanded, productId, outerRoot, outerRootButtonProps,
+    defaultEditable, defaultExpanded, productId, actionButtons,
     assertionType, parentId, quickSave }) => {
 
     const dispatch = useDispatch()
@@ -125,17 +125,16 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
                 expandable: (!newAssertion && childAssertions.length > 0),
                 quickSave: quickSave
             }}
-            outerRootButtonProps = {outerRootButtonProps}
+            actionButtons = {actionButtons}
             defaultExpanded = {defaultExpanded}
             expanded = {child ? undefined : false}
-            outerRoot = {outerRoot}
-            create = {create}
+            rootAssertion = {type === 'OBJECTIVE'}
         >
             {kids.map((kid, key) => {
                 const creation = create || kid.id === undefined
                 return (
                     <Assertion
-                        key = {key}
+                        key = {`${productId}-${kid.id}-${key}`}
                         defaultText = {`Enter new ${child} here...`}
                         index = {key}
                         order = {subOrder}
@@ -148,7 +147,6 @@ const Assertion = React.memo(({ id, create, defaultText, parentIndex, index, ord
                         defaultExpanded = {defaultExpanded}
                         defaultEditable = {creation}
                         editable = {!creation}
-                        outerRoot = {false}
                         quickSave = {quickSave}
                     />
                 )
@@ -170,11 +168,7 @@ Assertion.propTypes = {
     quickSave: PropTypes.bool,
     defaultExpanded: PropTypes.bool,
     defaultEditable: PropTypes.bool,
-    outerRoot: PropTypes.bool,
-    outerRootButtonProps: PropTypes.shape({
-        label: PropTypes.string,
-        onClick: PropTypes.func
-    }),
+    actionButtons: PropTypes.node
 }
 
 Assertion.defaultProps = {
@@ -186,12 +180,8 @@ Assertion.defaultProps = {
     defaultExpanded: false,
     defaultEditable: false,
     defaultText: undefined,
-    outerRoot: true,
-    outerRootButtonProps: {
-        label: 'add objective',
-        onClick: undefined
-    },
-    quickSave: true
+    quickSave: true,
+    actionButtons: undefined
 }
 
 export default Assertion
