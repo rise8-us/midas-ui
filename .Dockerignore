@@ -3,3 +3,5 @@ build
 coverage
 chart
 docs
+.vscode
+npm-packages-offline-cache
