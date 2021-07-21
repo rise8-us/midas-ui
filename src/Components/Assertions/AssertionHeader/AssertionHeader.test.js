@@ -128,4 +128,19 @@ describe('<AssertionHeader>', () => {
             )
         })
     })
+
+    test('should call addChildAssertion button', () => {
+        useDispatchMock().mockReturnValueOnce()
+        const onAddChildMock = jest.fn()
+        render(<AssertionHeader
+            category = 'cat'
+            detail = 'devils'
+            editable
+            addChildAssertion = {onAddChildMock}
+            addChildAssertionLabel = 'add me'
+        />)
+
+        fireEvent.click(screen.getByTitle('add me'))
+        expect(onAddChildMock).toHaveBeenCalled()
+    })
 })

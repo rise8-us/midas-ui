@@ -1,6 +1,6 @@
 import { Badge, Box, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
-import { Chat, Delete, ExpandMore } from '@material-ui/icons'
+import { Add, Chat, Delete, ExpandMore } from '@material-ui/icons'
 import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
@@ -51,8 +51,12 @@ const expandIcon = (cat) => {
 const returnDisplay = (setDisplay) => setDisplay ? 'inherit' : 'none'
 
 function AssertionHeader(props) {
-    const { id, category, detail, autoFocus, defaultEditable, editable, status, commentCount, ...actions } = props
-    const { onClick, onSave, onChange, onDelete, onEdit } = actions
+    const {
+        id, category, detail, autoFocus, defaultEditable, editable,
+        status, commentCount, addChildAssertionLabel, expandable, quickSave,
+        ...actions
+    } = props
+    const { onClick, onSave, onChange, onDelete, addChildAssertion } = actions
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -78,7 +82,7 @@ function AssertionHeader(props) {
     const onSaveClicked = (event) => {
         event.stopPropagation()
         canPerformChange && onChange(value)
-        onSave(event)
+        quickSave && onSave(value)
         setChangeable(false)
         setViewingComments(false)
     }
@@ -112,11 +116,15 @@ function AssertionHeader(props) {
         setOpenConfirmation(true)
     }
 
+    const onAddChildAssertionClicked = (event) => {
+        event.stopPropagation()
+        addChildAssertion()
+    }
+
     const onTextClick = (event) => {
         event.stopPropagation()
 
         if (!changeable) {
-            typeof onEdit === 'function' && onEdit(true)
             setViewingComments(true)
             setChangeable(true)
         }
@@ -143,7 +151,6 @@ function AssertionHeader(props) {
         } else if (event.key === 'Escape') {
             onValueChange({ target: { value: detail } })
             setChangeable(false)
-            typeof onEdit === 'function' && onEdit(false)
         }
     }
 
@@ -158,7 +165,7 @@ function AssertionHeader(props) {
 
     return (
         <AccordionSummary
-            expandIcon = {expandIcon(category)}
+            expandIcon = {expandable ? expandIcon(category) : <></>}
             classes = {{
                 root: classes.summaryRoot
             }}
@@ -189,7 +196,7 @@ function AssertionHeader(props) {
                             }
                         }}
                         value = {value}
-                        onKeyDown = {handleEnter}
+                        onKeyDown = {quickSave ? handleEnter : undefined}
                         onChange = {onValueChange}
                         onClick = {onTextClick}
                         onFocus = {onFocus}
@@ -208,13 +215,21 @@ function AssertionHeader(props) {
                             bottom: '13px',
                             zIndex: 1,
                             left: '8px',
-                            display: returnDisplay(changeable)
+                            display: returnDisplay(changeable && quickSave)
                         }}
                     >
                         enter to save • escape to revert
                     </Typography>
                 </div>
                 <Box display = 'flex' flexDirection = 'row'>
+                    { addChildAssertion &&
+                        <IconButton
+                            color = 'secondary'
+                            title = {addChildAssertionLabel}
+                            size = 'small'
+                            onClick = {onAddChildAssertionClicked}
+                        ><Add /></IconButton>
+                    }
                     {editable && canPerformDelete &&
                         <IconButton
                             color = 'secondary'
@@ -273,9 +288,12 @@ AssertionHeader.propTypes = {
     onSave: PropTypes.func,
     onDelete: PropTypes.func,
     onClick: PropTypes.func,
-    onEdit: PropTypes.func,
     defaultEditable: PropTypes.bool,
-    exitEditOnSave: PropTypes.bool
+    exitEditOnSave: PropTypes.bool,
+    addChildAssertion: PropTypes.func,
+    addChildAssertionLabel: PropTypes.string,
+    expandable: PropTypes.bool,
+    quickSave: PropTypes.bool
 }
 
 AssertionHeader.defaultProps = {
@@ -289,9 +307,12 @@ AssertionHeader.defaultProps = {
     onSave: undefined,
     onClick: undefined,
     onDelete: undefined,
-    onEdit: undefined,
     defaultEditable: false,
-    exitEditOnSave: false
+    exitEditOnSave: false,
+    addChildAssertion: undefined,
+    addChildAssertionLabel: undefined,
+    expandable: true,
+    quickSave: true
 }
 
 export default AssertionHeader
