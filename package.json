@@ -12,6 +12,8 @@
     "test:summary": "react-scripts test --coverage --coverageReporters=\"text-summary\"",
     "test:lite": "react-scripts test --bail",
     "test:unit": "react-scripts test --coverage --watchAll=false --runInBand",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "lint": "eslint src/.",
     "lint:fix": "eslint src/. --fix",
     "eject": "react-scripts eject",
@@ -67,10 +69,13 @@
     "glob-parent": "^5.1.2"
   },
   "devDependencies": {
+    "@cypress/react": "^5.9.2",
+    "@cypress/webpack-dev-server": "^1.4.0",
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.0",
+    "cypress": "^8.0.0",
     "eslint": "^7.27.0",
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-no-unsanitized": "^3.1.5",

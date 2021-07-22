@@ -16,7 +16,7 @@ The information below covers both the UI and API.
 
 ## Emergency procedures
 
-> N/A. YOLO
+> N/A.
 
 ## Backup/restore, logging, and auditing features
 
