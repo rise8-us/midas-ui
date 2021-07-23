@@ -1,12 +1,27 @@
+-- Adminer 4.8.1 MySQL 8.0.21 dump
+
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
 DROP DATABASE IF EXISTS `appDB`;
 CREATE DATABASE `appDB` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `appDB`;
+
+DELIMITER ;;
+
+CREATE FUNCTION `nextID`() RETURNS bigint
+BEGIN
+  DECLARE response BIGINT(20);
+  SET response = (SELECT `next_val` FROM `hibernate_sequence` LIMIT 1);
+  UPDATE `hibernate_sequence` SET `next_val` = `next_val` + 1;
+  RETURN (response);
+END;;
+
+DELIMITER ;
 
 DROP TABLE IF EXISTS `announcement`;
 CREATE TABLE `announcement` (
@@ -221,3 +236,6 @@ CREATE TABLE `user_team` (
   `user_id` bigint NOT NULL,
   `team_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- 2021-07-23 15:35:40

@@ -78,6 +78,7 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
 #### Local setup
 
 0. Midas API is running locally
+0. Midas UI is running locally
 0. mysql is installed
     -  The spec files reset and set the database to specific states to test specific workflows; this is accomplished with the mysql cli. If you have homebrew installed, run `brew install mysql`
 

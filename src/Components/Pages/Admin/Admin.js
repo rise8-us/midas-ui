@@ -26,11 +26,11 @@ function Admin() {
                     }}
                 >
                     <Tabs value = {value} onChange = {handleChange} style = {{ margin: 'auto' }}>
-                        <Tab label = 'users' value = 'users' disableRipple/>
-                        <Tab label = 'projects' value = 'projects' disableRipple/>
-                        <Tab label = 'products' value = 'products' disableRipple/>
-                        <Tab label = 'portfolios' value = 'portfolios' disableRipple/>
-                        <Tab label = 'configs' value = 'configs' disableRipple/>
+                        <Tab label = 'users' value = 'users' disableRipple data-testid = 'Admin__users'/>
+                        <Tab label = 'projects' value = 'projects' disableRipple data-testid = 'Admin__projects'/>
+                        <Tab label = 'products' value = 'products' disableRipple data-testid = 'Admin__products'/>
+                        <Tab label = 'portfolios' value = 'portfolios' disableRipple data-testid = 'Admin__portfolios'/>
+                        <Tab label = 'configs' value = 'configs' disableRipple data-testid = 'Admin__gitConfigs'/>
                     </Tabs>
                 </AppBar>
                 { value === 'users' &&
