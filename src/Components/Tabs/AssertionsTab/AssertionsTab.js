@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import objectHash from 'object-hash'
 import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestSearchAssertions } from '../../../Redux/Assertions/actions'
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function AssertionsTab({ productId }) {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const bottomOfAssertionsRef = useRef(null)
 
     const showComments = useSelector(state => state.app.assertionCommentsOpen)
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
@@ -47,7 +48,7 @@ function AssertionsTab({ productId }) {
     return (
         <div className = {classes.root}>
             <div style = {{ width: showComments ? 'calc(100% - 350px)' : '100%' }} className = {classes.assertion}>
-                <CreateAssertionsButton productId = {productId} />
+                <CreateAssertionsButton productId = {productId} endAssertionsRef = { bottomOfAssertionsRef } />
                 {objectives.map((objective, index) => (
                     <div style = {{ margin: '16px 0' }} key = { objective.id}>
                         <Assertion
@@ -59,6 +60,7 @@ function AssertionsTab({ productId }) {
                         />
                     </div>
                 ))}
+                <div ref = {bottomOfAssertionsRef}></div>
             </div>
             { showComments &&
                 <div className = {classes.comments} style = {{ width: '350px' }}>

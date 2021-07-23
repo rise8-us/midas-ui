@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
         padding: '68px 0 20px 0',
         overflowY: 'auto',
         height: '100%',
+        scrollBehavior: 'smooth'
     }
 }))
 

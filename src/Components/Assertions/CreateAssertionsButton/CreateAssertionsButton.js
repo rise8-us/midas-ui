@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function CreateAssertionsButton({ productId }) {
+function CreateAssertionsButton({ productId, endAssertionsRef }) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
@@ -59,6 +59,7 @@ function CreateAssertionsButton({ productId }) {
 
         setAdded(true)
         dispatch(requestCreateAssertion(blankObjective)).then(unwrapResult).then(() => {
+            endAssertionsRef && endAssertionsRef.current.scrollIntoView()
             setAdded(false)
         })
     }
@@ -72,13 +73,21 @@ function CreateAssertionsButton({ productId }) {
             disabled = {added}
             onClick = {handleAddNewOGSM}
         >
-            {added ? <>Adding new ogsm <CircularProgress size = {'0.8125rem'} /></> : 'Add a new OGSM' }
+            { added
+                ? <>Adding new ogsm <CircularProgress size = {'0.8125rem'} style = {{ marginLeft: 5 }}/></>
+                : 'Add a new OGSM'
+            }
         </Button>
     )
 }
 
 CreateAssertionsButton.propTypes = {
-    productId: PropTypes.number.isRequired
+    productId: PropTypes.number.isRequired,
+    endAssertionsRef: PropTypes.object
+}
+
+CreateAssertionsButton.defaultProps = {
+    endAssertionsRef: undefined
 }
 
 export default CreateAssertionsButton
