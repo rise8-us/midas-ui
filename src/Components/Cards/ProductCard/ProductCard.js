@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
             cursor: 'pointer'
         },
-        height: 40
+        height: 40,
+        width: 'fit-content'
     }
 }))
 
