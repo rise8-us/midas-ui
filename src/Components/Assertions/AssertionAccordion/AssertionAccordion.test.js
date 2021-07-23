@@ -2,19 +2,21 @@ import React from 'react'
 import { render, screen } from '../../../Utilities/test-utils'
 import { AssertionAccordion } from './index'
 
-describe('<AssertionAccordion>', () => {
+jest.mock('../../Assertions/AssertionHeader/AssertionHeader',
+    () => function testing() { return (<div>AssertionHeaderComponent</div>) })
 
+
+describe('<AssertionAccordion>', () => {
     test('should render', () => {
         render(
             <AssertionAccordion
-                accordionHeaderProps = {{ category: 'cat', detail: 'dog' }}
+                category = 'cat'
             >
                 <div>Hello Valheim</div>
             </AssertionAccordion>
         )
 
-        expect(screen.getByText(/cat:/)).toBeInTheDocument()
-        expect(screen.getByDisplayValue(/dog/)).toBeInTheDocument()
+        expect(screen.getByText('AssertionHeaderComponent')).toBeInTheDocument()
         expect(screen.queryByText(/Hello Valheim/)).not.toBeInTheDocument()
     })
 })

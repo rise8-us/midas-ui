@@ -1,23 +1,14 @@
-import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Add } from '@material-ui/icons'
 import objectHash from 'object-hash'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestSearchAssertions } from '../../../Redux/Assertions/actions'
 import { selectAssertionsByTypeAndProductId } from '../../../Redux/Assertions/selectors'
-import { Assertion, AssertionComments, CreateAssertions } from '../../Assertions'
+import { Assertion, AssertionComments, CreateAssertionsButton } from '../../Assertions'
 
 const useStyles = makeStyles((theme) => ({
-    button: {
-        '&:hover': {
-            color: theme.palette.primary.main
-        },
-        height: 40,
-        marginBottom: theme.spacing(2)
-    },
     root: {
         marginTop: theme.spacing(2),
         width: '100%',
@@ -44,8 +35,6 @@ function AssertionsTab({ productId }) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const [showCreate, setShowCreate] = useState(false)
-
     const showComments = useSelector(state => state.app.assertionCommentsOpen)
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => objectHash(left) === objectHash(right))
@@ -58,29 +47,15 @@ function AssertionsTab({ productId }) {
     return (
         <div className = {classes.root}>
             <div style = {{ width: showComments ? 'calc(100% - 350px)' : '100%' }} className = {classes.assertion}>
-                <Button
-                    className = {classes.button}
-                    variant = 'outlined'
-                    startIcon = {<Add/>}
-                    color = {!showCreate ? 'primary' : 'secondary'}
-                    onClick = {() => setShowCreate(!showCreate)}
-                >
-                    {!showCreate ? 'Add a new OGSM' : 'Cancel OGSM creation'}
-                </Button>
-                { showCreate &&
-                    <CreateAssertions productId = {productId} setShowCreate = {setShowCreate} />
-                }
+                <CreateAssertionsButton productId = {productId} />
                 {objectives.map((objective, index) => (
                     <div style = {{ margin: '16px 0' }} key = { objective.id}>
                         <Assertion
                             index = {index + 1}
-                            defaultText = 'Enter new objective here...'
                             order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
-                            outerRoot
                             id = {objective.id}
                             productId = {productId}
                             defaultExpanded
-                            quickSave = {true}
                         />
                     </div>
                 ))}
