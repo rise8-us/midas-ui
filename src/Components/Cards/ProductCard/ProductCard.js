@@ -60,6 +60,7 @@ function ProductCard({ id }) {
                     color: 'textPrimary',
                     onClick: goToProductsPage,
                     className: classes.link,
+                    'data-testid': 'ProductCard__header-title'
                 }}
                 subheader = {product.description}
                 action = {

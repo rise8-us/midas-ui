@@ -1,15 +1,15 @@
-describe('Archive/Unarchive project', () => {
+describe('Archive/Unarchive product', () => {
 
     before(() => {
         cy.initDB()
         cy.addLocalUserAsAdmin()
-        cy.loadSqlFiles(['e2e/Projects/insert-project-alpha.sql'])
+        cy.loadSqlFiles(['e2e/Products/insert-product-alpha.sql'])
         
         cy.visit('localhost:3000/admin')
-        cy.get('[data-testid=Admin__projects]').click()
+        cy.get('[data-testid=Admin__products]').click()
     })
 
-    it('should archive project', () => {
+    it('should archive product', () => {
         cy.get('[title="edit"]').should('exist')
 
         cy.get('[title="archive"]').click()
@@ -17,7 +17,7 @@ describe('Archive/Unarchive project', () => {
         cy.get('[title="edit"]').should('not.exist')
     })
 
-    it('should unarchive project', () => {
+    it('should unarchive product', () => {
         cy.get('[title="edit"]').should('not.exist')
 
         cy.get('[title="unarchive"]').click()
