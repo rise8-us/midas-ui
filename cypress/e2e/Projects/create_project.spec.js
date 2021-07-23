@@ -1,7 +1,7 @@
 describe('Creates a project', () => {
     
     before(() => {
-        cy.clearDB()
+        cy.initDB()
         cy.addLocalUserAsAdmin()
         cy.visit('localhost:3000/projects')
     })

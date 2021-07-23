@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import useSonarqubeRatings from '../../../Hooks/useSonarqubeRatings'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
@@ -23,7 +24,8 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
             cursor: 'pointer'
         },
-        height: 40
+        height: 40,
+        width: 'fit-content'
     }
 }))
 
@@ -31,6 +33,7 @@ function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
     const classes = useStyles()
+    const history = useHistory()
 
     const sonarqube = useSonarqubeRatings()
 
@@ -53,11 +56,19 @@ function ProjectCard({ id }) {
         dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id }))
     }
 
+    const goToProductsPage = () => history.push(`/products/${project.productId}`)
+
     return (
         <Card className = {classes.card}>
             <CardHeader
                 title = {project.name}
-                titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
+                titleTypographyProps = {{
+                    variant: 'h5',
+                    color: 'textPrimary',
+                    onClick: project.productId !== null ? goToProductsPage : undefined,
+                    className: project.productId !== null ? classes.link : 'card',
+                    'data-testid': 'ProjectCard__header-title'
+                }}
                 action = {
                     <IconButton
                         onClick = {updateProjectPopup}

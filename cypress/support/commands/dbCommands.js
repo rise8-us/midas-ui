@@ -4,8 +4,9 @@ Cypress.Commands.add('db', (script) => {
     cy.exec(`cypress/run-sql-script.sh ${script}`)
 })
 
-Cypress.Commands.add('clearDB', () => {
+Cypress.Commands.add('initDB', () => {
     cy.db('support/sql/schema.sql')
+    cy.db('support/sql/initialize.sql')
 })
 
 Cypress.Commands.add('addLocalUserAsAdmin', () => {
