@@ -1,6 +1,5 @@
 import { Badge, Box, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
-import { Add, Chat, Delete, ExpandMore } from '@material-ui/icons'
+import { Chat, Delete, KeyboardReturn } from '@material-ui/icons'
 import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
@@ -30,47 +29,24 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto 0',
         marginRight: 'auto',
         paddingLeft: 6
-    },
-    summaryRoot: {
-        minHeight: 48,
-        height: 48,
-        width: '100%',
-        '&.Mui-expanded': {
-            height: 48,
-            minHeight: 48
-        }
     }
 }))
 
-const expandIcon = (cat) => {
-    return (
-        <ExpandMore data-testid = {`AssertionHeader__icon-expand-${cat}`}/>
-    )
-}
-
-const returnDisplay = (setDisplay) => setDisplay ? 'inherit' : 'none'
-
 function AssertionHeader(props) {
     const {
-        id, category, detail, defaultEditable, editable, status,
-        commentCount, addChildAssertionLabel, expandable, quickSave,
-        ...actions
+        id, category, title, status, commentCount, addChildAssertionLabel,
+        onSave, onDelete, addChildAssertion
     } = props
-    const { onClick, onSave, onChange, onDelete, addChildAssertion } = actions
 
     const classes = useStyles()
     const dispatch = useDispatch()
 
     const statuses = useAssertionStatuses()
 
-    const canEdit = typeof onChange === 'function' && defaultEditable
-    const canPerformChange = typeof onChange === 'function'
-    const canPerformDelete = typeof onDelete === 'function'
-
     const defaultTag = statuses.filter(t => t.name === status)[0]
 
-    const [value, setValue] = useState(detail)
-    const [changeable, setChangeable] = useState(canEdit)
+    const [value, setValue] = useState(title)
+    const [changeable, setChangeable] = useState(false)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [viewingComments, setViewingComments] = useState(false)
 
@@ -79,28 +55,34 @@ function AssertionHeader(props) {
         setValue(val)
     }
 
-    const onSaveClicked = (event) => {
-        event.stopPropagation()
-        canPerformChange && onChange(value)
-        quickSave && onSave(value)
+    const saveChanges = () => {
+        onSave(value)
         setChangeable(false)
-        setViewingComments(false)
+    }
+
+    const onTitleBlur = (event) => {
+        event.stopPropagation()
+        saveChanges()
     }
 
     const onKeyDown = (event) => {
         if (event.key === 'Enter') {
-            canPerformChange && onChange(value)
-            quickSave && onSave(value)
-            setChangeable(false)
+            saveChanges()
         } else if (event.key === 'Escape') {
-            onValueChange({ target: { value: detail } })
+            onValueChange({ target: { value: title } })
             setChangeable(false)
         }
     }
 
-    const onFocus = (event) => {
+    const onTitleFocus = (event) => {
         event.stopPropagation()
         event.target.setSelectionRange(0, event.target.value.length)
+    }
+
+    const onTitleClick = (event) => {
+        event.stopPropagation()
+        setViewingComments(true)
+        setChangeable(true)
     }
 
     const onStatusChange = (val) => {
@@ -132,15 +114,6 @@ function AssertionHeader(props) {
         addChildAssertion()
     }
 
-    const onTextClick = (event) => {
-        event.stopPropagation()
-
-        if (!changeable) {
-            setViewingComments(true)
-            setChangeable(true)
-        }
-    }
-
     const onCommentsClick = (event) => {
         event.stopPropagation()
         setViewingComments(!viewingComments)
@@ -156,8 +129,7 @@ function AssertionHeader(props) {
     const handlePopupConfirm = (event) => {
         event.stopPropagation()
         handlePopup()
-
-        typeof onDelete === 'function' && onDelete(event)
+        onDelete(event)
     }
 
     useEffect(() => {
@@ -170,25 +142,13 @@ function AssertionHeader(props) {
     }, [viewingComments])
 
     return (
-        <AccordionSummary
-            expandIcon = {expandable ? expandIcon(category) : <></>}
-            classes = {{
-                root: classes.summaryRoot
-            }}
-            IconButtonProps = {{
-                style: {
-                    padding: '8px'
-                }
-            }}
-            onClick = {onClick}
-        >
+        <>
             <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary'>
                 {category}:
             </Typography>
-            <Box display = 'flex' justifyContent = 'space-between' width = '100%'>
+            <Box display = 'flex' width = '100%'>
                 <div style = {{ width: '100%' }}>
                     <TextField
-                        autoFocus = {id === undefined}
                         fullWidth
                         title = {value}
                         InputProps = {{
@@ -204,14 +164,14 @@ function AssertionHeader(props) {
                         value = {value}
                         onKeyDown = {onKeyDown}
                         onChange = {onValueChange}
-                        onClick = {onTextClick}
-                        onFocus = {onFocus}
-                        onBlur = {onSaveClicked}
+                        onFocus = {onTitleFocus}
+                        onBlur = {onTitleBlur}
+                        onClick = {onTitleClick}
                         style = {{
                             height: '100%'
                         }}
                     >
-                        {detail}
+                        {title}
                     </TextField>
                     <Typography
                         variant = 'caption'
@@ -221,7 +181,7 @@ function AssertionHeader(props) {
                             bottom: '13px',
                             zIndex: 1,
                             left: '8px',
-                            display: returnDisplay(changeable)
+                            display: (changeable) ? 'inherit' : 'none'
                         }}
                     >
                         enter to save • escape to revert
@@ -234,33 +194,29 @@ function AssertionHeader(props) {
                             title = {addChildAssertionLabel}
                             size = 'small'
                             onClick = {onAddChildAssertionClick}
-                        ><Add /></IconButton>
+                        ><KeyboardReturn /></IconButton>
                     }
-                    {editable && canPerformDelete &&
+                    <IconButton
+                        color = 'secondary'
+                        title = 'delete'
+                        size = 'small'
+                        onClick = {onDeleteClick}
+                    ><Delete /></IconButton>
+                    <Badge
+                        badgeContent = {commentCount}
+                        overlap = 'circular'
+                        color = 'primary'
+                        style = {{ marginRight: '8px' }}
+                        onClick = {onCommentsClick}
+                    >
                         <IconButton
                             color = 'secondary'
-                            title = 'delete'
+                            title = 'comment'
                             size = 'small'
-                            onClick = {onDeleteClick}
-                        ><Delete /></IconButton>
-                    }
-                    {id &&
-                        <Badge
-                            badgeContent = {commentCount}
-                            overlap = 'circular'
-                            color = 'primary'
-                            style = {{ marginRight: '8px' }}
-                            onClick = {onCommentsClick}
                         >
-                            <IconButton
-                                color = 'secondary'
-                                title = 'comment'
-                                size = 'small'
-                            >
-                                <Chat />
-                            </IconButton>
-                        </Badge>
-                    }
+                            <Chat />
+                        </IconButton>
+                    </Badge>
                     {defaultTag &&
                         <AssertionStatusDropdown
                             onClick = {onStatusClick}
@@ -278,45 +234,28 @@ function AssertionHeader(props) {
                     detail = {`You are about to delete '${category}: ${value}'`}
                 />
             }
-        </AccordionSummary>
+        </>
     )
 }
 
 AssertionHeader.propTypes = {
-    id: PropTypes.number,
+    id: PropTypes.number.isRequired,
     commentCount: PropTypes.number,
     category: PropTypes.string.isRequired,
-    detail: PropTypes.string,
+    title: PropTypes.string,
     status: PropTypes.string,
-    editable: PropTypes.bool,
-    onChange: PropTypes.func,
-    onSave: PropTypes.func,
-    onDelete: PropTypes.func,
-    onClick: PropTypes.func,
-    defaultEditable: PropTypes.bool,
-    exitEditOnSave: PropTypes.bool,
+    onSave: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     addChildAssertion: PropTypes.func,
     addChildAssertionLabel: PropTypes.string,
-    expandable: PropTypes.bool,
-    quickSave: PropTypes.bool
 }
 
 AssertionHeader.defaultProps = {
-    id: undefined,
     commentCount: 0,
-    detail: '',
+    title: '',
     status: undefined,
-    editable: false,
-    onChange: undefined,
-    onSave: undefined,
-    onClick: undefined,
-    onDelete: undefined,
-    defaultEditable: false,
-    exitEditOnSave: false,
     addChildAssertion: undefined,
     addChildAssertionLabel: undefined,
-    expandable: true,
-    quickSave: true
 }
 
 export default AssertionHeader

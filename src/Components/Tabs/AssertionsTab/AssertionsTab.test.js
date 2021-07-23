@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useModuleMock,
+    render, screen, useModuleMock,
 } from '../../../Utilities/test-utils'
 import { AssertionsTab } from './index'
 
@@ -9,6 +9,9 @@ jest.mock('../../Assertions/AssertionHeader/AssertionHeader',
 
 jest.mock('../../Assertions/AssertionComments/AssertionComments',
     () => function testing() { return (<div>AssertionCommentsComponent</div>) })
+
+jest.mock('../../Assertions/CreateAssertionsButton/CreateAssertionsButton',
+    () => function testing() { return (<div>CreateAssertionsButtonComponent</div>) })
 
 describe('<AssertionsTab>', () => {
 
@@ -29,16 +32,14 @@ describe('<AssertionsTab>', () => {
     test('should render OGSM', () => {
         render(<AssertionsTab productId = {0}/>)
 
-        expect(screen.getAllByText('AssertionHeader')).toHaveLength(4)
+        expect(screen.getAllByText('AssertionHeader')).toHaveLength(1)
         expect(setAssertionCommentMock).toHaveBeenCalledWith(null)
     })
 
-    test('should show create', () => {
+    test('should render create assertions button component', () => {
         render(<AssertionsTab productId = {0}/>)
 
-        fireEvent.click(screen.getByText(/add a new ogsm/i))
-
-        expect(screen.getAllByText('AssertionHeader')).toHaveLength(8)
+        expect(screen.getAllByText('CreateAssertionsButtonComponent')).toHaveLength(1)
     })
 
     test('should show comments', () => {

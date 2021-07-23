@@ -1,4 +1,5 @@
-import { Accordion, AccordionActions, AccordionDetails, makeStyles } from '@material-ui/core'
+import { Accordion, AccordionDetails, AccordionSummary, makeStyles } from '@material-ui/core'
+import { ExpandMore } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { AssertionHeader } from '../'
@@ -20,86 +21,87 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         padding: theme.spacing(1)
+    },
+    accordionSummaryRoot: {
+        minHeight: 48,
+        height: 48,
+        width: '100%',
+        '&.Mui-expanded': {
+            height: 48,
+            minHeight: 48
+        }
     }
 }))
 
-function AssertionAccordion({ accordionHeaderProps, actionButtons,
-    children, defaultExpanded, expanded, rootAssertion }) {
-
+function AssertionAccordion({
+    assertionHeaderProps, children, category, expandable, defaultExpanded, expanded, rootAssertion
+}) {
     const classes = useStyles()
 
-    const accordionProps = {
-        className: classes.root,
-        defaultExpanded,
-        expanded: expanded,
-        classes: {
-            root: classes.accordionRoot
-        },
-        TransitionProps: {
-            unmountOnExit: true
-        }
-    }
-
     return (
-        <Accordion {...accordionProps}>
-            <AssertionHeader {...accordionHeaderProps}/>
+        <Accordion
+            className = { classes.root }
+            defaultExpanded = { defaultExpanded }
+            expanded = { expanded }
+            classes = {{ root: classes.accordionRoot }}
+            TransitionProps = {{ unmountOnExit: true }}
+        >
+            <AccordionSummary
+                expandIcon = {
+                    expandable
+                        ? <ExpandMore data-testid = {`AssertionHeader__icon-expand-${category}`}/>
+                        : <></>
+                }
+                classes = {{ root: classes.accordionSummaryRoot }}
+                IconButtonProps = {{
+                    style: {
+                        padding: '8px'
+                    }
+                }}
+            >
+                <AssertionHeader {... { ...assertionHeaderProps, category } }/>
+            </AccordionSummary>
             <AccordionDetails
                 className = {classes.accordionDetails}
                 style = {(rootAssertion) ? { marginBottom: 16 } : undefined}
             >
                 {children}
             </AccordionDetails>
-            {actionButtons &&
-                <AccordionActions>
-                    {actionButtons}
-                </AccordionActions>
-            }
         </Accordion>
     )
 }
 
 AssertionAccordion.propTypes = {
-    accordionHeaderProps: PropTypes.shape({
+    assertionHeaderProps: PropTypes.shape({
         id: PropTypes.number,
         commentCount: PropTypes.number,
-        category: PropTypes.string,
-        detail: PropTypes.string,
-        editable: PropTypes.bool,
-        onChange: PropTypes.func,
+        title: PropTypes.string,
         onSave: PropTypes.func,
         onDelete: PropTypes.func,
-        onClick: PropTypes.func,
-        defaultEditable: PropTypes.bool,
         status: PropTypes.string,
         addChildAssertion: PropTypes.func,
         addChildAssertionLabel: PropTypes.string,
-        expandable: PropTypes.bool,
-        quickSave: PropTypes.bool,
     }),
+    category: PropTypes.string.isRequired,
+    expandable: PropTypes.bool,
     expanded: PropTypes.bool,
     defaultExpanded: PropTypes.bool,
-    actionButtons: PropTypes.node,
     rootAssertion: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
 }
 
 AssertionAccordion.defaultProps = {
-    accordionHeaderProps: {
+    assertionHeaderProps: {
         id: undefined,
         commentCount: 0,
-        detail: '',
-        editable: false,
-        onChange: undefined,
+        title: '',
         onSave: undefined,
         onDelete: undefined,
-        onClick: undefined,
-        defaultEditable: false,
         expandable: true,
-        quickSave: true
     },
-    defaultExpanded: false,
+    expandable: true,
     expanded: undefined,
-    actionButtons: undefined,
+    defaultExpanded: false,
     rootAssertion: false,
     children: undefined
 }
