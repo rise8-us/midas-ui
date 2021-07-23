@@ -18,7 +18,7 @@
     "lint:fix": "eslint src/. --fix",
     "eject": "react-scripts eject",
     "test:e2e": "npx cypress run",
-    "test:e2e-ci": "npx cypress run --env configFile=pipeline pluginsFile=false --config integrationFolder=cypress/integration"
+    "test:e2e-ci": "npx cypress run --env configFile=pipeline --config integrationFolder=cypress/integration,pluginsFile=false"
   },
   "eslintConfig": {
     "extends": [
