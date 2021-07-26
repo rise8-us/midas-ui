@@ -109,6 +109,8 @@ function CreateOrUpdatePortfolioPopup({ id }) {
                     options = {availableProducts}
                     getOptionLabel = {(option) => option.name}
                     getOptionSelected = {(option, value) => option.id === value.id}
+                    groupBy = {(option) => option.firstLetter}
+                    data-testid = 'CreateOrUpdatePortfolioPopup__select-products'
                     onChange = {onSelectProducts}
                     value = {products}
                     ChipProps = {{ variant: 'outlined' }}

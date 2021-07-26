@@ -45,7 +45,11 @@ function PortfolioCard({ id }) {
             <CardHeader
                 title = {portfolio.name}
                 subheader = {portfolio.description}
-                titleTypographyProps = {{ variant: 'h5', style: { padding: '5px' } }}
+                titleTypographyProps = {{
+                    variant: 'h5',
+                    color: 'textPrimary',
+                    'data-testid': 'PortfolioCard__header-title'
+                }}
                 action = {
                     <IconButton
                         onClick = {updatePortfolioPopup}
@@ -81,6 +85,7 @@ function PortfolioCard({ id }) {
                             <Typography
                                 className = {classes.link}
                                 onClick = {() => history.push(`/products/${product.id}`)}
+                                data-testid = 'PortfolioCard__text-productName'
                             >
                                 {product.name}
                             </Typography>
