@@ -23,6 +23,7 @@ function SonarqubeIndicator({ title, value, adornment, tooltip }) {
             displayValueColor = {determineColor(value)}
             titleAdornment = {adornment}
             tooltip = {tooltip}
+            interactive
         />
     )
 }
@@ -31,7 +32,7 @@ SonarqubeIndicator.propTypes = {
     title: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     adornment: PropTypes.node,
-    tooltip: PropTypes.string,
+    tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 }
 
 SonarqubeIndicator.defaultProps = {
