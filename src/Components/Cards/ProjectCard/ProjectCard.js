@@ -1,9 +1,12 @@
-import { Box, Card, CardContent, CardHeader, IconButton, makeStyles, Tooltip, useTheme } from '@material-ui/core'
+import {
+    Box, Card, CardContent, CardHeader, IconButton, Link, makeStyles, Tooltip, Typography, useTheme
+} from '@material-ui/core'
 import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { ReactComponent as SonarqubeLogo } from '../../../Assets/sonarqubeLogo.svg'
 import useSonarqubeRatings from '../../../Hooks/useSonarqubeRatings'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
@@ -57,6 +60,35 @@ function ProjectCard({ id }) {
     }
 
     const goToProductsPage = () => history.push(`/products/${project.productId}`)
+
+    const buildTooltip = (data) => (
+        <Box display = 'flex' flexDirection = 'column'>
+            {data &&
+                <>
+                    <Link
+                        href = {'https://docs.sonarqube.org/latest/user-guide/metric-definitions/'}
+                        target = '_blank'
+                        rel = 'noopener noreferrer'
+                    >
+                        <SonarqubeLogo />
+                    </Link>
+                    <Typography>{data}</Typography>
+                </>
+            }
+            <Box display = 'flex' justifyContent = 'space-between' style = {{ marginTop: '24px' }}>
+                <Typography variant = 'body2'>
+                    <Link href = {coverage.pipelineUrl} target = '_blank' rel = 'noopener noreferrer'>
+                        Gitlab Pipeline
+                    </Link>
+                </Typography>
+                <Typography variant = 'body2'>
+                    <Link href = {coverage.sonarqubeUrl} target = '_blank' rel = 'noopener noreferrer'>
+                        SonarQube Project
+                    </Link>
+                </Typography>
+            </Box>
+        </Box>
+    )
 
     return (
         <Card className = {classes.card}>
@@ -127,21 +159,28 @@ function ProjectCard({ id }) {
                                 }}
                             />
                         }
+                        tooltip = {buildTooltip(`Code coverage is currently at ${coverage.testCoverage}%`)}
                     />
                     <SonarqubeIndicator
                         title = 'Security'
                         value = {coverage.securityRating ?? '?'}
-                        tooltip = {sonarqube.security[coverage.securityRating]?.description ?? ''}
+                        tooltip = {
+                            buildTooltip(sonarqube.security[coverage.securityRating]?.description)
+                        }
                     />
                     <SonarqubeIndicator
                         title = 'Reliability'
                         value = {coverage.reliabilityRating ?? '?'}
-                        tooltip = {sonarqube.reliability[coverage.reliabilityRating]?.description ?? ''}
+                        tooltip = {
+                            buildTooltip(sonarqube.reliability[coverage.reliabilityRating]?.description)
+                        }
                     />
                     <SonarqubeIndicator
                         title = 'Maintainability'
                         value = {coverage.maintainabilityRating ?? '?'}
-                        tooltip = {sonarqube.maintainability[coverage.maintainabilityRating]?.description ?? ''}
+                        tooltip = {
+                            buildTooltip(sonarqube.maintainability[coverage.maintainabilityRating]?.description)
+                        }
                     />
                 </Box>
                 {project.tags?.length > 0 &&

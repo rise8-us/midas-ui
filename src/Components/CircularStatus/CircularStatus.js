@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 function CircularStatus(props) {
-    const { title, titleAdornment, variant, value, displayValue, size, tooltip, ...colors } = props
+    const { title, titleAdornment, variant, value, displayValue, size, tooltip, interactive, ...colors } = props
     const { valueColor, displayValueColor, titleColor } = colors
 
     return (
@@ -32,7 +32,16 @@ function CircularStatus(props) {
                         }}
                         size = {size}
                     />
-                    <Tooltip title = {tooltip} PopperProps = {{ style: { display: tooltip ? 'unset' : 'none' } }}>
+                    <Tooltip
+                        title = {tooltip}
+                        PopperProps = {{
+                            style: {
+                                display: tooltip ? 'unset' : 'none',
+                                minWidth: '350px',
+                            }
+                        }}
+                        interactive = {interactive}
+                    >
                         <Typography
                             variant = 'subtitle2'
                             style = {{
@@ -61,7 +70,8 @@ CircularStatus.propTypes = {
     displayValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     displayValueColor: PropTypes.string,
     size: PropTypes.number,
-    tooltip: PropTypes.string,
+    tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    interactive: PropTypes.bool,
 }
 
 CircularStatus.defaultProps = {
@@ -74,6 +84,7 @@ CircularStatus.defaultProps = {
     displayValueColor: 'inherit',
     size: 36,
     tooltip: '',
+    interactive: false,
 }
 
 export default CircularStatus
