@@ -31,16 +31,17 @@ describe('<AssertionComments>', () => {
         }
     }
 
-    test.skip('should set height', () => {
+    test('should set height', () => {
         render(<AssertionComments assertionId = {3}/>, { initialState: {
             assertions: { ...mockState.assertions },
             app: {
-                assertionStatus: { ...mockState.app.assertionStatus },
-                pageScrollY: 600
+                assertionStatus: { },
+                pageScrollY: -289
             }
         } })
 
-        expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 712px')
+        expect(screen.getByText('Not Started')).toBeInTheDocument()
+        expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 446px')
     })
 
     test('should render', () => {

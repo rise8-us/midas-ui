@@ -1,17 +1,12 @@
 import React from 'react'
-import {
-    render, screen, useModuleMock,
-} from '../../../Utilities/test-utils'
+import { render, screen, useModuleMock } from '../../../Utilities/test-utils'
 import { AssertionsTab } from './index'
 
-jest.mock('../../Assertions/AssertionHeader/AssertionHeader',
-    () => function testing() { return (<div>AssertionHeader</div>) })
+jest.mock('../../Assertions/Assertion/Assertion',
+    () => function testing() { return (<div>Assertion</div>) })
 
 jest.mock('../../Assertions/AssertionComments/AssertionComments',
     () => function testing() { return (<div>AssertionCommentsComponent</div>) })
-
-jest.mock('../../Assertions/CreateAssertionsButton/CreateAssertionsButton',
-    () => function testing() { return (<div>CreateAssertionsButtonComponent</div>) })
 
 describe('<AssertionsTab>', () => {
 
@@ -32,14 +27,8 @@ describe('<AssertionsTab>', () => {
     test('should render OGSM', () => {
         render(<AssertionsTab productId = {0}/>)
 
-        expect(screen.getAllByText('AssertionHeader')).toHaveLength(1)
+        expect(screen.getAllByText('Assertion')).toHaveLength(1)
         expect(setAssertionCommentMock).toHaveBeenCalledWith(null)
-    })
-
-    test('should render create assertions button component', () => {
-        render(<AssertionsTab productId = {0}/>)
-
-        expect(screen.getAllByText('CreateAssertionsButtonComponent')).toHaveLength(1)
     })
 
     test('should show comments', () => {

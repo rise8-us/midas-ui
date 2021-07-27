@@ -5,9 +5,13 @@ import {
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
+    const defaultProps = {
+        onSave: jest.fn(),
+        onDelete: jest.fn()
+    }
 
     test('should render', () => {
-        render(<AssertionHeader id = {1} category = 'category' title = 'detail'/>)
+        render(<AssertionHeader id = {1} category = 'category' title = 'detail' {...defaultProps}/>)
 
         expect(screen.getByText(/category:/)).toBeInTheDocument()
         expect(screen.getByDisplayValue(/detail/)).toBeInTheDocument()
@@ -16,7 +20,7 @@ describe('<AssertionHeader>', () => {
     test('should edit and restore', () => {
         useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
 
-        render(<AssertionHeader id = {1} category = 'cat' title = 'devils' editable/>)
+        render(<AssertionHeader id = {1} category = 'cat' title = 'devils' editable {...defaultProps}/>)
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{esc}')
 
         expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
@@ -33,9 +37,11 @@ describe('<AssertionHeader>', () => {
                 title = 'devils'
                 editable
                 onSave = {OnSaveMock}
+                onDelete = {jest.fn()}
             />
         )
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
+        fireEvent.blur(screen.getByDisplayValue(/in the details/i))
 
         expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
         expect(OnSaveMock).toHaveBeenCalled()
@@ -43,7 +49,7 @@ describe('<AssertionHeader>', () => {
 
     test('should see status', () => {
         useDispatchMock().mockReturnValueOnce()
-        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' status = 'STARTED'/>, {
+        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' status = 'STARTED' {...defaultProps}/>, {
             initialState: {
                 app: {
                     assertionStatus: {
@@ -62,7 +68,7 @@ describe('<AssertionHeader>', () => {
 
     test('should show commentCount', () => {
         useDispatchMock().mockReturnValueOnce()
-        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' commentCount = {1}/>)
+        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' commentCount = {1} {...defaultProps}/>)
 
         expect(screen.getByText('1')).toBeInTheDocument()
     })
@@ -72,7 +78,7 @@ describe('<AssertionHeader>', () => {
         const requestSearchCommentsMock = useModuleMock('Redux/Comments/actions', 'requestSearchComments')
         const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
 
-        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils'/>)
+        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' {...defaultProps}/>)
 
         fireEvent.click(screen.getByTitle('comment'))
 
@@ -130,6 +136,7 @@ describe('<AssertionHeader>', () => {
             editable
             addChildAssertion = {onAddChildMock}
             addChildAssertionLabel = 'add me'
+            {...defaultProps}
         />)
 
         fireEvent.click(screen.getByTitle('add me'))
@@ -153,7 +160,7 @@ describe('<AssertionHeader>', () => {
         }
 
         render(
-            <AssertionHeader category = 'cat' detail = 'devils' id = {1} status = 'NOT_STARTED'/>,
+            <AssertionHeader category = 'cat' detail = 'devils' id = {1} status = 'NOT_STARTED' {...defaultProps}/>,
             { initialState: mockState }
         )
 
