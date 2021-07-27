@@ -16,12 +16,14 @@ function AssertionComments({ assertionId }) {
     const scroll = useSelector(state => state.app.pageScrollY)
     const dispatch = useDispatch()
 
-    const maxHeight = browserSize.height - 88 - 33
 
     const assertion = useSelector(state => state.assertions[assertionId])
 
     const selectedStatus = useSelector(state => state.app.assertionStatus[assertion?.status ?? 'NOT_STARTED'])
     const [status, setStatus] = useState(selectedStatus?.name ?? 'NOT_STARTED')
+
+    const [maxHeight, setMaxHeight] = useState((browserSize?.height ?? 0) - 88 - 33)
+    const [height, setHeight] = useState(0)
 
     const handleSubmit = (value) => {
         dispatch(requestCreateComment({
@@ -44,13 +46,17 @@ function AssertionComments({ assertionId }) {
 
     useLayoutEffect(() => {
         const offsetTop = ref.current?.offsetTop - 88
-        if (offsetTop > scroll) ref.current.style.height = `${maxHeight - offsetTop + scroll}px`
-        else ref.current.style.height = `${maxHeight}px`
-    }, [scroll])
+        if (offsetTop > scroll) setHeight(maxHeight - offsetTop + scroll)
+        else setHeight(maxHeight)
+    }, [scroll, maxHeight])
 
     useEffect(() => {
         selectedStatus && setStatus(selectedStatus.name)
     }, [selectedStatus])
+
+    useEffect(() => {
+        setMaxHeight((browserSize?.height ?? 0) - 88 - 33)
+    }, [browserSize])
 
     return (
         <Paper
@@ -58,6 +64,7 @@ function AssertionComments({ assertionId }) {
             style = {{
                 top: '2px',
                 position: 'sticky',
+                height: `${height}px`,
                 maxHeight: `${maxHeight}px`,
                 display: 'flex',
                 flexDirection: 'column',

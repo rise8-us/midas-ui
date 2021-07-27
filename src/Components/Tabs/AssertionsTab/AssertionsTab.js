@@ -48,7 +48,7 @@ function AssertionsTab({ productId }) {
     return (
         <div className = {classes.root}>
             <div style = {{ width: showComments ? 'calc(100% - 350px)' : '100%' }} className = {classes.assertion}>
-                <CreateAssertionsButton productId = {productId} endAssertionsRef = { bottomOfAssertionsRef } />
+                <CreateAssertionsButton productId = {productId} ref = { bottomOfAssertionsRef } />
                 {objectives.map((objective, index) => (
                     <div style = {{ margin: '16px 0' }} key = { objective.id}>
                         <Assertion

@@ -33,7 +33,9 @@ function Page({ children }) {
     return (
         <>
             <AppBar />
-            <div className = {classes.page} onScroll = {onScroll}>{children}</div>
+            <div className = {classes.page} onScroll = {onScroll} data-testid = 'Page__div'>
+                {children}
+            </div>
         </>
     )
 }

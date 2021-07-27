@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-    fireEvent, render, screen, useModuleMock, useDispatchMock, waitFor
-} from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from '../../../Utilities/test-utils'
 import { CreateAssertionsButton } from './index'
 
 jest.mock('../../Assertions/AssertionHeader/AssertionHeader',
@@ -10,6 +8,12 @@ jest.mock('../../Assertions/AssertionHeader/AssertionHeader',
 describe('<CreateAssertions>', () => {
 
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
+    const scrollIntoViewMock = jest.fn()
+
+    const mockRef = React.createRef(<div />)
+    mockRef.current = {
+        scrollIntoView: () => scrollIntoViewMock
+    }
 
     const blankMeasure = {
         text: 'Enter new measure here...',
@@ -48,12 +52,14 @@ describe('<CreateAssertions>', () => {
         requestCreateAssertionMock.mockReturnValue({ type: '/', payload: {} })
         useDispatchMock().mockResolvedValue({ data: {} })
 
-        render(<CreateAssertionsButton productId = {1} />)
+        render(<CreateAssertionsButton productId = {1} ref = {mockRef} />)
 
         fireEvent.click(screen.getByText(/add a new ogsm/i))
+
         expect(screen.queryAllByText(/add a new ogsm/i)).toHaveLength(0)
-        await waitFor(() => screen.getByText(/adding new ogsm/i))
+        expect(await screen.findByText(/adding new ogsm/i)).toBeInTheDocument()
 
         expect(requestCreateAssertionMock).toHaveBeenCalledWith(blankObjective)
+        waitFor(() => { expect(scrollIntoViewMock).toBeCalled() })
     })
 })

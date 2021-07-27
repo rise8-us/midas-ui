@@ -17,49 +17,41 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function CreateAssertionsButton({ productId, endAssertionsRef }) {
+const CreateAssertionsButton = React.forwardRef((props, ref) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
     const [added, setAdded] = useState(false)
 
+    const defaultData = (type) => ({
+        text: `Enter new ${type} here...`,
+        type: type.toUpperCase(),
+        productId: props.productId,
+        parentId: undefined,
+        status: 'NOT_STARTED',
+    })
+
     const handleAddNewOGSM = () => {
         const blankMeasure = {
-            text: 'Enter new measure here...',
-            type: 'MEASURE',
-            productId: productId,
-            parentId: undefined,
-            status: 'NOT_STARTED',
+            ...defaultData('measure'),
             children: []
         }
         const blankStrategy = {
-            text: 'Enter new strategy here...',
-            type: 'STRATEGY',
-            productId: productId,
-            parentId: undefined,
-            status: 'NOT_STARTED',
+            ...defaultData('strategy'),
             children: [blankMeasure]
         }
         const blankGoal = {
-            text: 'Enter new goal here...',
-            type: 'GOAL',
-            productId: productId,
-            parentId: undefined,
-            status: 'NOT_STARTED',
+            ...defaultData('goal'),
             children: [blankStrategy]
         }
         const blankObjective = {
-            text: 'Enter new objective here...',
-            type: 'OBJECTIVE',
-            productId: productId,
-            parentId: undefined,
-            status: 'NOT_STARTED',
+            ...defaultData('objective'),
             children: [blankGoal]
         }
 
         setAdded(true)
         dispatch(requestCreateAssertion(blankObjective)).then(unwrapResult).then(() => {
-            endAssertionsRef && endAssertionsRef.current.scrollIntoView()
+            ref && ref.current.scrollIntoView()
             setAdded(false)
         })
     }
@@ -79,11 +71,10 @@ function CreateAssertionsButton({ productId, endAssertionsRef }) {
             }
         </Button>
     )
-}
+})
 
 CreateAssertionsButton.propTypes = {
-    productId: PropTypes.number.isRequired,
-    endAssertionsRef: PropTypes.object
+    productId: PropTypes.number.isRequired
 }
 
 CreateAssertionsButton.defaultProps = {
