@@ -15,13 +15,15 @@ describe('<CreateOrUpdateTeamPopup />', () => {
         id: 4,
         name: 'My Team',
         description: 'Description',
-        gitlabGroupId: 12345
+        gitlabGroupId: 12345,
+        userIds: [9]
     }
 
     const returnedNewTeam = {
         name: '',
         description: '',
-        gitlabGroupId: ''
+        gitlabGroupId: '',
+        userIds: []
     }
 
     beforeEach(() => {
@@ -87,7 +89,7 @@ describe('<CreateOrUpdateTeamPopup />', () => {
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateTeamMock).toHaveBeenCalledWith({
-            ...returnedFoundTeam, name, description, gitlabGroupId, userIds: [] })
+            ...returnedFoundTeam, name, description, gitlabGroupId })
     })
 
     test('should close popup', () => {

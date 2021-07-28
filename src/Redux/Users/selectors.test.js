@@ -20,7 +20,7 @@ const expectedUser = {
 const convertRolesLongToRolesMapMock = useModuleMock('Utilities/bitwise', 'convertRolesLongToRolesMap')
 const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
 
-test('should return object', () => {
+test('selectUserById - should return object', () => {
     convertRolesLongToRolesMapMock.mockReturnValue({})
     selectRolesAsArrayMock.mockResolvedValue({})
 
@@ -28,7 +28,7 @@ test('should return object', () => {
     expect(user).toBeInstanceOf(Object)
 })
 
-test('should return empty object', () => {
+test('selectUserById - should return empty object', () => {
     convertRolesLongToRolesMapMock.mockReturnValue({})
     selectRolesAsArrayMock.mockResolvedValue({})
 
@@ -36,7 +36,7 @@ test('should return empty object', () => {
     expect(user).toBeInstanceOf(Object)
 })
 
-test('should have data', () => {
+test('selectUserById - should have data', () => {
     convertRolesLongToRolesMapMock.mockReturnValue({ ROLE1: true, ROLE2: true })
     selectRolesAsArrayMock.mockResolvedValue({})
 

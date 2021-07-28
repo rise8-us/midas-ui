@@ -1,14 +1,15 @@
 import { Box, makeStyles, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestCreateTeam, requestUpdateTeam } from '../../../Redux/Teams/actions'
-import TeamConstants from '../../../Redux/Teams/constants'
+import TeamsConstants from '../../../Redux/Teams/constants'
 import { selectTeamById } from '../../../Redux/Teams/selectors'
 import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
+import { TeamUsers } from '../../TeamUsers'
 
 const useStyles = makeStyles(() => ({
     numberField: {
@@ -18,52 +19,53 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const initDetails = (create) => {
+    return {
+        isCreate: create,
+        title: create ? 'Create Team' : 'Update Team',
+        constant: create ? TeamsConstants.CREATE_TEAM : TeamsConstants.UPDATE_TEAM,
+        request: (data) => create ? requestCreateTeam(data) : requestUpdateTeam(data)
+    }
+}
+
 function CreateOrUpdateTeamPopup({ id }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
     const team = useSelector(state => selectTeamById(state, id))
 
-    const isCreate = team.id === undefined
-    const teamConstants = isCreate ? TeamConstants.CREATE_TEAM : TeamConstants.UPDATE_TEAM
-    const teamTitle = isCreate ? 'Create Team' : 'Update Team'
+    const context = initDetails(team.id === undefined)
 
-    const teamRequest = (data) => isCreate ? requestCreateTeam(data) : requestUpdateTeam(data)
-    const errors = useSelector(state => selectRequestErrors(state, teamConstants))
+    const errors = useSelector(state => selectRequestErrors(state, context.constant))
 
     const [name, setName] = useState(team.name)
-    const [gitlabGroupId, setGitlabGroupId] = useState(team.gitlabGroupId)
-    const [description, setDescription] = useState(team.description)
-
-    const [nameError, setNameError] = useState([])
+    const [gitlabGroupId, setGitlabGroupId] = useState(team.gitlabGroupId ?? '')
+    const [description, setDescription] = useState(team.description ?? '')
+    const [userIds, setUserIds] = useState(team.userIds)
 
     const onNameChange = (e) => setName(e.target.value)
     const onGitlabGroupIdChange = (e) => setGitlabGroupId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
 
     const onClose = () => {
-        dispatch(closePopup(teamConstants))
+        dispatch(closePopup(context.constant))
     }
 
     const onSubmit = () => {
-        dispatch(teamRequest({
+        dispatch(context.request({
             ...team,
             name,
             gitlabGroupId,
             description,
-            userIds: []
+            userIds
         }))
     }
 
-    useEffect(() => {
-        if (errors.length > 0) {
-            setNameError(errors.filter(error => error.includes('name')))
-        }
-    }, [errors])
+    const nameErrors = useMemo(() => errors.filter(error => error.includes('name')), [errors])
 
     return (
         <Popup
-            title = {teamTitle}
+            title = {context.title}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
@@ -75,8 +77,8 @@ function CreateOrUpdateTeamPopup({ id }) {
                     }}
                     value = {name}
                     onChange = {onNameChange}
-                    error = {nameError.length > 0}
-                    helperText = {<FormatErrors errors = {nameError}/>}
+                    error = {nameErrors.length > 0}
+                    helperText = {<FormatErrors errors = {nameErrors}/>}
                     margin = 'dense'
                     required
                 />
@@ -101,6 +103,7 @@ function CreateOrUpdateTeamPopup({ id }) {
                     margin = 'dense'
                     multiline
                 />
+                <TeamUsers userIds = {userIds} setUserIds = {setUserIds} />
             </Box>
         </Popup>
     )
