@@ -10,7 +10,11 @@ export const selectTagById = (state, id) => {
 }
 
 export const selectAllTags = state => {
-    return Object.values(state.tags)
+    return Object.values(state.tags).sort((a, b) => {
+        const labelA = a.label.toUpperCase()
+        const labelB = b.label.toUpperCase()
+        return (labelA < labelB) ? -1 : (labelA > labelB) ? 1 : 0
+    })
 }
 
 export const selectTagsByIds = (state, ids) => {
