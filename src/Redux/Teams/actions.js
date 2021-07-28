@@ -26,3 +26,11 @@ export const requestUpdateTeam = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestArchiveTeam = createAsyncThunk(
+    Constants.ARCHIVE_TEAM,
+    async({ id, isArchived }, { rejectWithValue }) => {
+        const request = { endpoint: `/api/teams/${id}/archive`, method: 'PUT', body: { isArchived } }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)

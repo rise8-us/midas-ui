@@ -6,6 +6,13 @@ export const selectTeamById = (state, id) => {
         name: '',
         gitlabGroupId: '',
         description: '',
+        userIds: []
     }
     return team
+}
+
+export const selectAllTeams = (state) => {
+    const allTeams = state.teams
+
+    return Object.keys(allTeams).map(id => selectTeamById(state, id))
 }

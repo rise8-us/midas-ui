@@ -8,3 +8,7 @@ export const selectUserById = (state, id) => {
 
     return { ...user, roles: assignedRoles }
 }
+
+export const selectUsersByIds = (state, ids) => {
+    return ids.map(id => selectUserById(state, id))
+}

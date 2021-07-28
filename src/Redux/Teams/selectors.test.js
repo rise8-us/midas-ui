@@ -5,7 +5,14 @@ const mockState = {
         4: {
             id: 4,
             name: 'Team',
-            gitlabGroupId: 1234
+            gitlabGroupId: 1234,
+            userIds: [1]
+        },
+        7: {
+            id: 7,
+            name: 'Team',
+            gitlabGroupId: 5678,
+            userIds: [2]
         }
     }
 }
@@ -16,5 +23,15 @@ test('selectTeamById - returns team object', () => {
 })
 
 test('selectTeamById - returns empty property object', () => {
-    expect(selectors.selectTeamById(mockState, 2)).toEqual({ name: '', gitlabGroupId: '', description: '', })
+    expect(selectors.selectTeamById(mockState, 2))
+        .toEqual({ name: '', gitlabGroupId: '', description: '', userIds: [] })
+})
+
+test('selectAllTeams - returns array of team objects', () => {
+    const teams = selectors.selectAllTeams(mockState)
+    expect(teams).toEqual([mockState.teams[4], mockState.teams[7]])
+})
+
+test('selectAllTeams - returns empty array', () => {
+    expect(selectors.selectAllTeams({ teams: {} })).toEqual([])
 })
