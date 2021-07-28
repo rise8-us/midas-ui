@@ -1,10 +1,11 @@
 import React from 'react'
 import {
-    render, screen, useModuleMock, useDispatchMock, userEvent
+    render, screen, useDispatchMock, useModuleMock, userEvent
 } from '../../Utilities/test-utils'
 import { TeamUsers } from './index'
 
 describe('<TeamUsers />', () => {
+    jest.setTimeout(15000)
     const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
     const requestFindUserByMock = useModuleMock('Redux/Users/actions', 'requestFindUserBy')
 

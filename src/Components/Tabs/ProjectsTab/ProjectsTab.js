@@ -55,7 +55,7 @@ ${product.name !== undefined ? product.name : 'this product'} •`
                     style = {{ margin: '20px 0' }}
                 >
                     {projects.map(project => (
-                        <ProjectCard id = {project.id} key = {project.id}/>
+                        <ProjectCard id = {project.id} key = {project.id} canUpdate = {true}/>
                     ))}
                 </Box>
                 :

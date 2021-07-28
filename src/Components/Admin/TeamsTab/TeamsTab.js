@@ -1,12 +1,12 @@
-import { alpha, Box, Button, IconButton, makeStyles } from '@material-ui/core'
+import { Box, Button, IconButton, makeStyles } from '@material-ui/core'
 import { Add, Archive, Unarchive } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { openPopup } from '../../../Redux/Popups/actions'
+import { requestArchiveTeam } from '../../../Redux/Teams/actions'
+import TeamsConstant from '../../../Redux/Teams/constants'
 import { selectAllTeams } from '../../../Redux/Teams/selectors'
 import { Table } from '../../Table'
-import TeamsConstant from '../../../Redux/Teams/constants'
-import { requestArchiveTeam } from '../../../Redux/Teams/actions'
-import { openPopup } from '../../../Redux/Popups/actions'
 
 const useStyles = makeStyles(theme => ({
     addButton: {

@@ -29,13 +29,20 @@ describe('<ProjectCard />', () => {
         ]
     }
 
+    const product = {
+        id: 2,
+        name: 'productName'
+    }
+
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
+    const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const journeyMapUpdateMock = useModuleMock('Redux/Projects/actions', 'requestUpdateJourneyMapById')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectProjectByIdMock.mockReturnValue(project)
+        selectProductByIdMock.mockReturnValue(product)
     })
 
     test('should display data', () => {
@@ -46,7 +53,7 @@ describe('<ProjectCard />', () => {
 
     test('should fire updateProjectPopup', () => {
         selectProjectByIdMock.mockReturnValue({ ...project, coverage: { coverageChange: 1 } })
-        render(<ProjectCard id = {project.id}/>)
+        render(<ProjectCard id = {project.id} canUpdate/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-edit'))
 
@@ -56,7 +63,7 @@ describe('<ProjectCard />', () => {
 
     test('should fire updateProgress forward', () => {
         selectProjectByIdMock.mockReturnValue({ ...project, coverage: { coverageChange: -1 } })
-        render(<ProjectCard id = {project.id}/>)
+        render(<ProjectCard id = {project.id} canUpdate/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-forward'))
 
@@ -65,7 +72,7 @@ describe('<ProjectCard />', () => {
     })
 
     test('should fire updateProgress backward', () => {
-        render(<ProjectCard id = {project.id}/>)
+        render(<ProjectCard id = {project.id} canUpdate/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-back'))
 
@@ -73,13 +80,20 @@ describe('<ProjectCard />', () => {
         expect(journeyMapUpdateMock.mock.calls[0][0]).toEqual({ id: 0, projectJourneyMap: 0 })
     })
 
-    test('should go to product page on name click', () => {
+    test('should go to product page on product name click', () => {
         selectProjectByIdMock.mockReturnValue({ ...project, productId: 2 })
 
         render(<ProjectCard id = {project.id}/>)
 
-        fireEvent.click(screen.getByText(/project 1/))
+        fireEvent.click(screen.getByText(/productName/))
         expect(mockHistoryPush).toHaveBeenCalledWith('/products/2')
+    })
 
+    test('should not be changeable', () => {
+        render(<ProjectCard id = {project.id} />)
+
+        expect(screen.queryByTestId('ProjectCard__button-edit')).not.toBeInTheDocument()
+        expect(screen.queryByTestId('ProjectCard__button-back')).not.toBeInTheDocument()
+        expect(screen.queryByTestId('ProjectCard__button-forward')).not.toBeInTheDocument()
     })
 })

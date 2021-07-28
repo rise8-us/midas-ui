@@ -28,7 +28,7 @@ function Product() {
                 <>
                     <Tabs value = {value} onChange = {handleChange} >
                         <Tab label = 'OGSMs' value = 'ogsm' disableRipple/>
-                        <Tab label = 'CtF Tracker' value = 'projects' disableRipple/>
+                        <Tab label = 'Projects' value = 'projects' disableRipple/>
                     </Tabs>
                     <Divider variant = 'fullWidth' />
                     { value === 'ogsm' &&

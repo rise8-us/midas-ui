@@ -46,7 +46,7 @@ describe('<Product>', () => {
     test('should render projects tab', () => {
         render(<Product />)
 
-        fireEvent.click(screen.getByText(/CtF Tracker/i))
+        fireEvent.click(screen.getByText(/Projects/i))
         expect(screen.getByText('ProjectsTab')).toBeInTheDocument()
     })
 
