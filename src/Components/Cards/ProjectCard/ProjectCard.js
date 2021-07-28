@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom'
 import { ReactComponent as SonarqubeLogo } from '../../../Assets/sonarqubeLogo.svg'
 import useSonarqubeRatings from '../../../Hooks/useSonarqubeRatings'
 import { openPopup } from '../../../Redux/Popups/actions'
+import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectProjectById } from '../../../Redux/Projects/selectors'
@@ -27,12 +28,11 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
             cursor: 'pointer'
         },
-        height: 40,
         width: 'fit-content'
     }
 }))
 
-function ProjectCard({ id }) {
+function ProjectCard({ id, canUpdate }) {
     const dispatch = useDispatch()
     const theme = useTheme()
     const classes = useStyles()
@@ -41,6 +41,7 @@ function ProjectCard({ id }) {
     const sonarqube = useSonarqubeRatings()
 
     const project = useSelector(state => selectProjectById(state, id))
+    const product = useSelector(state => selectProductById(state, project.productId))
     const coverage = project.coverage ?? {}
 
     const calcStep = () => Math.log2(project.projectJourneyMap + 1)
@@ -94,14 +95,18 @@ function ProjectCard({ id }) {
         <Card className = {classes.card}>
             <CardHeader
                 title = {project.name}
+                subheader = {product.name}
                 titleTypographyProps = {{
                     variant: 'h5',
                     color: 'textPrimary',
+                    'data-testid': 'ProjectCard__header-title',
+                }}
+                subheaderTypographyProps = {{
+                    'data-testid': 'ProjectCard__header-subheader',
                     onClick: project.productId !== null ? goToProductsPage : undefined,
                     className: project.productId !== null ? classes.link : 'card',
-                    'data-testid': 'ProjectCard__header-title'
                 }}
-                action = {
+                action = {canUpdate &&
                     <IconButton
                         onClick = {updateProjectPopup}
                         color = 'secondary'
@@ -112,8 +117,8 @@ function ProjectCard({ id }) {
                 }
             />
             <Box display = 'flex'>
-                <Tooltip title = 'Roll back status'>
-                    <>
+                {canUpdate &&
+                    <Tooltip title = 'Roll back status'>
                         <IconButton
                             onClick = {() => handleProgress(-1)}
                             color = 'secondary'
@@ -124,11 +129,11 @@ function ProjectCard({ id }) {
                         >
                             <ChevronLeft />
                         </IconButton>
-                    </>
-                </Tooltip>
+                    </Tooltip>
+                }
                 <PathToProdStepper step = {calcStep()} />
-                <Tooltip title = 'Complete current step'>
-                    <>
+                {canUpdate &&
+                    <Tooltip title = 'Complete current step'>
                         <IconButton
                             onClick = {() => handleProgress(1)}
                             color = 'secondary'
@@ -139,8 +144,8 @@ function ProjectCard({ id }) {
                         >
                             <ChevronRight />
                         </IconButton>
-                    </>
-                </Tooltip>
+                    </Tooltip>
+                }
             </Box>
             <CardContent>
                 <Box display = 'flex' justifyContent = 'space-between' padding = {1}>
@@ -196,7 +201,12 @@ function ProjectCard({ id }) {
 }
 
 ProjectCard.propTypes = {
-    id: PropTypes.number.isRequired
+    canUpdate: PropTypes.bool,
+    id: PropTypes.number.isRequired,
+}
+
+ProjectCard.defaultProps = {
+    canUpdate: false,
 }
 
 export default ProjectCard
