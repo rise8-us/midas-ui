@@ -13,7 +13,10 @@ export const selectAllTags = state => {
     return Object.values(state.tags).sort((a, b) => {
         const labelA = a.label.toUpperCase()
         const labelB = b.label.toUpperCase()
-        return (labelA < labelB) ? -1 : (labelA > labelB) ? 1 : 0
+
+        if (labelA < labelB) return -1
+        else if (labelA > labelB) return 1
+        else return 0
     })
 }
 
