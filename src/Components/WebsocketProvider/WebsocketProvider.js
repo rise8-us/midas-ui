@@ -4,10 +4,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import SockJS from 'sockjs-client'
 import assertionSubscriptions from '../../Redux/Assertions/subscriptions'
 import commentSubscriptions from '../../Redux/Comments/subscriptions'
-import gitlabConfigSubscriptions from '../../Redux/GitlabConfigs/subscriptions'
 import portfolioSubscriptions from '../../Redux/Portfolios/subscriptions'
 import productSubscriptions from '../../Redux/Products/subscriptions'
 import projectSubscriptions from '../../Redux/Projects/subscriptions'
+import sourceControlSubscriptions from '../../Redux/SourceControls/subscriptions'
 import tagSubscriptions from '../../Redux/Tags/subscriptions'
 import teamSubscriptions from '../../Redux/Teams/subscriptions'
 import { getAPIURL } from '../../Utilities/requests'
@@ -38,7 +38,7 @@ function WebsocketProvider({ children }) {
         setConnected(true)
         assertionSubscriptions({ stompClient })
         commentSubscriptions({ stompClient })
-        gitlabConfigSubscriptions({ stompClient })
+        sourceControlSubscriptions({ stompClient })
         productSubscriptions({ stompClient })
         projectSubscriptions({ stompClient })
         tagSubscriptions({ stompClient })

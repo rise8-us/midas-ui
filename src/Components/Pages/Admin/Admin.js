@@ -7,7 +7,7 @@ const TeamsTab = React.lazy(() => import('../../Admin/TeamsTab/TeamsTab'))
 const ProjectsTab = React.lazy(() => import('../../Admin/ProjectsTab/ProjectsTab'))
 const ProductsTab = React.lazy(() => import('../../Admin/ProductsTab/ProductsTab'))
 const PortfoliosTab = React.lazy(() => import('../../Admin/PortfoliosTab/PortfoliosTab'))
-const ConfigsTab = React.lazy(() => import('../../Admin/ConfigsTab/ConfigsTab'))
+const SourceControlTab = React.lazy(() => import('../../Admin/SourceControlTab/SourceControlTab'))
 
 function Admin() {
     const theme = useTheme()
@@ -32,7 +32,11 @@ function Admin() {
                         <Tab label = 'projects' value = 'projects' disableRipple data-testid = 'Admin__projects'/>
                         <Tab label = 'products' value = 'products' disableRipple data-testid = 'Admin__products'/>
                         <Tab label = 'portfolios' value = 'portfolios' disableRipple data-testid = 'Admin__portfolios'/>
-                        <Tab label = 'configs' value = 'configs' disableRipple data-testid = 'Admin__gitConfigs'/>
+                        <Tab label = 'source Controls'
+                            value = 'source Controls'
+                            disableRipple
+                            data-testid = 'Admin__sourceControls'
+                        />
                     </Tabs>
                 </AppBar>
                 { value === 'users' &&
@@ -50,8 +54,8 @@ function Admin() {
                 { value === 'portfolios' &&
                     <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><PortfoliosTab/></Suspense>
                 }
-                { value === 'configs' &&
-                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ConfigsTab/></Suspense>
+                { value === 'source Controls' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><SourceControlTab/></Suspense>
                 }
             </>
         </Page>

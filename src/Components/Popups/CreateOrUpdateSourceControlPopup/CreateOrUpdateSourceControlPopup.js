@@ -3,23 +3,23 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
-import { requestCreateGitlabConfig, requestUpdateGitlabConfig } from '../../../Redux/GitlabConfigs/actions'
-import ConfigConstants from '../../../Redux/GitlabConfigs/constants'
-import { selectGitlabConfigById } from '../../../Redux/GitlabConfigs/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
+import { requestCreateSourceControl, requestUpdateSourceControl } from '../../../Redux/SourceControls/actions'
+import ConfigConstants from '../../../Redux/SourceControls/constants'
+import { selectSourceControlById } from '../../../Redux/SourceControls/selectors'
 import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
 
-function CreateOrUpdateGitlabConfigPopup({ id }) {
+function CreateOrUpdateSourceControlPopup({ id }) {
     const dispatch = useDispatch()
 
-    const config = useSelector(state => selectGitlabConfigById(state, id))
+    const config = useSelector(state => selectSourceControlById(state, id))
 
     const isCreate = config.id === undefined
     const configConstants = isCreate ? ConfigConstants.CREATE_CONFIG : ConfigConstants.UPDATE_CONFIG
     const configTitle = isCreate ? 'Create Config' : 'Update Config'
 
-    const configRequest = (data) => isCreate ? requestCreateGitlabConfig(data) : requestUpdateGitlabConfig(data)
+    const configRequest = (data) => isCreate ? requestCreateSourceControl(data) : requestUpdateSourceControl(data)
     const errors = useSelector(state => selectRequestErrors(state, configConstants))
 
     const [name, setName] = useState(config.name)
@@ -62,9 +62,9 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
         >
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
-                    label = 'Gitlab Name'
+                    label = 'Source Control Name'
                     inputProps = {{
-                        'data-testid': 'CreateOrUpdateGitlabConfigPopup__input-name'
+                        'data-testid': 'CreateOrUpdateSourceControlPopup__input-name'
                     }}
                     value = {name}
                     onChange = {onNameChange}
@@ -74,9 +74,9 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
                     required
                 />
                 <TextField
-                    label = 'Gitlab Url'
+                    label = 'Source Control Url'
                     inputProps = {{
-                        'data-testid': 'CreateOrUpdateGitlabConfigPopup__input-baseUrl'
+                        'data-testid': 'CreateOrUpdateSourceControlPopup__input-baseUrl'
                     }}
                     value = {baseUrl}
                     error = {nameError.length > 0}
@@ -87,7 +87,7 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
                 <TextField
                     label = 'Description'
                     inputProps = {{
-                        'data-testid': 'CreateOrUpdateGitlabConfigPopup__input-description'
+                        'data-testid': 'CreateOrUpdateSourceControlPopup__input-description'
                     }}
                     value = {description}
                     onChange = {onDescriptionChange}
@@ -98,7 +98,7 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
                     label = 'Token'
                     type = 'password'
                     inputProps = {{
-                        'data-testid': 'CreateOrUpdateGitlabConfigPopup__input-token'
+                        'data-testid': 'CreateOrUpdateSourceControlPopup__input-token'
                     }}
                     value = {token ?? ''}
                     onChange = {onTokenChange}
@@ -110,12 +110,12 @@ function CreateOrUpdateGitlabConfigPopup({ id }) {
     )
 }
 
-CreateOrUpdateGitlabConfigPopup.propTypes = {
+CreateOrUpdateSourceControlPopup.propTypes = {
     id: PropTypes.number
 }
 
-CreateOrUpdateGitlabConfigPopup.defaultProps = {
+CreateOrUpdateSourceControlPopup.defaultProps = {
     id: null
 }
 
-export default CreateOrUpdateGitlabConfigPopup
+export default CreateOrUpdateSourceControlPopup

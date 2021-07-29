@@ -5,12 +5,12 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from '../../../Redux/Errors/selectors'
-import { selectGitlabConfigById, selectGitlabConfigs } from '../../../Redux/GitlabConfigs/selectors'
 import { closePopup } from '../../../Redux/Popups/actions'
 import { requestSearchProduct } from '../../../Redux/Products/actions'
 import { requestCreateProject, requestUpdateProject } from '../../../Redux/Projects/actions'
 import ProjectConstants from '../../../Redux/Projects/constants'
 import { selectProjectById } from '../../../Redux/Projects/selectors'
+import { selectSourceControlById, selectSourceControls } from '../../../Redux/SourceControls/selectors'
 import FormatErrors from '../../../Utilities/FormatErrors'
 import { Popup } from '../../Popup'
 import { TagDropdown } from '../../TagDropdown'
@@ -41,10 +41,12 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
     const context = initDetails(project.id === undefined)
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
-    const allGitlabConfigs = useSelector(selectGitlabConfigs)
+    const allSourceControls = useSelector(selectSourceControls)
 
-    const orginalGitlabConfig = useSelector(state => selectGitlabConfigById(state, project.gitlabConfigId))
-    const [gitlabConfig, setGitlabConfig] = useState(orginalGitlabConfig.id !== undefined ? orginalGitlabConfig : null)
+    const orginalSourceControl = useSelector(state => selectSourceControlById(state, project.sourceControlId))
+    const [sourceControl, setSourceControl] = useState(
+        orginalSourceControl.id !== undefined ? orginalSourceControl : null
+    )
 
     const [name, setName] = useState(project.name)
     const [gitlabProjectId, setGitlabProjectId] = useState(project.gitlabProjectId)
@@ -56,7 +58,7 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
     const [tagsError, setTagsError] = useState([])
 
     const onNameChange = (e) => setName(e.target.value)
-    const onGitlabConfigChange = (_e, value) => setGitlabConfig(value)
+    const onSourceControlChange = (_e, value) => setSourceControl(value)
     const onGitlabProjectIdChange = (e) => setGitlabProjectId(e.target.value)
     const onDescriptionChange = (e) => setDescription(e.target.value)
     const onTagsChange = (value) => setTags(value)
@@ -69,7 +71,7 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
             name,
             gitlabProjectId,
             description,
-            gitlabConfigId: gitlabConfig?.id ?? null,
+            sourceControlId: sourceControl?.id ?? null,
             tagIds: Object.values(tags.map(t => t.id))
         }
         if (parentId !== null) data.productId = parentId
@@ -106,9 +108,9 @@ function CreateOrUpdateProjectPopup({ id, parentId }) {
                     required
                 />
                 <Autocomplete
-                    value = {gitlabConfig}
-                    onChange = {onGitlabConfigChange}
-                    options = {allGitlabConfigs}
+                    value = {sourceControl}
+                    onChange = {onSourceControlChange}
+                    options = {allSourceControls}
                     getOptionLabel = {option => option.name}
                     renderInput = {(params) =>
                         <TextField

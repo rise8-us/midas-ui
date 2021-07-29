@@ -12,15 +12,15 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const requestSearchProductMock = useModuleMock('Redux/Products/actions', 'requestSearchProduct')
-    const selectGitlabConfigByIdMock = useModuleMock('Redux/GitlabConfigs/selectors', 'selectGitlabConfigById')
-    const selectGitlabConfigsMock = useModuleMock('Redux/GitlabConfigs/selectors', 'selectGitlabConfigs')
+    const selectSourceControlByIdMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControlById')
+    const selectSourceControlsMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControls')
 
     const returnedTags = [
         { id: 1, label: 'Tag 1', description: '', color: '#000000' },
         { id: 13, label: 'Tag 2', description: '', color: '#000000' },
     ]
 
-    const returnedGitlabConfigs = [
+    const returnedSourceControls = [
         { id: 11, name: 'conf1' },
         { id: 12, name: 'conf2' }
     ]
@@ -44,8 +44,8 @@ describe('<CreateOrUpdateProjectPopup />', () => {
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ data: {} })
         selectTagsByTypesMock.mockReturnValue(returnedTags)
-        selectGitlabConfigsMock.mockReturnValue(returnedGitlabConfigs)
-        selectGitlabConfigByIdMock.mockReturnValue(returnedGitlabConfigs[0])
+        selectSourceControlsMock.mockReturnValue(returnedSourceControls)
+        selectSourceControlByIdMock.mockReturnValue(returnedSourceControls[0])
     })
 
     test('should render found project', () => {
@@ -80,14 +80,14 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
     test('should call onSubmit for createProject', () => {
         requestSearchProductMock.mockReturnValue({})
-        selectGitlabConfigByIdMock.mockReturnValue({ name: '' })
+        selectSourceControlByIdMock.mockReturnValue({ name: '' })
         selectProjectByIdMock.mockReturnValue(returnedNewProject)
         render(<CreateOrUpdateProjectPopup />)
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitCreateProjectMock).toHaveBeenCalledWith({
-            ...returnedNewProject, tagIds: [], gitlabConfigId: null
+            ...returnedNewProject, tagIds: [], sourceControlId: null
         })
     })
 
@@ -120,7 +120,7 @@ describe('<CreateOrUpdateProjectPopup />', () => {
 
         expect(submitUpdateProjectMock).toHaveBeenCalledWith({
             ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13], productId: 1,
-            gitlabConfigId: 12
+            sourceControlId: 12
         })
         waitFor(() => { expect(requestSearchProductMock).toHaveBeenCalledTimes(1) })
     })

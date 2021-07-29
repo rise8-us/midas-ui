@@ -7,11 +7,11 @@ import { PopupManager } from './Components/PopupManager'
 import { WebsocketProvider } from './Components/WebsocketProvider'
 import { selectUserLoggedIn } from './Redux/Auth/selectors'
 import { requestFetchAllBlockedAssertions } from './Redux/BlockedAssertions/actions'
-import { requestFetchAllGitlabConfigs } from './Redux/GitlabConfigs/actions'
 import { requestFetchInit } from './Redux/Init/actions'
 import { requestFetchAllPortfolios } from './Redux/Portfolios/actions'
 import { requestFetchAllProducts } from './Redux/Products/actions'
 import { requestFetchAllProjects } from './Redux/Projects/actions'
+import { requestFetchAllSourceControls } from './Redux/SourceControls/actions'
 import { requestFetchAllTags } from './Redux/Tags/actions'
 import { requestFetchAllTeams } from './Redux/Teams/actions'
 
@@ -27,7 +27,7 @@ function App() {
             dispatch(requestFetchAllTags())
             dispatch(requestFetchAllProducts())
             dispatch(requestFetchAllPortfolios())
-            dispatch(requestFetchAllGitlabConfigs())
+            dispatch(requestFetchAllSourceControls())
             dispatch(requestFetchAllBlockedAssertions())
         }
 
