@@ -1,14 +1,15 @@
-import { IconButton, makeStyles, TextField } from '@material-ui/core'
-import { AddCircleOutline, Edit, Restore, SaveOutlined } from '@material-ui/icons'
+import { IconButton, makeStyles } from '@material-ui/core'
+import { Edit } from '@material-ui/icons'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TagDropdown } from '../../Components/TagDropdown'
 import { selectRequestErrors } from '../../Redux/Errors/selectors'
+import { openPopup } from '../../Redux/Popups/actions'
 import { requestUpdateProduct } from '../../Redux/Products/actions'
 import ProductConstants from '../../Redux/Products/constants'
 import { selectProductById } from '../../Redux/Products/selectors'
-import FormatErrors from '../../Utilities/FormatErrors'
+import { AutoSaveTextField } from '../AutoSaveTextField'
 
 const useStyles = makeStyles((theme) => ({
     row: {
@@ -34,124 +35,77 @@ function ProductHeader({ id }) {
     const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, id))
+
     const errors = useSelector(state => selectRequestErrors(state, ProductConstants.UPDATE_PRODUCT))
+    const nameErrors = useMemo(() => errors.filter(error => error.includes('Name')), [errors])
 
-    const [isDisabled, setDisabled] = useState(true)
-    const [description, setVision] = useState(product.description)
-    const [name, setName] = useState(product.name)
-    const [tags, setTags] = useState(product.tags)
-    const [loaded, setLoaded] = useState(false)
-    const [nameError, setNameError] = useState([])
-
-    const onDescriptionChange = (e) => !isDisabled && setVision(e.target.value)
-    const onNameChange = (e) => !isDisabled && setName(e.target.value)
-    const onTagsChange = (value) => setTags(value)
-
-    const submitUpdate = () => {
-        setName(name)
-        setVision(description)
+    const submitUpdate = (updatedProduct) => {
         dispatch(requestUpdateProduct({
-            ...product,
+            ...updatedProduct,
             childIds: [],
-            name,
-            description,
-            tagIds: Object.values(tags.map(t => t.id))
+            tagIds: Object.values(product.tags.map(t => t.id))
         }))
     }
 
-    const handleEditAction = () => {
-        !isDisabled && submitUpdate()
-        setDisabled(!isDisabled)
+    const onDescriptionSave = (newValue) => {
+        submitUpdate({
+            ...product,
+            description: newValue
+        })
     }
 
-    const handleRevertAction = () => {
-        setName(product.name)
-        setVision(product.description)
-        setTags(product.tags)
+    const onNameSave = (newValue) => {
+        submitUpdate({
+            ...product,
+            name: newValue
+        })
     }
 
-    useEffect(() => {
-        if (!loaded && product.id === id) {
-            setVision(product.description)
-            setName(product.name)
-            setTags(product.tags)
-            setLoaded(true)
-        }
-    })
-
-    useEffect(() => {
-        if (errors.length > 0) {
-            setNameError(errors.filter(error => error.includes('Name')))
-        }
-    }, [errors])
+    const openUpdateProductPopup = () =>
+        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id }))
 
     return (
         <>
             <div className = {classes.row}>
-                <TextField
-                    InputProps = {{
-                        disableUnderline: isDisabled,
-                        readOnly: isDisabled,
-                        'data-testid': 'ProductHeader__input-name',
-                        className: classes.h4,
-                    }}
-                    value = {name}
-                    onChange = {onNameChange}
-                    error = { nameError.length > 0 }
-                    helperText = {<FormatErrors errors = {nameError}/>}
+                <AutoSaveTextField
+                    initialValue = {product.name}
+                    onSave = {onNameSave}
+                    className = {classes.h4}
+                    errors = {nameErrors}
+                    dataTestId = 'ProductHeader__input-name'
                 />
-                <div>
-                    {!isDisabled && <IconButton
-                        className = {classes.icon}
-                        data-testid = 'ProductHeader__icon-revert'
-                        onClick = {handleRevertAction}
-                        color = 'secondary'
-                    >
-                        <Restore />
-                    </IconButton>
-                    }
-                    <IconButton
-                        className = {classes.icon}
-                        data-testid = 'ProductHeader__icon-action'
-                        onClick = {handleEditAction}
-                        color = 'secondary'
-                    >
-                        {isDisabled ? <Edit /> : <SaveOutlined />}
-                    </IconButton>
-                </div>
+                <IconButton
+                    className = {classes.icon}
+                    data-testid = 'ProductHeader__icon-action'
+                    onClick = {openUpdateProductPopup}
+                    color = 'secondary'
+                >
+                    <Edit />
+                </IconButton>
             </div>
             <div className = {classes.row}>
-                <TextField
-                    InputProps = {{
-                        disableUnderline: isDisabled,
-                        readOnly: isDisabled,
-                        'data-testid': 'ProductHeader__input-description',
-                        className: classes.h6,
-                        spellCheck: true,
-                    }}
-                    hiddenLabel
+                <AutoSaveTextField
+                    initialValue = {product.description}
+                    onSave = {onDescriptionSave}
                     placeholder = 'Description not set...'
-                    value = {description}
-                    onChange = {onDescriptionChange}
+                    className = {classes.h6}
+                    errors = {[]}
                     multiline
-                    style = {{ width: '100%' }}
+                    fullWidth
+                    enableSpellCheck
+                    dataTestId = 'ProductHeader__input-description'
                 />
             </div>
             <div className = {classes.row} >
                 <TagDropdown
-                    defaultTags = {tags}
+                    defaultTags = {product.tags}
                     error = {[]}
-                    onChange = {onTagsChange}
-                    freeSolo = {isDisabled}
-                    disabled = {isDisabled}
+                    disabled = {true}
                     disableClearable = {true}
-                    deletable = {!isDisabled}
                     disableUnderline = {true}
                     type = {['ALL', 'PRODUCT']}
-                    popupIcon = {<AddCircleOutline color = 'secondary' />}
                     creatable
                     creatableType = 'PRODUCT'
-                    forcePopupIcon = {!isDisabled}
                 />
             </div>
         </>

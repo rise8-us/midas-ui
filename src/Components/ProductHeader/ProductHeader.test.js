@@ -1,19 +1,17 @@
 import React from 'react'
-import {
-    act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent
-} from '../../Utilities/test-utils'
+import ProductConstants from '../../Redux/Products/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../Utilities/test-utils'
 import { ProductHeader } from './index'
 
 describe('<ProductHeader>', () => {
 
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
-    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
+    const requestUpdateProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
 
     const product = {
         id: 0,
         name: 'Product 1',
-        description: 'great vision',
-        problemStatement: 'great problem',
+        description: '',
         tagIds: [4],
         tags: [
             {   id: 4,
@@ -25,70 +23,50 @@ describe('<ProductHeader>', () => {
     }
 
     beforeEach(() => {
-        useDispatchMock().mockReturnValue({})
         selectProductByIdMock.mockReturnValue(product)
     })
 
     test('Has correct text', () => {
         render(<ProductHeader id = {0}/>)
-        expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('Product 1')
+
+        expect(screen.getByDisplayValue('Product 1')).toBeInTheDocument()
+        expect(screen.getByPlaceholderText('Description not set...'))
         expect(screen.getByText('Some tags')).toBeInTheDocument()
     })
 
-    test('should have empty text', () => {
-        selectProductByIdMock.mockReturnValue({
-            name: '',
-            description: '',
-            problemStatement: '',
-            tags: [],
-            projects: []
-        })
+    test('should call onSubmit for name change', () => {
+        useDispatchMock().mockReturnValue({})
         render(<ProductHeader id = {0}/>)
 
-        fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
-        expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('')
-    })
+        userEvent.type(screen.getByTestId('ProductHeader__input-name'), '2{enter}')
 
-    test('should call onSubmit for update product vision', () => {
-        render(<ProductHeader id = {0}/>)
-
-        act(() => {
-            fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
-        })
-
-        const name = 'My Edited Product'
-        const description = 'New description'
-
-        const nameInput = screen.getByTestId('ProductHeader__input-name').querySelector('input')
-        const visionStatementInput = screen.getByTestId('ProductHeader__input-description').querySelector('textarea')
-        userEvent.clear(nameInput)
-        userEvent.clear(visionStatementInput)
-
-        userEvent.type(visionStatementInput, description)
-        userEvent.type(nameInput, name)
-
-        fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
-
-        expect(submitProductMock).toHaveBeenCalledWith({
-            ...product, name, description, childIds: []
+        expect(requestUpdateProductMock).toHaveBeenCalledWith({
+            ...product, name: 'Product 12', childIds: []
         })
     })
 
-    test('should revert changes', () => {
+    test('should call onSubmit for description change', () => {
+        useDispatchMock().mockReturnValue({})
         render(<ProductHeader id = {0}/>)
 
-        act(() => {
-            fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
-        })
+        const description = 'is no longer empty'
+        userEvent.type(screen.getByTestId('ProductHeader__input-description'), `${description}{enter}`)
 
-        const nameInput = screen.getByTestId('ProductHeader__input-name').querySelector('input')
-        const visionStatementInput = screen.getByTestId('ProductHeader__input-description').querySelector('textarea')
-        userEvent.clear(nameInput)
-        userEvent.clear(visionStatementInput)
-
-        act(() => {
-            fireEvent.click(screen.getByTestId('ProductHeader__icon-revert'))
+        expect(requestUpdateProductMock).toHaveBeenCalledWith({
+            ...product, description, childIds: []
         })
+    })
+
+    test('should call updateProduct popup', () => {
+        useDispatchMock().mockReturnValue({})
+        const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+
+        render(<ProductHeader id = {0}/>)
+
+        fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
+
+        expect(openPopupMock).toHaveBeenCalledWith(
+            ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: product.id })
     })
 
     test('should display error messages', () => {
