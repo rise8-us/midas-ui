@@ -1,4 +1,4 @@
--- Adminer 4.8.1 MySQL 8.0.21 dump
+-- Adminer 4.7.8 MySQL dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -6,22 +6,6 @@ SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
-
-DROP DATABASE IF EXISTS `appDB`;
-CREATE DATABASE `appDB` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `appDB`;
-
-DELIMITER ;;
-
-CREATE FUNCTION `nextID`() RETURNS bigint
-BEGIN
-  DECLARE response BIGINT(20);
-  SET response = (SELECT `next_val` FROM `hibernate_sequence` LIMIT 1);
-  UPDATE `hibernate_sequence` SET `next_val` = `next_val` + 1;
-  RETURN (response);
-END;;
-
-DELIMITER ;
 
 DROP TABLE IF EXISTS `announcement`;
 CREATE TABLE `announcement` (
@@ -111,18 +95,6 @@ CREATE TABLE `flyway_schema_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-DROP TABLE IF EXISTS `gitlab_config`;
-CREATE TABLE `gitlab_config` (
-  `id` bigint NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text,
-  `base_url` varchar(255) DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
-  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
 DROP TABLE IF EXISTS `hibernate_sequence`;
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint DEFAULT NULL
@@ -140,14 +112,14 @@ CREATE TABLE `product` (
   `type` varchar(70) DEFAULT NULL,
   `parent_id` bigint DEFAULT NULL,
   `gitlab_group_id` int DEFAULT NULL,
-  `gitlab_config_id` bigint DEFAULT NULL,
+  `source_control_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `product_manager_id` (`product_manager_id`),
   KEY `parent_id` (`parent_id`),
-  KEY `gitlab_config_id` (`gitlab_config_id`),
+  KEY `gitlab_config_id` (`source_control_id`),
   CONSTRAINT `product_ibfk_1` FOREIGN KEY (`product_manager_id`) REFERENCES `user` (`id`),
   CONSTRAINT `product_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `product` (`id`),
-  CONSTRAINT `product_ibfk_4` FOREIGN KEY (`gitlab_config_id`) REFERENCES `gitlab_config` (`id`)
+  CONSTRAINT `product_ibfk_4` FOREIGN KEY (`source_control_id`) REFERENCES `source_control` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -169,14 +141,14 @@ CREATE TABLE `project` (
   `gitlab_project_id` int DEFAULT NULL,
   `project_journey_map` bigint NOT NULL DEFAULT '0',
   `product_id` bigint DEFAULT NULL,
-  `gitlab_config_id` bigint DEFAULT NULL,
+  `source_control_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `team_id` (`team_id`),
   KEY `application_id` (`product_id`),
-  KEY `gitlab_config_id` (`gitlab_config_id`),
+  KEY `gitlab_config_id` (`source_control_id`),
   CONSTRAINT `project_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`),
   CONSTRAINT `project_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-  CONSTRAINT `project_ibfk_4` FOREIGN KEY (`gitlab_config_id`) REFERENCES `gitlab_config` (`id`)
+  CONSTRAINT `project_ibfk_4` FOREIGN KEY (`source_control_id`) REFERENCES `source_control` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -184,6 +156,18 @@ DROP TABLE IF EXISTS `project_tag`;
 CREATE TABLE `project_tag` (
   `tag_id` bigint NOT NULL,
   `project_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `source_control`;
+CREATE TABLE `source_control` (
+  `id` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `base_url` varchar(255) DEFAULT NULL,
+  `token` varchar(255) DEFAULT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -238,4 +222,4 @@ CREATE TABLE `user_team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2021-07-23 15:35:40
+-- 2021-07-29 18:45:22
