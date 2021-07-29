@@ -27,8 +27,8 @@ function Product() {
                 <ProductHeader id = {id} />
                 <>
                     <Tabs value = {value} onChange = {handleChange} >
-                        <Tab label = 'OGSMs' value = 'ogsm' disableRipple/>
-                        <Tab label = 'Projects' value = 'projects' disableRipple/>
+                        <Tab label = 'OGSMs' value = 'ogsm' disableRipple data-testid = 'Product__ogsm'/>
+                        <Tab label = 'Projects' value = 'projects' disableRipple data-testid = 'Product__projects'/>
                     </Tabs>
                     <Divider variant = 'fullWidth' />
                     { value === 'ogsm' &&
