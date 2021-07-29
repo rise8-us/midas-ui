@@ -41,7 +41,7 @@ describe('<AssertionHeader>', () => {
             />
         )
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
-        fireEvent.blur(screen.getByDisplayValue(/in the details/i))
+        fireEvent.focusOut(screen.getByDisplayValue(/in the details/i))
 
         expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
         expect(OnSaveMock).toHaveBeenCalled()

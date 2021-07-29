@@ -39,8 +39,8 @@ function CreateOrUpdateTeamPopup({ id }) {
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
 
     const [name, setName] = useState(team.name)
-    const [gitlabGroupId, setGitlabGroupId] = useState(team.gitlabGroupId ?? '')
-    const [description, setDescription] = useState(team.description ?? '')
+    const [gitlabGroupId, setGitlabGroupId] = useState(team.gitlabGroupId)
+    const [description, setDescription] = useState(team.description)
     const [userIds, setUserIds] = useState(team.userIds)
 
     const onNameChange = (e) => setName(e.target.value)
