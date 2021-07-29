@@ -20,7 +20,7 @@ describe('Configs Reducer', () => {
     })
 
     test('fetches all configs', () => {
-        const actions = [{ type: reduxActions.requestFetchAllGitlabConfigs.fulfilled, payload: allConfigsResponse }]
+        const actions = [{ type: reduxActions.requestFetchAllSourceControls.fulfilled, payload: allConfigsResponse }]
         const state = actions.reduce(reducer, {})
 
         expect(state[4]).toEqual(allConfigsResponse[0])
@@ -29,13 +29,13 @@ describe('Configs Reducer', () => {
     })
 
     test('Create Config', () => {
-        const actions = [{ type: reduxActions.requestCreateGitlabConfig.fulfilled, payload: allConfigsResponse[0] }]
+        const actions = [{ type: reduxActions.requestCreateSourceControl.fulfilled, payload: allConfigsResponse[0] }]
         const state = actions.reduce(reducer, {})
         expect(state).toEqual({ 4: allConfigsResponse[0] })
     })
 
     test('Update Config', () => {
-        const actions = [{ type: reduxActions.requestUpdateGitlabConfig.fulfilled, payload: updatedConfig }]
+        const actions = [{ type: reduxActions.requestUpdateSourceControl.fulfilled, payload: updatedConfig }]
         const state = actions.reduce(reducer, { 4: allConfigsResponse[0] })
         expect(state).toEqual({ 4: updatedConfig })
     })

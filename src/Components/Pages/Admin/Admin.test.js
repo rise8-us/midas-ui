@@ -14,8 +14,8 @@ jest.mock('../../Admin/ProductsTab/ProductsTab',
 jest.mock('../../Admin/PortfoliosTab/PortfoliosTab',
     () => function testing() { return (<div>Admin Page Portfolio Tab Test</div>) })
 
-jest.mock('../../Admin/ConfigsTab/ConfigsTab',
-    () => function testing() { return (<div>Admin Page Configs Tab Test</div>) })
+jest.mock('../../Admin/SourceControlTab/SourceControlTab',
+    () => function testing() { return (<div>Admin Page sourceControls Tab Test</div>) })
 
 describe('<Admin />', () => {
 
@@ -60,12 +60,12 @@ describe('<Admin />', () => {
         expect(await screen.findByText('Admin Page Portfolio Tab Test')).toBeInTheDocument()
     })
 
-    test('should call ConfigsTab component', async() => {
+    test('should call SourceControlTab component', async() => {
         render(<Admin />)
 
-        fireEvent.click(screen.getByText('configs'))
+        fireEvent.click(screen.getByText('source Controls'))
 
-        expect(await screen.findByText('Admin Page Configs Tab Test')).toBeInTheDocument()
+        expect(await screen.findByText('Admin Page sourceControls Tab Test')).toBeInTheDocument()
     })
 
 })

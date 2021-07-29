@@ -2,9 +2,9 @@ import { Box, Button, IconButton, makeStyles } from '@material-ui/core'
 import { Add, Edit } from '@material-ui/icons'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ConfigConstants from '../../../Redux/GitlabConfigs/constants'
-import { selectGitlabConfigs } from '../../../Redux/GitlabConfigs/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
+import SourceControlConstants from '../../../Redux/SourceControls/constants'
+import { selectSourceControls } from '../../../Redux/SourceControls/selectors'
 import { Table } from '../../Table'
 
 const useStyles = makeStyles(theme => ({
@@ -16,23 +16,23 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function ConfigsTab() {
+function SourceControlTab() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const allConfigs = useSelector(selectGitlabConfigs)
+    const allSourceControls = useSelector(selectSourceControls)
 
-    const createConfig = () => dispatch(
-        openPopup(ConfigConstants.CREATE_CONFIG, 'CreateOrUpdateGitlabConfigPopup'))
-    const updateConfig = (id) => dispatch(
-        openPopup(ConfigConstants.UPDATE_CONFIG, 'CreateOrUpdateGitlabConfigPopup', { id }))
+    const createSourceControl = () => dispatch(
+        openPopup(SourceControlConstants.CREATE_SourceControl, 'CreateOrUpdateSourceControlPopup'))
+    const updateSourceControl = (id) => dispatch(
+        openPopup(SourceControlConstants.UPDATE_SourceControl, 'CreateOrUpdateSourceControlPopup', { id }))
 
     const buildRows = () => {
-        return allConfigs.map(config => ({
+        return allSourceControls.map(SourceControl => ({
             data: [
-                config.name,
-                config.description,
-                config.baseUrl,
-                buildActions(config.id)
+                SourceControl.name,
+                SourceControl.description,
+                SourceControl.baseUrl,
+                buildActions(SourceControl.id)
             ],
             properties: { strikeThrough: false }
         }))
@@ -44,7 +44,7 @@ function ConfigsTab() {
                 <IconButton
                     title = 'edit'
                     color = 'secondary'
-                    onClick = {() => updateConfig(id)}
+                    onClick = {() => updateSourceControl(id)}
                 >
                     <Edit />
                 </IconButton>
@@ -59,9 +59,9 @@ function ConfigsTab() {
                     variant = 'text'
                     startIcon = {<Add/>}
                     className = {classes.button}
-                    onClick = {createConfig}
+                    onClick = {createSourceControl}
                 >
-                    Add New Config
+                    Add New Source Control
                 </Button>
             </Box>
             <Table
@@ -72,4 +72,4 @@ function ConfigsTab() {
     )
 }
 
-export default ConfigsTab
+export default SourceControlTab
