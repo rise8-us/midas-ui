@@ -1,7 +1,6 @@
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
 import App from './App'
-import { render, screen, useDispatchMock } from './Utilities/test-utils'
+import { renderWithRouter, screen, useDispatchMock } from './Utilities/test-utils'
 
 jest.mock('./Components/PopupManager/PopupManager', () => function testing() { return (<div/>) })
 jest.mock('./Components/WebsocketProvider/WebsocketProvider', () => function testing() {  return (<div/>) })
@@ -13,7 +12,7 @@ describe('<App />', () => {
     test('Has correct text', async() => {
         useDispatchMock().mockReturnValue({ meta: { requestStatus: 'fulfilled' }, payload: [{}] })
 
-        render(<MemoryRouter><App /></MemoryRouter>, {
+        renderWithRouter(<App />, {
             initialState: {
                 auth: {
                     user: {
@@ -30,7 +29,7 @@ describe('<App />', () => {
     test('Init fetch fails throws error', async() => {
         useDispatchMock().mockReturnValue({ meta: { requestStatus: 'failed' }, payload: [{}] })
 
-        render(<MemoryRouter><App /></MemoryRouter>)
+        renderWithRouter(<App />)
 
         expect(await consoleSpy).toHaveBeenCalledWith('INIT FAILED')
     })

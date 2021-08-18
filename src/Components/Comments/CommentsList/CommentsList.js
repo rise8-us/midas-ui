@@ -1,9 +1,7 @@
 import { Box, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Comment } from '../'
-import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
 
 const useStyles = makeStyles(theme => ({
     wrap: {
@@ -27,13 +25,12 @@ const useStyles = makeStyles(theme => ({
 function CommentsList({ commentProps, commentIds }) {
     const classes = useStyles()
 
-    const userLoggedIn = useSelector(selectUserLoggedIn)
     const commentsListSorted = Array.from(commentIds).sort((a, b) => b - a)
 
     return (
         <Box className = {classes.wrap}>
             {commentsListSorted.map(id => (
-                <Comment {...commentProps} id = {id} key = {id} viewerId = {userLoggedIn.id}/>
+                <Comment {...commentProps} id = {id} key = {id} />
             ))}
         </Box>
     )

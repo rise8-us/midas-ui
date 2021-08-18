@@ -14,7 +14,7 @@ describe('<AssertionStatusDropdown>', () => {
 
     test('should call onChange', () => {
         const onChangeMock = jest.fn()
-        render(<AssertionStatusDropdown onChange = {onChangeMock}/>, { initialState: mockState })
+        render(<AssertionStatusDropdown onChange = {onChangeMock} hasAccess = {true}/>, { initialState: mockState })
 
         fireEvent.click(screen.getByText(/not started/i))
         fireEvent.click(screen.getByText(/completed/i))
@@ -23,18 +23,27 @@ describe('<AssertionStatusDropdown>', () => {
     })
 
     test('should handle no color', () => {
-        render(<AssertionStatusDropdown option = {{ label: 'Started' }}/>)
+        render(<AssertionStatusDropdown option = {{ label: 'Started' }} hasAccess = {true}/>)
 
         expect(screen.getByText(/started/i)).toHaveStyle('color: #ffffff')
     })
 
     test('should call onClick prop', () => {
         const onClickMock = jest.fn()
-        render(<AssertionStatusDropdown onClick = {onClickMock}/>)
+        render(<AssertionStatusDropdown onClick = {onClickMock} hasAccess = {true}/>)
 
         fireEvent.click(screen.getByText(/not started/i))
 
         expect(onClickMock).toHaveBeenCalled()
+    })
+
+    test('should not open Popper with no access', () => {
+        const onClickMock = jest.fn()
+        render(<AssertionStatusDropdown onClick = {onClickMock} hasAccess = {false}/>)
+
+        fireEvent.click(screen.getByText(/not started/i))
+
+        expect(onClickMock).not.toHaveBeenCalled()
     })
 
 })

@@ -29,6 +29,10 @@ export const darkTheme = createTheme({
         info: {
             main: '#26c6da',
         },
+        text: {
+            primary: '#DDDDDD',
+            secondary: '#797979'
+        },
         divider: '#3e4548',
         subtext: '#778185',
         classification: {

@@ -7,18 +7,20 @@ import {
     requestUpdateAssertion
 } from '../../../Redux/Assertions/actions'
 import { selectAssertionById, selectAssertionsByParentId } from '../../../Redux/Assertions/selectors'
+import { hasProductAccess } from '../../../Redux/Auth/selectors'
 import { AssertionAccordion } from '../AssertionAccordion'
 
 const Assertion = ({ id, order, defaultExpanded, productId }) => {
 
     const dispatch = useDispatch()
     const subOrder = [...order]
-    const type = subOrder.shift() ?? ''
+    const type = subOrder.shift()
     const childType = subOrder[0]?.toLowerCase()
     const category = type[0] + type.substring(1).toLowerCase()
 
     const assertion = useSelector(state => selectAssertionById(state, id))
     const childAssertions = useSelector(state => selectAssertionsByParentId(state, id))
+    const hasAccess = useSelector(state =>  hasProductAccess(state, productId))
 
     const createChildAssertion = () => {
         const newChild = {
@@ -54,6 +56,7 @@ const Assertion = ({ id, order, defaultExpanded, productId }) => {
                 commentCount: assertion.commentIds?.length,
                 title: assertion.text,
                 status: assertion.status,
+                hasAccess: hasAccess,
                 onSave: updateAssertion,
                 onDelete: onDeleteClick,
                 addChildAssertion: childType ? createChildAssertion : undefined,

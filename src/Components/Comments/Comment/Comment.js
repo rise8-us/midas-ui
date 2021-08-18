@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
+import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
 import { requestDeleteComment, requestUpdateComment } from '../../../Redux/Comments/actions'
 import { selectCommentById } from '../../../Redux/Comments/selectors'
 import { Tag } from '../../Tag'
@@ -32,14 +33,15 @@ const parseStatus = (statusReceived) => {
     )
 }
 
-function Comment({ id, handleStatusUpdates, viewerId }) {
+function Comment({ id, handleStatusUpdates }) {
     const dispatch = useDispatch()
     const classes = useStyles()
 
     const comment = useSelector(state => selectCommentById(state, id))
+    const userLoggedIn = useSelector(selectUserLoggedIn)
 
     const [body, status] = comment?.text?.split('###')
-    const canEdit = comment.author?.id === viewerId
+    const canEdit = comment.author?.id === userLoggedIn.id || userLoggedIn.isAdmin
     const modified = comment.lastEdit ? true : false
     const lastEdit = comment.lastEdit ?? comment.creationDate
 
@@ -97,7 +99,6 @@ function Comment({ id, handleStatusUpdates, viewerId }) {
                     </Typography>
                     {canEdit &&
                         <EditCommentOptions
-                            canAccess = {canEdit}
                             onEditClick = {onEditClick}
                             onDeleteClick = {onDeleteClick}
                         />
@@ -136,7 +137,7 @@ function Comment({ id, handleStatusUpdates, viewerId }) {
                     </div>
                 </div>
                 :
-                <Typography color = 'textSecondary' style = {{ marginLeft: '48px' }}>
+                <Typography color = 'textSecondary' >
                     {content}
                 </Typography>
             }
@@ -147,7 +148,6 @@ function Comment({ id, handleStatusUpdates, viewerId }) {
 
 Comment.propTypes = {
     id: PropTypes.number.isRequired,
-    viewerId: PropTypes.number.isRequired,
     handleStatusUpdates: PropTypes.bool,
 }
 

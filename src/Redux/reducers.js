@@ -7,6 +7,7 @@ import commentReducer from './Comments/reducer'
 import errorReducer from './Errors/reducer'
 import filterReducer from './Filters/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
+import personaReducer from './Personas/reducer'
 import popupReducer from './Popups/reducer'
 import portfolioReducer from './Portfolios/reducer'
 import productReducer from './Products/reducer'
@@ -26,6 +27,7 @@ export const rootReducer = combineReducers({
     filters: filterReducer,
     sourceControls: sourceControlReducer,
     modifiedAssertions: modifiedAssertionsReducer,
+    personas: personaReducer,
     popups: popupReducer,
     products: productReducer,
     portfolios: portfolioReducer,

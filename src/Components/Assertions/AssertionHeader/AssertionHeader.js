@@ -2,8 +2,9 @@ import { Badge, Box, IconButton, makeStyles, TextField, Typography } from '@mate
 import { Chat, Delete, KeyboardReturn } from '@material-ui/icons'
 import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
@@ -32,14 +33,21 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+const getDisplay = (show) => show ? 'inherit' : 'none'
+const checkAccess = (allowEvent, event) => allowEvent ? event : null
+
 function AssertionHeader(props) {
     const {
         id, category, title, status, commentCount, addChildAssertionLabel,
-        onSave, onDelete, addChildAssertion
+        onSave, onDelete, addChildAssertion, hasAccess
     } = props
 
     const classes = useStyles()
     const dispatch = useDispatch()
+
+    const ref = useRef()
+    const { assertionId } = useParams()
+    const assertionIdInt = parseInt(assertionId)
 
     const statuses = useAssertionStatuses()
 
@@ -141,9 +149,21 @@ function AssertionHeader(props) {
         }
     }, [viewingComments])
 
+    useEffect(() => {
+        title !== value && setValue(title)
+    }, [title])
+
+    useEffect(() => {
+        if (assertionIdInt === id) {
+            ref.current.scrollIntoView({
+                behavior: 'smooth',
+            })
+        }
+    }, [assertionId])
+
     return (
         <>
-            <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary'>
+            <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary' ref = {ref}>
                 {category}:
             </Typography>
             <Box display = 'flex' width = '100%'>
@@ -162,11 +182,11 @@ function AssertionHeader(props) {
                             }
                         }}
                         value = {value}
-                        onKeyDown = {onKeyDown}
-                        onChange = {onValueChange}
-                        onFocus = {onTitleFocus}
-                        onBlur = {onTitleBlur}
-                        onClick = {onTitleClick}
+                        onKeyDown = {checkAccess(hasAccess, onKeyDown)}
+                        onChange = {checkAccess(hasAccess, onValueChange)}
+                        onFocus = {checkAccess(hasAccess, onTitleFocus)}
+                        onBlur = {checkAccess(hasAccess, onTitleBlur)}
+                        onClick = {checkAccess(hasAccess, onTitleClick)}
                         style = {{
                             height: '100%'
                         }}
@@ -181,14 +201,14 @@ function AssertionHeader(props) {
                             bottom: '13px',
                             zIndex: 1,
                             left: '8px',
-                            display: (changeable) ? 'inherit' : 'none'
+                            display: getDisplay(changeable)
                         }}
                     >
                         enter to save • escape to revert
                     </Typography>
                 </div>
                 <Box display = 'flex' flexDirection = 'row'>
-                    { addChildAssertion &&
+                    { hasAccess && addChildAssertion &&
                         <IconButton
                             color = 'secondary'
                             title = {addChildAssertionLabel}
@@ -196,12 +216,14 @@ function AssertionHeader(props) {
                             onClick = {onAddChildAssertionClick}
                         ><KeyboardReturn /></IconButton>
                     }
-                    <IconButton
-                        color = 'secondary'
-                        title = 'delete'
-                        size = 'small'
-                        onClick = {onDeleteClick}
-                    ><Delete /></IconButton>
+                    { hasAccess &&
+                        <IconButton
+                            color = 'secondary'
+                            title = 'delete'
+                            size = 'small'
+                            onClick = {onDeleteClick}
+                        ><Delete /></IconButton>
+                    }
                     <Badge
                         badgeContent = {commentCount}
                         overlap = 'circular'
@@ -219,8 +241,9 @@ function AssertionHeader(props) {
                     </Badge>
                     {defaultTag &&
                         <AssertionStatusDropdown
-                            onClick = {onStatusClick}
                             option = {defaultTag}
+                            hasAccess = {hasAccess}
+                            onClick = {onStatusClick}
                             onChange = {onStatusChange}
                         />
                     }
@@ -248,6 +271,7 @@ AssertionHeader.propTypes = {
     onDelete: PropTypes.func.isRequired,
     addChildAssertion: PropTypes.func,
     addChildAssertionLabel: PropTypes.string,
+    hasAccess: PropTypes.bool.isRequired
 }
 
 AssertionHeader.defaultProps = {

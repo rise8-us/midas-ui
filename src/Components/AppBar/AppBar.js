@@ -111,7 +111,7 @@ function AppBar({ height }) {
                             variant = 'body1'
                             style = {{
                                 color: currentPage === page.path ?
-                                    theme.palette.text.secondary : theme.palette.grey[600],
+                                    theme.palette.text.primary : theme.palette.grey[600],
                             }}
                         >{page.label}</Typography>
                     </div>

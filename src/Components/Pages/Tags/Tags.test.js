@@ -41,7 +41,7 @@ describe('<Tags />', () => {
         fireEvent.click(screen.getByTitle('edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            TagConstants.UPDATE_TAG, 'CreateOrUpdateTagPopup', { id: allTags.id })
+            TagConstants.UPDATE_TAG, 'TagPopup', { id: allTags.id })
     })
 
     test('Should fire delete tag', () => {
@@ -59,7 +59,7 @@ describe('<Tags />', () => {
 
         expect(openPopupMock).toHaveBeenCalledWith(
             TagConstants.CREATE_TAG,
-            'CreateOrUpdateTagPopup',
+            'TagPopup',
             { type: 'ALL' }
 
         )

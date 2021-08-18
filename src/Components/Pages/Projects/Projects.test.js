@@ -53,7 +53,7 @@ describe('<Projects>', () => {
 
         fireEvent.click(screen.getByTitle(/add/i))
 
-        expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'ProjectPopup')
     })
 
 })

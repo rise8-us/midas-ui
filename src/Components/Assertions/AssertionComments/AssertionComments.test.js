@@ -32,7 +32,7 @@ describe('<AssertionComments>', () => {
     }
 
     test('should set height', () => {
-        render(<AssertionComments assertionId = {3}/>, { initialState: {
+        render(<AssertionComments assertionId = {3} hasAccess = {true}/>, { initialState: {
             assertions: { ...mockState.assertions },
             app: {
                 assertionStatus: { },
@@ -45,13 +45,13 @@ describe('<AssertionComments>', () => {
     })
 
     test('should render', () => {
-        render(<AssertionComments assertionId = {1}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {1} hasAccess = {true}/>, { initialState: mockState })
 
         expect(screen.getByPlaceholderText(/enter comment here.../i)).toBeInTheDocument()
     })
 
     test('should not render', () => {
-        render(<AssertionComments assertionId = {2}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {2} hasAccess = {true}/>, { initialState: mockState })
 
         expect(screen.queryByPlaceholderText(/enter comment here.../i)).not.toBeInTheDocument()
     })
@@ -59,7 +59,7 @@ describe('<AssertionComments>', () => {
     test('should handle submit', () => {
         const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
         useDispatchMock().mockResolvedValue({ data: {} })
-        render(<AssertionComments assertionId = {1}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {1} hasAccess = {true}/>, { initialState: mockState })
 
         userEvent.type(screen.getByPlaceholderText(/enter comment here.../i), 'new comment')
         fireEvent.click(screen.getByText(/submit/i))

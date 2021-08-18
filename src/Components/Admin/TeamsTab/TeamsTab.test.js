@@ -1,7 +1,7 @@
 import React from 'react'
+import TeamsConstants from '../../../Redux/Teams/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from '../../../Utilities/test-utils'
 import TeamsTab from './TeamsTab'
-import TeamsConstants from '../../../Redux/Teams/constants'
 
 describe('<TeamsTab />', () => {
     const allTeams = [
@@ -51,7 +51,7 @@ describe('<TeamsTab />', () => {
 
         fireEvent.click(screen.getByText('Add New Team'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(TeamsConstants.CREATE_TEAM, 'CreateOrUpdateTeamPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(TeamsConstants.CREATE_TEAM, 'TeamPopup')
     })
 
     test('Clicking on unarchived Team row calls openPopup', () => {
@@ -59,7 +59,7 @@ describe('<TeamsTab />', () => {
 
         fireEvent.click(screen.queryAllByTestId('Table__row')[0])
 
-        expect(openPopupMock).toHaveBeenCalledWith(TeamsConstants.UPDATE_TEAM, 'CreateOrUpdateTeamPopup', { id: 1 })
+        expect(openPopupMock).toHaveBeenCalledWith(TeamsConstants.UPDATE_TEAM, 'TeamPopup', { id: 1 })
     })
 
     test('Clicking on archived Team row does not call openPopup', () => {

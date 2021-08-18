@@ -7,7 +7,8 @@ export const selectProductById = (state, id) => {
         description: '',
         tagIds: [],
         tags: [],
-        projects: []
+        projects: [],
+        teamIds: []
     }
 
     const projects = product.projectIds.map(pId => selectProjectById(state, pId))

@@ -50,7 +50,7 @@ function AssertionAccordion({
                 expandIcon = {
                     expandable
                         ? <ExpandMore data-testid = {`AssertionHeader__icon-expand-${category}`}/>
-                        : <></>
+                        : <div style = {{ width: '24px' }}/>
                 }
                 classes = {{ root: classes.accordionSummaryRoot }}
                 IconButtonProps = {{
@@ -59,7 +59,7 @@ function AssertionAccordion({
                     }
                 }}
             >
-                <AssertionHeader {... { ...assertionHeaderProps, category } }/>
+                <AssertionHeader {...assertionHeaderProps} category = {category}/>
             </AccordionSummary>
             <AccordionDetails
                 className = {classes.accordionDetails}

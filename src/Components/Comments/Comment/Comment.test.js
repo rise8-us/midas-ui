@@ -5,6 +5,17 @@ import { Comment } from './index'
 describe('<Comment>', () => {
 
     const selectCommentByIdMock = useModuleMock('Redux/Comments/selectors', 'selectCommentById')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
+
+    const userMock = {
+        id: 42,
+        isAdmin: false
+    }
+
+    beforeEach(() => {
+        selectUserLoggedInMock.mockReturnValue(userMock)
+        useDispatchMock().mockReturnValue()
+    })
 
     test('should render', () => {
         selectCommentByIdMock.mockReturnValue({
@@ -19,7 +30,7 @@ describe('<Comment>', () => {
             lastEdit: 'newer'
         })
 
-        render(<Comment id = {0} viewerId = {1} />)
+        render(<Comment id = {0} />)
 
         expect(screen.getByText('email')).toBeInTheDocument()
         expect(screen.getByText(/newer/)).toBeInTheDocument()
@@ -43,7 +54,6 @@ describe('<Comment>', () => {
         render(
             <Comment
                 id = {0}
-                viewerId = {1}
                 handleStatusUpdates
             />, {
                 initialState: {
@@ -64,7 +74,7 @@ describe('<Comment>', () => {
         selectCommentByIdMock.mockReturnValue({
             text: 'body###status::COMPLETED',
             author: {
-                id: 1,
+                id: 42,
                 displayName: '',
                 email: '',
                 username: 'usrnm'
@@ -72,9 +82,8 @@ describe('<Comment>', () => {
             creationDate: 'created',
             lastEdit: null
         })
-        useDispatchMock().mockReturnValue()
 
-        render(<Comment id = {0} viewerId = {1} />)
+        render(<Comment id = {0} />)
 
         fireEvent.click(screen.getByTitle(/more/i))
         fireEvent.click(screen.getByText(/edit/i))
@@ -84,11 +93,11 @@ describe('<Comment>', () => {
         expect(screen.getByText(/body1/i)).toBeInTheDocument()
     })
 
-    test('should edit and revert comment', () => {
+    test('should edit and revert commentas user', () => {
         selectCommentByIdMock.mockReturnValue({
             text: 'body###status::COMPLETED',
             author: {
-                id: 1,
+                id: 42,
                 displayName: '',
                 email: '',
                 username: 'usrnm'
@@ -96,9 +105,8 @@ describe('<Comment>', () => {
             creationDate: 'created',
             lastEdit: null
         })
-        useDispatchMock().mockReturnValue()
 
-        render(<Comment id = {0} viewerId = {1} />)
+        render(<Comment id = {0} />)
 
         fireEvent.click(screen.getByTitle(/more/i))
         fireEvent.click(screen.getByText(/edit/i))
@@ -108,12 +116,12 @@ describe('<Comment>', () => {
         expect(screen.getByText(/body/i)).toBeInTheDocument()
     })
 
-    test('should delete comment', () => {
+    test('should delete comment as user', () => {
         const requestDeleteCommentMock = useModuleMock('Redux/Comments/actions', 'requestDeleteComment')
         selectCommentByIdMock.mockReturnValue({
             text: 'body###status::COMPLETED',
             author: {
-                id: 1,
+                id: 42,
                 displayName: '',
                 email: '',
                 username: 'usrnm'
@@ -121,13 +129,45 @@ describe('<Comment>', () => {
             creationDate: 'created',
             lastEdit: null
         })
-        useDispatchMock().mockReturnValue()
 
-        render(<Comment id = {0} viewerId = {1} />)
+        render(<Comment id = {0} />)
 
         fireEvent.click(screen.getByTitle(/more/i))
         fireEvent.click(screen.getByText(/delete/i))
 
         expect(requestDeleteCommentMock).toHaveBeenCalledWith(0)
+    })
+
+    test('should see more Options dropdown as Admin', () => {
+        selectUserLoggedInMock.mockReturnValue({ ...userMock, isAdmin: true })
+        selectCommentByIdMock.mockReturnValue({
+            text: 'body',
+            author: {
+                id: 42,
+                displayName: 'Y',
+            },
+            creationDate: 'created',
+            lastEdit: null
+        })
+
+        render(<Comment id = {0} />)
+
+        expect(screen.getByTitle(/more/i)).toBeInTheDocument()
+    })
+
+    test('should not see more Options dropdown when not author or admin', () => {
+        selectCommentByIdMock.mockReturnValue({
+            text: 'body',
+            author: {
+                id: 1,
+                displayName: 'Z',
+            },
+            creationDate: 'date',
+            lastEdit: null
+        })
+
+        render(<Comment id = {0} />)
+
+        expect(screen.queryByTitle(/more/i)).not.toBeInTheDocument()
     })
 })

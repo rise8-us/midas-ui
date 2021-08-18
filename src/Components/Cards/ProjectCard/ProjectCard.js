@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { ReactComponent as SonarqubeLogo } from '../../../Assets/sonarqubeLogo.svg'
 import useSonarqubeRatings from '../../../Hooks/useSonarqubeRatings'
+import { hasProductOrTeamAccess } from '../../../Redux/Auth/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
 import { selectProductById } from '../../../Redux/Products/selectors'
 import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function ProjectCard({ id, canUpdate }) {
+function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
     const classes = useStyles()
@@ -42,6 +43,7 @@ function ProjectCard({ id, canUpdate }) {
 
     const project = useSelector(state => selectProjectById(state, id))
     const product = useSelector(state => selectProductById(state, project.productId))
+    const hasAccess = useSelector(state => hasProductOrTeamAccess(state, project.productId))
     const coverage = project.coverage ?? {}
 
     const calcStep = () => Math.log2(project.projectJourneyMap + 1)
@@ -57,7 +59,7 @@ function ProjectCard({ id, canUpdate }) {
     }
 
     const updateProjectPopup = () => {
-        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id }))
+        dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'ProjectPopup', { id }))
     }
 
     const goToProductsPage = () => history.push(`/products/${project.productId}`)
@@ -106,7 +108,7 @@ function ProjectCard({ id, canUpdate }) {
                     onClick: project.productId !== null ? goToProductsPage : undefined,
                     className: project.productId !== null ? classes.link : 'card',
                 }}
-                action = {canUpdate &&
+                action = {hasAccess &&
                     <IconButton
                         onClick = {updateProjectPopup}
                         color = 'secondary'
@@ -117,33 +119,37 @@ function ProjectCard({ id, canUpdate }) {
                 }
             />
             <Box display = 'flex'>
-                {canUpdate &&
+                {hasAccess &&
                     <Tooltip title = 'Roll back status'>
-                        <IconButton
-                            onClick = {() => handleProgress(-1)}
-                            color = 'secondary'
-                            data-testid = 'ProjectCard__button-back'
-                            disabled = {project.projectJourneyMap === 0}
-                            style = {{ height: '48px', margin: 'auto' }}
-                            disableRipple
-                        >
-                            <ChevronLeft />
-                        </IconButton>
+                        <>
+                            <IconButton
+                                onClick = {() => handleProgress(-1)}
+                                color = 'secondary'
+                                data-testid = 'ProjectCard__button-back'
+                                disabled = {project.projectJourneyMap === 0}
+                                style = {{ height: '48px', margin: 'auto' }}
+                                disableRipple
+                            >
+                                <ChevronLeft />
+                            </IconButton>
+                        </>
                     </Tooltip>
                 }
                 <PathToProdStepper step = {calcStep()} />
-                {canUpdate &&
+                {hasAccess &&
                     <Tooltip title = 'Complete current step'>
-                        <IconButton
-                            onClick = {() => handleProgress(1)}
-                            color = 'secondary'
-                            data-testid = 'ProjectCard__button-forward'
-                            disabled = {project.projectJourneyMap === 7}
-                            style = {{ height: '48px', margin: 'auto' }}
-                            disableRipple
-                        >
-                            <ChevronRight />
-                        </IconButton>
+                        <>
+                            <IconButton
+                                onClick = {() => handleProgress(1)}
+                                color = 'secondary'
+                                data-testid = 'ProjectCard__button-forward'
+                                disabled = {project.projectJourneyMap === 7}
+                                style = {{ height: '48px', margin: 'auto' }}
+                                disableRipple
+                            >
+                                <ChevronRight />
+                            </IconButton>
+                        </>
                     </Tooltip>
                 }
             </Box>
@@ -201,12 +207,7 @@ function ProjectCard({ id, canUpdate }) {
 }
 
 ProjectCard.propTypes = {
-    canUpdate: PropTypes.bool,
     id: PropTypes.number.isRequired,
-}
-
-ProjectCard.defaultProps = {
-    canUpdate: false,
 }
 
 export default ProjectCard

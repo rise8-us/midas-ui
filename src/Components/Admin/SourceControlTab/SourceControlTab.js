@@ -21,10 +21,13 @@ function SourceControlTab() {
     const dispatch = useDispatch()
     const allSourceControls = useSelector(selectSourceControls)
 
-    const createSourceControl = () => dispatch(
-        openPopup(SourceControlConstants.CREATE_SourceControl, 'CreateOrUpdateSourceControlPopup'))
-    const updateSourceControl = (id) => dispatch(
-        openPopup(SourceControlConstants.UPDATE_SourceControl, 'CreateOrUpdateSourceControlPopup', { id }))
+    const createSourceControl = () => {
+        dispatch(openPopup(SourceControlConstants.CREATE_CONFIG, 'SourceControlPopup'))
+    }
+
+    const updateSourceControl = (id) => {
+        dispatch(openPopup(SourceControlConstants.UPDATE_CONFIG, 'SourceControlPopup', { id }))
+    }
 
     const buildRows = () => {
         return allSourceControls.map(SourceControl => ({

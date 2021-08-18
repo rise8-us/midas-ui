@@ -13,7 +13,7 @@ describe('<AutoSaveTextField>', () => {
     test('should edit and call onSave on ENTER', () => {
         const onSaveMock = jest.fn()
 
-        render(<AutoSaveTextField onSave = {onSaveMock} initialValue = 'test'/>)
+        render(<AutoSaveTextField onSave = {onSaveMock} initialValue = 'test' canEdit/>)
         userEvent.type(screen.getByDisplayValue(/test/), 'in the details{enter}')
 
         expect(screen.getByDisplayValue(/in the details/)).toBeInTheDocument()
@@ -23,7 +23,7 @@ describe('<AutoSaveTextField>', () => {
     test('should edit and call onSave on Leave', () => {
         const onSaveMock = jest.fn()
 
-        render(<AutoSaveTextField onSave = {onSaveMock} initialValue = 'test'/>)
+        render(<AutoSaveTextField onSave = {onSaveMock} initialValue = 'test' canEdit/>)
 
         userEvent.type(screen.getByDisplayValue(/test/), 'tabbing outta here')
         userEvent.tab()
@@ -33,8 +33,7 @@ describe('<AutoSaveTextField>', () => {
     })
 
     test('should edit and revert', () => {
-
-        render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'test'/>)
+        render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'test' canEdit/>)
         userEvent.type(screen.getByDisplayValue(/test/), 'in the details{esc}')
 
         expect(screen.getByDisplayValue(/test/)).toBeInTheDocument()

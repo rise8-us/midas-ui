@@ -35,6 +35,7 @@ describe('<ProjectCard />', () => {
     }
 
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
+    const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const journeyMapUpdateMock = useModuleMock('Redux/Projects/actions', 'requestUpdateJourneyMapById')
@@ -43,6 +44,7 @@ describe('<ProjectCard />', () => {
         useDispatchMock().mockReturnValue({})
         selectProjectByIdMock.mockReturnValue(project)
         selectProductByIdMock.mockReturnValue(product)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
     })
 
     test('should display data', () => {
@@ -58,7 +60,7 @@ describe('<ProjectCard />', () => {
         fireEvent.click(screen.getByTestId('ProjectCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProjectConstants.UPDATE_PROJECT, 'CreateOrUpdateProjectPopup', { id: project.id })
+            ProjectConstants.UPDATE_PROJECT, 'ProjectPopup', { id: project.id })
     })
 
     test('should fire updateProgress forward', () => {
@@ -90,6 +92,8 @@ describe('<ProjectCard />', () => {
     })
 
     test('should not be changeable', () => {
+        hasProductOrTeamAccessMock.mockReturnValue(false)
+
         render(<ProjectCard id = {project.id} />)
 
         expect(screen.queryByTestId('ProjectCard__button-edit')).not.toBeInTheDocument()

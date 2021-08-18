@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
 import { requestSearchAssertions } from '../../../Redux/Assertions/actions'
 import { selectAssertionsByTypeAndProductId } from '../../../Redux/Assertions/selectors'
+import { hasProductAccess } from '../../../Redux/Auth/selectors'
 import { Assertion, AssertionComments, CreateAssertionsButton } from '../../Assertions'
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +37,7 @@ function AssertionsTab({ productId }) {
     const dispatch = useDispatch()
     const bottomOfAssertionsRef = useRef(null)
 
+    const hasAccess = useSelector(state =>  hasProductAccess(state, productId))
     const showComments = useSelector(state => state.app.assertionCommentsOpen)
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => objectHash(left) === objectHash(right))
@@ -48,7 +50,7 @@ function AssertionsTab({ productId }) {
     return (
         <div className = {classes.root}>
             <div style = {{ width: showComments ? 'calc(100% - 350px)' : '100%' }} className = {classes.assertion}>
-                <CreateAssertionsButton productId = {productId} ref = { bottomOfAssertionsRef } />
+                {hasAccess && <CreateAssertionsButton productId = {productId} ref = { bottomOfAssertionsRef } />}
                 {objectives.map((objective, index) => (
                     <div style = {{ margin: '16px 0' }} key = { objective.id}>
                         <Assertion
@@ -64,7 +66,7 @@ function AssertionsTab({ productId }) {
             </div>
             { showComments &&
                 <div className = {classes.comments} style = {{ width: '350px' }}>
-                    <AssertionComments assertionId = {showComments}/>
+                    <AssertionComments assertionId = {showComments} hasAccess = {hasAccess}/>
                 </div>
             }
         </div>

@@ -5,6 +5,7 @@ import { ProductHeader } from './index'
 
 describe('<ProductHeader>', () => {
 
+    const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const requestUpdateProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
 
@@ -24,6 +25,7 @@ describe('<ProductHeader>', () => {
 
     beforeEach(() => {
         selectProductByIdMock.mockReturnValue(product)
+        hasProductAccessMock.mockReturnValue(true)
     })
 
     test('Has correct text', () => {
@@ -31,7 +33,7 @@ describe('<ProductHeader>', () => {
 
         expect(screen.getByDisplayValue('Product 1')).toBeInTheDocument()
         expect(screen.getByPlaceholderText('Description not set...'))
-        expect(screen.getByText('Some tags')).toBeInTheDocument()
+        expect(screen.getByText(/Some tags/i)).toBeInTheDocument()
     })
 
     test('should call onSubmit for name change', () => {
@@ -66,7 +68,7 @@ describe('<ProductHeader>', () => {
         fireEvent.click(screen.getByTestId('ProductHeader__icon-action'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: product.id })
+            ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id: product.id })
     })
 
     test('should display error messages', () => {

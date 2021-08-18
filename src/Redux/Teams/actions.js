@@ -34,3 +34,11 @@ export const requestArchiveTeam = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestFindTeamBy = createAsyncThunk(
+    Constants.FIND_TEAM_BY,
+    async(search, { rejectWithValue }) => {
+        const request = { endpoint: `/api/teams?search=${search}`, method: 'GET', body: {} }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)

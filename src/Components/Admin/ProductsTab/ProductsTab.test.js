@@ -49,7 +49,7 @@ describe('<ProductsTab />', () => {
         fireEvent.click(screen.getByTitle('edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: allProducts.id })
+            ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id: allProducts.id })
     })
 
     test('Should fire archive tag', () => {
@@ -75,7 +75,7 @@ describe('<ProductsTab />', () => {
         fireEvent.click(screen.getByText('Add New Product'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProductConstants.CREATE_PRODUCT, 'CreateOrUpdateProductPopup')
+            ProductConstants.CREATE_PRODUCT, 'ProductPopup')
     })
 
 })
