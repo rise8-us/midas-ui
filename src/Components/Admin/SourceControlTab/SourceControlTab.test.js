@@ -33,7 +33,7 @@ describe('<SourceControlsTab />', () => {
         fireEvent.click(screen.getByTitle('edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            SourceControlConstants.UPDATE_SourceControl,
+            SourceControlConstants.UPDATE_CONFIG,
             'SourceControlPopup', { id: allSourceControls.id })
     })
 
@@ -43,7 +43,7 @@ describe('<SourceControlsTab />', () => {
         fireEvent.click(screen.getByText('Add New Source Control'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            SourceControlConstants.CREATE_SourceControl, 'SourceControlPopup')
+            SourceControlConstants.CREATE_CONFIG, 'SourceControlPopup')
     })
 
 })

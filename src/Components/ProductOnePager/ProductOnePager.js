@@ -3,9 +3,10 @@ import { ProductDetails } from 'Components/ProductDetails'
 import { ProductHeader } from 'Components/ProductHeader'
 import { ProductUserPersonas } from 'Components/ProductUserPersonas'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
+import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'
 import { requestUpdateProduct } from 'Redux/Products/actions'
 import { selectProductById } from 'Redux/Products/selectors'
 
@@ -22,6 +23,10 @@ function ProductOnePager({ id, readOnly, excludeHeader }) {
             [field]: value
         }))
     }
+
+    useEffect(() => {
+        dispatch(requestFetchPersonasByProductId(id))
+    }, [])
 
     return (
         <Grid container direction = 'row' wrap = 'wrap' >
