@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import FormatErrors from '../../Utilities/FormatErrors'
 
 function AutoSaveTextField({
-    className, dataTestId, enableSpellCheck, errors, initialValue, onSave, ...textFieldProps }) {
+    canEdit, className, dataTestId, enableSpellCheck, errors, initialValue, onSave, ...textFieldProps }) {
 
     const [inEditMode, setInEditMode] = useState(false)
     const [value, setValue] = useState(initialValue)
@@ -16,28 +16,31 @@ function AutoSaveTextField({
 
     const onMouseDown = (event) => {
         event.stopPropagation()
-        setInEditMode(true)
+        canEdit && setInEditMode(true)
     }
 
     const onFocus = (event) => {
         event.stopPropagation()
-        setInEditMode(true)
+        canEdit && setInEditMode(true)
         event.target.setSelectionRange(0, event.target.value.length)
     }
 
     const onBlur = (event) => {
         event.stopPropagation()
         setInEditMode(false)
-        onSave(value)
+        canEdit && onSave(value)
     }
 
     const onKeyDown = (event) => {
         event.stopPropagation()
 
-        if (event.key === 'Enter') onSave(value)
-        else if (event.key === 'Escape') setValue(initialValue)
-
-        setInEditMode(false)
+        if (event.key === 'Enter') {
+            canEdit && onSave(value)
+            setInEditMode(false)
+        } else if (event.key === 'Escape') {
+            setValue(initialValue)
+            setInEditMode(false)
+        }
     }
 
     useEffect(() => {
@@ -52,6 +55,7 @@ function AutoSaveTextField({
                 disableUnderline: !inEditMode,
                 'data-testid': dataTestId,
                 className,
+                readOnly: !canEdit
             }}
             value = {value}
             onFocus = {onFocus}
@@ -66,12 +70,17 @@ function AutoSaveTextField({
 }
 
 AutoSaveTextField.propTypes = {
+    canEdit: PropTypes.bool,
     className: PropTypes.string,
     dataTestId: PropTypes.string,
     enableSpellCheck: PropTypes.bool,
     errors: PropTypes.arrayOf(PropTypes.string),
     fullWidth: PropTypes.bool,
     initialValue: PropTypes.string,
+    InputLabelProps: PropTypes.shape({
+        className: PropTypes.string
+    }),
+    label: PropTypes.string,
     multiline: PropTypes.bool,
     name: PropTypes.string,
     onSave: PropTypes.func.isRequired,
@@ -79,12 +88,15 @@ AutoSaveTextField.propTypes = {
 }
 
 AutoSaveTextField.defaultProps = {
+    canEdit: false,
     className: '',
     dataTestId: 'AutoSaveTextField__input',
     enableSpellCheck: false,
     errors: [],
     fullWidth: false,
     initialValue: '',
+    InputLabelProps: undefined,
+    label: undefined,
     multiline: false,
     name: '',
     placeholder: '',

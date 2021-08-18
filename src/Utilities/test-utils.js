@@ -2,23 +2,36 @@
 /* eslint-disable react/prop-types */
 import { render as rtlRender } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { createMemoryHistory } from 'history'
+import React from 'react'
 import { Provider } from 'react-redux'
+import { Router } from 'react-router-dom'
 import { createStore } from 'redux'
 import { rootReducer } from '../Redux/reducers'
 
-function render(
-    ui,
-    {
-        initialState,
-        store = createStore(rootReducer, initialState),
-        ...renderOptions
-    } = {}
-) {
+function render(ui, { initialState, store = createStore(rootReducer, initialState), ...renderOptions } = {}) {
     function Wrapper({ children }) {
-        // eslint-disable-next-line react/react-in-jsx-scope
         return <Provider store = {store}>{children}</Provider>
     }
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
+}
+
+// TODO: Get route with path working so that useParams hook can access a templete for the route
+function renderWithRouter(ui, {
+    route = '/',
+    // routePath = '/',
+    history = createMemoryHistory(),
+    ...renderOptions
+} = {}) {
+
+    history.push(route)
+
+    return render(
+        <Router history = {history}>
+            {/* <Route path = {routePath}> */}
+            {ui}
+            {/* </Route> */}
+        </Router>, { ...renderOptions })
 }
 
 export const useSelectorMock = () => {
@@ -46,5 +59,5 @@ export * from '@testing-library/react'
 export * from '@testing-library/user-event'
 export { userEvent }
 // override render method
-export { render }
+export { render, renderWithRouter }
 

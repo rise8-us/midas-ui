@@ -25,6 +25,7 @@ describe('<SearchUsers />', () => {
     })
 
     test('should render props', () => {
+        useDispatchMock().mockResolvedValue({ payload: allUsers })
         render(<SearchUsers value = {allUsers[1]} title = 'test title'/>)
 
         expect(screen.getByText('test title')).toBeInTheDocument()
@@ -35,11 +36,9 @@ describe('<SearchUsers />', () => {
         useDispatchMock().mockResolvedValue({ payload: allUsers })
         const onChangePropMock = jest.fn()
 
-        render(<SearchUsers onChange = {onChangePropMock}/>)
+        render(<SearchUsers onChange = {onChangePropMock} freeSolo/>)
 
-        const input = screen.getByDisplayValue('')
-        userEvent.type(input, 'test')
-
+        userEvent.type(screen.getByDisplayValue(''), 'test')
         fireEvent.click(await screen.findByText('foobar'))
 
         expect(onChangePropMock).toHaveBeenCalledTimes(1)

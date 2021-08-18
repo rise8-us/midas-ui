@@ -16,7 +16,7 @@ const WebsocketContext = createContext({})
 
 export const useWebsocket = () => useContext(WebsocketContext)
 
-let stompClient
+let stompClient = Stomp.client(`${getAPIURL()}/midas-websocket`)
 
 function WebsocketProvider({ children }) {
 
@@ -52,15 +52,13 @@ function WebsocketProvider({ children }) {
 
 
     useEffect(() => {
-        stompClient = Stomp.over(socketFactory)
+        stompClient.webSocketFactory = socketFactory
         stompClient.reconnectDelay = 5000
         stompClient.debug = function() { /* Turn off debugging */ }
         stompClient.onWebSocketClose = onWebsocketClose
-        stompClient.connect(
-            {},
-            onConnectSuccess,
-            onConnectFailure
-        )
+        stompClient.onWebSocketError = onConnectFailure
+        stompClient.onConnect = onConnectSuccess
+        stompClient.activate()
     }, [])
 
 

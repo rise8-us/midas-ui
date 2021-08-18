@@ -1,12 +1,16 @@
-import { CardContent, Divider, Grid, makeStyles, Typography } from '@material-ui/core'
+import { CardContent, Divider, Grid, makeStyles } from '@material-ui/core'
+import { ProductList } from 'Components/ProductList'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AbmsLogo from '../../../Assets/ABMSAppsLogo.svg'
+import { hasProductAccess } from '../../../Redux/Auth/selectors'
+import { requestUpdatePortfolio } from '../../../Redux/Portfolios/actions'
 import {
     selectAllActivePortfoliosNameAndIds, selectAllPortfolios, selectPortfolioById
 } from '../../../Redux/Portfolios/selectors'
 import { selectTagsByScope } from '../../../Redux/Tags/selectors'
 import { getNumberOrZero } from '../../../Utilities/getNumberOrZero'
+import { AutoSaveTextField } from '../../AutoSaveTextField'
 import { BlockerList } from '../../BlockerList'
 import { DashboardCard } from '../../Cards'
 import { CtfStatistics } from '../../CtfStatistics'
@@ -19,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
         margin: '0 25px',
         minWidth: '250px',
         paddingTop: theme.spacing(2)
+    },
+    portfolioDescription: {
+        fontWeight: 'bold'
     },
     container: {
         overflowY: 'overlay',
@@ -42,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down(1500)]: {
             maxWidth: '100%'
         },
-    }
+    },
 }))
 
 export const combinePortfolios = (portfolios) => {
@@ -105,12 +112,14 @@ export const buildScopedData = (products, scopedTags) => {
 
 function Dashboard() {
     const classes = useStyles()
+    const dispatch = useDispatch()
 
     const portfolios = useSelector(selectAllActivePortfoliosNameAndIds)
     const scopedTags = useSelector(state => selectTagsByScope(state, 'Ownership'))
     const ctfSteps = useSelector(state => state.app.projectJourneyMap) ?? {}
 
     const [selectedPortfolioId, setSelectedPortfolioId] = useState(0)
+    const hasEdit = useSelector(state => hasProductAccess(state, selectedPortfolioId))
 
     const selectedPortfolio = useSelector(state => (selectedPortfolioId === 0) ?
         combinePortfolios(selectAllPortfolios(state)) : selectPortfolioById(state, selectedPortfolioId))
@@ -122,9 +131,27 @@ function Dashboard() {
 
     const ctfData = buildCtfData(combineProducts(selectedPortfolio?.products ?? []), ctfSteps)
 
+    const getPortfolioDescription = (description) => {
+        if (selectedPortfolioId === 0) {
+            return 'Currently view all portfolio data. ' +
+            'To view a specific portfolio select it from the list above.'
+        } else {
+            return description ? description : 'No description available'
+        }
+    }
+
+    const updatePortfolioDescription = (description) => {
+        dispatch(requestUpdatePortfolio({
+            ...selectedPortfolio,
+            description,
+            childIds: selectedPortfolio.children,
+            tagIds: selectedPortfolio.tags.map(t => t.id)
+        }))
+    }
+
     return (
         <Page>
-            <Grid container spacing = {2} style = {{ padding: '0 24px' }} >
+            <Grid container spacing = {3} style = {{ padding: '24px' }} >
                 <Grid item sm>
                     <DashboardCard
                         title = 'Portfolio'
@@ -148,11 +175,14 @@ function Dashboard() {
                                     className = {classes.portfolioInfoContainer}
                                 >
                                     <Grid item style = {{ margin: 'auto 0' }}>
-                                        <Typography style = {{ fontWeight: 'bold' }}>
-                                            {selectedPortfolio?.description ?
-                                                selectedPortfolio.description : 'No description available'
-                                            }
-                                        </Typography>
+                                        <AutoSaveTextField
+                                            className = {classes.portfolioDescription}
+                                            initialValue = {getPortfolioDescription(selectedPortfolio?.description)}
+                                            canEdit = {hasEdit}
+                                            multiline
+                                            fullWidth
+                                            onSave = {updatePortfolioDescription}
+                                        />
                                     </Grid>
                                     <Grid container item spacing = {2} style = {{ margin: '0 -8px' }}>
                                         {scopedTags.map(tag => (
@@ -175,6 +205,16 @@ function Dashboard() {
                     >
                         <CardContent className = {classes.container}>
                             <BlockerList portfolioId = {selectedPortfolioId}/>
+                        </CardContent>
+                    </DashboardCard>
+                </Grid>
+                <Grid item xs className = {classes.products}>
+                    <DashboardCard
+                        title = 'Products'
+                        minWidth = '600px'
+                    >
+                        <CardContent className = {classes.container}>
+                            <ProductList products = {selectedPortfolio.products} tagScope = 'Ownership' />
                         </CardContent>
                     </DashboardCard>
                 </Grid>

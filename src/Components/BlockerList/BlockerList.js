@@ -27,6 +27,8 @@ function BlockerList({ portfolioId }) {
                 return (
                     <React.Fragment key = {index}>
                         <BlockerRow
+                            assertionId = {blocker.assertion.id}
+                            productId = {blocker.productId}
                             name = {blocker.productName}
                             date = {`${dateParsed[2]} ${dateParsed[1].toUpperCase()} ${dateParsed[3].substr(2, 2)}`}
                             title = {blocker.assertion.text}

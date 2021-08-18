@@ -6,7 +6,7 @@ jest.mock('axios')
 describe('requests', () => {
 
     test('createAxiosRequest : data attached', () => {
-        let requestAnswer = {
+        const answer = {
             method: 'GET',
             url: 'http://localhost:8000/info',
             headers: {
@@ -17,12 +17,12 @@ describe('requests', () => {
                 foo: 'bar'
             }
         }
-        const request = requestUtils.createAxiosRequest('/info', 'GET', { 'foo': 'bar' })
-        expect(request).toEqual(requestAnswer)
+        const demand = requestUtils.createAxiosRequest('/info', 'GET', { 'foo': 'bar' })
+        expect(demand).toEqual(answer)
     })
 
     test('createAxiosRequest : no data', () => {
-        let requestAnswer = {
+        let answer = {
             method: 'GET',
             url: 'http://localhost:8000/info',
             headers: {
@@ -30,8 +30,8 @@ describe('requests', () => {
                 'Accept': 'application/json'
             }
         }
-        const request = requestUtils.createAxiosRequest('/info', 'GET')
-        expect(request).toEqual(requestAnswer)
+        const demand = requestUtils.createAxiosRequest('/info', 'GET')
+        expect(demand).toEqual(answer)
     })
 
     test('Handles async thunk', async() => {
@@ -41,8 +41,8 @@ describe('requests', () => {
             data: data
         }
         axios.mockResolvedValueOnce(response)
-        const request = { endpoint: '/api/teams', method: 'GET', body: data }
-        const result = await requestUtils.handleThunkRequest(request, () => { /* Empty */ })
+        const demand = { endpoint: '/api/teams', method: 'GET', body: data }
+        const result = await requestUtils.handleThunkRequest(demand, () => { /* Empty */ })
         expect(result).toEqual(data)
     })
 
@@ -53,8 +53,8 @@ describe('requests', () => {
             }
         }
         axios.mockImplementation(() =>  Promise.reject(errorResponse))
-        const request = { endpoint: '/api/teams', method: 'GET', body: {} }
-        const result = await requestUtils.handleThunkRequest(request, () => errorResponse.response.data.errors[0])
+        const demand = { endpoint: '/api/teams', method: 'GET', body: {} }
+        const result = await requestUtils.handleThunkRequest(demand, () => errorResponse.response.data.errors[0])
         expect(result).toEqual('error1')
     })
 
@@ -65,8 +65,8 @@ describe('requests', () => {
             }
         }
         axios.mockImplementation(() => Promise.reject(errorResponse))
-        const request = { endpoint: '/api/teams', method: 'GET', body: {} }
-        const result = await requestUtils.handleThunkRequest(request, () => errorResponse.response.data.message)
+        const demand = { endpoint: '/api/teams', method: 'GET', body: {} }
+        const result = await requestUtils.handleThunkRequest(demand, () => errorResponse.response.data.message)
         expect(result).toEqual('error1')
     })
 
@@ -77,8 +77,8 @@ describe('requests', () => {
             }
         }
         axios.mockImplementation(() => Promise.reject(errorResponse))
-        const request = { endpoint: '/api/teams', method: 'GET', body: {} }
-        const result = await requestUtils.handleThunkRequest(request, () => 'Unknown error occured')
+        const demand = { endpoint: '/api/teams', method: 'GET', body: {} }
+        const result = await requestUtils.handleThunkRequest(demand, () => 'Unknown error occured')
         expect(result).toEqual('Unknown error occured')
     })
 })

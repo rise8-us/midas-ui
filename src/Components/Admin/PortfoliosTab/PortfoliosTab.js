@@ -24,9 +24,9 @@ function PortfoliosTab() {
     const allPortfolios = useSelector(selectAllPortfolios)
 
     const createPortfolio = () => dispatch(
-        openPopup(PortfolioConstant.CREATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup'))
+        openPopup(PortfolioConstant.CREATE_PORTFOLIO, 'PortfolioPopup'))
     const updatePortfolio = (id) => dispatch(
-        openPopup(PortfolioConstant.UPDATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup', { id }))
+        openPopup(PortfolioConstant.UPDATE_PORTFOLIO, 'PortfolioPopup', { id }))
     const archivePortfolio = (id, isArchived) => dispatch(requestArchivePortfolio({ id, isArchived: !isArchived }))
 
     const buildRows = () => {

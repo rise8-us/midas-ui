@@ -2,11 +2,11 @@ import React from 'react'
 import { render, screen, useSelectorMock, waitFor } from '../../Utilities/test-utils'
 import { PopupManager } from './index'
 
-jest.mock('../Popups/CreateOrUpdateTeamPopup/CreateOrUpdateTeamPopup',
+jest.mock('../Popups/TeamPopup/TeamPopup',
     () => function testing() { return (<div>PopupManagerTest</div>) })
 
 const popup = {
-    componentName: 'CreateOrUpdateTeamPopup',
+    componentName: 'TeamPopup',
     name: 'test/popup',
     open: true,
     props: { userId: 0 }

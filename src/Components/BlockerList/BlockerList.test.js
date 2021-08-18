@@ -21,23 +21,27 @@ describe('<DashboardCard />', () => {
 
     const blockers = [
         {
+            productId: 1,
             productName: 'product_1',
             comment: {
                 text: 'comment_1###',
                 lastEdit: '2021-07-03T06:04:53.000Z'
             },
             assertion: {
+                id: 2,
                 status: 'BLOCKED',
                 text: 'assertion_1'
             }
         },
         {
+            productId: 2,
             productName: 'product_2',
             comment: {
                 text: 'comment_2###',
                 creationDate: '2021-07-03T06:04:53.000Z'
             },
             assertion: {
+                id: 2,
                 status: 'AT_RISK',
                 text: 'assertion_2'
             }

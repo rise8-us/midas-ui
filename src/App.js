@@ -47,10 +47,12 @@ function App() {
                     <Route exact path = '/'><Redirect to = '/dashboard'/></Route>
                     <Route exact path = '/account' component = {Pages.Account} />
                     <Route exact path = '/dashboard' component = {Pages.Dashboard} />
-                    <Route exact path = '/home' component = {Pages.Home} />
+                    <Route exact path = '/home'><Redirect to = '/dashboard'/></Route>
                     <Route exact path = '/portfolios' component = {Pages.Portfolios} />
                     <Route exact path = '/products' component = {Pages.Products} />
                     <Route exact path = '/products/:productId' component = {Pages.Product} />
+                    <Route exact path = '/products/:productId/:productTab' component = {Pages.Product} />
+                    <Route exact path = '/products/:productId/:productTab/:assertionId' component = {Pages.Product} />
                     <Route exact path = '/projects' component = {Pages.Projects} />
                     <Route exact path = '/tags' component = {Pages.Tags} />
                     {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Product } from './index'
 
 jest.mock('../../Tabs/ProjectsTab/ProjectsTab',
@@ -8,18 +8,20 @@ jest.mock('../../Tabs/ProjectsTab/ProjectsTab',
 jest.mock('../../Tabs/AssertionsTab/AssertionsTab',
     () => function testing() { return (<div>AssertionsTab</div>) })
 
+jest.mock('../../ProductOnePager/ProductOnePager',
+    () => function testing() { return (<div>ProductOnePager</div>) })
+
 jest.mock('../../Page/Page',
     () => function testing({ children }) { return (<div>{children}</div>) })
 
 describe('<Product>', () => {
 
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
-    const queryParamsMock = useModuleMock('Utilities/queryParams', 'getUrlParam')
 
     const product = {
         id: 0,
         name: 'Product 1',
-        visionStatement: 'great vision',
+        description: '',
         tagIds: [4],
         tags: [
             {   id: 4,
@@ -32,22 +34,29 @@ describe('<Product>', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        queryParamsMock.mockReturnValue(0)
         selectProductByIdMock.mockReturnValue(product)
     })
 
     test('should have correct header text', () => {
-        render(<Product />)
+        renderWithRouter(<Product />)
+
         expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('Product 1')
         expect(screen.getByPlaceholderText('Description not set...')).toBeInTheDocument()
-        expect(screen.getByText('Some tags')).toBeInTheDocument()
+        expect(screen.getByText(/Some tags/i)).toBeInTheDocument()
     })
 
     test('should render projects tab', () => {
-        render(<Product />)
+        renderWithRouter(<Product />)
 
         fireEvent.click(screen.getByText(/Projects/i))
         expect(screen.getByText('ProjectsTab')).toBeInTheDocument()
+    })
+
+    test('should render about tab', () => {
+        renderWithRouter(<Product />)
+
+        fireEvent.click(screen.getByText(/about/i))
+        expect(screen.getByText('ProductOnePager')).toBeInTheDocument()
     })
 
 })

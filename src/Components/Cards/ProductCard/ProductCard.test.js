@@ -1,16 +1,10 @@
+import { createMemoryHistory } from 'history'
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
 import ProductConstants from '../../../Redux/Products/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import {
+    fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock
+} from '../../../Utilities/test-utils'
 import { ProductCard } from './index'
-
-const mockHistoryPush = jest.fn()
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-        push: mockHistoryPush,
-    })
-}))
 
 describe('<ProductCard />', () => {
     const product = {
@@ -35,12 +29,14 @@ describe('<ProductCard />', () => {
         projects: []
     }
 
+    const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectProductByIdMock.mockReturnValue(product)
+        hasProductAccessMock.mockReturnValue(false)
     })
 
     test('should display data with projects', () => {
@@ -60,21 +56,24 @@ describe('<ProductCard />', () => {
         expect(screen.queryByText('project 1')).not.toBeInTheDocument()
     })
 
-    test('should call CreateOrUpdateProductPopup', () => {
+    test('should call ProductPopup', () => {
+        hasProductAccessMock.mockReturnValue(true)
         render(<ProductCard id = {product.id}/>)
 
         fireEvent.click(screen.getByTestId('ProductCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: product.id })
+            ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id: product.id })
     })
 
     test('should go to products page', () => {
-        render(<MemoryRouter><ProductCard id = {product.id}/></MemoryRouter>)
+        const history = createMemoryHistory()
+
+        renderWithRouter(<ProductCard id = {product.id}/>, { history })
 
         fireEvent.click(screen.getByText('Midas'))
 
-        expect(mockHistoryPush).toHaveBeenCalledWith('/products/4')
+        expect(history.location.pathname).toEqual('/products/4/ogsms')
     })
 
 })

@@ -39,7 +39,7 @@ function Home() {
         }
     })
 
-    const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'CreateOrUpdateProductPopup'))
+    const createProduct = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'ProductPopup'))
 
     return (
         <Page>

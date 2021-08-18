@@ -51,11 +51,13 @@ describe('<PortfolioCard />', () => {
     }
 
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
+    const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectPortfolioByIdMock.mockReturnValue(portfolio)
+        hasProductAccessMock.mockReturnValue(true)
     })
 
     test('should display data with projects', () => {
@@ -74,13 +76,13 @@ describe('<PortfolioCard />', () => {
         expect(screen.getByText('No products are currently assigned to this portfolio.')).toBeInTheDocument()
     })
 
-    test('should call CreateOrUpdatePortfolioPopup', () => {
+    test('should call PortfolioPopup', () => {
         render(<PortfolioCard id = {portfolio.id}/>)
 
         fireEvent.click(screen.getByTestId('PortfolioCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            PortfolioConstants.UPDATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup', { id: portfolio.id })
+            PortfolioConstants.UPDATE_PORTFOLIO, 'PortfolioPopup', { id: portfolio.id })
     })
 
     test('should go to portfolios page', () => {
@@ -89,6 +91,14 @@ describe('<PortfolioCard />', () => {
         fireEvent.click(screen.getByText('Midas'))
 
         expect(mockHistoryPush).toHaveBeenCalledWith('/products/4')
+    })
+
+    test('should not render edit icon', () => {
+        hasProductAccessMock.mockReturnValue(false)
+
+        render(<PortfolioCard id = {portfolio.id}/>)
+
+        expect(screen.queryByTestId('PortfolioCard__button-edit')).not.toBeInTheDocument()
     })
 
 })

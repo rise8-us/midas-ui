@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, useModuleMock, useDispatchMock, userEvent } from '../../../Utilities/test-utils'
+import { renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
 import { Assertion } from './index'
 
 describe('<Assertion>', () => {
@@ -9,6 +9,7 @@ describe('<Assertion>', () => {
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
     const requestUpdateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestUpdateAssertion')
     const requestDeleteAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestDeleteAssertion')
+    const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
 
     const assertionMock = {
         id: 1,
@@ -33,8 +34,9 @@ describe('<Assertion>', () => {
     test('should render', () => {
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([childAssertionMock])
+        hasProductAccessMock.mockReturnValue(false)
 
-        render(
+        renderWithRouter(
             <Assertion
                 productId = {3}
                 order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
@@ -49,8 +51,9 @@ describe('<Assertion>', () => {
     test('should not render add button', () => {
         selectAssertionByIdMock.mockReturnValue(childAssertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
+        hasProductAccessMock.mockReturnValue(true)
 
-        render(
+        renderWithRouter(
             <Assertion
                 productId = {3}
                 order = {['MEASURE']}
@@ -68,8 +71,9 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
+        hasProductAccessMock.mockReturnValue(true)
 
-        render(
+        renderWithRouter(
             <Assertion
                 productId = {3}
                 order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
@@ -93,8 +97,9 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
+        hasProductAccessMock.mockReturnValue(true)
 
-        render(
+        renderWithRouter(
             <Assertion
                 productId = {3}
                 order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
@@ -115,8 +120,9 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
+        hasProductAccessMock.mockReturnValue(true)
 
-        render(
+        renderWithRouter(
             <Assertion
                 productId = {3}
                 order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
@@ -133,8 +139,9 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
+        hasProductAccessMock.mockReturnValue(true)
 
-        render(
+        renderWithRouter(
             <Assertion
                 productId = {3}
                 order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}

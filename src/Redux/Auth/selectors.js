@@ -1,4 +1,13 @@
 import { convertRolesLongToRolesMap } from '../../Utilities/bitwise'
+import { selectProductById } from '../Products/selectors'
+import { selectProjectById } from '../Projects/selectors'
+
+const selectAllProductsAndPortfolios = (state) => {
+    const portfolios = state.portfolios ?? {}
+    const products = state.products ?? {}
+
+    return { ...portfolios, ...products }
+}
 
 export const selectUserLoggedIn = (state) => {
     const auth = state.auth
@@ -24,4 +33,56 @@ export const selectUserPermissions = (state) => {
         roles[newKey] = v
     })
     return roles
+}
+
+export const hasProductAccess = (state, productId) => {
+    if (typeof productId !== 'number') return false
+    const userLoggedIn = selectUserLoggedIn(state)
+    const productBeingAccessed = selectAllProductsAndPortfolios(state)[productId]
+
+    if (typeof productBeingAccessed !== 'object') return false
+
+    return (
+        userLoggedIn.isAdmin
+        || userLoggedIn.id === productBeingAccessed.productManagerId
+        || hasProductAccess(state, productBeingAccessed.parentId)
+    )
+}
+
+export const hasProductOrTeamAccess = (state, productId) => {
+    if (typeof productId !== 'number') return false
+    const productBeingAccessed = selectProductById(state, productId)
+
+    return (
+        hasProductAccess(state, productId)
+        || productBeingAccessed.teamIds.some(id => hasTeamAccess(state, id))
+    )
+}
+
+export const hasTeamAccess = (state, teamId) => {
+    const userLoggedIn = selectUserLoggedIn(state)
+    return userLoggedIn.teamIds.includes(teamId)
+}
+
+export const hasProjectAccess = (state, projectId) => {
+    const userLoggedIn = selectUserLoggedIn(state)
+    const projectBeingAccessed = selectProjectById(projectId)
+
+    return (
+        userLoggedIn.isAdmin
+        || hasTeamAccess(state, projectBeingAccessed.teamId)
+        || hasProductAccess(state, projectBeingAccessed.productId)
+    )
+}
+
+export const isPortfolioCreator = (state) => {
+    const user = selectUserPermissions(state)
+
+    return user.isAdmin || user.isPortfolioLead
+}
+
+export const isProductCreator = (state) => {
+    const user = selectUserPermissions(state)
+
+    return user.isAdmin || user.isPortfolioLead || user.isProductManager
 }

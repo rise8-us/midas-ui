@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import React, { useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { hasProductAccess } from '../../../Redux/Auth/selectors'
 import { openPopup } from '../../../Redux/Popups/actions'
 import PortfolioConstants from '../../../Redux/Portfolios/constants'
 import { selectPortfolioById } from '../../../Redux/Portfolios/selectors'
@@ -30,9 +31,10 @@ function PortfolioCard({ id }) {
     const history = useHistory()
 
     const portfolio = useSelector(state => selectPortfolioById(state, id))
+    const hasPortfolioAccess = useSelector(state => hasProductAccess(state, id))
 
     const updatePortfolioPopup = () => {
-        dispatch(openPopup(PortfolioConstants.UPDATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup', { id }))
+        dispatch(openPopup(PortfolioConstants.UPDATE_PORTFOLIO, 'PortfolioPopup', { id }))
     }
 
     useLayoutEffect(() => {
@@ -51,13 +53,14 @@ function PortfolioCard({ id }) {
                     'data-testid': 'PortfolioCard__header-title'
                 }}
                 action = {
-                    <IconButton
-                        onClick = {updatePortfolioPopup}
-                        color = 'secondary'
-                        data-testid = 'PortfolioCard__button-edit'
-                    >
-                        <Edit />
-                    </IconButton>
+                    hasPortfolioAccess &&
+                        <IconButton
+                            onClick = {updatePortfolioPopup}
+                            color = 'secondary'
+                            data-testid = 'PortfolioCard__button-edit'
+                        >
+                            <Edit />
+                        </IconButton>
                 }
             />
             <CardContent>
@@ -74,11 +77,11 @@ function PortfolioCard({ id }) {
                         No products are currently assigned to this portfolio.
                     </Typography>
                 }
-                {portfolio.products.map(product => {
+                {portfolio.products.map((product, index) => {
                     const ctfProjects = product.projects.filter(p => p.projectJourneyMap === 7).length
                     return (
                         <Box
-                            key = {product.id}
+                            key = {index}
                             display = 'flex'
                             justifyContent = 'space-between'
                         >

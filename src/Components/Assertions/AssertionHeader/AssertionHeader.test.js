@@ -1,17 +1,18 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
+    fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
 } from '../../../Utilities/test-utils'
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
     const defaultProps = {
         onSave: jest.fn(),
-        onDelete: jest.fn()
+        onDelete: jest.fn(),
+        hasAccess: true
     }
 
     test('should render', () => {
-        render(<AssertionHeader id = {1} category = 'category' title = 'detail' {...defaultProps}/>)
+        renderWithRouter(<AssertionHeader id = {1} category = 'category' title = 'detail' {...defaultProps}/>)
 
         expect(screen.getByText(/category:/)).toBeInTheDocument()
         expect(screen.getByDisplayValue(/detail/)).toBeInTheDocument()
@@ -20,7 +21,7 @@ describe('<AssertionHeader>', () => {
     test('should edit and restore', () => {
         useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
 
-        render(<AssertionHeader id = {1} category = 'cat' title = 'devils' editable {...defaultProps}/>)
+        renderWithRouter(<AssertionHeader id = {1} category = 'cat' title = 'devils' editable {...defaultProps}/>)
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{esc}')
 
         expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
@@ -30,7 +31,7 @@ describe('<AssertionHeader>', () => {
         const OnSaveMock = jest.fn()
         useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
 
-        render(
+        renderWithRouter(
             <AssertionHeader
                 id = {1}
                 category = 'cat'
@@ -38,6 +39,7 @@ describe('<AssertionHeader>', () => {
                 editable
                 onSave = {OnSaveMock}
                 onDelete = {jest.fn()}
+                hasAccess = {true}
             />
         )
         userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
@@ -49,26 +51,28 @@ describe('<AssertionHeader>', () => {
 
     test('should see status', () => {
         useDispatchMock().mockReturnValueOnce()
-        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' status = 'STARTED' {...defaultProps}/>, {
-            initialState: {
-                app: {
-                    assertionStatus: {
-                        STARTED: {
-                            name: 'STARTED',
-                            label: 'Started',
-                            color: '#000000'
+        renderWithRouter(
+            <AssertionHeader id = {1} category = 'cat' detail = 'devils' status = 'STARTED' {...defaultProps}/>, {
+                initialState: {
+                    app: {
+                        assertionStatus: {
+                            STARTED: {
+                                name: 'STARTED',
+                                label: 'Started',
+                                color: '#000000'
+                            }
                         }
                     }
                 }
-            }
-        })
+            })
 
         expect(screen.getByText('Started')).toBeInTheDocument()
     })
 
     test('should show commentCount', () => {
         useDispatchMock().mockReturnValueOnce()
-        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' commentCount = {1} {...defaultProps}/>)
+        renderWithRouter(
+            <AssertionHeader id = {1} category = 'cat' detail = 'devils' commentCount = {1} {...defaultProps}/>)
 
         expect(screen.getByText('1')).toBeInTheDocument()
     })
@@ -78,7 +82,7 @@ describe('<AssertionHeader>', () => {
         const requestSearchCommentsMock = useModuleMock('Redux/Comments/actions', 'requestSearchComments')
         const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
 
-        render(<AssertionHeader id = {1} category = 'cat' detail = 'devils' {...defaultProps}/>)
+        renderWithRouter(<AssertionHeader id = {1} category = 'cat' detail = 'devils' {...defaultProps}/>)
 
         fireEvent.click(screen.getByTitle('comment'))
 
@@ -89,7 +93,7 @@ describe('<AssertionHeader>', () => {
     test('should cancel delete ogsm', () => {
         useDispatchMock().mockReturnValueOnce()
         const onDeleteMock = jest.fn()
-        render(
+        renderWithRouter(
             <AssertionHeader
                 id = {1}
                 category = 'cat'
@@ -97,6 +101,7 @@ describe('<AssertionHeader>', () => {
                 editable
                 onDelete = {onDeleteMock}
                 onSave = {jest.fn()}
+                hasAccess = {true}
             />
         )
 
@@ -109,7 +114,7 @@ describe('<AssertionHeader>', () => {
     test('should confirm delete ogsm', () => {
         useDispatchMock().mockReturnValueOnce()
         const onDeleteMock = jest.fn()
-        render(
+        renderWithRouter(
             <AssertionHeader
                 id = {1}
                 category = 'cat'
@@ -117,6 +122,7 @@ describe('<AssertionHeader>', () => {
                 editable
                 onDelete = {onDeleteMock}
                 onSave = {jest.fn()}
+                hasAccess = {true}
             />
         )
 
@@ -129,7 +135,7 @@ describe('<AssertionHeader>', () => {
     test('should call addChildAssertion', () => {
         useDispatchMock().mockReturnValueOnce()
         const onAddChildMock = jest.fn()
-        render(<AssertionHeader
+        renderWithRouter(<AssertionHeader
             id = {1}
             category = 'cat'
             detail = 'devils'
@@ -159,7 +165,7 @@ describe('<AssertionHeader>', () => {
             }
         }
 
-        render(
+        renderWithRouter(
             <AssertionHeader category = 'cat' detail = 'devils' id = {1} status = 'NOT_STARTED' {...defaultProps}/>,
             { initialState: mockState }
         )
@@ -175,5 +181,29 @@ describe('<AssertionHeader>', () => {
                 { id: 1, text: 'devils', status: 'COMPLETED', children: [] }
             )
         })
+    })
+
+
+    test('should not trigger event listener with no access', () => {
+        const OnSaveMock = jest.fn()
+        useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
+
+        renderWithRouter(
+            <AssertionHeader
+                id = {1}
+                category = 'cat'
+                title = 'devils'
+                editable
+                onSave = {OnSaveMock}
+                onDelete = {jest.fn()}
+                hasAccess = {false}
+            />
+        )
+        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
+        fireEvent.focusOut(screen.getByDisplayValue(/devils/i))
+
+        expect(screen.getByDisplayValue(/devils/i)).toBeInTheDocument()
+        expect(OnSaveMock).not.toHaveBeenCalled()
+        expect(screen.queryByTitle('delete')).not.toBeInTheDocument()
     })
 })

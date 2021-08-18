@@ -63,7 +63,7 @@ describe('<TeamUsers />', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
         render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
-        userEvent.type(screen.getByTestId('SearchUser__input'), 'test')
+        userEvent.type(screen.getByTestId('AutocompleteSearch__input'), 'test')
         userEvent.click(await screen.findByText('foobar'))
 
         expect(setUserIdsMock).toHaveBeenCalledWith([1, 2, 11])

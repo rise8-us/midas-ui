@@ -9,6 +9,7 @@ jest.mock('../../Cards/ProductCard/ProductCard', () =>
 describe('<Products>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+    const isProductCreatorMock = useModuleMock('Redux/Auth/selectors', 'isProductCreator')
     const selectUnarchivedProductsMock =
         useModuleMock('Redux/Products/selectors', 'selectUnarchivedProducts')
 
@@ -49,10 +50,11 @@ describe('<Products>', () => {
     })
 
     test('Add Product calls openPopup', () => {
+        isProductCreatorMock.mockReturnValue(true)
         render(<Products />)
 
         fireEvent.click(screen.getByTitle(/add/i))
 
-        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'CreateOrUpdateProductPopup')
+        expect(openPopupMock).toHaveBeenCalledWith(ProductConstants.CREATE_PRODUCT, 'ProductPopup')
     })
 })

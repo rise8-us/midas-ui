@@ -4,10 +4,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { MoreOptionsPopperMenu } from '../../MoreOptionsPopperMenu'
 
-function EditCommentOptions({ canAccess, onEditClick, onDeleteClick }) {
+function EditCommentOptions({ onEditClick, onDeleteClick }) {
     const theme = useTheme()
-
-    if (!canAccess) return null
 
     const options = [
         {
@@ -31,13 +29,11 @@ function EditCommentOptions({ canAccess, onEditClick, onDeleteClick }) {
 }
 
 EditCommentOptions.propTypes = {
-    canAccess: PropTypes.bool,
     onDeleteClick: PropTypes.func,
     onEditClick: PropTypes.func.isRequired,
 }
 
 EditCommentOptions.defaultProps = {
-    canAccess: false,
     onDeleteClick: null
 }
 

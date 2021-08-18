@@ -51,7 +51,7 @@ describe('<PortfoliosTab />', () => {
         fireEvent.click(screen.getByTitle('edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            PortfolioConstants.UPDATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup', { id: allPortfolios.id })
+            PortfolioConstants.UPDATE_PORTFOLIO, 'PortfolioPopup', { id: allPortfolios.id })
     })
 
     test('Should fire archive tag', () => {
@@ -77,7 +77,7 @@ describe('<PortfoliosTab />', () => {
         fireEvent.click(screen.getByText('Add New Portfolio'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            PortfolioConstants.CREATE_PORTFOLIO, 'CreateOrUpdatePortfolioPopup')
+            PortfolioConstants.CREATE_PORTFOLIO, 'PortfolioPopup')
     })
 
 })

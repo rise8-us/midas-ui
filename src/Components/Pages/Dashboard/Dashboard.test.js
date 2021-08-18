@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useModuleMock } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
 import { buildCtfData, buildScopedData, combinePortfolios, combineProducts, Dashboard } from './index'
 
 describe('<Dashboard>', () => {
@@ -9,13 +9,34 @@ describe('<Dashboard>', () => {
 
     const selectTagsByScopeMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByScope')
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
+    const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
 
-    test('should render', () => {
-        selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test' }])
+    const defaultText = 'Currently view all portfolio data. ' +
+        'To view a specific portfolio select it from the list above.'
+
+    const portfolio = {
+        id: 1,
+        name: 'test',
+        description: 'yolo',
+        productManagerId: 100,
+        products: [],
+        tags: [{ id: 1 }],
+        tagIds: [1]
+    }
+
+    beforeEach(() => {
+        selectUserLoggedInMock.mockReturnValue({ id: 100 })
+
+        selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test', productManagerId: 100 }])
+
         selectTagsByScopeMock.mockReturnValue([
             { id: 1, label: 'scope::label1', color: '#FFFFFF' },
             { id: 2, label: 'scope::label2', color: '#000000' },
         ])
+    })
+
+    test('should render', () => {
 
         render(<Dashboard />, { initialState: { app: { projectJournetMap: {} } } })
 
@@ -26,42 +47,37 @@ describe('<Dashboard>', () => {
         expect(screen.getByText('label1')).toBeInTheDocument()
         expect(screen.getByText('label2')).toBeInTheDocument()
 
-        expect(screen.getByText('No description available')).toBeInTheDocument()
-    })
-
-    test('should handle undefined selectedPortfolio', () => {
-        selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test' }])
-        selectTagsByScopeMock.mockReturnValue([
-            { id: 1, label: 'scope::label1', color: '#FFFFFF' },
-            { id: 2, label: 'scope::label2', color: '#000000' },
-        ])
-        selectPortfolioByIdMock.mockReturnValue(undefined)
-
-        render(<Dashboard />)
-        fireEvent.click(screen.getByText('test'))
-
-        expect(screen.getByText('No description available')).toBeInTheDocument()
+        expect(screen.getByText(defaultText)).toBeInTheDocument()
     })
 
     test('should render singular portfolio', () => {
-        selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test' }])
-        selectTagsByScopeMock.mockReturnValue([
-            { id: 1, label: 'scope::label1', color: '#FFFFFF' },
-            { id: 2, label: 'scope::label2', color: '#000000' },
-        ])
-        selectPortfolioByIdMock.mockReturnValue({
-            id: 1,
-            name: 'test',
-            description: 'yolo',
-            products: [],
-            tagIds: [1]
-        })
+        selectPortfolioByIdMock.mockReturnValue(portfolio)
 
         render(<Dashboard />)
 
         fireEvent.click(screen.getByText('test'))
 
         expect(screen.getByText('yolo')).toBeInTheDocument()
+    })
+
+    test('should update description if in middle of change', async() => {
+        useDispatchMock().mockReturnValue({})
+        selectPortfolioByIdMock.mockReturnValue(portfolio)
+        hasProductAccessMock.mockReturnValue(true)
+
+        const requestUpdatePortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestUpdatePortfolio')
+
+        render(<Dashboard />)
+        fireEvent.click(screen.getByText('test'))
+
+        const el = screen.getByText('yolo')
+        userEvent.type(screen.getByText('yolo'), 'new description')
+        fireEvent.focusOut(el)
+        fireEvent.click(screen.getByText('ALL'))
+
+        expect(await screen.findByText(defaultText)).toBeInTheDocument()
+
+        expect(requestUpdatePortfolioMock).toHaveBeenCalled()
     })
 
     test('should combine portfolios', () => {

@@ -29,9 +29,9 @@ ReactDOM.render(
                     <ThemeProvider theme = {darkTheme}>
                         <CssBaseline />
                         <ErrorBoundary FallbackComponent = {errorFallbackComponent}>
-                            <React.StrictMode>
-                                <App />
-                            </React.StrictMode>
+                            {/* <React.StrictMode> */}
+                            <App />
+                            {/* </React.StrictMode> */}
                         </ErrorBoundary>
                     </ThemeProvider>
                 </Fragment>

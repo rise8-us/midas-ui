@@ -38,7 +38,7 @@ describe('<ProjectsTab>', () => {
             .toBeInTheDocument()
     })
 
-    test('should call CreateOrUpdateProductPopup', () => {
+    test('should call ProductPopup', () => {
         useDispatchMock().mockReturnValue({})
         selectProductByIdMock.mockReturnValue({
             name: 'foo',
@@ -50,10 +50,10 @@ describe('<ProjectsTab>', () => {
 
         fireEvent.click(screen.getByText(/add an existing project/i))
         expect(openPopupMock)
-            .toHaveBeenCalledWith(ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: 0 })
+            .toHaveBeenCalledWith(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id: 0 })
     })
 
-    test('should call CreateOrUpdateProjectPopup', () => {
+    test('should call ProjectPopup', () => {
         useDispatchMock().mockReturnValue({})
         selectProductByIdMock.mockReturnValue({
             id: 0,
@@ -65,7 +65,7 @@ describe('<ProjectsTab>', () => {
 
         fireEvent.click(screen.getByText(/create a new project/i))
         expect(openPopupMock)
-            .toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup', { parentId: 0 })
+            .toHaveBeenCalledWith(ProjectConstants.CREATE_PROJECT, 'ProjectPopup', { parentId: 0 })
     })
 
 })

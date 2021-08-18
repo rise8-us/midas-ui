@@ -97,4 +97,23 @@ describe('Team action thunks', () => {
         expect(store.getActions()[0].type).toEqual(actions.requestArchiveTeam.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestArchiveTeam.rejected.toString())
     })
+
+    test('requestFindTeamBy : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestFindTeamBy('id:1'))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/teams?search=id:1')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestFindTeamBy.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestFindTeamBy.fulfilled.toString())
+    })
+
+    test('requestFindTeamBy : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestFindTeamBy('id:3a'))
+
+        expect(store.getActions()[0].type).toEqual(actions.requestFindTeamBy.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestFindTeamBy.rejected.toString())
+    })
 })

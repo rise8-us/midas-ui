@@ -10,7 +10,7 @@ import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
 import { requestCreateComment } from '../../../Redux/Comments/actions'
 import { AddComment, CommentsList } from '../../Comments/'
 
-function AssertionComments({ assertionId }) {
+function AssertionComments({ assertionId, hasAccess }) {
     const ref = useRef()
     const browserSize = useWindowSize()
     const scroll = useSelector(state => state.app.pageScrollY)
@@ -82,6 +82,7 @@ function AssertionComments({ assertionId }) {
                     <AssertionStatusDropdown
                         option = {selectedStatus}
                         onChange = {setStatus}
+                        hasAccess = {hasAccess}
                     />
                 }
                 onSubmit = {handleSubmit}
@@ -91,7 +92,8 @@ function AssertionComments({ assertionId }) {
 }
 
 AssertionComments.propTypes = {
-    assertionId: PropTypes.number.isRequired
+    assertionId: PropTypes.number.isRequired,
+    hasAccess: PropTypes.bool.isRequired
 }
 
 export default AssertionComments

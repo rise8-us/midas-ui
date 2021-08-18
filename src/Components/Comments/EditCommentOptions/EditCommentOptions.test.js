@@ -7,7 +7,7 @@ describe('<EditCommentOptions>', () => {
 
     test('should render', () => {
         const onEditClickMock = jest.fn()
-        render(<EditCommentOptions onEditClick = {onEditClickMock} canAccess/>)
+        render(<EditCommentOptions onEditClick = {onEditClickMock} />)
 
         fireEvent.click(screen.getByTitle('more'))
         fireEvent.click(screen.getByText(/edit/i))
@@ -15,15 +15,9 @@ describe('<EditCommentOptions>', () => {
         expect(onEditClickMock).toHaveBeenCalled()
     })
 
-    test('should not render', () => {
-        render(<EditCommentOptions onEditClick = {jest.fn()}/>)
-
-        expect(screen.queryByTitle('more')).not.toBeInTheDocument()
-    })
-
     test('should handle onDelete', () => {
         const onDeleteClickMock = jest.fn()
-        render(<EditCommentOptions onEditClick = {jest.fn} onDeleteClick = {onDeleteClickMock} canAccess/>)
+        render(<EditCommentOptions onEditClick = {jest.fn} onDeleteClick = {onDeleteClickMock} />)
 
         fireEvent.click(screen.getByTitle('more'))
         fireEvent.click(screen.getByText(/delete/i))

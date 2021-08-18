@@ -25,10 +25,10 @@ function ProjectsTab({ id }) {
     const projects = product.projects?.filter(p => !p.isArchived)
 
     const updateProduct = () =>
-        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'CreateOrUpdateProductPopup', { id: product.id }))
+        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id: product.id }))
 
     const createProject = async() => {
-        dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup', { parentId: product.id }))
+        dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'ProjectPopup', { parentId: product.id }))
     }
 
     const noProjectsString =
@@ -55,7 +55,7 @@ ${product.name !== undefined ? product.name : 'this product'} •`
                     style = {{ margin: '20px 0' }}
                 >
                     {projects.map(project => (
-                        <ProjectCard id = {project.id} key = {project.id} canUpdate = {true}/>
+                        <ProjectCard id = {project.id} key = {project.id}/>
                     ))}
                 </Box>
                 :

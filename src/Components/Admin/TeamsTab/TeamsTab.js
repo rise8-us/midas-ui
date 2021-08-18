@@ -25,9 +25,9 @@ const TeamsTab = () => {
     const archivedTeams = allTeams.filter(team => team.isArchived)
 
     const createTeam = () => dispatch(
-        openPopup(TeamsConstant.CREATE_TEAM, 'CreateOrUpdateTeamPopup'))
+        openPopup(TeamsConstant.CREATE_TEAM, 'TeamPopup'))
     const updateTeam = (id) => dispatch(
-        openPopup(TeamsConstant.UPDATE_TEAM, 'CreateOrUpdateTeamPopup', { id }))
+        openPopup(TeamsConstant.UPDATE_TEAM, 'TeamPopup', { id }))
     const archiveTeam = (id, isArchived) => dispatch(requestArchiveTeam({ id, isArchived: !isArchived }))
 
     const buildActions = (id, isArchived) => {

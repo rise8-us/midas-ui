@@ -34,7 +34,7 @@ describe('<SourceControlsTab />', () => {
 
         expect(openPopupMock).toHaveBeenCalledWith(
             SourceControlConstants.UPDATE_SourceControl,
-            'CreateOrUpdateSourceControlPopup', { id: allSourceControls.id })
+            'SourceControlPopup', { id: allSourceControls.id })
     })
 
     test('Add SourceControl calls openPopup', () => {
@@ -43,7 +43,7 @@ describe('<SourceControlsTab />', () => {
         fireEvent.click(screen.getByText('Add New Source Control'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
-            SourceControlConstants.CREATE_SourceControl, 'CreateOrUpdateSourceControlPopup')
+            SourceControlConstants.CREATE_SourceControl, 'SourceControlPopup')
     })
 
 })

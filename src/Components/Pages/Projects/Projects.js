@@ -17,7 +17,7 @@ function Projects() {
 
     const filteredProducts = allProjects.filter(project => project.name.toLowerCase().includes(filterString))
 
-    const create = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'CreateOrUpdateProjectPopup'))
+    const create = () => dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'ProjectPopup'))
 
     return (
         <Page>
