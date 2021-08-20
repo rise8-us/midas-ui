@@ -31,7 +31,7 @@ describe('<RoadmapEntry />', () => {
                 label: 'Complete',
                 color: '#000000'
             }
-        }),
+        })
         selectRoadmapByIdMock.mockReturnValue(roadmapEntry)
         useDispatchMock().mockReturnValue({})
         openPopupMock.mockReset()

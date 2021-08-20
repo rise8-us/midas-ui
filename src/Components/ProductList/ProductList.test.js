@@ -1,11 +1,10 @@
+import { createMemoryHistory } from 'history'
 import React from 'react'
-import { fireEvent, render, screen, userEvent } from 'Utilities/test-utils'
+import { fireEvent, renderWithRouter, screen } from 'Utilities/test-utils'
 import { ProductList } from './index'
 
-jest.mock('../ProductOnePager/ProductOnePager',
-    () => function testing() { return (<div>ProductOnePager</div>) })
-
 describe('<ProductList>', () => {
+    const history = createMemoryHistory()
 
     const productsList = [
         {
@@ -35,21 +34,17 @@ describe('<ProductList>', () => {
     ]
 
     test('should render', () => {
-        render(<ProductList products = {productsList} tagScope = 'yolo'/>)
+        renderWithRouter(<ProductList products = {productsList} tagScope = 'yolo'/>)
 
         expect(screen.getByText('product 1')).toBeInTheDocument()
     })
 
-    test('should open and close popup', () => {
-        render(<ProductList products = {productsList} tagScope = 'agileAF'/>)
+    test('should nav to product Page', () => {
+        renderWithRouter(<ProductList products = {productsList} tagScope = 'agileAF'/>, { history })
 
         fireEvent.click(screen.getByText('product 1'))
 
-        expect(screen.getByText('ProductOnePager')).toBeInTheDocument()
-
-        userEvent.type(screen.getByText('ProductOnePager'), '{esc}')
-
-        expect(screen.queryByText('ProductOnePager')).not.toBeInTheDocument()
+        expect(history.location.pathname).toEqual('/products/1/about')
     })
 
 })

@@ -1,22 +1,14 @@
 import { Grid } from '@material-ui/core'
-import { OnePagerPopup } from 'Components/Popups/OnePagerPopup'
 import { ProductBox } from 'Components/ProductBox'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React from 'react'
+import { useHistory } from 'react-router'
 
 function ProductList({ products, tagScope }) {
+    const history = useHistory()
 
-    const [selectedId, setSelectedId] = useState(null)
-    const [open, setOpen] = useState(false)
-
-    const onClose = () => {
-        setOpen(false)
-        setSelectedId(null)
-    }
-
-    const onClick = (id) => {
-        setOpen(true)
-        setSelectedId(id)
+    const goToProductPage = (id) => {
+        history.push(`/products/${id}/about`)
     }
 
     return (
@@ -35,16 +27,13 @@ function ProductList({ products, tagScope }) {
                             <ProductBox
                                 name = {product.name}
                                 color = {color}
-                                onClick = {() => onClick(product.id)}
+                                onClick = {() => goToProductPage(product.id)}
                                 projects = {product.projects}
                             />
                         </Grid>
                     )
                 })}
             </Grid>
-            {selectedId &&
-                <OnePagerPopup productId = {selectedId} open = {open} onClose = {onClose} />
-            }
         </>
     )
 }
