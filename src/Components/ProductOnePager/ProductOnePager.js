@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core'
 import { ProductDetails } from 'Components/ProductDetails'
 import { ProductHeader } from 'Components/ProductHeader'
+import { ProductRoadmap } from 'Components/ProductRoadmap'
 import { ProductUserPersonas } from 'Components/ProductUserPersonas'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
@@ -9,6 +10,7 @@ import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
 import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'
 import { requestUpdateProduct } from 'Redux/Products/actions'
 import { selectProductById } from 'Redux/Products/selectors'
+import { requestFetchRoadmapsByProductId } from 'Redux/Roadmaps/actions'
 
 function ProductOnePager({ id, readOnly, excludeHeader }) {
     const dispatch = useDispatch()
@@ -26,11 +28,12 @@ function ProductOnePager({ id, readOnly, excludeHeader }) {
 
     useEffect(() => {
         dispatch(requestFetchPersonasByProductId(id))
+        dispatch(requestFetchRoadmapsByProductId(id))
     }, [])
 
     return (
-        <Grid container direction = 'row' wrap = 'wrap' >
-            <Grid container item direction = 'column' lg md>
+        <Grid container wrap = 'wrap' spacing = {6} style = {{ overflowX: 'hidden' }}>
+            <Grid container item direction = 'column' lg = {3} md = {3}>
                 {!excludeHeader &&
                     <Grid
                         container
@@ -55,11 +58,11 @@ function ProductOnePager({ id, readOnly, excludeHeader }) {
                 </Grid>
             </Grid>
             <Grid container item direction = 'column' lg md>
-                <Grid item style = {{ display: 'none' }}>
-                    <div>Roadmap</div>
+                <Grid item>
+                    <ProductRoadmap productId = {id} hasEditAccess = {hasEditAccess}/>
                 </Grid>
             </Grid>
-            <Grid container item direction = 'column' lg md>
+            <Grid container item direction = 'column' lg = {3} md = {3}>
                 <Grid item style = {{ display: 'none' }}>
                     <div>Deliverables</div>
                 </Grid>

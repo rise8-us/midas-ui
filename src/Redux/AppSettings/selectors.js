@@ -10,3 +10,7 @@ export const selectRolesAsArray = (state) => {
 export const selectTagTypes = (state) => {
     return Object.values(state.app.tagTypes).filter(t => t !== 'GITLAB')
 }
+
+export const selectRoadmapStatuses = (state) => {
+    return state.app.roadmapStatus
+}
