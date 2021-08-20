@@ -2,17 +2,18 @@ import { requestFetchInit } from '../Init/actions'
 import reducer, { setAssertionComment, setPageScrollY, toggleNavBar } from './reducer'
 
 const mockStore = {
-    navBarOpen: false,
     assertionCommentsOpen: 2,
-    roles: {},
-    classification: {},
-    projectJourneyMap: {},
     assertionStatus: {},
-    sonarqubeReliability: {},
+    classification: {},
+    navBarOpen: false,
+    pageScrollY: 0,
+    projectJourneyMap: {},
+    roadmapStatus: {},
+    roles: {},
     sonarqubeMaintainability: {},
+    sonarqubeReliability: {},
     sonarqubeSecurity: {},
     tagTypes: [],
-    pageScrollY: 0,
 }
 
 test('should handle initial state', () => {
@@ -22,6 +23,7 @@ test('should handle initial state', () => {
         classification: {},
         navBarOpen: true,
         projectJourneyMap: {},
+        roadmapStatus: {},
         roles: {},
         sonarqubeMaintainability: {},
         sonarqubeReliability: {},
@@ -85,7 +87,8 @@ test('sets init info', () => {
         sonarqubeReliability: [{ name: 'foo1' }],
         sonarqubeMaintainability: [{ name: 'foo2' }],
         sonarqubeSecurity: [{ name: 'foo3' }],
-        tagTypes: ['foo', 'bar']
+        tagTypes: ['foo', 'bar'],
+        roadmapStatus: [{ name: 'food' }]
     }
 
     const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
@@ -99,4 +102,5 @@ test('sets init info', () => {
     expect(state.sonarqubeMaintainability.foo2).toEqual(initResponse.sonarqubeMaintainability[0])
     expect(state.sonarqubeSecurity.foo3).toEqual(initResponse.sonarqubeSecurity[0])
     expect(state.tagTypes).toEqual(['foo', 'bar'])
+    expect(state.roadmapStatus.food).toEqual(initResponse.roadmapStatus[0])
 })

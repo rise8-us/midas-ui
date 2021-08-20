@@ -12,6 +12,7 @@ import popupReducer from './Popups/reducer'
 import portfolioReducer from './Portfolios/reducer'
 import productReducer from './Products/reducer'
 import projectReducer from './Projects/reducer'
+import roadmapReducer from './Roadmaps/reducer'
 import sourceControlReducer from './SourceControls/reducer'
 import tagReducer from './Tags/reducer'
 import teamReducer from './Teams/reducer'
@@ -25,13 +26,14 @@ export const rootReducer = combineReducers({
     comments: commentReducer,
     errors: errorReducer,
     filters: filterReducer,
-    sourceControls: sourceControlReducer,
     modifiedAssertions: modifiedAssertionsReducer,
     personas: personaReducer,
     popups: popupReducer,
-    products: productReducer,
     portfolios: portfolioReducer,
+    products: productReducer,
     projects: projectReducer,
+    roadmaps: roadmapReducer,
+    sourceControls: sourceControlReducer,
     tags: tagReducer,
     teams: teamReducer,
     users: userReducer

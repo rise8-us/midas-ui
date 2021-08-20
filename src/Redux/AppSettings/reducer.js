@@ -9,6 +9,7 @@ const appSettingsSlice = createSlice({
         classification: {},
         navBarOpen: true,
         projectJourneyMap: {},
+        roadmapStatus: {},
         roles: {},
         sonarqubeMaintainability: {},
         sonarqubeReliability: {},
@@ -48,6 +49,9 @@ const appSettingsSlice = createSlice({
             })
             action.payload.sonarqubeSecurity.map(sonarqube => {
                 state.sonarqubeSecurity[sonarqube.name] = sonarqube
+            })
+            action.payload.roadmapStatus.map(status => {
+                state.roadmapStatus[status.name] = status
             })
         }
     }
