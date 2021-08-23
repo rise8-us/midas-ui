@@ -1,6 +1,6 @@
 import React from 'react'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import ProjectConstants from 'Redux/Projects/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProjectCard } from './index'
 
 const mockHistoryPush = jest.fn()
@@ -88,7 +88,7 @@ describe('<ProjectCard />', () => {
         render(<ProjectCard id = {project.id}/>)
 
         fireEvent.click(screen.getByText(/productName/))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/products/2')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/products/2/overview')
     })
 
     test('should not be changeable', () => {

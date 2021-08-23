@@ -40,7 +40,7 @@ function ProductUserPersonas({ productId, hasEditAccess }) {
         <Grid container direction = 'column' spacing = {0}>
             <Grid container item justifyContent = 'space-between' alignItems = 'center'>
                 <Grid item>
-                    <Typography variant = 'h6' color = 'textPrimary'>OUR USERS</Typography>
+                    <Typography variant = 'h6' color = 'textPrimary'>PERSONAS</Typography>
                 </Grid>
                 <Grid item>
                     {performAction(
@@ -60,14 +60,14 @@ function ProductUserPersonas({ productId, hasEditAccess }) {
                     label = {<Typography variant = 'caption' color = 'textSecondary'>CURRENT</Typography>}
                     size = 'small'
                     variant = 'outlined'
-                    style = {{ margin: '8px', marginLeft: 0 }}
+                    style = {{ margin: '8px', marginLeft: 0, borderWidth: 0 }}
                     icon = {<PersonOutlined style = {{ color: theme.palette.primary.main }}/>}
                 />
                 <Chip
                     label = {<Typography variant = 'caption' color = 'textSecondary'>FUTURE</Typography>}
                     size = 'small'
                     variant = 'outlined'
-                    style = {{ margin: '8px' }}
+                    style = {{ margin: '8px', borderWidth: 0 }}
                     icon = {<PersonOutlined style = {{ color: theme.palette.secondary.main }}/>}
                 />
             </Grid>

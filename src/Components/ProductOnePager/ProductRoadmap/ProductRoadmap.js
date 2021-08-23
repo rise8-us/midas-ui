@@ -59,7 +59,7 @@ function ProductRoadmap({ productId, hasEditAccess }) {
                     <Typography variant = 'h6' color = 'textPrimary'>ROADMAP</Typography>
                 </Grid>
             </Grid>
-            <Grid container item style = {{ marginTop: '-12px' }}>
+            <Grid container item style = {{ marginTop: '-12px', paddingBottom: 0 }}>
                 {Object.values(roadmapStatuses).map((status, index) =>
                     <Grid item key = {index}>
                         <Chip
@@ -72,8 +72,8 @@ function ProductRoadmap({ productId, hasEditAccess }) {
                     </Grid>
                 )}
             </Grid>
-            <Grid item style = {{ flexGrow: 1 }}>
-                <Timeline align = 'left' style = {{ paddingLeft: '12px' }}>
+            <Grid item style = {{ flexGrow: 1, paddingTop: 0 }}>
+                <Timeline align = 'left' style = {{ paddingLeft: '4px' }}>
                     {roadmapEntries.map((entry, index) =>
                         <RoadmapEntry key = {index} id = {entry.id} hasEditAccess = {hasEditAccess} />
                     )}

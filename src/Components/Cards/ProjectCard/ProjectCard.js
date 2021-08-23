@@ -2,21 +2,21 @@ import {
     Box, Card, CardContent, CardHeader, IconButton, Link, makeStyles, Tooltip, Typography, useTheme
 } from '@material-ui/core'
 import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@material-ui/icons'
+import { ReactComponent as SonarqubeLogo } from 'Assets/sonarqubeLogo.svg'
+import { PathToProdStepper } from 'Components/PathToProdStepper'
+import { SonarqubeIndicator } from 'Components/SonarqubeIndicator'
+import { Tag } from 'Components/Tag'
+import useSonarqubeRatings from 'Hooks/useSonarqubeRatings'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { ReactComponent as SonarqubeLogo } from '../../../Assets/sonarqubeLogo.svg'
-import useSonarqubeRatings from '../../../Hooks/useSonarqubeRatings'
-import { hasProductOrTeamAccess } from '../../../Redux/Auth/selectors'
-import { openPopup } from '../../../Redux/Popups/actions'
-import { selectProductById } from '../../../Redux/Products/selectors'
-import { requestUpdateJourneyMapById } from '../../../Redux/Projects/actions'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { selectProjectById } from '../../../Redux/Projects/selectors'
-import { PathToProdStepper } from '../../PathToProdStepper'
-import { SonarqubeIndicator } from '../../SonarqubeIndicator'
-import { Tag } from '../../Tag'
+import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import { selectProductById } from 'Redux/Products/selectors'
+import { requestUpdateJourneyMapById } from 'Redux/Projects/actions'
+import ProjectConstants from 'Redux/Projects/constants'
+import { selectProjectById } from 'Redux/Projects/selectors'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -62,7 +62,7 @@ function ProjectCard({ id }) {
         dispatch(openPopup(ProjectConstants.UPDATE_PROJECT, 'ProjectPopup', { id }))
     }
 
-    const goToProductsPage = () => history.push(`/products/${project.productId}`)
+    const goToProductsPage = () => history.push(`/products/${project.productId}/overview`)
 
     const buildTooltip = (data) => (
         <Box display = 'flex' flexDirection = 'column'>

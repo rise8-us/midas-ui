@@ -1,14 +1,14 @@
 import { Box, Card, CardContent, CardHeader, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
+import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
 import React, { useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { hasProductAccess } from '../../../Redux/Auth/selectors'
-import { openPopup } from '../../../Redux/Popups/actions'
-import PortfolioConstants from '../../../Redux/Portfolios/constants'
-import { selectPortfolioById } from '../../../Redux/Portfolios/selectors'
-import { Tag } from '../../Tag'
+import { hasProductAccess } from 'Redux/Auth/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import PortfolioConstants from 'Redux/Portfolios/constants'
+import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -87,7 +87,7 @@ function PortfolioCard({ id }) {
                         >
                             <Typography
                                 className = {classes.link}
-                                onClick = {() => history.push(`/products/${product.id}`)}
+                                onClick = {() => history.push(`/products/${product.id}/overview`)}
                                 data-testid = 'PortfolioCard__text-productName'
                             >
                                 {product.name}

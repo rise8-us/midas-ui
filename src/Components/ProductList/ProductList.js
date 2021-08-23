@@ -9,7 +9,7 @@ function ProductList({ products, tagScope }) {
     const theme = useTheme()
 
     const goToProductPage = (id) => {
-        history.push(`/products/${id}/about`)
+        history.push(`/products/${id}/overview`)
     }
 
     return (

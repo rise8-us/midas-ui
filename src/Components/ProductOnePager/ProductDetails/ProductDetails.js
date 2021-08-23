@@ -1,7 +1,10 @@
 import { Grid, makeStyles } from '@material-ui/core'
+import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { AutoSaveTextField } from '../AutoSaveTextField'
+import { useDispatch, useSelector } from 'react-redux'
+import { requestUpdateProduct } from 'Redux/Products/actions'
+import { selectProductById } from 'Redux/Products/selectors'
 
 const defaultValue = (field) => {
     return `Oh no! It looks like this product does not have a ${field}. Someone should fix that.`
@@ -19,17 +22,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function ProductDetails({ missionStatement, problemStatement, visionStatement, hasEditAccess, onFieldUpdated }) {
+function ProductDetails({ productId, hasEdit }) {
     const classes = useStyles()
+    const dispatch = useDispatch()
+
+    const product = useSelector(state => selectProductById(state, productId))
+
+    const dispatchUpdateProduct = (field, value) => {
+        dispatch(requestUpdateProduct({
+            ...product,
+            childIds: [],
+            [field]: value
+        }))
+    }
 
     return (
         <Grid container direction = 'column'>
             <Grid item>
                 <AutoSaveTextField
                     label = 'OUR VISION'
-                    initialValue = {visionStatement ?? defaultValue('Vision Statement')}
-                    canEdit = {hasEditAccess}
-                    onSave = {(e) => onFieldUpdated('vision', e)}
+                    initialValue = {product.vision ?? defaultValue('Vision Statement')}
+                    canEdit = {hasEdit}
+                    onSave = {(e) => dispatchUpdateProduct('vision', e)}
                     InputLabelProps = {{
                         className: classes.inputLabel
                     }}
@@ -42,9 +56,9 @@ function ProductDetails({ missionStatement, problemStatement, visionStatement, h
             <Grid item>
                 <AutoSaveTextField
                     label = 'OUR MISSION'
-                    initialValue = {missionStatement ?? defaultValue('Mission Statement')}
-                    canEdit = {hasEditAccess}
-                    onSave = {(e) => onFieldUpdated('mission', e)}
+                    initialValue = {product.mission ?? defaultValue('Mission Statement')}
+                    canEdit = {hasEdit}
+                    onSave = {(e) => dispatchUpdateProduct('mission', e)}
                     InputLabelProps = {{
                         className: classes.inputLabel
                     }}
@@ -57,9 +71,9 @@ function ProductDetails({ missionStatement, problemStatement, visionStatement, h
             <Grid item>
                 <AutoSaveTextField
                     label = 'PROBLEM STATEMENT'
-                    initialValue = {problemStatement ?? defaultValue('Problem Statement')}
-                    canEdit = {hasEditAccess}
-                    onSave = {(e) => onFieldUpdated('problemStatement', e)}
+                    initialValue = {product.problemStatement ?? defaultValue('Problem Statement')}
+                    canEdit = {hasEdit}
+                    onSave = {(e) => dispatchUpdateProduct('problemStatement', e)}
                     InputLabelProps = {{
                         className: classes.inputLabel
                     }}
@@ -74,17 +88,12 @@ function ProductDetails({ missionStatement, problemStatement, visionStatement, h
 }
 
 ProductDetails.propTypes = {
-    hasEditAccess: PropTypes.bool.isRequired,
-    missionStatement: PropTypes.string,
-    onFieldUpdated: PropTypes.func.isRequired,
-    problemStatement: PropTypes.string,
-    visionStatement: PropTypes.string,
+    productId: PropTypes.number.isRequired,
+    hasEdit: PropTypes.bool,
 }
 
 ProductDetails.defaultProps = {
-    missionStatement: null,
-    problemStatement: null,
-    visionStatement: null
+    hasEdit: false
 }
 
 export default ProductDetails
