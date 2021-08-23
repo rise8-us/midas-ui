@@ -66,8 +66,7 @@ describe('<Comment>', () => {
             }
         )
 
-        expect(await screen.findByText('status')).toBeInTheDocument()
-        expect(screen.getByText('Completed')).toBeInTheDocument()
+        expect(screen.getByText('status | Completed')).toBeInTheDocument()
     })
 
     test('should edit and save comment', () => {

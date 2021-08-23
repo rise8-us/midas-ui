@@ -66,7 +66,7 @@ describe('<AssertionHeader>', () => {
                 }
             })
 
-        expect(screen.getByText('Started')).toBeInTheDocument()
+        expect(screen.getByText(/Started/)).toBeInTheDocument()
     })
 
     test('should show commentCount', () => {
@@ -170,9 +170,9 @@ describe('<AssertionHeader>', () => {
             { initialState: mockState }
         )
 
-        fireEvent.click(screen.getByText('Not Started'))
+        fireEvent.click(screen.getByText(/Not Started/))
         useDispatchMock().mockReturnValueOnce({ data: { payload: {} } })
-        fireEvent.click(screen.getByText('Completed'))
+        fireEvent.click(screen.getByText(/Completed/))
 
         expect(requestCreateCommentMock).toHaveBeenCalledWith({ assertionId: 1, text: '###COMPLETED' })
         waitFor(() => {

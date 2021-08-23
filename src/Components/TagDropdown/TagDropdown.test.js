@@ -43,15 +43,15 @@ describe('<TagDropdown />', () => {
             onChange = {onTagsChange}
         />)
 
-        expect(await screen.findByText('label 1')).toBeInTheDocument()
+        expect(await screen.findByText('scoped | label 1')).toBeInTheDocument()
         fireEvent.click(screen.getByTitle('Open'))
 
         const option = screen.getByText('scoped::label 2')
         expect(option).toBeInTheDocument()
         fireEvent.click(option)
 
-        expect(await screen.findByText('label 2')).toBeInTheDocument()
-        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
+        expect(await screen.findByText('scoped | label 2')).toBeInTheDocument()
+        expect(screen.queryByText('scoped | label 1')).not.toBeInTheDocument()
     })
 
     test('should delete tag', async() => {
@@ -62,9 +62,9 @@ describe('<TagDropdown />', () => {
             onChange = {onTagsChange} />
         )
 
-        fireEvent.click(await screen.findByTitle('delete'))
+        fireEvent.click(screen.getByTitle('Remove Tag 1'))
 
-        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
+        expect(screen.queryByText('Tag 1')).not.toBeInTheDocument()
     })
 
     test('should not delete tag', () => {
@@ -115,15 +115,13 @@ describe('<TagDropdown />', () => {
             color: '#123456',
         } })
         render(<TagDropdown defaultTags = {[allTags[2]]} creatable />)
-        expect(screen.getByText('scoped')).toBeInTheDocument()
-        expect(screen.getByText('label 1')).toBeInTheDocument()
+        expect(screen.getByText('scoped | label 1')).toBeInTheDocument()
 
         userEvent.type(screen.getByRole('textbox'), 'scoped::label 3')
         fireEvent.click(screen.getByText('Add "scoped::label 3"'))
 
-        expect(await screen.findByText('scoped')).toBeInTheDocument()
-        expect(await screen.findByText('label 3')).toBeInTheDocument()
-        expect(screen.queryByText('label 1')).not.toBeInTheDocument()
+        expect(await screen.findByText('scoped | label 3')).toBeInTheDocument()
+        expect(screen.queryByText('scoped | label 1')).not.toBeInTheDocument()
     })
 
 })

@@ -40,7 +40,7 @@ describe('<AssertionComments>', () => {
             }
         } })
 
-        expect(screen.getByText('Not Started')).toBeInTheDocument()
+        expect(screen.getByText(/Not Started/)).toBeInTheDocument()
         expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 446px')
     })
 

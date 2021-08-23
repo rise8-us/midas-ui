@@ -1,27 +1,28 @@
 import React from 'react'
-import { fireEvent, render, screen, userEvent, waitFor } from '../../Utilities/test-utils'
+import { fireEvent, render, screen } from '../../Utilities/test-utils'
 import { Tag } from './index'
 
 describe('<Tag />', () => {
 
     const onDeleteMock = jest.fn()
 
-    test('scopped tag no description', () => {
+    test('scoped tag no description', async() => {
         const data = {
             label: 'scope::label 1',
             description: 'desc 1',
             color: '#000000'
         }
 
+        const scopedTag = 'scope | label 1'
+
         render(<Tag {...data}/>)
 
-        expect(screen.getByText('scope')).toBeInTheDocument()
-        expect(screen.getByText('label 1')).toBeInTheDocument()
+        expect(screen.getByText(scopedTag)).toBeInTheDocument()
         expect(screen.queryAllByText('::')).toHaveLength(0)
 
-        fireEvent.mouseEnter(screen.getByText('scope'))
+        fireEvent.mouseEnter(screen.getByText(scopedTag))
 
-        waitFor(() => expect(screen.getByTitle(data.description)).toBeInTheDocument())
+        expect(await screen.findByText(data.description)).toBeInTheDocument()
     })
 
     test('scoped tag no description', () => {
@@ -30,14 +31,14 @@ describe('<Tag />', () => {
             description: '',
             color: '#000000'
         }
+        const scopedTag = 'scope | label 2'
 
         render(<Tag {...data}/>)
 
-        expect(screen.getByText('scope')).toBeInTheDocument()
-        expect(screen.getByText('label 2')).toBeInTheDocument()
+        expect(screen.getByText(scopedTag)).toBeInTheDocument()
     })
 
-    test('single tag with description', () => {
+    test('single tag with description', async() => {
         const data = {
             label: 'label 3',
             description: 'desc 3',
@@ -48,7 +49,7 @@ describe('<Tag />', () => {
 
         fireEvent.mouseEnter(screen.getByText(data.label))
 
-        waitFor(() => expect(screen.getByTitle(data.description)).toBeInTheDocument())
+        expect(await screen.findByText(data.description)).toBeInTheDocument()
     })
 
     test('single tag no description', () => {
@@ -72,7 +73,7 @@ describe('<Tag />', () => {
 
         render(<Tag {...data} onDelete = {onDeleteMock}/>)
 
-        userEvent.click(screen.getByTitle('delete'))
+        fireEvent.click(screen.getByTitle('Remove label 4'))
 
         expect(onDeleteMock).toHaveBeenCalled()
     })
