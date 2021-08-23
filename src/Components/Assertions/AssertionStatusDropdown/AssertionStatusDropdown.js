@@ -49,7 +49,7 @@ function AssertionStatusDropdown({ option, onChange, onClick, hasAccess }) {
         <div style = {{ cursor: 'pointer', margin: 'auto 0' }}>
             <Tag
                 label = {`status::${selectStatus?.label}`}
-                color = {selectStatus?.color ?? '#ffffff'}
+                color = {selectStatus.color}
                 onClick = {togglePopper}
             />
             {hasAccess &&
