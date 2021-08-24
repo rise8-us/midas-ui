@@ -82,14 +82,14 @@ function ProductHeader({ id, hasEdit }) {
                     canEdit = {hasEdit}
                 />
             </div>
-            <div style = {{ display: 'flex' }}>
+            <div style = {{ display: 'flex', flexWrap: 'wrap' }}>
                 {product.tags.map((tag, index) =>
                     <Chip
                         key = {index}
                         label = {tag.label.replace('::', ' | ').toUpperCase()}
                         style = {{
                             borderColor: tag.color,
-                            margin: index === 0 ? '4px 4px 4px 0px' : '4px'
+                            margin: '3px 6px 3px 0px'
                         }}
                         size = 'small'
                         variant = 'outlined'
