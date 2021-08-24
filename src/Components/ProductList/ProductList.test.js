@@ -44,7 +44,7 @@ describe('<ProductList>', () => {
 
         fireEvent.click(screen.getByText('product 1'))
 
-        expect(history.location.pathname).toEqual('/products/1/about')
+        expect(history.location.pathname).toEqual('/products/1/overview')
     })
 
 })

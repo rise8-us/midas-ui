@@ -1,1 +1,5 @@
-export { default as ProductOnePager } from './ProductOnePager'
+export { ProductDetails } from './ProductDetails'
+export { ProductHeader } from './ProductHeader'
+export { ProductOnePager } from './ProductOnePager'
+export { ProductRoadmap } from './ProductRoadmap'
+export { ProductUserPersonas } from './ProductUserPersonas'

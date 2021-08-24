@@ -1,15 +1,12 @@
-import { Chip, IconButton, makeStyles } from '@material-ui/core'
-import { Edit } from '@material-ui/icons'
+import { Chip, makeStyles } from '@material-ui/core'
+import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { hasProductAccess } from '../../Redux/Auth/selectors'
-import { selectRequestErrors } from '../../Redux/Errors/selectors'
-import { openPopup } from '../../Redux/Popups/actions'
-import { requestUpdateProduct } from '../../Redux/Products/actions'
-import ProductConstants from '../../Redux/Products/constants'
-import { selectProductById } from '../../Redux/Products/selectors'
-import { AutoSaveTextField } from '../AutoSaveTextField'
+import { selectRequestErrors } from 'Redux/Errors/selectors'
+import { requestUpdateProduct } from 'Redux/Products/actions'
+import ProductConstants from 'Redux/Products/constants'
+import { selectProductById } from 'Redux/Products/selectors'
 
 const useStyles = makeStyles((theme) => ({
     row: {
@@ -17,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    h4: {
-        ...theme.typography.h4,
+    h2: {
+        ...theme.typography.h3,
         color: theme.palette.text.primary,
     },
     subtitle1: {
@@ -30,18 +27,14 @@ const useStyles = makeStyles((theme) => ({
         '&:first-child': {
             marginLeft: 0
         }
-    },
-    icon: {
-        height: 42
     }
 }))
 
-function ProductHeader({ id, readOnly }) {
+function ProductHeader({ id, hasEdit }) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, id))
-    const hasAccess = useSelector(state => hasProductAccess(state, id)) && !readOnly
 
     const errors = useSelector(state => selectRequestErrors(state, ProductConstants.UPDATE_PRODUCT))
     const nameErrors = useMemo(() => errors.filter(error => error.includes('Name')), [errors])
@@ -68,30 +61,18 @@ function ProductHeader({ id, readOnly }) {
         })
     }
 
-    const openUpdateProductPopup = () =>
-        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id }))
-
     return (
         <>
-            <div className = {classes.row} style = {{ height: '48px' }}>
+            <div className = {classes.row}>
                 <AutoSaveTextField
                     initialValue = {product.name}
                     onSave = {onNameSave}
-                    className = {classes.h4}
+                    className = {classes.h2}
                     errors = {nameErrors}
+                    style = {{ height: '48px' }}
                     dataTestId = 'ProductHeader__input-name'
-                    canEdit = {hasAccess}
+                    canEdit = {hasEdit}
                 />
-                {hasAccess &&
-                    <IconButton
-                        className = {classes.icon}
-                        data-testid = 'ProductHeader__icon-action'
-                        onClick = {openUpdateProductPopup}
-                        color = 'secondary'
-                    >
-                        <Edit />
-                    </IconButton>
-                }
             </div>
             <div className = {classes.row}>
                 <AutoSaveTextField
@@ -104,7 +85,7 @@ function ProductHeader({ id, readOnly }) {
                     fullWidth
                     enableSpellCheck
                     dataTestId = 'ProductHeader__input-description'
-                    canEdit = {hasAccess}
+                    canEdit = {hasEdit}
                 />
             </div>
             <div className = {classes.tags} >
@@ -127,11 +108,11 @@ function ProductHeader({ id, readOnly }) {
 
 ProductHeader.propTypes = {
     id: PropTypes.number.isRequired,
-    readOnly: PropTypes.bool
+    hasEdit: PropTypes.bool
 }
 
 ProductHeader.defaultProps = {
-    readOnly: false
+    hasEdit: false
 }
 
 export default ProductHeader

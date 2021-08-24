@@ -8,8 +8,11 @@ jest.mock('../../Tabs/ProjectsTab/ProjectsTab',
 jest.mock('../../Tabs/AssertionsTab/AssertionsTab',
     () => function testing() { return (<div>AssertionsTab</div>) })
 
-jest.mock('../../ProductOnePager/ProductOnePager',
-    () => function testing() { return (<div>ProductOnePager</div>) })
+jest.mock('../../ProductOnePager/ProductRoadmap/ProductRoadmap',
+    () => function testing() { return (<div>ProductRoadmap</div>) })
+
+jest.mock('../../ProductOnePager/ProductUserPersonas/ProductUserPersonas',
+    () => function testing() { return (<div>ProductUserPersonas</div>) })
 
 jest.mock('../../Page/Page',
     () => function testing({ children }) { return (<div>{children}</div>) })
@@ -17,6 +20,8 @@ jest.mock('../../Page/Page',
 describe('<Product>', () => {
 
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
+    const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
+    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
     const product = {
         id: 0,
@@ -35,6 +40,7 @@ describe('<Product>', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectProductByIdMock.mockReturnValue(product)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
     })
 
     test('should have correct header text', () => {
@@ -52,11 +58,29 @@ describe('<Product>', () => {
         expect(screen.getByText('ProjectsTab')).toBeInTheDocument()
     })
 
-    test('should render about tab', () => {
+    test('should render overview tab', () => {
         renderWithRouter(<Product />)
 
-        fireEvent.click(screen.getByText(/about/i))
-        expect(screen.getByText('ProductOnePager')).toBeInTheDocument()
+        fireEvent.click(screen.getByText(/overview/i))
+        expect(screen.getByText('ProductRoadmap')).toBeInTheDocument()
+        expect(screen.getByText('ProductUserPersonas')).toBeInTheDocument()
+    })
+
+    test('should render ogsms tab', () => {
+        renderWithRouter(<Product />)
+
+        fireEvent.click(screen.getByText(/ogsms/i))
+        expect(screen.getByText('AssertionsTab')).toBeInTheDocument()
+    })
+
+    test('should handle action icons', () => {
+        renderWithRouter(<Product />)
+
+        fireEvent.click(screen.getByTestId('ProductPage__icon-inline-edit'))
+        fireEvent.click(screen.getByTestId('ProductPage__icon-popup-edit'))
+
+        expect(screen.getByTitle('unlocked')).toBeInTheDocument()
+        expect(openPopupMock).toHaveBeenCalled()
     })
 
 })

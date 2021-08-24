@@ -1,9 +1,7 @@
 import { createMemoryHistory } from 'history'
 import React from 'react'
-import ProductConstants from '../../../Redux/Products/constants'
-import {
-    fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock
-} from '../../../Utilities/test-utils'
+import ProductConstants from 'Redux/Products/constants'
+import { fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProductCard } from './index'
 
 describe('<ProductCard />', () => {
@@ -73,7 +71,7 @@ describe('<ProductCard />', () => {
 
         fireEvent.click(screen.getByText('Midas'))
 
-        expect(history.location.pathname).toEqual('/products/4/ogsms')
+        expect(history.location.pathname).toEqual('/products/4/overview')
     })
 
 })

@@ -1,7 +1,7 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import PortfolioConstants from '../../../Redux/Portfolios/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import PortfolioConstants from 'Redux/Portfolios/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { PortfolioCard } from './index'
 
 const mockHistoryPush = jest.fn()
@@ -90,7 +90,7 @@ describe('<PortfolioCard />', () => {
 
         fireEvent.click(screen.getByText('Midas'))
 
-        expect(mockHistoryPush).toHaveBeenCalledWith('/products/4')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/products/4/overview')
     })
 
     test('should not render edit icon', () => {

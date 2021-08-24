@@ -2,16 +2,16 @@ import {
     Box, Card, CardActions, CardContent, CardHeader, IconButton, makeStyles, Typography
 } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
+import { PathToProdStepper } from 'Components/PathToProdStepper'
+import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
 import React, { useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
-import { hasProductAccess } from '../../../Redux/Auth/selectors'
-import { openPopup } from '../../../Redux/Popups/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { selectProductById } from '../../../Redux/Products/selectors'
-import { PathToProdStepper } from '../../PathToProdStepper'
-import { Tag } from '../../Tag'
+import { hasProductAccess } from 'Redux/Auth/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import ProductConstants from 'Redux/Products/constants'
+import { selectProductById } from 'Redux/Products/selectors'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -46,7 +46,7 @@ function ProductCard({ id }) {
     const updateProductPopup = () =>
         dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id }))
 
-    const goToProductsPage = () => history.push(`/products/${product.id}/ogsms`)
+    const goToProductsPage = () => history.push(`/products/${product.id}/overview`)
 
     useLayoutEffect(() => {
         const spans = Math.ceil(ref.current.clientHeight / 2) + 5
