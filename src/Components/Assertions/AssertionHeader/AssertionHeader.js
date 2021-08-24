@@ -143,7 +143,9 @@ function AssertionHeader(props) {
                         initialValue = {title}
                         onSave = {saveChanges}
                         className = {classes.creatableDetail}
+                        title = {title}
                         fullWidth
+                        inputProps = {{ style: { textOverflow: 'ellipsis' } }}
                     />
                 </div>
                 <Box display = 'flex' flexDirection = 'row'>

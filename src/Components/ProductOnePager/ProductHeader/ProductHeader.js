@@ -21,12 +21,6 @@ const useStyles = makeStyles((theme) => ({
     subtitle1: {
         ...theme.typography.subtitle1,
         color: theme.palette.text.secondary,
-    },
-    tags: {
-        display: 'flex',
-        '&:first-child': {
-            marginLeft: 0
-        }
     }
 }))
 
@@ -88,14 +82,14 @@ function ProductHeader({ id, hasEdit }) {
                     canEdit = {hasEdit}
                 />
             </div>
-            <div className = {classes.tags} >
+            <div style = {{ display: 'flex' }}>
                 {product.tags.map((tag, index) =>
                     <Chip
                         key = {index}
                         label = {tag.label.replace('::', ' | ').toUpperCase()}
                         style = {{
                             borderColor: tag.color,
-                            margin: '4px'
+                            margin: index === 0 ? '4px 4px 4px 0px' : '4px'
                         }}
                         size = 'small'
                         variant = 'outlined'
