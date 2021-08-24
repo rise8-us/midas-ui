@@ -64,7 +64,7 @@ function AutoSaveTextField({
             onKeyDown = {onKeyDown}
             onChange = {onChange}
             error = { errors.length > 0 }
-            helperText = {<FormatErrors errors = {errors}/>}
+            helperText = {errors.length === 0 ? null : <FormatErrors errors = {errors}/>}
         />
     )
 }

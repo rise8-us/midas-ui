@@ -39,4 +39,10 @@ describe('<AutoSaveTextField>', () => {
         expect(screen.getByDisplayValue(/test/)).toBeInTheDocument()
     })
 
+    test('should render errors', () => {
+        render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'test' errors = {['error']}/>)
+
+        expect(screen.getByText(/error/)).toBeInTheDocument()
+    })
+
 })

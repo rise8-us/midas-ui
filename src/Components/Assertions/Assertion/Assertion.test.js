@@ -1,5 +1,5 @@
 import React from 'react'
-import { renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { Assertion } from './index'
 
 describe('<Assertion>', () => {
@@ -81,6 +81,8 @@ describe('<Assertion>', () => {
             />
         )
 
+        fireEvent.mouseEnter(screen.getByDisplayValue('TestAssertion'))
+
         userEvent.click(screen.getByTitle('add new goal'))
         expect(requestCreateAssertionMock).toHaveBeenCalledWith({
             text: 'Enter new goal here...',
@@ -148,6 +150,8 @@ describe('<Assertion>', () => {
                 id = {1}
             />
         )
+
+        fireEvent.mouseEnter(screen.getByDisplayValue('TestAssertion'))
 
         userEvent.click(screen.getByTitle('delete'))
         userEvent.click(screen.getByText('confirm'))

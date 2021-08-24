@@ -1,16 +1,15 @@
-import { Badge, Box, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
+import { alpha, Badge, Box, Grow, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Chat, Delete, KeyboardReturn } from '@material-ui/icons'
-import { unwrapResult } from '@reduxjs/toolkit'
+import { AutoSaveTextField } from 'Components/AutoSaveTextField'
+import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { Tag } from 'Components/Tag'
+import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
-import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
-import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
-import { requestCreateComment, requestSearchComments } from '../../../Redux/Comments/actions'
-import { ConfirmationPopup } from '../../Popups/ConfirmationPopup'
-import { AssertionStatusDropdown } from '../AssertionStatusDropdown'
+import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { requestSearchComments } from 'Redux/Comments/actions'
 
 const useStyles = makeStyles((theme) => ({
     heading: {
@@ -30,12 +29,22 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto 0',
         marginRight: 'auto',
         paddingLeft: 6
+    },
+    statusIndicator: {
+        borderLeft: '3px solid',
+        borderRadius: '4px 0 0 4px',
+        width: 8,
+        marginRight: 3
+    },
+    row: {
+        display: 'flex',
+        width: '100%',
+        '&:hover': {
+            backgroundColor: alpha(theme.palette.background.default, .4),
+            borderRadius: 6
+        }
     }
 }))
-
-const getDisplay = (show) => show ? 'inherit' : 'none'
-const checkAccess = (allowEvent, event) => allowEvent ? event : null
-
 function AssertionHeader(props) {
     const {
         id, category, title, status, commentCount, addChildAssertionLabel,
@@ -51,65 +60,14 @@ function AssertionHeader(props) {
 
     const statuses = useAssertionStatuses()
 
-    const defaultTag = statuses.filter(t => t.name === status)[0]
+    const defaultTag = statuses.filter(t => t.name === status)[0] ?? { label: 'Not Started', color: '#c3c3c3' }
 
-    const [value, setValue] = useState(title)
-    const [changeable, setChangeable] = useState(false)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [viewingComments, setViewingComments] = useState(false)
+    const [showActions, setShowActions] = useState(false)
 
-    const onValueChange = (event) => {
-        const val = event.target.value
-        setValue(val)
-    }
-
-    const saveChanges = () => {
-        onSave(value)
-        setChangeable(false)
-    }
-
-    const onTitleBlur = (event) => {
-        event.stopPropagation()
-        saveChanges()
-    }
-
-    const onKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            saveChanges()
-        } else if (event.key === 'Escape') {
-            onValueChange({ target: { value: title } })
-            setChangeable(false)
-        }
-    }
-
-    const onTitleFocus = (event) => {
-        event.stopPropagation()
-        event.target.setSelectionRange(0, event.target.value.length)
-    }
-
-    const onTitleClick = (event) => {
-        event.stopPropagation()
-        setViewingComments(true)
-        setChangeable(true)
-    }
-
-    const onStatusChange = (val) => {
-        dispatch(requestCreateComment({
-            assertionId: id,
-            text: `###${val}`
-        })).then(unwrapResult).then(() => {
-            dispatch(setAssertionComment(id))
-            dispatch(requestUpdateAssertion({
-                id,
-                text: value,
-                status: val,
-                children: []
-            }))
-        })
-    }
-
-    const onStatusClick = (event) => {
-        event.stopPropagation()
+    const saveChanges = (newValue) => {
+        onSave(newValue)
     }
 
     const onDeleteClick = (event) => {
@@ -150,10 +108,6 @@ function AssertionHeader(props) {
     }, [viewingComments])
 
     useEffect(() => {
-        title !== value && setValue(title)
-    }, [title])
-
-    useEffect(() => {
         if (assertionIdInt === id) {
             ref.current.scrollIntoView({
                 behavior: 'smooth',
@@ -162,68 +116,57 @@ function AssertionHeader(props) {
     }, [assertionId])
 
     return (
-        <>
-            <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary' ref = {ref}>
-                {category}:
-            </Typography>
+        <div
+            onMouseEnter = {() => setShowActions(true)}
+            onMouseLeave = {() => setShowActions(false)}
+            className = {classes.row}
+            style = {{
+            }}
+        >
+            <div style = {{ display: 'flex', justifyContent: 'space-between' }}>
+                <Tooltip arrow title = {<Tag {...defaultTag}/>} placement = 'left' interactive>
+                    <div
+                        className = {classes.statusIndicator}
+                        style = {{
+                            borderLeftColor: defaultTag?.color ?? '#797979'
+                        }}
+                    />
+                </Tooltip>
+                <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary' ref = {ref}>
+                    {category}:
+                </Typography>
+            </div>
             <Box display = 'flex' width = '100%'>
-                <div style = {{ width: '100%' }}>
-                    <TextField
+                <div style = {{ width: '100%' }} onClick = {(e) => e.stopPropagation()}>
+                    <AutoSaveTextField
+                        canEdit = {hasAccess}
+                        initialValue = {title}
+                        onSave = {saveChanges}
+                        className = {classes.creatableDetail}
                         fullWidth
-                        title = {value}
-                        InputProps = {{
-                            disableUnderline: !changeable,
-                            readOnly: !changeable,
-                            className: classes.creatableDetail,
-                        }}
-                        inputProps = {{
-                            style: {
-                                textOverflow: 'ellipsis'
-                            }
-                        }}
-                        value = {value}
-                        onKeyDown = {checkAccess(hasAccess, onKeyDown)}
-                        onChange = {checkAccess(hasAccess, onValueChange)}
-                        onFocus = {checkAccess(hasAccess, onTitleFocus)}
-                        onBlur = {checkAccess(hasAccess, onTitleBlur)}
-                        onClick = {checkAccess(hasAccess, onTitleClick)}
-                        style = {{
-                            height: '100%'
-                        }}
-                    >
-                        {title}
-                    </TextField>
-                    <Typography
-                        variant = 'caption'
-                        color = 'textSecondary'
-                        style = {{
-                            position: 'relative',
-                            bottom: '13px',
-                            zIndex: 1,
-                            left: '8px',
-                            display: getDisplay(changeable)
-                        }}
-                    >
-                        enter to save • escape to revert
-                    </Typography>
+                    />
                 </div>
                 <Box display = 'flex' flexDirection = 'row'>
-                    { hasAccess && addChildAssertion &&
-                        <IconButton
-                            color = 'secondary'
-                            title = {addChildAssertionLabel}
-                            size = 'small'
-                            onClick = {onAddChildAssertionClick}
-                        ><KeyboardReturn /></IconButton>
-                    }
-                    { hasAccess &&
-                        <IconButton
-                            color = 'secondary'
-                            title = 'delete'
-                            size = 'small'
-                            onClick = {onDeleteClick}
-                        ><Delete /></IconButton>
-                    }
+                    <Grow in = {showActions} unmountOnExit>
+                        <Box display = 'flex' flexDirection = 'row'>
+                            { hasAccess && addChildAssertion &&
+                                <IconButton
+                                    color = 'secondary'
+                                    title = {addChildAssertionLabel}
+                                    size = 'small'
+                                    onClick = {onAddChildAssertionClick}
+                                ><KeyboardReturn /></IconButton>
+                            }
+                            { hasAccess &&
+                                <IconButton
+                                    color = 'secondary'
+                                    title = 'delete'
+                                    size = 'small'
+                                    onClick = {onDeleteClick}
+                                ><Delete /></IconButton>
+                            }
+                        </Box>
+                    </Grow>
                     <Badge
                         badgeContent = {commentCount}
                         overlap = 'circular'
@@ -239,14 +182,6 @@ function AssertionHeader(props) {
                             <Chat />
                         </IconButton>
                     </Badge>
-                    {defaultTag &&
-                        <AssertionStatusDropdown
-                            option = {defaultTag}
-                            hasAccess = {hasAccess}
-                            onClick = {onStatusClick}
-                            onChange = {onStatusChange}
-                        />
-                    }
                 </Box>
             </Box>
             {openConfirmation &&
@@ -254,10 +189,10 @@ function AssertionHeader(props) {
                     open = {openConfirmation}
                     onConfirm = {handlePopupConfirm}
                     onCancel = {handlePopupCancel}
-                    detail = {`You are about to delete '${category}: ${value}'`}
+                    detail = {`You are about to delete '${category}: ${title}'`}
                 />
             }
-        </>
+        </div>
     )
 }
 

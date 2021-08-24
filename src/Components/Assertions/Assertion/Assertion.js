@@ -5,9 +5,9 @@ import {
     requestCreateAssertion,
     requestDeleteAssertion,
     requestUpdateAssertion
-} from '../../../Redux/Assertions/actions'
-import { selectAssertionById, selectAssertionsByParentId } from '../../../Redux/Assertions/selectors'
-import { hasProductAccess } from '../../../Redux/Auth/selectors'
+} from 'Redux/Assertions/actions'
+import { selectAssertionById, selectAssertionsByParentId } from 'Redux/Assertions/selectors'
+import { hasProductAccess } from 'Redux/Auth/selectors'
 import { AssertionAccordion } from '../AssertionAccordion'
 
 const Assertion = ({ id, order, defaultExpanded, productId }) => {
