@@ -1,10 +1,9 @@
 import React from 'react'
-import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent
-} from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { TeamPopup } from './index'
 
 describe('<TeamPopup />', () => {
+    jest.setTimeout(25000)
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitCreateTeamMock = useModuleMock('Redux/Teams/actions', 'requestCreateTeam')
@@ -57,39 +56,61 @@ describe('<TeamPopup />', () => {
         expect(screen.getByText('name error')).toBeInTheDocument()
     })
 
-    test('should call onSubmit for createTeam', () => {
+    test('should call onSubmit to create Team', () => {
         render(<TeamPopup />)
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitCreateTeamMock).toHaveBeenCalledWith({
-            name: '', description: '', gitlabGroupId: '', userIds: [] })
+            name: '',
+            description: '',
+            gitlabGroupId: '',
+            productManagerId: null,
+            designerId: null,
+            techLeadId: null,
+            userIds: [],
+            productIds: [],
+        })
     })
 
-    test('should call onSubmit to Update team', () => {
+    test('should call onSubmit to Update team', async() => {
+        const allUsers = [
+            {
+                id: 10,
+                username: 'jsmith',
+                displayName: 'Jon Jacob Jingle Hiemer Smith'
+            }
+        ]
         selectTeamByIdMock.mockReturnValue(returnedFoundTeam)
+        useDispatchMock().mockResolvedValue({ type: '/', payload: allUsers })
+
         render(<TeamPopup id = {4} />)
 
         const name = 'My Edited Team'
-        const gitlabGroupId = '15550'
-        const description = 'New Description'
 
         const nameInput = screen.getByTestId('TeamPopup__input-name')
-        const descriptionInput = screen.getByTestId('TeamPopup__input-description')
-        const gitlabGroupIdInput = screen.getByTestId('TeamPopup__input-gitlabGroupId')
-
-        userEvent.clear(descriptionInput)
-        userEvent.clear(gitlabGroupIdInput)
         userEvent.clear(nameInput)
-
-        userEvent.type(descriptionInput, description)
-        userEvent.type(gitlabGroupIdInput, gitlabGroupId)
         userEvent.type(nameInput, name)
+
+        for (let i = 0; i < 3; i++) {
+            userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
+            fireEvent.click(await screen.findByText(/jsmith/))
+        }
+
+        userEvent.type(screen.getByPlaceholderText('Add another developer...'), 'jsmith')
+        fireEvent.click(await screen.findByText(/jsmith/))
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateTeamMock).toHaveBeenCalledWith({
-            ...returnedFoundTeam, name, description, gitlabGroupId })
+            ...returnedFoundTeam,
+            productIds: [],
+            name,
+            productManagerId: 10,
+            designerId: 10,
+            techLeadId: 10,
+            userIds: [9]
+        })
     })
 
     test('should close popup', () => {

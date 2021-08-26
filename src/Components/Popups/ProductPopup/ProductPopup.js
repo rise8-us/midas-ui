@@ -1,24 +1,22 @@
 import { Box, TextField } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { Popup } from 'Components/Popup'
+import { SearchTeams } from 'Components/Search/SearchTeams'
+import { TagDropdown } from 'Components/TagDropdown'
+import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useFormReducer from '../../../Hooks/useFormReducer'
-import { selectRequestErrors } from '../../../Redux/Errors/selectors'
-import { closePopup } from '../../../Redux/Popups/actions'
-import { requestCreateProduct, requestUpdateProduct } from '../../../Redux/Products/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { selectProductById } from '../../../Redux/Products/selectors'
-import { requestCreateProject } from '../../../Redux/Projects/actions'
-import { selectProjectsWithNoProductId } from '../../../Redux/Projects/selectors'
-import { requestFindTeamBy } from '../../../Redux/Teams/actions'
-import { requestFindUserBy } from '../../../Redux/Users/actions'
-import FormatErrors from '../../../Utilities/FormatErrors'
-import { Popup } from '../../Popup'
-import { SearchTeams } from '../../Search/SearchTeams'
-import { SearchUsers } from '../../Search/SearchUsers'
-import { TagDropdown } from '../../TagDropdown'
+import { selectRequestErrors } from 'Redux/Errors/selectors'
+import { closePopup } from 'Redux/Popups/actions'
+import { requestCreateProduct, requestUpdateProduct } from 'Redux/Products/actions'
+import ProductConstants from 'Redux/Products/constants'
+import { selectProductById } from 'Redux/Products/selectors'
+import { requestCreateProject } from 'Redux/Projects/actions'
+import { selectProjectsWithNoProductId } from 'Redux/Projects/selectors'
+import { requestFindTeamBy } from 'Redux/Teams/actions'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const filter = createFilterOptions()
 
@@ -49,7 +47,6 @@ function ProductPopup({ id }) {
     const projectsWithNoProductId = useSelector(selectProjectsWithNoProductId)
     const [availableProjects, setAvailableProjects] = useState(product.projects.concat(projectsWithNoProductId))
 
-    const [productManager, setProductManager] = useState()
     const [teams, setTeams] = useState([])
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
@@ -103,20 +100,14 @@ function ProductPopup({ id }) {
             problemStatement: formValues.problemStatement,
             tagIds: Object.values(formValues.tags.map(tag => tag.id)),
             projectIds: Object.values(formValues.projects.map(project => project.id)),
-            productManagerId: productManager?.id ?? null,
             teamIds: teams.map(team => team.id),
             childIds: [],
             type: 'PRODUCT',
         }))
     }
 
-    // TODO: Can the useEffect be removed and productManagerId & teams be moved to formValues?
+    // TODO: Can the useEffect be removed and teams be moved to formValues?
     useEffect(() => {
-        product.productManagerId && dispatch(requestFindUserBy(`id:${product.productManagerId}`))
-            .then(unwrapResult)
-            .then(data => {
-                setProductManager(data[0])
-            })
         product.teamIds?.length > 0 && dispatch(requestFindTeamBy(generateTeamsQuery(product.teamIds)))
             .then(unwrapResult)
             .then(data => {
@@ -186,12 +177,6 @@ function ProductPopup({ id }) {
                     margin = 'dense'
                     multiline
                 />
-                <SearchUsers
-                    onChange = {(_e, values) => setProductManager(values)}
-                    title = 'Product Manager'
-                    growFrom = '100%'
-                    value = {productManager}
-                />
                 <SearchTeams
                     onChange = {(_e, values) => setTeams(values)}
                     title = 'Team'
@@ -255,7 +240,7 @@ ProductPopup.propTypes = {
 }
 
 ProductPopup.defaultProps = {
-    id: 1
+    id: null
 }
 
 export default ProductPopup

@@ -14,6 +14,9 @@ jest.mock('../../ProductOnePager/ProductRoadmap/ProductRoadmap',
 jest.mock('../../ProductOnePager/ProductUserPersonas/ProductUserPersonas',
     () => function testing() { return (<div>ProductUserPersonas</div>) })
 
+jest.mock('../../ProductOnePager/ProductTeam/ProductTeam',
+    () => function testing() { return (<div>ProductTeam</div>) })
+
 jest.mock('../../Page/Page',
     () => function testing({ children }) { return (<div>{children}</div>) })
 

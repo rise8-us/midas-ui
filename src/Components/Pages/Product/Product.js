@@ -1,8 +1,7 @@
 import { Divider, Grid, IconButton, Tab, Tabs } from '@material-ui/core'
 import { Edit, LockOpenOutlined, LockOutlined } from '@material-ui/icons'
 import { Page } from 'Components/Page'
-import { ProductDetails } from 'Components/ProductOnePager/ProductDetails'
-import { ProductHeader } from 'Components/ProductOnePager/ProductHeader'
+import { ProductDetails, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { ProductPageOverview } from 'Components/ProductPageOverview'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
 import React, { Suspense, useEffect, useState } from 'react'
@@ -55,8 +54,8 @@ function Product() {
                     <Grid item>
                         <ProductHeader id = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
                     </Grid>
-                    <Grid item style = {{ display: 'none' }}>
-                        <div>Team Info</div>
+                    <Grid item>
+                        <ProductTeam productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
                     </Grid>
                     <Grid item>
                         <ProductDetails productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>

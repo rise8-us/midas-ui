@@ -16,3 +16,7 @@ export const selectAllTeams = (state) => {
 
     return Object.keys(allTeams).map(id => selectTeamById(state, id))
 }
+
+export const selectTeamByProductId = (state, productId) => {
+    return Object.values(selectAllTeams(state)).filter(team => team.productIds.includes(productId))[0] ?? {}
+}

@@ -43,7 +43,8 @@ const AutocompleteSearch = (props) => {
     const {
         title, placeholder, options, selectedOption, noOptionsText,
         onOptionChange, onTextChange, getOptionLabel,
-        setIsSearching, isSearching, growFrom, freeSolo
+        setIsSearching, isSearching, growFrom, freeSolo,
+        ...autoCompleteProps
     } = props
 
     const classes = useStyles({ growFrom })
@@ -95,7 +96,7 @@ const AutocompleteSearch = (props) => {
                     }}
                 />
             }
-            filterOptions = {() => options}
+            {...autoCompleteProps}
         />
     )
 }

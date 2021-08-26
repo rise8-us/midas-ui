@@ -44,11 +44,10 @@ describe('<TeamUsers />', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
         render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
-        screen.getByText('Members')
-        screen.getByText('user1')
-        screen.getByText('bro1')
-        screen.getByText('user2')
-        screen.getByText('sis1')
+        expect(screen.getByText('user1')).toBeInTheDocument()
+        expect(screen.getByText('bro1')).toBeInTheDocument()
+        expect(screen.getByText('user2')).toBeInTheDocument()
+        expect(screen.getByText('sis1')).toBeInTheDocument()
     })
 
     test('should fetch users missing from store state', () => {
@@ -59,11 +58,11 @@ describe('<TeamUsers />', () => {
     })
 
     test('should add user to userids list', async() => {
-        useDispatchMock().mockResolvedValue({ payload: addUsersList })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: addUsersList })
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
         render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
-        userEvent.type(screen.getByTestId('AutocompleteSearch__input'), 'test')
+        userEvent.type(screen.getByTestId('AutocompleteSearch__input'), 'foobar')
         userEvent.click(await screen.findByText('foobar'))
 
         expect(setUserIdsMock).toHaveBeenCalledWith([1, 2, 11])
