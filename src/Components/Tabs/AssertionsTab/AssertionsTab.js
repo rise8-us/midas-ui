@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles'
+import { Assertion, AssertionComments, CreateAssertionsButton } from 'Components/Assertions'
 import objectHash from 'object-hash'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
-import { requestSearchAssertions } from '../../../Redux/Assertions/actions'
-import { selectAssertionsByTypeAndProductId } from '../../../Redux/Assertions/selectors'
-import { hasProductAccess } from '../../../Redux/Auth/selectors'
-import { Assertion, AssertionComments, CreateAssertionsButton } from '../../Assertions'
+import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { requestSearchAssertions } from 'Redux/Assertions/actions'
+import { selectAssertionsByTypeAndProductId } from 'Redux/Assertions/selectors'
+import { hasProductAccess } from 'Redux/Auth/selectors'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,7 +44,7 @@ function AssertionsTab({ productId }) {
 
     useEffect(() => {
         dispatch(requestSearchAssertions(`product.id:${productId}`))
-        dispatch(setAssertionComment(null))
+        dispatch(setAssertionComment({ assertionId: null, deletedAssertionId: null }))
     }, [])
 
     return (

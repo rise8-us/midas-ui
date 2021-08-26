@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { requestFetchInit } from '../Init/actions'
+import { requestFetchInit } from 'Redux/Init/actions'
 
 const appSettingsSlice = createSlice({
     name: 'app',
@@ -22,7 +22,15 @@ const appSettingsSlice = createSlice({
             state.navBarOpen = !state.navBarOpen
         },
         setAssertionComment: (state, action) => {
-            state.assertionCommentsOpen = action.payload === state.assertionCommentsOpen ? null : action.payload
+            const currentId = state.assertionCommentsOpen
+            const { assertionId, deletedAssertionId } = action.payload
+            if (deletedAssertionId !== null && deletedAssertionId === currentId) {
+                state.assertionCommentsOpen = null
+            } else if (currentId === assertionId) {
+                state.assertionCommentsOpen = null
+            } else {
+                state.assertionCommentsOpen = assertionId
+            }
         },
         setPageScrollY: (state, action) => {
             state.pageScrollY = action.payload

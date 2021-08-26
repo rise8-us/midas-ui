@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AssertionComments } from './index'
 
 jest.mock('../../Comments/Comment/Comment', () => function testing() {
@@ -7,6 +7,9 @@ jest.mock('../../Comments/Comment/Comment', () => function testing() {
 })
 
 describe('<AssertionComments>', () => {
+
+    const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
+    const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
 
     const mockState = {
         app: {
@@ -50,15 +53,17 @@ describe('<AssertionComments>', () => {
         expect(screen.getByPlaceholderText(/enter comment here.../i)).toBeInTheDocument()
     })
 
-    test('should not render', () => {
+    test('should dispatch setAssertionComment', () => {
+        useDispatchMock().mockReturnValue({})
+
         render(<AssertionComments assertionId = {2} hasAccess = {true}/>, { initialState: mockState })
 
-        expect(screen.queryByPlaceholderText(/enter comment here.../i)).not.toBeInTheDocument()
+        expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: null, deletedAssertionId: null })
     })
 
     test('should handle submit', () => {
-        const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
         useDispatchMock().mockResolvedValue({ data: {} })
+
         render(<AssertionComments assertionId = {1} hasAccess = {true}/>, { initialState: mockState })
 
         userEvent.type(screen.getByPlaceholderText(/enter comment here.../i), 'new comment')

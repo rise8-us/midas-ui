@@ -5,11 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchOneUser } from 'Redux/Users/actions'
 import { selectUserById } from 'Redux/Users/selectors'
 
-const getUserName = (displayName, username) => {
-    if (displayName) return displayName
-    else return username
-}
-
 function TeamMember({ id, title, noUserText }) {
     const dispatch = useDispatch()
 
@@ -35,13 +30,15 @@ function TeamMember({ id, title, noUserText }) {
                         justifyContent: 'center'
                     }}
                 >
-                    <Typography variant = 'h5' color = 'secondary'>?</Typography>
+                    <Typography variant = 'h5' color = 'secondary'>
+                        {userNotFound ? '?' : user.username.split(' ').map(name => name[0]).join('')}
+                    </Typography>
                 </div>
             </Grid>
             <Grid container item direction = 'column' xs = {9} s = {9}>
                 <Grid item>
                     <Typography variant = 'body2' noWrap>
-                        {userNotFound ? noUserText : getUserName(user.displayName, user.username)}
+                        {userNotFound ? noUserText : user.username}
                     </Typography>
                 </Grid>
                 <Grid item>
