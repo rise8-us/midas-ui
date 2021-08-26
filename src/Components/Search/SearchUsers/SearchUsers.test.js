@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, userEvent } from '../../../Utilities/test-utils'
+import { act, fireEvent, render, screen, useDispatchMock, userEvent } from 'Utilities/test-utils'
 import { SearchUsers } from './index'
 
 describe('<SearchUsers />', () => {
@@ -32,14 +32,18 @@ describe('<SearchUsers />', () => {
         expect(screen.getByDisplayValue('foobar')).toBeInTheDocument()
     })
 
-    test('shoulld call onChange prop', async() => {
-        useDispatchMock().mockResolvedValue({ payload: allUsers })
+    test('should call onChange prop', async() => {
+        jest.useFakeTimers()
         const onChangePropMock = jest.fn()
+        useDispatchMock().mockResolvedValue({ type: '/', payload: allUsers })
 
-        render(<SearchUsers onChange = {onChangePropMock} freeSolo/>)
+        render(<SearchUsers onChange = {onChangePropMock} freeSolo dynamicUpdate/>)
 
-        userEvent.type(screen.getByDisplayValue(''), 'test')
-        fireEvent.click(await screen.findByText('foobar'))
+        userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
+
+        act(() => { jest.runAllTimers() })
+
+        fireEvent.click(await screen.findByText(/jsmith/))
 
         expect(onChangePropMock).toHaveBeenCalledTimes(1)
     })

@@ -1,24 +1,19 @@
-import { Box, makeStyles, TextField } from '@material-ui/core'
+import { Box, TextField } from '@material-ui/core'
+import { unwrapResult } from '@reduxjs/toolkit'
+import { Popup } from 'Components/Popup'
+import { SearchUsers } from 'Components/Search'
+import { TeamUsers } from 'Components/TeamUsers'
+import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useFormReducer from '../../../Hooks/useFormReducer'
-import { selectRequestErrors } from '../../../Redux/Errors/selectors'
-import { closePopup } from '../../../Redux/Popups/actions'
-import { requestCreateTeam, requestUpdateTeam } from '../../../Redux/Teams/actions'
-import TeamsConstants from '../../../Redux/Teams/constants'
-import { selectTeamById } from '../../../Redux/Teams/selectors'
-import FormatErrors from '../../../Utilities/FormatErrors'
-import { Popup } from '../../Popup'
-import { TeamUsers } from '../../TeamUsers'
-
-const useStyles = makeStyles(() => ({
-    numberField: {
-        '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-            display: 'none'
-        }
-    }
-}))
+import { selectRequestErrors } from 'Redux/Errors/selectors'
+import { closePopup } from 'Redux/Popups/actions'
+import { requestCreateTeam, requestUpdateTeam } from 'Redux/Teams/actions'
+import TeamsConstants from 'Redux/Teams/constants'
+import { selectTeamById } from 'Redux/Teams/selectors'
+import { requestFindUserBy } from 'Redux/Users/actions'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
     return {
@@ -29,9 +24,8 @@ const initDetails = (create) => {
     }
 }
 
-function TeamPopup({ id }) {
+function TeamPopup({ id, productIds }) {
     const dispatch = useDispatch()
-    const classes = useStyles()
 
     const team = useSelector(state => selectTeamById(state, id))
     const context = initDetails(team.id === undefined)
@@ -42,8 +36,10 @@ function TeamPopup({ id }) {
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: team.name,
         description: team.description,
-        gitlabGroupId: team.gitlabGroupId,
-        userIds: team.userIds
+        productManager: undefined,
+        designer: undefined,
+        techLead: undefined,
+        userIds: team.userIds,
     })
 
     const handleChange = (name, value) => {
@@ -58,14 +54,37 @@ function TeamPopup({ id }) {
     }
 
     const onSubmit = () => {
+        const userIds = formValues.userIds.filter(id =>
+            id !== formValues.productManager?.id &&
+            id !== formValues.designer?.id &&
+            id !== formValues.techLead?.id
+        )
+
         dispatch(context.request({
             ...team,
+            productIds,
             name: formValues.name,
-            gitlabGroupId: formValues.gitlabGroupId,
             description: formValues.description,
-            userIds: formValues.userIds
+            productManagerId: formValues.productManager?.id ?? null,
+            designerId: formValues.designer?.id ?? null,
+            techLeadId: formValues.techLead?.id ?? null,
+            userIds: userIds,
         }))
     }
+
+    const requestUserData = (userId, field) => {
+        dispatch(requestFindUserBy(`id:${userId}`))
+            .then(unwrapResult)
+            .then(data => {
+                handleChange(field, data[0])
+            })
+    }
+
+    useEffect(() => {
+        team.productManagerId && requestUserData(team.productManagerId, 'productManager')
+        team.designerId && requestUserData(team.designerId, 'designer')
+        team.techLeadId && requestUserData(team.techLeadId, 'techLead')
+    }, [team])
 
     return (
         <Popup
@@ -86,26 +105,29 @@ function TeamPopup({ id }) {
                     margin = 'dense'
                     required
                 />
-                <TextField
-                    label = 'Gitlab Group Id'
-                    type = 'number'
-                    inputProps = {{
-                        'data-testid': 'TeamPopup__input-gitlabGroupId'
-                    }}
-                    className = {classes.numberField}
-                    value = {formValues.gitlabGroupId}
-                    onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
-                    margin = 'dense'
+                <SearchUsers
+                    title = 'Product Manager'
+                    growFrom = '100%'
+                    value = {formValues.productManager}
+                    onChange = {(_e, values) => handleChange('productManager', values)}
+                    freeSolo = {true}
+                    dynamicUpdate
                 />
-                <TextField
-                    label = 'Description'
-                    inputProps = {{
-                        'data-testid': 'TeamPopup__input-description'
-                    }}
-                    value = {formValues.description}
-                    onChange = {(e) => handleChange('description', e.target.value)}
-                    margin = 'dense'
-                    multiline
+                <SearchUsers
+                    title = 'Designer (UI/UX)'
+                    growFrom = '100%'
+                    value = {formValues.designer}
+                    onChange = {(_e, values) => handleChange('designer', values)}
+                    freeSolo = {true}
+                    dynamicUpdate
+                />
+                <SearchUsers
+                    title = 'Tech Lead'
+                    growFrom = '100%'
+                    value = {formValues.techLead}
+                    onChange = {(_e, values) => handleChange('techLead', values)}
+                    freeSolo = {true}
+                    dynamicUpdate
                 />
                 <TeamUsers
                     userIds = {formValues.userIds}
@@ -117,11 +139,13 @@ function TeamPopup({ id }) {
 }
 
 TeamPopup.propTypes = {
-    id: PropTypes.number
+    id: PropTypes.number,
+    productIds: PropTypes.arrayOf(PropTypes.number)
 }
 
 TeamPopup.defaultProps = {
-    id: null
+    id: null,
+    productIds: [],
 }
 
 export default TeamPopup

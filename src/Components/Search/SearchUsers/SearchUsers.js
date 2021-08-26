@@ -1,13 +1,13 @@
 import { unwrapResult } from '@reduxjs/toolkit'
+import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import useDebounce from '../../../Hooks/useDebounce'
-import { requestFindUserBy } from '../../../Redux/Users/actions'
+import { requestFindUserBy } from 'Redux/Users/actions'
 import { AutocompleteSearch } from '../AutocompleteSearch'
 
 function SearchUsers(props) {
-    const { onChange, value, growFrom, ...autoCompleteProps } = props
+    const { onChange, value, growFrom, dynamicUpdate, ...autoCompleteProps } = props
 
     const dispatch = useDispatch()
 
@@ -50,10 +50,13 @@ function SearchUsers(props) {
         }
     }, [debouncedSearchTerm])
 
+    useEffect(() => {
+        dynamicUpdate && setSelectedUser(value)
+    }, [value])
+
     return (
         <AutocompleteSearch
             {...autoCompleteProps}
-            placeholder = {'username, display name, or email'}
             options = {options}
             selectedOption = {selectedUser}
             onOptionChange = {onUserChange}
@@ -79,6 +82,8 @@ SearchUsers.propTypes = {
         displayName: PropTypes.string
     }),
     freeSolo: PropTypes.bool,
+    placeholder: PropTypes.string,
+    dynamicUpdate: PropTypes.bool,
 }
 
 SearchUsers.defaultProps = {
@@ -87,6 +92,8 @@ SearchUsers.defaultProps = {
     title: 'Search users',
     value: undefined,
     freeSolo: false,
+    placeholder: 'username, display name, or email',
+    dynamicUpdate: false
 }
 
 export default SearchUsers

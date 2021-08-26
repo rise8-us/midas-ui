@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, makeStyles, useTheme } from '@material-ui/core'
-import { ProductOnePager } from 'Components/ProductOnePager/ProductOnePager'
+import { ProductOnePager } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
 import React from 'react'
 

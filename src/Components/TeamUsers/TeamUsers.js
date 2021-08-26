@@ -1,12 +1,12 @@
-import { IconButton, makeStyles, Typography } from '@material-ui/core'
+import { IconButton, makeStyles } from '@material-ui/core'
 import { HighlightOff } from '@material-ui/icons'
+import { SearchUsers } from 'Components/Search/SearchUsers'
+import { Table } from 'Components/Table'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { selectUsersByIds } from '../../Redux/Users/selectors'
-import { Table } from '../Table'
-import { SearchUsers } from '../Search/SearchUsers'
-import { requestFindUserBy } from '../../Redux/Users/actions'
+import { useDispatch, useSelector } from 'react-redux'
+import { requestFindUserBy } from 'Redux/Users/actions'
+import { selectUsersByIds } from 'Redux/Users/selectors'
 
 const useStyles = makeStyles((theme) => ({
     tableContainer: {
@@ -79,20 +79,26 @@ const TeamUsers = ({ userIds, setUserIds }) => {
 
     return (
         <>
-            <Typography variant = 'h6' color = 'textPrimary' style = {{ marginTop: '10px' }}>Members</Typography>
             <SearchUsers
                 onChange = {(_e, values) => {
                     values && addUser(values.id)
                 }}
-                title = 'User'
+                title = ''
+                placeholder = 'Add another developer...'
                 growFrom = '100%'
                 freeSolo = {true}
+                style = {{
+                    height: '32px',
+                    marginTop: '8px',
+                    marginBottom: '8px'
+                }}
             />
             <div className = { classes.tableContainer }>
                 <Table
                     columns = {['username', 'display name', '']}
                     rows = {buildRows()}
                     tableWidth = '100%'
+                    disableHeaders
                     disableRowDividers = {true}
                     stickyHeader = {true}
                     data-testid = 'TeamUsers__Table'
@@ -103,8 +109,8 @@ const TeamUsers = ({ userIds, setUserIds }) => {
 }
 
 TeamUsers.propTypes = {
-    userIds: PropTypes.array.isRequired,
-    setUserIds: PropTypes.func.isRequired
+    userIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setUserIds: PropTypes.func.isRequired,
 }
 
 export default TeamUsers

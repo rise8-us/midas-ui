@@ -1,11 +1,9 @@
 import React from 'react'
-import {
-    act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent
-} from '../../../Utilities/test-utils'
+import { act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { ProductPopup } from './index'
 
 describe('<ProductPopup />', () => {
-    jest.setTimeout(30000)
+    jest.setTimeout(60000)
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
@@ -60,11 +58,13 @@ describe('<ProductPopup />', () => {
         expect(submitProductMock).toHaveBeenCalledWith({
             name: '',
             description: '',
+            vision: undefined,
+            mission: undefined,
+            problemStatement: undefined,
             tags: [],
             tagIds: [],
             projects: [],
             projectIds: [],
-            productManagerId: null,
             teamIds: [],
             type: 'PRODUCT',
             childIds: []
@@ -127,22 +127,34 @@ describe('<ProductPopup />', () => {
 
         const name = 'My Edited Product'
         const description = 'New description'
+        const vision = 'vision'
+        const mission = 'mission'
+        const problem = 'problem'
 
         const nameInput = screen.getByTestId('ProductPopup__input-name')
         const descriptionInput = screen.getByTestId('ProductPopup__input-description')
+        const visionInput = screen.getByTestId('ProductPopup__input-vision')
+        const missionInput = screen.getByTestId('ProductPopup__input-mission')
+        const problemInput = screen.getByTestId('ProductPopup__input-problem')
 
         userEvent.clear(descriptionInput)
         userEvent.clear(nameInput)
+        userEvent.clear(visionInput)
+        userEvent.clear(missionInput)
+        userEvent.clear(problemInput)
 
         userEvent.type(descriptionInput, description)
         userEvent.type(nameInput, name)
+        userEvent.type(visionInput, vision)
+        userEvent.type(missionInput, mission)
+        userEvent.type(problemInput, problem)
 
-        fireEvent.click(screen.getAllByTitle(/open/i)[2])
+        fireEvent.click(screen.getAllByTitle(/open/i)[1])
         fireEvent.click(await screen.getByText(/Tag 2/i))
 
         useDispatchMock().mockReturnValueOnce({ data: { payload: {} } })
 
-        fireEvent.click(screen.getAllByTitle(/open/i)[3])
+        fireEvent.click(screen.getAllByTitle(/open/i)[2])
         fireEvent.click(await screen.findByText('project 2'))
 
         fireEvent.click(screen.getByText('Submit'))
@@ -151,12 +163,15 @@ describe('<ProductPopup />', () => {
             ...returnedFoundProduct,
             name,
             description,
+            vision,
+            mission,
+            problemStatement: problem,
             projectIds: [20, 21],
             productManagerId: 1,
             teamIds: [1],
             type: 'PRODUCT',
             tagIds: [4, 13, 2],
-            childIds: []
+            childIds: [],
         })
     })
 })
