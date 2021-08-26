@@ -34,8 +34,10 @@ test('should handle initial state', () => {
 })
 
 test('should handle setAssertionComment', () => {
+    const payload = { assertionId: 1, deletedAssertionId: null }
+
     expect(
-        reducer(mockStore, { type: setAssertionComment.type, payload: 1 })
+        reducer(mockStore, { type: setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
         assertionCommentsOpen: 1
@@ -43,8 +45,21 @@ test('should handle setAssertionComment', () => {
 })
 
 test('should set setAssertionComment to null', () => {
+    const payload = { assertionId: 2, deletedAssertionId: null }
+
     expect(
-        reducer(mockStore, { type: setAssertionComment.type, payload: 2 })
+        reducer(mockStore, { type: setAssertionComment.type, payload: payload })
+    ).toEqual({
+        ...mockStore,
+        assertionCommentsOpen: null
+    })
+})
+
+test('should set setAssertionComment to null on deletedAssertionId', () => {
+    const payload = { assertionId: null, deletedAssertionId: 2 }
+
+    expect(
+        reducer(mockStore, { type: setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
         assertionCommentsOpen: null

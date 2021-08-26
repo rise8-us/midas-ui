@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-    fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent
-} from 'Utilities/test-utils'
+import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
@@ -76,7 +74,7 @@ describe('<AssertionHeader>', () => {
         fireEvent.click(screen.getByTitle('comment'))
 
         expect(requestSearchCommentsMock).toHaveBeenCalledWith('assertion.id:1')
-        expect(setAssertionCommentMock).toHaveBeenCalledWith(1)
+        expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: 1, deletedAssertionId: null })
     })
 
     test('should cancel delete ogsm', () => {

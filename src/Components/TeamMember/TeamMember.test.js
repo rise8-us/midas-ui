@@ -9,21 +9,14 @@ describe('<TeamMember />', () => {
         useDispatchMock().mockReturnValue({})
     })
 
-    test('should render with user display name', () => {
-        selectUserByIdMock.mockReturnValue({ id: 1, displayName: 'display', username: 'username' })
+    test('should render', () => {
+        selectUserByIdMock.mockReturnValue({ id: 1, username: 'John Smith' })
 
         render(<TeamMember id = {1} title = 'title' />)
 
-        expect(screen.getByText('display')).toBeInTheDocument()
         expect(screen.getByText('title')).toBeInTheDocument()
-    })
-
-    test('should render with username', () => {
-        selectUserByIdMock.mockReturnValue({ id: 1, username: 'username' })
-
-        render(<TeamMember id = {1} />)
-
-        expect(screen.getByText('username')).toBeInTheDocument()
+        expect(screen.getByText('JS')).toBeInTheDocument()
+        expect(screen.getByText('John Smith')).toBeInTheDocument()
     })
 
     test('should render no user found', () => {

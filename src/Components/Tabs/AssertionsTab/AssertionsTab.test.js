@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, useModuleMock } from '../../../Utilities/test-utils'
+import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { AssertionsTab } from './index'
 
 jest.mock('../../Assertions/Assertion/Assertion',
@@ -28,7 +28,7 @@ describe('<AssertionsTab>', () => {
         render(<AssertionsTab productId = {0}/>)
 
         expect(screen.getAllByText('Assertion')).toHaveLength(1)
-        expect(setAssertionCommentMock).toHaveBeenCalledWith(null)
+        expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: null, deletedAssertionId: null })
     })
 
     test('should show comments', () => {

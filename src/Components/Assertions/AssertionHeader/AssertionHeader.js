@@ -63,12 +63,7 @@ function AssertionHeader(props) {
     const defaultTag = statuses.filter(t => t.name === status)[0] ?? { label: 'Not Started', color: '#c3c3c3' }
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
-    const [viewingComments, setViewingComments] = useState(false)
     const [showActions, setShowActions] = useState(false)
-
-    const saveChanges = (newValue) => {
-        onSave(newValue)
-    }
 
     const onDeleteClick = (event) => {
         event.stopPropagation()
@@ -82,7 +77,8 @@ function AssertionHeader(props) {
 
     const onCommentsClick = (event) => {
         event.stopPropagation()
-        setViewingComments(!viewingComments)
+        dispatch(requestSearchComments(`assertion.id:${id}`))
+        dispatch(setAssertionComment({ assertionId: id, deletedAssertionId: null }))
     }
 
     const handlePopup = () => setOpenConfirmation(prev => !prev)
@@ -97,15 +93,6 @@ function AssertionHeader(props) {
         handlePopup()
         onDelete(event)
     }
-
-    useEffect(() => {
-        if (viewingComments) {
-            dispatch(requestSearchComments(`assertion.id:${id}`))
-            dispatch(setAssertionComment(id))
-        } else {
-            dispatch(setAssertionComment(null))
-        }
-    }, [viewingComments])
 
     useEffect(() => {
         if (assertionIdInt === id) {
@@ -141,7 +128,7 @@ function AssertionHeader(props) {
                     <AutoSaveTextField
                         canEdit = {hasAccess}
                         initialValue = {title}
-                        onSave = {saveChanges}
+                        onSave = {onSave}
                         className = {classes.creatableDetail}
                         title = {title}
                         fullWidth

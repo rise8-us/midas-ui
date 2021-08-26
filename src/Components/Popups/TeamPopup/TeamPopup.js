@@ -54,10 +54,10 @@ function TeamPopup({ id, productIds }) {
     }
 
     const onSubmit = () => {
-        const userIds = formValues.userIds.filter(id =>
-            id !== formValues.productManager?.id &&
-            id !== formValues.designer?.id &&
-            id !== formValues.techLead?.id
+        const userIds = formValues.userIds.filter(uId =>
+            uId !== formValues.productManager?.id &&
+            uId !== formValues.designer?.id &&
+            uId !== formValues.techLead?.id
         )
 
         dispatch(context.request({

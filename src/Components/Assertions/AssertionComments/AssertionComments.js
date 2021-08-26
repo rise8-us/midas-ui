@@ -1,21 +1,20 @@
 import { Paper } from '@material-ui/core'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { AssertionStatusDropdown } from 'Components/Assertions'
+import { AddComment, CommentsList } from 'Components/Comments'
+import useWindowSize from 'Hooks/useWindowSize'
 import PropTypes from 'prop-types'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AssertionStatusDropdown } from '../'
-import useWindowSize from '../../../Hooks/useWindowSize'
-import { setAssertionComment } from '../../../Redux/AppSettings/reducer'
-import { requestUpdateAssertion } from '../../../Redux/Assertions/actions'
-import { requestCreateComment } from '../../../Redux/Comments/actions'
-import { AddComment, CommentsList } from '../../Comments/'
+import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { requestUpdateAssertion } from 'Redux/Assertions/actions'
+import { requestCreateComment } from 'Redux/Comments/actions'
 
 function AssertionComments({ assertionId, hasAccess }) {
     const ref = useRef()
     const browserSize = useWindowSize()
     const scroll = useSelector(state => state.app.pageScrollY)
     const dispatch = useDispatch()
-
 
     const assertion = useSelector(state => state.assertions[assertionId])
 
@@ -40,8 +39,7 @@ function AssertionComments({ assertionId, hasAccess }) {
     }
 
     if (assertion === undefined) {
-        dispatch(setAssertionComment(null))
-        return null
+        dispatch(setAssertionComment({ assertionId: null, deletedAssertionId: null }))
     }
 
     useLayoutEffect(() => {
@@ -74,7 +72,7 @@ function AssertionComments({ assertionId, hasAccess }) {
         >
             <CommentsList
                 commentProps = {{ handleStatusUpdates: true }}
-                commentIds = {assertion.commentIds}
+                commentIds = {assertion?.commentIds ?? []}
             />
             <AddComment
                 assertionId = {assertionId}
