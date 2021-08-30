@@ -30,7 +30,7 @@ function TeamMember({ id, title, noUserText }) {
                         justifyContent: 'center'
                     }}
                 >
-                    <Typography variant = 'h5' color = 'secondary'>
+                    <Typography color = 'secondary'>
                         {userNotFound ? '?' : user.username.split(' ').map(name => name[0]).join('')}
                     </Typography>
                 </div>

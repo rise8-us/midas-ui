@@ -33,3 +33,7 @@ export const selectUnarchivedProjects = (state) => {
 export const selectProjectsWithNoProductId = (state) => {
     return selectProjects(state).filter(p => p.productId === null)
 }
+
+export const selectProjectsByProductId = (state, productId) => {
+    return selectProjects(state).filter(p => p.productId === productId)
+}

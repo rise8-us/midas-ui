@@ -92,3 +92,7 @@ test('selectUnarchivedProjects - returns empty array', () => {
 test('selectProjectsWithNoProductId - returns array of one', () => {
     expect(selectors.selectProjectsWithNoProductId(mockState)).toHaveLength(1)
 })
+
+test('selectProjectsByProductId - return array', () => {
+    expect(selectors.selectProjectsByProductId(mockState, 42)).toEqual([mockState.projects[5]])
+})

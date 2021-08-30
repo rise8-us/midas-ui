@@ -50,7 +50,7 @@ function Product() {
     return (
         <Page>
             <Grid container style = {{ padding: '8px 24px' }} spacing = {6}>
-                <Grid container item direction = 'column' xl = {3} lg = {4} md = {4} spacing = {2}>
+                <Grid container item direction = 'column' xl = {3} lg = {3} md = {4} spacing = {2}>
                     <Grid item>
                         <ProductHeader id = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
                     </Grid>
@@ -61,7 +61,7 @@ function Product() {
                         <ProductDetails productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
                     </Grid>
                 </Grid>
-                <Grid container item direction = 'column' xl = {9} lg = {8} md = {8}>
+                <Grid container item direction = 'column' xl = {9} lg = {9} md = {8}>
                     <Grid container item direction = 'column'>
                         <Grid container item style = {{ height: '48px' }} direction = 'row-reverse'>
                             <Grid item>
