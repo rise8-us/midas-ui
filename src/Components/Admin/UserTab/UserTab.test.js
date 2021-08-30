@@ -1,7 +1,6 @@
 import React from 'react'
-import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { UserTab } from './index'
-
 
 jest.mock('../../UserRoles/UserRoles',
     () => function testing() { return (<div>UserRoles test</div>) })

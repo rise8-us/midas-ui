@@ -1,62 +1,58 @@
 import React from 'react'
-import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
-} from '../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { UserSettings } from './index'
 
 describe('<UserSettings />', () => {
+    const selectUserByIdMock = useModuleMock('Redux/Users/selectors', 'selectUserById')
     const requestUpdateUserMock = useModuleMock('Redux/Users/actions', 'requestUpdateUser')
 
     const user = {
         id: 4,
-        username: 'jsmith',
-        displayName: 'Jafar Smith',
+        username: 'Jon Smith',
+        displayName: 'me ditto',
         email: 'dsmith@aol.com',
+        company: 'yo diddy',
+        phone: '5558675309',
         roles: ['admin'],
         isAdmin: true
     }
 
-    test('should have correct general information', () => {
-        render(<UserSettings user = {user}/>)
+    test('should render', () => {
+        selectUserByIdMock.mockReturnValue(user)
+
+        render(<UserSettings id = {4}/>)
 
         expect(screen.getByText('General Information')).toBeInTheDocument()
         expect(screen.getByText('save')).toBeInTheDocument()
+
+        expect(screen.getByDisplayValue('Jon Smith')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('me ditto')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('dsmith@aol.com')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('5558675309')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('yo diddy')).toBeInTheDocument()
     })
 
-    test('should have correct labels', () => {
-        render(<UserSettings user = {user}/>)
-
-        expect(screen.getByTestId('UserSettings__settings')).toHaveTextContent('Username')
-        expect(screen.getByTestId('UserSettings__settings')).toHaveTextContent('Display Name *')
-        expect(screen.getByTestId('UserSettings__settings')).toHaveTextContent('Email *')
-
-    })
-
-    test('should update Display Name', () => {
-        const { getByTestId } = render(<UserSettings user = {user}/>)
-        const element = within(getByTestId('UserSettings__input-display-name')).getByRole('textbox')
-        expect(element).toHaveValue('Jafar Smith')
-
-        userEvent.clear(element)
-        userEvent.type(element, 'Will Smith')
-        expect(element).toHaveValue('Will Smith')
-    })
-
-    test('should update Email', () => {
-        const { getByTestId } = render(<UserSettings user = {user}/>)
-        const element = within(getByTestId('UserSettings__input-email')).getByRole('textbox')
-        expect(element).toHaveValue('dsmith@aol.com')
-
-        userEvent.clear(element)
-        userEvent.type(element, 'jdoe@a.b')
-        expect(element).toHaveValue('jdoe@a.b')
-    })
 
     test('should save changes', () => {
         useDispatchMock().mockReturnValue({})
-        render(<UserSettings user = {user}/>)
+        selectUserByIdMock.mockReturnValue(user)
+
+        render(<UserSettings id = {4}/>)
+
+        userEvent.type(screen.getByDisplayValue('me ditto'), '2')
+        userEvent.type(screen.getByDisplayValue('dsmith@aol.com'), '2')
+        userEvent.type(screen.getByDisplayValue('5558675309'), '2')
+        userEvent.type(screen.getByDisplayValue('yo diddy'), '2')
+
         fireEvent.click(screen.getByTestId('UserSettings__button-save'))
 
-        expect(requestUpdateUserMock).toHaveBeenCalledTimes(1)
+        expect(requestUpdateUserMock).toHaveBeenCalledWith({
+            id: 4,
+            username: user.username,
+            displayName: user.displayName + '2',
+            email: user.email + '2',
+            phone: user.phone + '2',
+            company: user.company + '2',
+        })
     })
 })

@@ -1,8 +1,10 @@
 import { Box, Button, makeStyles, TextField, Typography } from '@material-ui/core'
+import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { requestUpdateUser } from '../../Redux/Users/actions'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { requestUpdateUser } from 'Redux/Users/actions'
+import { selectUserById } from 'Redux/Users/selectors'
 
 const useStyles = makeStyles((theme) => ({
     textField: {
@@ -17,33 +19,38 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const UserSettings = (props) => {
+const UserSettings = ({ id }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const { user } = props
-    const [username, setUsername] = useState()
-    const [displayName, setDisplayName] = useState()
-    const [email, setEmail] = useState()
+    const user = useSelector(state => selectUserById(state, id))
 
-    const onDisplayNameChange = (e) => setDisplayName(e.target.value)
-    const onEmailChange = (e) => setEmail(e.target.value)
 
-    const saveUser = () => {
-        const updatedUser = {
-            id: user.id,
-            username: username,
-            displayName: displayName,
-            email: email
-        }
-        dispatch(requestUpdateUser(updatedUser))
+    const [formValues, formDispatch] = React.useReducer(useFormReducer, {
+        username: user.username,
+        displayName: user.displayName,
+        email: user.email,
+        phone: user.phone,
+        company: user.company
+    })
+
+    const handleChange = (name, value) => {
+        formDispatch({
+            type: 'onChange',
+            payload: { name, value }
+        })
     }
 
-    useEffect(() => {
-        setUsername(user.username)
-        setDisplayName(user.displayName)
-        setEmail(user.email)
-    }, [user])
+    const saveUser = () => {
+        dispatch(requestUpdateUser({
+            id: user.id,
+            username: formValues.username,
+            displayName: formValues.displayName,
+            email: formValues.email,
+            phone: formValues.phone,
+            company: formValues.company,
+        }))
+    }
 
     return (
         <Box className = {classes.box} style = {{ width: '100%' }} data-testid = 'UserSettings__settings'>
@@ -61,7 +68,7 @@ const UserSettings = (props) => {
             <TextField
                 disabled
                 label = 'Username'
-                value = {username ?? ''}
+                value = {formValues.username}
                 margin = 'dense'
                 data-testid = 'UserSettings__input-username'
                 className = {classes.textField}
@@ -69,20 +76,35 @@ const UserSettings = (props) => {
             />
             <TextField
                 label = 'Display Name'
-                value = {displayName ?? ''}
-                onChange = {onDisplayNameChange}
-                required
+                value = {formValues.displayName}
+                onChange = {(e) => handleChange('displayName', e.target.value)}
                 margin = 'dense'
                 data-testid = 'UserSettings__input-display-name'
                 className = {classes.textField}
             />
             <TextField
-                label = 'Email'
-                value = {email ?? ''}
-                onChange = {onEmailChange}
-                required
+                label = 'Work Email'
+                value = {formValues.email}
+                onChange = {(e) => handleChange('email', e.target.value)}
                 margin = 'dense'
                 data-testid = 'UserSettings__input-email'
+                className = {classes.textField}
+            />
+            <TextField
+                label = 'Work Phone'
+                type = 'tel'
+                value = {formValues.phone}
+                onChange = {(e) => handleChange('phone', e.target.value)}
+                margin = 'dense'
+                data-testid = 'UserSettings__input-phone'
+                className = {classes.textField}
+            />
+            <TextField
+                label = 'Company'
+                value = {formValues.company}
+                onChange = {(e) => handleChange('company', e.target.value)}
+                margin = 'dense'
+                data-testid = 'UserSettings__input-company'
                 className = {classes.textField}
             />
         </Box>
@@ -90,12 +112,7 @@ const UserSettings = (props) => {
 }
 
 UserSettings.propTypes = {
-    user: PropTypes.shape({
-        id: PropTypes.number,
-        username: PropTypes.string,
-        displayName: PropTypes.string,
-        email: PropTypes.string
-    }).isRequired
+    id: PropTypes.number.isRequired,
 }
 
 export default UserSettings
