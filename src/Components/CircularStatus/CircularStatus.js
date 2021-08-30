@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 function CircularStatus(props) {
-    const { title, titleAdornment, variant, value, displayValue, size, tooltip, interactive, ...colors } = props
-    const { valueColor, displayValueColor, titleColor } = colors
+    const { title, titleAdornment, variant, value, displayValue, size, tooltip, interactive, ...more } = props
+    const { valueColor, displayValueColor, titleColor, fontSize, ...circularProgressProps } = more
 
     return (
         <Box display = 'flex' justifyContent = 'space-around' flexDirection = 'column'>
@@ -31,6 +31,7 @@ function CircularStatus(props) {
                             color: valueColor
                         }}
                         size = {size}
+                        {...circularProgressProps}
                     />
                     <Tooltip
                         title = {tooltip}
@@ -51,6 +52,7 @@ function CircularStatus(props) {
                                 margin: 'auto',
                                 textAlign: 'center',
                                 color: displayValueColor,
+                                fontSize
                             }}
                         >{isNaN(displayValue) ? displayValue : String(parseInt(displayValue))}</Typography>
                     </Tooltip>
@@ -72,6 +74,7 @@ CircularStatus.propTypes = {
     size: PropTypes.number,
     tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     interactive: PropTypes.bool,
+    fontSize: PropTypes.string,
 }
 
 CircularStatus.defaultProps = {
@@ -85,6 +88,7 @@ CircularStatus.defaultProps = {
     size: 36,
     tooltip: '',
     interactive: false,
+    fontSize: '.875rem'
 }
 
 export default CircularStatus
