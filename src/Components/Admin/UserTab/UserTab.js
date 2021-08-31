@@ -1,14 +1,14 @@
 import { alpha, Box, CircularProgress, InputBase, makeStyles } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { Table } from 'Components/Table'
+import { UserRoles } from 'Components/UserRoles'
+import { UserSettings } from 'Components/UserSettings'
+import useDebounce from 'Hooks/useDebounce'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useDebounce from '../../../Hooks/useDebounce'
-import { requestFindUserBy } from '../../../Redux/Users/actions'
-import { selectUserById } from '../../../Redux/Users/selectors'
-import { Table } from '../../Table'
-import { UserRoles } from '../../UserRoles'
-import { UserSettings } from '../../UserSettings'
+import { requestFindUserBy } from 'Redux/Users/actions'
+import { selectUserById } from 'Redux/Users/selectors'
 
 const useStyles = makeStyles(theme => ({
     searchIcon: {
@@ -125,7 +125,7 @@ function UserTab() {
                 </div>
                 {show &&
                     <>
-                        <UserSettings user = {user} />
+                        <UserSettings user = {user.id} />
                         <UserRoles user = {user} editable/>
                     </>
                 }

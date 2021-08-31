@@ -22,7 +22,7 @@ function Account() {
         <Page>
             <Header title = 'Account Information' subtitle = {`ID: ${user.id}`} />
             <div className = {classes.wrap}>
-                <UserSettings user = { user } />
+                <UserSettings id = {user.id} />
                 <UserRoles user = { user } />
             </div>
         </Page>
