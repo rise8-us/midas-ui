@@ -1,13 +1,14 @@
 import { Divider, Grid, IconButton, Tab, Tabs } from '@material-ui/core'
 import { Edit, LockOpenOutlined, LockOutlined } from '@material-ui/icons'
 import { Page } from 'Components/Page'
-import { ProductDetails, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
+import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { ProductPageOverview } from 'Components/ProductPageOverview'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
+import { requestFetchFeaturesByProductId } from 'Redux/Features/actions'
 import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'
 import { openPopup } from 'Redux/Popups/actions'
 import ProductConstants from 'Redux/Products/constants'
@@ -45,6 +46,7 @@ function Product() {
     useEffect(() => {
         dispatch(requestFetchPersonasByProductId(id))
         dispatch(requestFetchRoadmapsByProductId(id))
+        dispatch(requestFetchFeaturesByProductId(id))
     }, [])
 
     return (
@@ -59,6 +61,9 @@ function Product() {
                     </Grid>
                     <Grid item>
                         <ProductDetails productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
+                    </Grid>
+                    <Grid item>
+                        <ProductFeatures productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
                     </Grid>
                 </Grid>
                 <Grid container item direction = 'column' xl = {9} lg = {8} md = {8}>

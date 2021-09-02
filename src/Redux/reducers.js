@@ -5,6 +5,7 @@ import authReducer from './Auth/reducer'
 import blockedAssertions from './BlockedAssertions/reducer'
 import commentReducer from './Comments/reducer'
 import errorReducer from './Errors/reducer'
+import featureReducer from './Features/reducer'
 import filterReducer from './Filters/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
 import personaReducer from './Personas/reducer'
@@ -25,6 +26,7 @@ export const rootReducer = combineReducers({
     blockedAssertions: blockedAssertions,
     comments: commentReducer,
     errors: errorReducer,
+    features: featureReducer,
     filters: filterReducer,
     modifiedAssertions: modifiedAssertionsReducer,
     personas: personaReducer,

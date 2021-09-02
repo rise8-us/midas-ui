@@ -1,16 +1,18 @@
 import { Stomp } from '@stomp/stompjs'
 import PropTypes from 'prop-types'
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import assertionSubscriptions from 'Redux/Assertions/subscriptions'
+import commentSubscriptions from 'Redux/Comments/subscriptions'
+import featureSubscriptions from 'Redux/Features/subscriptions'
+import personaSubscriptions from 'Redux/Personas/subscriptions'
+import portfolioSubscriptions from 'Redux/Portfolios/subscriptions'
+import productSubscriptions from 'Redux/Products/subscriptions'
+import projectSubscriptions from 'Redux/Projects/subscriptions'
+import sourceControlSubscriptions from 'Redux/SourceControls/subscriptions'
+import tagSubscriptions from 'Redux/Tags/subscriptions'
+import teamSubscriptions from 'Redux/Teams/subscriptions'
 import SockJS from 'sockjs-client'
-import assertionSubscriptions from '../../Redux/Assertions/subscriptions'
-import commentSubscriptions from '../../Redux/Comments/subscriptions'
-import portfolioSubscriptions from '../../Redux/Portfolios/subscriptions'
-import productSubscriptions from '../../Redux/Products/subscriptions'
-import projectSubscriptions from '../../Redux/Projects/subscriptions'
-import sourceControlSubscriptions from '../../Redux/SourceControls/subscriptions'
-import tagSubscriptions from '../../Redux/Tags/subscriptions'
-import teamSubscriptions from '../../Redux/Teams/subscriptions'
-import { getAPIURL } from '../../Utilities/requests'
+import { getAPIURL } from 'Utilities/requests'
 
 const WebsocketContext = createContext({})
 
@@ -44,6 +46,8 @@ function WebsocketProvider({ children }) {
         tagSubscriptions({ stompClient })
         teamSubscriptions({ stompClient })
         portfolioSubscriptions({ stompClient })
+        featureSubscriptions({ stompClient })
+        personaSubscriptions({ stompClient })
     }
 
     const onConnectFailure = (error) => {

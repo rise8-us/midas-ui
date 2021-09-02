@@ -26,6 +26,6 @@ COPY --from=builder --chown=appuser:appuser /app/build/ /var/www
 COPY --from=builder /app/scripts/ /app/scripts/
 COPY --from=builder /usr/bin/cp /usr/bin/cp
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD [ "sh", "/app/scripts/docker_run.sh", "/var/www/config.js" ]

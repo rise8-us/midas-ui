@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { handleThunkRequest } from '../../Utilities/requests'
+import { handleThunkRequest } from 'Utilities/requests'
 import Constants from './constants'
-
 
 export const requestFetchPersonasByProductId = createAsyncThunk(
     Constants.FETCH_BY_PRODUCT,

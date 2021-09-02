@@ -1,10 +1,13 @@
 import { TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import FormatErrors from '../../Utilities/FormatErrors'
 
 function AutoSaveTextField({
-    canEdit, className, dataTestId, enableSpellCheck, errors, initialValue, onSave, ...textFieldProps }) {
+    canEdit, className, dataTestId, enableSpellCheck, errors,
+    initialValue, onSave, clearAfterSave, ...textFieldProps }) {
+
+    const ref = useRef()
 
     const [inEditMode, setInEditMode] = useState(false)
     const [value, setValue] = useState(initialValue)
@@ -28,19 +31,23 @@ function AutoSaveTextField({
     const onBlur = (event) => {
         event.stopPropagation()
         setInEditMode(false)
-        canEdit && onSave(value)
+        executeSave()
     }
 
     const onKeyDown = (event) => {
         event.stopPropagation()
 
         if (event.key === 'Enter') {
-            canEdit && onSave(value)
-            setInEditMode(false)
+            ref.current.blur()
         } else if (event.key === 'Escape') {
             setValue(initialValue)
             setInEditMode(false)
         }
+    }
+
+    const executeSave = () => {
+        canEdit && onSave(value)
+        clearAfterSave && setValue('')
     }
 
     useEffect(() => {
@@ -56,6 +63,9 @@ function AutoSaveTextField({
                 'data-testid': dataTestId,
                 className,
                 readOnly: !canEdit
+            }}
+            inputProps = {{
+                ref
             }}
             value = {value}
             onFocus = {onFocus}
@@ -85,6 +95,7 @@ AutoSaveTextField.propTypes = {
     name: PropTypes.string,
     onSave: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
+    clearAfterSave: PropTypes.bool,
 }
 
 AutoSaveTextField.defaultProps = {
@@ -100,6 +111,7 @@ AutoSaveTextField.defaultProps = {
     multiline: false,
     name: '',
     placeholder: '',
+    clearAfterSave: false
 }
 
 export default AutoSaveTextField
