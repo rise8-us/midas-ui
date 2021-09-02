@@ -61,11 +61,12 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
 5. In a chrome browser navigate to, `http://localhost:3000` and see your sweet, sweet app!
 
 ### Running Docker
-1. Execute `docker build .`
+1. Execute `docker build . --file ./Dockerfile.dev`
 2. Execute `docker images` and grab the **IMAGE_ID** for the just built image
    * Will reference as **I_ID** for remaining instructions
-3. Execute, `docker run -p 80:80 -e REACT_APP_API_URL=<YOUR_BACKEND_URL> <I_ID>`
-4. In a chrome browser navigate to, `http://localhost` and see your sweet, sweet app!
+3. Execute, `docker run -p 8080:8080 -e REACT_APP_API_URL=<YOUR_BACKEND_URL> <I_ID>`
+   * For local: `REACT_APP_API_URL=http://localhost:8000`
+4. In a chrome browser navigate to, `http://localhost:8080` and see your sweet, sweet app!
 
 ### Cypress
 

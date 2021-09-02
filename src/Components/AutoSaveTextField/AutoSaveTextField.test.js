@@ -13,11 +13,11 @@ describe('<AutoSaveTextField>', () => {
     test('should edit and call onSave on ENTER', () => {
         const onSaveMock = jest.fn()
 
-        render(<AutoSaveTextField onSave = {onSaveMock} initialValue = 'test' canEdit/>)
+        render(<AutoSaveTextField onSave = {onSaveMock} initialValue = 'test' canEdit clearAfterSave/>)
         userEvent.type(screen.getByDisplayValue(/test/), 'in the details{enter}')
 
-        expect(screen.getByDisplayValue(/in the details/)).toBeInTheDocument()
         expect(onSaveMock).toHaveBeenCalledWith('in the details')
+        expect(screen.getByTestId('AutoSaveTextField__input').children[0]).toHaveValue('')
     })
 
     test('should edit and call onSave on Leave', () => {

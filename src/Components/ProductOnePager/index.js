@@ -1,5 +1,6 @@
 export { ProductDetails } from './ProductDetails'
 export { ProductDevelopment } from './ProductDevelopment'
+export { ProductFeatures } from './ProductFeatures'
 export { ProductHeader } from './ProductHeader'
 export { ProductOnePager } from './ProductOnePager'
 export { ProductRoadmap } from './ProductRoadmap'
