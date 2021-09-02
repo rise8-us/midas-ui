@@ -13,9 +13,10 @@ import { selectRoadmapsByProductId } from 'Redux/Roadmaps/selectors'
 const generateCircle = (color) => (
     <div
         style = {{
-            width: 12,
-            height: 12,
+            width: 10,
+            height: 10,
             borderRadius: '50%',
+            marginLeft: '5px',
             backgroundColor: color
         }}
     />
@@ -73,7 +74,7 @@ function ProductRoadmap({ productId, hasEditAccess }) {
                 )}
             </Grid>
             <Grid item style = {{ flexGrow: 1, paddingTop: 0 }}>
-                <Timeline align = 'left' style = {{ paddingLeft: '4px' }}>
+                <Timeline align = 'left' style = {{ padding: '0px 4px' }}>
                     {roadmapEntries.map((entry, index) =>
                         <RoadmapEntry key = {index} id = {entry.id} hasEditAccess = {hasEditAccess} />
                     )}

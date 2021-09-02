@@ -11,7 +11,7 @@ function ProductPageOverview({ id, hasEdit }) {
             </Grid>
             <Grid container item direction = 'column' xl = {4} lg = {4} md = {4} spacing = {2}>
                 <Grid item>
-                    <ProductUserPersonas productId = {id} hasEditAccess = {hasEdit}/>
+                    <ProductUserPersonas productId = {id} hasEdit = {hasEdit}/>
                 </Grid>
                 <Grid container item direction = 'column' spacing = {1}>
                     <Grid item>

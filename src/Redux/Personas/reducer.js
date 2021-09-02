@@ -10,6 +10,9 @@ const personaSlice = createSlice({
         [actions.requestFetchPersonasByProductId.fulfilled]: (state, action) => {
             setStateFromArray(state, action.payload)
         },
+        [actions.requestUpdatePersonasBulk.fulfilled]: (state, action) => {
+            setStateFromArray(state, action.payload)
+        },
         [actions.requestCreatePersona.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
         },

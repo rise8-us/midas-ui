@@ -14,5 +14,7 @@ export const selectPersonasByProductId = (state, productId) => {
     const personas = state.personas
     if (!personas) return []
 
-    return Object.values(personas).filter(persona => persona.productId === productId)
+    return Object.values(personas)
+        .filter(persona => persona.productId === productId)
+        .sort((a, b) => a.index - b.index)
 }
