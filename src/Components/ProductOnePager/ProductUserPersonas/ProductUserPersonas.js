@@ -1,59 +1,59 @@
 
-import { Chip, Grid, IconButton, Typography, useTheme } from '@material-ui/core'
-import { DeleteOutlined, PersonAddOutlined, PersonOutlined } from '@material-ui/icons'
+import { Chip, Grid, Typography, useTheme } from '@material-ui/core'
+import { PersonAddOutlined, PersonOutlined } from '@material-ui/icons'
+import { AutoSaveTextField } from 'Components/AutoSaveTextField'
+import { DraggablePersonaList } from 'Components/Draggable/DraggablePersonaList'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestDeletePersona, requestUpdatePersona } from 'Redux/Personas/actions'
-import PersonaConstants from 'Redux/Personas/constants'
+import * as personaActions from 'Redux/Personas/actions'
 import { selectPersonasByProductId } from 'Redux/Personas/selectors'
-import { openPopup } from 'Redux/Popups/actions'
-
-function ProductUserPersonas({ productId, hasEditAccess }) {
+import { onDragEnd } from 'Utilities/draggable'
+function ProductUserPersonas({ productId, hasEdit }) {
     const dispatch = useDispatch()
     const theme = useTheme()
 
     const personas = useSelector(state => selectPersonasByProductId(state, productId))
 
-    const openPersonaPopup = (id, index) => {
-        dispatch(openPopup(
-            id ? PersonaConstants.UPDATE_PERSONA : PersonaConstants.CREATE_PERSONA,
-            'PersonaPopup',
-            { id, index, productId }
-        ))
+    const createPersona = (value) => {
+        dispatch(personaActions.requestCreatePersona({
+            title: value,
+            productId,
+            index: personas.length,
+            description: '',
+            isSupported: false
+        }))
+    }
+
+    const updatePersona = (newTitle, selectedPersona) => {
+        newTitle.trim().length > 0 && dispatch(personaActions.requestUpdatePersona({
+            ...selectedPersona,
+            title: newTitle.trim()
+        }))
     }
 
     const toggleIsSupported = (persona) => {
-        dispatch(requestUpdatePersona({
+        dispatch(personaActions.requestUpdatePersona({
             ...persona,
             isSupported: !persona.isSupported
         }))
     }
 
     const deletePersona = (id) => {
-        dispatch(requestDeletePersona(id))
+        dispatch(personaActions.requestDeletePersona(id))
     }
 
-    const performAction = (action) => hasEditAccess ? action : null
+    const onDragEndAction = (newPersonasList) => {
+        const updatedIndexes = newPersonasList.map((persona, index) => ({ ...persona, index }))
+
+        dispatch(personaActions.requestUpdatePersonasBulk(updatedIndexes))
+    }
 
     return (
         <Grid container direction = 'column' spacing = {0}>
-            <Grid container item justifyContent = 'space-between' alignItems = 'center'>
-                <Grid item>
-                    <Typography variant = 'h6' color = 'textPrimary'>PERSONAS</Typography>
-                </Grid>
-                <Grid item>
-                    {performAction(
-                        <IconButton
-                            onClick = {() => openPersonaPopup(null, personas.length)}
-                            style = {{ right: '3px' }}
-                            size = 'small'
-                            title = 'add'
-                        >
-                            <PersonAddOutlined color = 'secondary'/>
-                        </IconButton>
-                    )}
-                </Grid>
+            <Grid item>
+                <Typography variant = 'h6' color = 'textPrimary'>PERSONAS</Typography>
             </Grid>
             <Grid item>
                 <Chip
@@ -71,52 +71,50 @@ function ProductUserPersonas({ productId, hasEditAccess }) {
                     icon = {<PersonOutlined style = {{ color: theme.palette.secondary.main }}/>}
                 />
             </Grid>
-            {personas.map((persona, index) =>
-                <Grid container item alignItems = 'center' key = {index} >
-                    <Grid item>
-                        <IconButton
-                            onClick = {performAction(() => toggleIsSupported(persona))}
-                            disableRipple = {!hasEditAccess}
-                            disableFocusRipple = {!hasEditAccess}
-                            size = 'small'
-                            style = {{
-                                cursor: hasEditAccess ? 'pointer' : 'default',
-                                backgroundColor: hasEditAccess ? 'unset' : 'transparent',
-                                right: '4px'
-                            }}
-                        >
-                            <PersonOutlined
-                                color = {persona.isSupported ? 'primary' : 'secondary'}
-                                title = 'supported'
+            <DragDropContext onDragEnd = {(result) => onDragEnd(result, personas, onDragEndAction)}>
+                <Droppable droppableId = 'list'>
+                    {provided => (
+                        <div ref = {provided.innerRef} {...provided.droppableProps}>
+                            <DraggablePersonaList
+                                personas = {personas}
+                                hasEdit = {hasEdit}
+                                onUpdate = {updatePersona}
+                                onDelete = {deletePersona}
+                                onToggleIsSupported = {toggleIsSupported}
                             />
-                        </IconButton>
-                    </Grid>
-                    <Grid
-                        item
-                        onClick = {performAction(() => openPersonaPopup(persona.id, persona.index))}
-                    >
-                        <Typography color = 'textSecondary'>{persona.title}</Typography>
-                    </Grid>
-                    {performAction(
-                        <Grid item style = {{ flexGrow: 1, direction: 'rtl' }}>
-                            <IconButton onClick = {() => deletePersona(persona.id)} size = 'small'>
-                                <DeleteOutlined color = 'secondary' title = 'delete'/>
-                            </IconButton>
-                        </Grid>
+                            {provided.placeholder}
+                        </div>
                     )}
+                </Droppable>
+            </DragDropContext>
+            {hasEdit &&
+                <Grid container alignItems = 'center'>
+                    <Grid item style = {{ minWidth: '24px', marginRight: '8px' }}>
+                        <PersonAddOutlined color = 'secondary' style = {{ marginLeft: '-2px' }}/>
+                    </Grid>
+                    <Grid item style = {{ flexGrow: 1 }}>
+                        <AutoSaveTextField
+                            fullWidth
+                            color = 'secondary'
+                            placeholder = 'Add new user persona...'
+                            onSave = {createPersona}
+                            clearAfterSave
+                            canEdit
+                        />
+                    </Grid>
                 </Grid>
-            )}
+            }
         </Grid>
     )
 }
 
 ProductUserPersonas.propTypes = {
     productId: PropTypes.number.isRequired,
-    hasEditAccess: PropTypes.bool
+    hasEdit: PropTypes.bool
 }
 
 ProductUserPersonas.defaultProps = {
-    hasEditAccess: false
+    hasEdit: false
 }
 
 export default ProductUserPersonas

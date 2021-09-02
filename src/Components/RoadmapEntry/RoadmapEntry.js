@@ -52,7 +52,13 @@ function RoadmapEntry({ id, hasEditAccess }) {
             onClick = {hasEditAccess ? onClick : null}
         >
             <TimelineSeparator>
-                <TimelineDot style = {{ backgroundColor: status?.color }}/>
+                <TimelineDot
+                    style = {{
+                        backgroundColor: status?.color,
+                        padding: '6px',
+                        marginLeft: '-1px'
+                    }}
+                />
                 <TimelineConnector style = {{ backgroundColor: theme.palette.text.secondary, opacity: .3 }}/>
             </TimelineSeparator>
             <TimelineContent style = {{ paddingTop: '1px', flex: 'auto' }}>

@@ -76,6 +76,27 @@ describe('Persona action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdatePersona.rejected.toString())
     })
 
+    test('requestUpdatePersonasBulk : fulfilled', async() => {
+        const personas = [{ id: 1, ...body }]
+
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestUpdatePersonasBulk(personas))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/personas/bulk')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual(personas)
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
+        expect(store.getActions()[0].type).toEqual(actions.requestUpdatePersonasBulk.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestUpdatePersonasBulk.fulfilled.toString())
+    })
+
+    test('requestUpdatePersonasBulk : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestUpdatePersonasBulk())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestUpdatePersonasBulk.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestUpdatePersonasBulk.rejected.toString())
+    })
+
     test('requestDeletePersona : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         const data = await store.dispatch(actions.requestDeletePersona(1))

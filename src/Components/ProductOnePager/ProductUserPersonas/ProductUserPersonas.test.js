@@ -1,66 +1,123 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { ProductUserPersonas } from './index'
 
 describe('<ProductUserPersonas>', () => {
-    const selectPersonasByProductIdMock = useModuleMock('Redux/Personas/selectors', 'selectPersonasByProductId')
+    const selectPersonasByProductId = useModuleMock('Redux/Personas/selectors', 'selectPersonasByProductId')
+    const requestCreatePersonaMock = useModuleMock('Redux/Personas/actions', 'requestCreatePersona')
     const requestUpdatePersonaMock = useModuleMock('Redux/Personas/actions', 'requestUpdatePersona')
+    const requestUpdatePersonasBulkMock = useModuleMock('Redux/Personas/actions', 'requestUpdatePersonasBulk')
     const requestDeletePersonaMock = useModuleMock('Redux/Personas/actions', 'requestDeletePersona')
-    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+
+    const onDragEndMock = useModuleMock('Utilities/draggable', 'onDragEnd')
+
+    const personas = [
+        {
+            id: 1,
+            productId: 3,
+            title: 'persona 1',
+            isSupported: true,
+            index: 0
+        }, {
+            id: 2,
+            productId: 3,
+            title: 'persona 2',
+            isSupported: true,
+            index: 1
+        }, {
+            id: 4,
+            productId: 3,
+            title: 'persona 3',
+            isSupported: false,
+            index: 2
+        }
+    ]
+
+    const newPersonaOrder = [
+        { ...personas[2], index: 0 },
+        personas[1],
+        { ...personas[0], index: 2 }
+    ]
 
     beforeEach(() => {
-        selectPersonasByProductIdMock.mockReturnValue([
-            {
-                id: 1,
-                productId: 3,
-                isSupported: true,
-                title: 'persona 1',
-                index: 0
-            }, {
-                id: 2,
-                productId: 3,
-                isSupported: false,
-                title: 'persona 2',
-                index: 1
-            }
-        ])
         useDispatchMock().mockReturnValue({})
     })
 
     test('should render', () => {
-        render(<ProductUserPersonas productId = {1}/>)
+        selectPersonasByProductId.mockReturnValue(personas)
+
+        render(<ProductUserPersonas productId = {3}/>)
+
+        expect(screen.getByText('PERSONAS')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('persona 1')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('persona 2')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('persona 3')).toBeInTheDocument()
     })
 
-    test('should call openPopup on Add', () => {
-        render(<ProductUserPersonas productId = {1} hasEditAccess />)
+    test('should call createPersona', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        fireEvent.click(screen.getByTitle('add'))
+        render(<ProductUserPersonas productId = {3} hasEdit/>)
 
-        expect(openPopupMock).toHaveBeenCalled()
+        userEvent.type(screen.getByPlaceholderText('Add new user persona...'), 'a new thing{enter}')
+
+        expect(requestCreatePersonaMock).toHaveBeenCalled()
     })
 
-    test('should call openPopup for editing', () => {
-        render(<ProductUserPersonas productId = {1} hasEditAccess />)
+    test('should call updatePersona', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        fireEvent.click(screen.getByText('persona 1'))
+        render(<ProductUserPersonas productId = {3} hasEdit/>)
 
-        expect(openPopupMock).toHaveBeenCalled()
+        userEvent.type(screen.getByDisplayValue('persona 1'), '!{enter}')
+
+        expect(requestUpdatePersonaMock).toHaveBeenCalledWith({
+            ...personas[0],
+            title: '!'
+        })
     })
 
-    test('should call delete on trashcan', () => {
-        render(<ProductUserPersonas productId = {1} hasEditAccess />)
+    test('should call toggleIsSupported', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        fireEvent.click(screen.getAllByTitle('delete')[0])
+        render(<ProductUserPersonas productId = {3} hasEdit/>)
+
+        fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
+        fireEvent.click(screen.getByTestId('PersonaEntry__button-supported'))
+
+        expect(requestUpdatePersonaMock).toHaveBeenCalledWith({
+            ...personas[0],
+            isSupported: false
+        })
+    })
+
+    test('should call deletePersona', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
+
+        render(<ProductUserPersonas productId = {3} hasEdit/>)
+
+        fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
+        fireEvent.click(screen.getByTitle('Delete'))
 
         expect(requestDeletePersonaMock).toHaveBeenCalled()
     })
 
-    test('should call update on person', () => {
-        render(<ProductUserPersonas productId = {1} hasEditAccess />)
+    test('should call updatePersonasBulk', () => {
+        selectPersonasByProductId.mockReturnValue(personas)
+        onDragEndMock.mockImplementation((_a, _b, passedThroughFn) => {
+            passedThroughFn(newPersonaOrder)
+        })
 
-        fireEvent.click(screen.getAllByTitle('supported')[0])
+        render(<ProductUserPersonas productId = {3} hasEdit/>)
 
-        expect(requestUpdatePersonaMock).toHaveBeenCalled()
+        const entries = screen.getAllByTestId('DraggablePersonaList__draggable')
+
+        fireEvent.mouseDown(entries[2])
+        fireEvent.mouseMove(entries[2], { clientX: 5, clientY: 5 })
+        fireEvent.mouseUp(entries[2])
+        fireEvent.dragEnd(entries[2])
+
+        expect(requestUpdatePersonasBulkMock).toHaveBeenCalledWith(newPersonaOrder)
     })
 
 })

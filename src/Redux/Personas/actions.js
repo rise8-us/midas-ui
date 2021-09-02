@@ -27,6 +27,14 @@ export const requestUpdatePersona = createAsyncThunk(
     }
 )
 
+export const requestUpdatePersonasBulk = createAsyncThunk(
+    Constants.UPDATE_PERSONA_BULK,
+    async(personas, { rejectWithValue }) => {
+        const request = { endpoint: '/api/personas/bulk', method: 'PUT', body: personas }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
+
 export const requestDeletePersona = createAsyncThunk(
     Constants.DELETE_PERSONA,
     async(id, { rejectWithValue }) => {

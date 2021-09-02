@@ -41,6 +41,15 @@ describe('Personas Reducer', () => {
         expect(Object.keys(state)).toHaveLength(2)
     })
 
+    test('Updates Personas Bulk', () => {
+        const actions = [{ type: reduxActions.requestUpdatePersonasBulk.fulfilled, payload: allPersonasResponse }]
+        const state = actions.reduce(reducer, {})
+
+        expect(state[1]).toEqual(allPersonasResponse[0])
+        expect(state[2]).toEqual(allPersonasResponse[1])
+        expect(Object.keys(state)).toHaveLength(2)
+    })
+
     test('Create Persona', () => {
         const actions = [{ type: reduxActions.requestCreatePersona.fulfilled, payload: allPersonasResponse[0] }]
         const state = actions.reduce(reducer, {})
