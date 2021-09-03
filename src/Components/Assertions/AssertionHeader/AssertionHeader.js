@@ -1,209 +1,126 @@
-import { alpha, Badge, Box, Grow, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core'
-import { Chat, Delete, KeyboardReturn } from '@material-ui/icons'
-import { AutoSaveTextField } from 'Components/AutoSaveTextField'
-import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
-import { Tag } from 'Components/Tag'
+import { Chip, CircularProgress, Grid, IconButton, Tooltip, Typography } from '@material-ui/core'
+import { AddCircleOutline } from '@material-ui/icons'
+import { unwrapResult } from '@reduxjs/toolkit'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { setAssertionComment } from 'Redux/AppSettings/reducer'
-import { requestSearchComments } from 'Redux/Comments/actions'
+import { requestCreateAssertion } from 'Redux/Assertions/actions'
 
-const useStyles = makeStyles((theme) => ({
-    heading: {
-        margin: 'auto 0',
-        marginLeft: -4
-    },
-    detail: {
-        ...theme.typography.h6,
-        margin: 'auto 0',
-        paddingLeft: 6,
-        '&:hover': {
-            cursor: 'pointer'
-        }
-    },
-    creatableDetail: {
-        ...theme.typography.h6,
-        margin: 'auto 0',
-        marginRight: 'auto',
-        paddingLeft: 6
-    },
-    statusIndicator: {
-        borderLeft: '3px solid',
-        borderRadius: '4px 0 0 4px',
-        width: 8,
-        marginRight: 3
-    },
-    row: {
-        display: 'flex',
-        width: '100%',
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.background.default, .4),
-            borderRadius: 6
-        }
-    }
-}))
-function AssertionHeader(props) {
-    const {
-        id, category, title, status, commentCount, addChildAssertionLabel,
-        onSave, onDelete, addChildAssertion, hasAccess
-    } = props
+const generateCircle = (color) => (
+    <div
+        style = {{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            marginLeft: '5px',
+            backgroundColor: color
+        }}
+    />
+)
 
-    const classes = useStyles()
+const AssertionHeader = React.forwardRef(({ productId, hasEdit }, ref) => {
     const dispatch = useDispatch()
 
-    const ref = useRef()
-    const { assertionId } = useParams()
-    const assertionIdInt = parseInt(assertionId)
+    const allStatuses = useAssertionStatuses()
 
-    const statuses = useAssertionStatuses()
+    const [adding, setAdding] = useState(false)
 
-    const defaultTag = statuses.filter(t => t.name === status)[0] ?? { label: 'Not Started', color: '#c3c3c3' }
+    const defaultData = (type, pId) => ({
+        text: `Enter new ${type} here...`,
+        type: type.toUpperCase(),
+        productId: pId,
+        parentId: undefined,
+        status: 'NOT_STARTED',
+    })
 
-    const [openConfirmation, setOpenConfirmation] = useState(false)
-    const [showActions, setShowActions] = useState(false)
+    const handleAddNewOGSM = () => {
+        setAdding(true)
 
-    const onDeleteClick = (event) => {
-        event.stopPropagation()
-        setOpenConfirmation(true)
-    }
-
-    const onAddChildAssertionClick = (event) => {
-        event.stopPropagation()
-        addChildAssertion()
-    }
-
-    const onCommentsClick = (event) => {
-        event.stopPropagation()
-        dispatch(requestSearchComments(`assertion.id:${id}`))
-        dispatch(setAssertionComment({ assertionId: id, deletedAssertionId: null }))
-    }
-
-    const handlePopup = () => setOpenConfirmation(prev => !prev)
-
-    const handlePopupCancel = (event) => {
-        event.stopPropagation()
-        handlePopup()
-    }
-
-    const handlePopupConfirm = (event) => {
-        event.stopPropagation()
-        handlePopup()
-        onDelete(event)
-    }
-
-    useEffect(() => {
-        if (assertionIdInt === id) {
-            ref.current.scrollIntoView({
-                behavior: 'smooth',
-            })
+        const blankMeasure = {
+            ...defaultData('measure', productId),
+            children: []
         }
-    }, [assertionId])
+        const blankStrategy = {
+            ...defaultData('strategy', productId),
+            children: [blankMeasure]
+        }
+        const blankGoal = {
+            ...defaultData('goal', productId),
+            children: [blankStrategy]
+        }
+        const blankObjective = {
+            ...defaultData('objective', productId),
+            children: [blankGoal]
+        }
+
+        dispatch(requestCreateAssertion(blankObjective)).then(unwrapResult).then(() => {
+            ref && ref.current.scrollIntoView()
+            setAdding(false)
+        })
+    }
 
     return (
-        <div
-            onMouseEnter = {() => setShowActions(true)}
-            onMouseLeave = {() => setShowActions(false)}
-            className = {classes.row}
-            style = {{
-            }}
-        >
-            <div style = {{ display: 'flex', justifyContent: 'space-between' }}>
-                <Tooltip arrow title = {<Tag {...defaultTag}/>} placement = 'left' interactive>
-                    <div
-                        className = {classes.statusIndicator}
+        <Grid container direction = 'column'>
+            <Grid container item alignItems = 'center'>
+                <Grid item>
+                    <Typography
+                        variant = 'h6'
+                        color = 'textPrimary'
                         style = {{
-                            borderLeftColor: defaultTag?.color ?? '#797979'
+                            marginLeft: '2px',
+                            marginRight: '8px',
+                            paddingBottom: '2px'
                         }}
-                    />
-                </Tooltip>
-                <Typography className = {classes.heading} variant = 'h6' color = 'textSecondary' ref = {ref}>
-                    {category}:
-                </Typography>
-            </div>
-            <Box display = 'flex' width = '100%'>
-                <div style = {{ width: '100%' }} onClick = {(e) => e.stopPropagation()}>
-                    <AutoSaveTextField
-                        canEdit = {hasAccess}
-                        initialValue = {title}
-                        onSave = {onSave}
-                        className = {classes.creatableDetail}
-                        title = {title}
-                        fullWidth
-                        inputProps = {{ style: { textOverflow: 'ellipsis' } }}
-                    />
-                </div>
-                <Box display = 'flex' flexDirection = 'row'>
-                    <Grow in = {showActions} unmountOnExit>
-                        <Box display = 'flex' flexDirection = 'row'>
-                            { hasAccess && addChildAssertion &&
-                                <IconButton
-                                    color = 'secondary'
-                                    title = {addChildAssertionLabel}
-                                    size = 'small'
-                                    onClick = {onAddChildAssertionClick}
-                                ><KeyboardReturn /></IconButton>
-                            }
-                            { hasAccess &&
-                                <IconButton
-                                    color = 'secondary'
-                                    title = 'delete'
-                                    size = 'small'
-                                    onClick = {onDeleteClick}
-                                ><Delete /></IconButton>
-                            }
-                        </Box>
-                    </Grow>
-                    <Badge
-                        badgeContent = {commentCount}
-                        overlap = 'circular'
-                        color = 'primary'
-                        style = {{ marginRight: '8px' }}
-                        onClick = {onCommentsClick}
                     >
-                        <IconButton
+                        Objectives, Goals, Strategies, and Measures
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    {hasEdit &&
+                        <Tooltip title = 'Add new OGSM'>
+                            <IconButton
+                                color = 'primary'
+                                disabled = {adding}
+                                size = 'small'
+                                onClick = {handleAddNewOGSM}
+                            >
+                                { adding
+                                    ? <CircularProgress size = '1.25rem' />
+                                    : <AddCircleOutline fontSize = 'small' data-testid = 'AssertionHeader__icon-add'/>
+                                }
+                            </IconButton>
+                        </Tooltip>
+                    }
+                </Grid>
+            </Grid>
+            <Grid container item style = {{ height: '22px', alignContent: 'center' }}>
+                {allStatuses.map((status, index) => (
+                    <Grid item key = {index}>
+                        <Chip
+                            label = {status.label.toUpperCase()}
+                            icon = {generateCircle(status.color)}
+                            variant = 'outlined'
                             color = 'secondary'
-                            title = 'comment'
-                            size = 'small'
-                        >
-                            <Chat />
-                        </IconButton>
-                    </Badge>
-                </Box>
-            </Box>
-            {openConfirmation &&
-                <ConfirmationPopup
-                    open = {openConfirmation}
-                    onConfirm = {handlePopupConfirm}
-                    onCancel = {handlePopupCancel}
-                    detail = {`You are about to delete '${category}: ${title}'`}
-                />
-            }
-        </div>
+                            style = {{
+                                border: 0,
+                                fontSize: '10px'
+                            }}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
+        </Grid>
     )
-}
+})
 
 AssertionHeader.propTypes = {
-    id: PropTypes.number.isRequired,
-    commentCount: PropTypes.number,
-    category: PropTypes.string.isRequired,
-    title: PropTypes.string,
-    status: PropTypes.string,
-    onSave: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    addChildAssertion: PropTypes.func,
-    addChildAssertionLabel: PropTypes.string,
-    hasAccess: PropTypes.bool.isRequired
+    productId: PropTypes.number.isRequired,
+    hasEdit: PropTypes.bool
 }
 
 AssertionHeader.defaultProps = {
-    commentCount: 0,
-    title: '',
-    status: undefined,
-    addChildAssertion: undefined,
-    addChildAssertionLabel: undefined,
+    hasEdit: false
 }
 
 export default AssertionHeader

@@ -2,10 +2,10 @@ import React from 'react'
 import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { AssertionsTab } from './index'
 
-jest.mock('../../Assertions/Assertion/Assertion',
+jest.mock('Components/Assertions/Assertion/Assertion',
     () => function testing() { return (<div>Assertion</div>) })
 
-jest.mock('../../Assertions/AssertionComments/AssertionComments',
+jest.mock('Components/Assertions/AssertionComments/AssertionComments',
     () => function testing() { return (<div>AssertionCommentsComponent</div>) })
 
 describe('<AssertionsTab>', () => {
@@ -35,7 +35,10 @@ describe('<AssertionsTab>', () => {
         render(<AssertionsTab productId = {0}/>, {
             initialState: {
                 app: {
-                    assertionCommentsOpen: 1
+                    assertionCommentsOpen: 1,
+                    assertionStatus: {
+                        COMPLETED: { name: 'COMPLETED', label: 'Completed', color: '#000000' }
+                    }
                 }
             }
         })

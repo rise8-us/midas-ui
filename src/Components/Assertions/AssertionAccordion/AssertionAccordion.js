@@ -1,8 +1,7 @@
-import { Accordion, AccordionDetails, AccordionSummary, makeStyles } from '@material-ui/core'
-import { ExpandMore } from '@material-ui/icons'
+import { Accordion, AccordionDetails, AccordionSummary, alpha, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { AssertionHeader } from '../'
+import { AssertionEntry } from '../'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -15,27 +14,25 @@ const useStyles = makeStyles((theme) => ({
     },
     accordionDetails: {
         borderLeft: 'solid 1px',
-        borderColor: theme.palette.text.secondary,
-        marginLeft: theme.spacing(2),
-        paddingRight: 0,
+        borderColor: alpha(theme.palette.text.secondary, .4),
+        margin: '0px 0px 0px 16px',
+        padding: '0px 0px 0px 8px',
         display: 'flex',
         flexDirection: 'column',
-        padding: theme.spacing(1)
     },
     accordionSummaryRoot: {
-        minHeight: 48,
-        height: 48,
+        minHeight: 42,
+        height: 42,
+        padding: 0,
         width: '100%',
         '&.Mui-expanded': {
-            height: 48,
-            minHeight: 48
+            minHeight: 42,
+            height: 42,
         }
     }
 }))
 
-function AssertionAccordion({
-    assertionHeaderProps, children, category, expandable, defaultExpanded, expanded, rootAssertion
-}) {
+function AssertionAccordion({ assertionEntryProps, children, category, defaultExpanded, expanded, rootAssertion }) {
     const classes = useStyles()
 
     return (
@@ -45,21 +42,13 @@ function AssertionAccordion({
             expanded = { expanded }
             classes = {{ root: classes.accordionRoot }}
             TransitionProps = {{ unmountOnExit: true }}
+            style = {{ backgroundColor: 'transparent' }}
         >
             <AccordionSummary
-                expandIcon = {
-                    expandable
-                        ? <ExpandMore data-testid = {`AssertionHeader__icon-expand-${category}`}/>
-                        : <div style = {{ width: '24px' }}/>
-                }
+                expandIcon = {null}
                 classes = {{ root: classes.accordionSummaryRoot }}
-                IconButtonProps = {{
-                    style: {
-                        padding: '8px'
-                    }
-                }}
             >
-                <AssertionHeader {...assertionHeaderProps} category = {category}/>
+                <AssertionEntry {...assertionEntryProps} category = {category[0]}/>
             </AccordionSummary>
             <AccordionDetails
                 className = {classes.accordionDetails}
@@ -72,7 +61,7 @@ function AssertionAccordion({
 }
 
 AssertionAccordion.propTypes = {
-    assertionHeaderProps: PropTypes.shape({
+    assertionEntryProps: PropTypes.shape({
         id: PropTypes.number,
         commentCount: PropTypes.number,
         title: PropTypes.string,
@@ -83,7 +72,6 @@ AssertionAccordion.propTypes = {
         addChildAssertionLabel: PropTypes.string,
     }),
     category: PropTypes.string.isRequired,
-    expandable: PropTypes.bool,
     expanded: PropTypes.bool,
     defaultExpanded: PropTypes.bool,
     rootAssertion: PropTypes.bool,
@@ -91,7 +79,7 @@ AssertionAccordion.propTypes = {
 }
 
 AssertionAccordion.defaultProps = {
-    assertionHeaderProps: {
+    assertionEntryProps: {
         id: undefined,
         commentCount: 0,
         title: '',
@@ -99,7 +87,6 @@ AssertionAccordion.defaultProps = {
         onDelete: undefined,
         expandable: true,
     },
-    expandable: true,
     expanded: undefined,
     defaultExpanded: false,
     rootAssertion: false,

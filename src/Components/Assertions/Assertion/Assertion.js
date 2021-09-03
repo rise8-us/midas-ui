@@ -20,7 +20,7 @@ const Assertion = ({ id, order, defaultExpanded, productId }) => {
 
     const assertion = useSelector(state => selectAssertionById(state, id))
     const childAssertions = useSelector(state => selectAssertionsByParentId(state, id))
-    const hasAccess = useSelector(state =>  hasProductAccess(state, productId))
+    const hasEdit = useSelector(state =>  hasProductAccess(state, productId))
 
     const createChildAssertion = () => {
         const newChild = {
@@ -51,12 +51,12 @@ const Assertion = ({ id, order, defaultExpanded, productId }) => {
 
     return (
         <AssertionAccordion
-            assertionHeaderProps = {{
+            assertionEntryProps = {{
                 id: assertion.id,
                 commentCount: assertion.commentIds?.length,
                 title: assertion.text,
                 status: assertion.status,
-                hasAccess: hasAccess,
+                hasEdit: hasEdit,
                 onSave: updateAssertion,
                 onDelete: onDeleteClick,
                 addChildAssertion: childType ? createChildAssertion : undefined,

@@ -72,7 +72,7 @@ describe('<Product>', () => {
     test('should render ogsms tab', () => {
         renderWithRouter(<Product />)
 
-        fireEvent.click(screen.getByText(/ogsms/i))
+        fireEvent.click(screen.getByText(/measures/i))
         expect(screen.getByText('AssertionsTab')).toBeInTheDocument()
     })
 
