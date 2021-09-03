@@ -13,8 +13,8 @@ import { selectRoadmapsByProductId } from 'Redux/Roadmaps/selectors'
 const generateCircle = (color) => (
     <div
         style = {{
-            width: 10,
-            height: 10,
+            width: 8,
+            height: 8,
             borderRadius: '50%',
             marginLeft: '5px',
             backgroundColor: color
@@ -40,9 +40,9 @@ function ProductRoadmap({ productId, hasEditAccess }) {
 
     return (
         <Grid container spacing = {2} wrap = 'wrap'>
-            <Grid container item alignItems = 'center'>
+            <Grid container item alignItems = 'center' style = {{ paddingBottom: 0 }}>
                 {performActionIfAllowed(hasEditAccess,
-                    <Grid item>
+                    <Grid item style = {{ paddingBottom: 0 }}>
                         <Tooltip title = 'Add a new entry' placement = 'top'>
                             <IconButton
                                 color = 'secondary'
@@ -56,11 +56,11 @@ function ProductRoadmap({ productId, hasEditAccess }) {
                         </Tooltip>
                     </Grid>
                 )}
-                <Grid item>
+                <Grid item style = {{ paddingBottom: 0 }}>
                     <Typography variant = 'h6' color = 'textPrimary'>ROADMAP</Typography>
                 </Grid>
             </Grid>
-            <Grid container item style = {{ marginTop: '-12px', paddingBottom: 0 }}>
+            <Grid container item style = {{ paddingBottom: 0, paddingTop: 0 }}>
                 {Object.values(roadmapStatuses).map((status, index) =>
                     <Grid item key = {index}>
                         <Chip
@@ -68,7 +68,11 @@ function ProductRoadmap({ productId, hasEditAccess }) {
                             icon = {generateCircle(status.color)}
                             variant = 'outlined'
                             color = 'secondary'
-                            style = {{ border: 0 }}
+                            style = {{
+                                border: 0,
+                                fontSize: '10px',
+                                height: '16px'
+                            }}
                         />
                     </Grid>
                 )}

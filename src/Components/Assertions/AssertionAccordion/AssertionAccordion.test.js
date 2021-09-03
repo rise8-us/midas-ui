@@ -2,8 +2,8 @@ import React from 'react'
 import { render, screen } from '../../../Utilities/test-utils'
 import { AssertionAccordion } from './index'
 
-jest.mock('../../Assertions/AssertionHeader/AssertionHeader',
-    () => function testing() { return (<div>AssertionHeaderComponent</div>) })
+jest.mock('../../Assertions/AssertionEntry/AssertionEntry',
+    () => function testing() { return (<div>AssertionEntryComponent</div>) })
 
 
 describe('<AssertionAccordion>', () => {
@@ -16,7 +16,7 @@ describe('<AssertionAccordion>', () => {
             </AssertionAccordion>
         )
 
-        expect(screen.getByText('AssertionHeaderComponent')).toBeInTheDocument()
+        expect(screen.getByText('AssertionEntryComponent')).toBeInTheDocument()
         expect(screen.queryByText(/Hello Valheim/)).not.toBeInTheDocument()
     })
 })

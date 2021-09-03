@@ -1,15 +1,11 @@
 import React from 'react'
-import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import { AssertionHeader } from './index'
 
-describe('<AssertionHeader>', () => {
-    const defaultProps = {
-        onSave: jest.fn(),
-        onDelete: jest.fn(),
-        hasAccess: true,
-        status: 'COMPLETED'
-    }
+jest.mock('../../Assertions/AssertionEntry/AssertionEntry',
+    () => function testing() { return (<div>AssertionEntry</div>) })
 
+describe('<CreateAssertions>', () => {
     const mockState = {
         app: {
             assertionStatus: {
@@ -19,155 +15,58 @@ describe('<AssertionHeader>', () => {
         }
     }
 
-    test('should render', () => {
-        renderWithRouter(<AssertionHeader id = {1} category = 'category' title = 'detail' {...defaultProps}/>)
+    const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
+    const scrollIntoViewMock = jest.fn()
 
-        expect(screen.getByText(/category:/)).toBeInTheDocument()
-        expect(screen.getByDisplayValue(/detail/)).toBeInTheDocument()
-    })
+    const mockRef = React.createRef(<div />)
+    mockRef.current = {
+        scrollIntoView: () => scrollIntoViewMock
+    }
 
-    test('should edit and restore', () => {
-        useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
+    const blankMeasure = {
+        text: 'Enter new measure here...',
+        type: 'MEASURE',
+        productId: 1,
+        parentId: undefined,
+        status: 'NOT_STARTED',
+        children: []
+    }
+    const blankStrategy = {
+        text: 'Enter new strategy here...',
+        type: 'STRATEGY',
+        productId: 1,
+        parentId: undefined,
+        status: 'NOT_STARTED',
+        children: [blankMeasure]
+    }
+    const blankGoal = {
+        text: 'Enter new goal here...',
+        type: 'GOAL',
+        productId: 1,
+        parentId: undefined,
+        status: 'NOT_STARTED',
+        children: [blankStrategy]
+    }
+    const blankObjective = {
+        text: 'Enter new objective here...',
+        type: 'OBJECTIVE',
+        productId: 1,
+        parentId: undefined,
+        status: 'NOT_STARTED',
+        children: [blankGoal]
+    }
 
-        renderWithRouter(<AssertionHeader id = {1} category = 'cat' title = 'devils' {...defaultProps}/>)
-        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{esc}')
+    test('should fire request to create new OGSM', async() => {
+        requestCreateAssertionMock.mockReturnValue({ type: '/', payload: {} })
+        useDispatchMock().mockResolvedValue({ data: {} })
 
-        expect(screen.getByDisplayValue(/devils/)).toBeInTheDocument()
-    })
+        render(<AssertionHeader productId = {1} ref = {mockRef} hasEdit/>, { initialState: mockState })
 
-    test('should edit and save', () => {
-        const OnSaveMock = jest.fn()
-        useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
+        fireEvent.click(screen.getByTitle('Add new OGSM'))
 
-        renderWithRouter(
-            <AssertionHeader
-                id = {1}
-                category = 'cat'
-                title = 'devils'
-                onSave = {OnSaveMock}
-                onDelete = {jest.fn()}
-                hasAccess = {true}
-            />
-        )
-        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
-        fireEvent.focusOut(screen.getByDisplayValue(/in the details/i))
+        expect(await screen.findByTestId('AssertionHeader__icon-add')).toBeInTheDocument()
 
-        expect(screen.getByDisplayValue(/in the details/i)).toBeInTheDocument()
-        expect(OnSaveMock).toHaveBeenCalled()
-    })
-
-    test('should show commentCount', () => {
-        useDispatchMock().mockReturnValueOnce()
-        renderWithRouter(
-            <AssertionHeader id = {1} category = 'cat' title = 'devils' commentCount = {1} {...defaultProps}/>)
-
-        expect(screen.getByText('1')).toBeInTheDocument()
-    })
-
-    test('should call comment dispatches', () => {
-        useDispatchMock().mockReturnValue({})
-        const requestSearchCommentsMock = useModuleMock('Redux/Comments/actions', 'requestSearchComments')
-        const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
-
-        renderWithRouter(<AssertionHeader id = {1} category = 'cat' title = 'devils' {...defaultProps}/>)
-
-        fireEvent.click(screen.getByTitle('comment'))
-
-        expect(requestSearchCommentsMock).toHaveBeenCalledWith('assertion.id:1')
-        expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: 1, deletedAssertionId: null })
-    })
-
-    test('should cancel delete ogsm', () => {
-        useDispatchMock().mockReturnValueOnce()
-        const onDeleteMock = jest.fn()
-
-        renderWithRouter(
-            <AssertionHeader
-                id = {1}
-                category = 'cat'
-                title = 'devils'
-                onDelete = {onDeleteMock}
-                onSave = {jest.fn()}
-                hasAccess = {true}
-                status = 'COMPLETED'
-            />, { initialState: mockState }
-        )
-
-        fireEvent.mouseEnter(screen.getByDisplayValue('devils'))
-
-        fireEvent.click(screen.getByTitle('delete'))
-        fireEvent.click(screen.getByText('cancel'))
-
-        expect(onDeleteMock).not.toHaveBeenCalled()
-    })
-
-    test('should confirm delete ogsm', () => {
-        useDispatchMock().mockReturnValueOnce()
-        const onDeleteMock = jest.fn()
-
-        renderWithRouter(
-            <AssertionHeader
-                id = {1}
-                category = 'cat'
-                title = 'devils'
-                onDelete = {onDeleteMock}
-                onSave = {jest.fn()}
-                hasAccess = {true}
-                status = 'COMPLETED'
-            />, { initialState: mockState }
-        )
-
-        fireEvent.mouseEnter(screen.getByDisplayValue('devils'))
-
-        fireEvent.click(screen.getByTitle('delete'))
-        fireEvent.click(screen.getByText('confirm'))
-
-        fireEvent.mouseLeave(screen.getByDisplayValue('devils'))
-
-        expect(onDeleteMock).toHaveBeenCalled()
-    })
-
-    test('should call addChildAssertion', () => {
-        useDispatchMock().mockReturnValueOnce()
-        const onAddChildMock = jest.fn()
-
-        renderWithRouter(
-            <AssertionHeader
-                id = {1}
-                category = 'cat'
-                title = 'devils'
-                addChildAssertion = {onAddChildMock}
-                addChildAssertionLabel = 'add me'
-                {...defaultProps}
-            />, { initialState: mockState }
-        )
-
-        fireEvent.mouseEnter(screen.getByDisplayValue('devils'))
-
-        fireEvent.click(screen.getByTitle('add me'))
-        expect(onAddChildMock).toHaveBeenCalled()
-    })
-
-    test('should not trigger event listener with no access', () => {
-        const OnSaveMock = jest.fn()
-        useDispatchMock().mockReturnValueOnce({ action: '/', payload: {} })
-
-        renderWithRouter(
-            <AssertionHeader
-                id = {1}
-                category = 'cat'
-                title = 'devils'
-                onSave = {OnSaveMock}
-                onDelete = {jest.fn()}
-                hasAccess = {false}
-            />
-        )
-
-        userEvent.type(screen.getByDisplayValue(/devils/), 'in the details{Enter}')
-        fireEvent.focusOut(screen.getByDisplayValue(/devils/i))
-
-        expect(screen.getByDisplayValue(/devils/i)).toBeInTheDocument()
-        expect(OnSaveMock).not.toHaveBeenCalled()
-        expect(screen.queryByTitle('delete')).not.toBeInTheDocument()
+        expect(requestCreateAssertionMock).toHaveBeenCalledWith(blankObjective)
+        waitFor(() => { expect(scrollIntoViewMock).toBeCalled() })
     })
 })

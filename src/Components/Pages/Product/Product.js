@@ -102,7 +102,12 @@ function Product() {
                                     disableRipple
                                     data-testid = 'Product__overview'
                                 />
-                                <Tab label = 'OGSMs' value = 'ogsms' disableRipple data-testid = 'Product__ogsms'/>
+                                <Tab
+                                    label = 'measures'
+                                    value = 'ogsms'
+                                    disableRipple
+                                    data-testid = 'Product__ogsms'
+                                />
                                 <Tab
                                     label = 'Projects'
                                     value = 'projects'
@@ -113,26 +118,26 @@ function Product() {
                             <Divider variant = 'fullWidth' />
                         </Grid>
                         <Grid item>
-                            { value === 'overview' &&
-                                <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                    <div style = {{ padding: '24px 0' }}>
+                            <div style = {{ padding: '24px 0' }}>
+                                { value === 'overview' &&
+                                    <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <ProductPageOverview
                                             id = {id}
                                             hasEdit = {allowInLineEdits(hasEdit, pageLock)}
                                         />
-                                    </div>
-                                </Suspense>
-                            }
-                            { value === 'ogsms' &&
-                                <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                    <AssertionsTab productId = {id}/>
-                                </Suspense>
-                            }
-                            { value === 'projects' &&
-                                <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                    <ProjectsTab id = {id} />
-                                </Suspense>
-                            }
+                                    </Suspense>
+                                }
+                                { value === 'ogsms' &&
+                                    <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                                        <AssertionsTab productId = {id}/>
+                                    </Suspense>
+                                }
+                                { value === 'projects' &&
+                                    <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                                        <ProjectsTab id = {id} />
+                                    </Suspense>
+                                }
+                            </div>
                         </Grid>
                     </Grid>
                 </Grid>

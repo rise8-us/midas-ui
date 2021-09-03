@@ -65,7 +65,8 @@ function AutoSaveTextField({
                 readOnly: !canEdit
             }}
             inputProps = {{
-                ref
+                ref,
+                ...textFieldProps.inputProps
             }}
             value = {value}
             onFocus = {onFocus}

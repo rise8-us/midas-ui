@@ -44,7 +44,7 @@ describe('<Assertion>', () => {
             />
         )
 
-        screen.getByText('Objective:')
+        screen.getByText('O')
         screen.getByDisplayValue('TestAssertion')
     })
 
@@ -61,7 +61,7 @@ describe('<Assertion>', () => {
             />
         )
 
-        screen.getByText('Measure:')
+        screen.getByText('M')
         screen.getByDisplayValue('TestAssertionChild')
         expect(screen.queryAllByTitle('add new measure')).toHaveLength(0)
     })

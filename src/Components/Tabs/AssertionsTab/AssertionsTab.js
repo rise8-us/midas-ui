@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { Assertion, AssertionComments, CreateAssertionsButton } from 'Components/Assertions'
+import { Grid } from '@material-ui/core'
+import { Assertion, AssertionComments, AssertionHeader } from 'Components/Assertions'
 import objectHash from 'object-hash'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef } from 'react'
@@ -9,35 +9,11 @@ import { requestSearchAssertions } from 'Redux/Assertions/actions'
 import { selectAssertionsByTypeAndProductId } from 'Redux/Assertions/selectors'
 import { hasProductAccess } from 'Redux/Auth/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        marginTop: theme.spacing(2),
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    assertion: {
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        }),
-    },
-    comments: {
-        marginTop: 72,
-        marginLeft: theme.spacing(1),
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        }),
-    }
-}))
-
 function AssertionsTab({ productId }) {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const bottomOfAssertionsRef = useRef(null)
 
-    const hasAccess = useSelector(state =>  hasProductAccess(state, productId))
+    const hasEdit = useSelector(state =>  hasProductAccess(state, productId))
     const showComments = useSelector(state => state.app.assertionCommentsOpen)
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => objectHash(left) === objectHash(right))
@@ -48,11 +24,13 @@ function AssertionsTab({ productId }) {
     }, [])
 
     return (
-        <div className = {classes.root}>
-            <div style = {{ width: showComments ? 'calc(100% - 350px)' : '100%' }} className = {classes.assertion}>
-                {hasAccess && <CreateAssertionsButton productId = {productId} ref = { bottomOfAssertionsRef } />}
+        <Grid container wrap = 'nowrap' spacing = {1}>
+            <Grid container item direction = 'column'>
+                <Grid item>
+                    <AssertionHeader productId = {productId} ref = {bottomOfAssertionsRef} hasEdit = {hasEdit}/>
+                </Grid>
                 {objectives.map((objective, index) => (
-                    <div style = {{ margin: '16px 0' }} key = { objective.id}>
+                    <Grid item key = {index} style = {{ marginLeft: '-8px' }}>
                         <Assertion
                             index = {index + 1}
                             order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
@@ -60,16 +38,18 @@ function AssertionsTab({ productId }) {
                             productId = {productId}
                             defaultExpanded
                         />
-                    </div>
+                    </Grid>
                 ))}
-                <div ref = {bottomOfAssertionsRef}></div>
-            </div>
+                <Grid item>
+                    <div ref = {bottomOfAssertionsRef}></div>
+                </Grid>
+            </Grid>
             { showComments &&
-                <div className = {classes.comments} style = {{ width: '350px' }}>
-                    <AssertionComments assertionId = {showComments} hasAccess = {hasAccess}/>
-                </div>
+            <Grid item style = {{ maxWidth: '350px', minWidth: '350px' }}>
+                <AssertionComments assertionId = {showComments} hasAccess = {hasEdit}/>
+            </Grid>
             }
-        </div>
+        </Grid>
     )
 }
 
