@@ -4,9 +4,8 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
 import { requestSearchComments } from 'Redux/Comments/actions'
 
@@ -47,10 +46,6 @@ function AssertionEntry(props) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const ref = useRef()
-    const { assertionId } = useParams()
-    const assertionIdInt = parseInt(assertionId)
-
     const statuses = useAssertionStatuses()
 
     const defaultTag = statuses.filter(t => t.name === status)[0] ?? { label: 'Not Started', color: '#c3c3c3' }
@@ -86,14 +81,6 @@ function AssertionEntry(props) {
         handlePopup()
         onDelete(event)
     }
-
-    useEffect(() => {
-        if (assertionIdInt === id) {
-            ref.current.scrollIntoView({
-                behavior: 'smooth',
-            })
-        }
-    }, [assertionId])
 
     return (
         <>

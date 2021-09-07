@@ -2,10 +2,7 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import { AssertionHeader } from './index'
 
-jest.mock('../../Assertions/AssertionEntry/AssertionEntry',
-    () => function testing() { return (<div>AssertionEntry</div>) })
-
-describe('<CreateAssertions>', () => {
+describe('<AssertionHeader>', () => {
     const mockState = {
         app: {
             assertionStatus: {
@@ -16,12 +13,6 @@ describe('<CreateAssertions>', () => {
     }
 
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
-    const scrollIntoViewMock = jest.fn()
-
-    const mockRef = React.createRef(<div />)
-    mockRef.current = {
-        scrollIntoView: () => scrollIntoViewMock
-    }
 
     const blankMeasure = {
         text: 'Enter new measure here...',
@@ -59,14 +50,15 @@ describe('<CreateAssertions>', () => {
     test('should fire request to create new OGSM', async() => {
         requestCreateAssertionMock.mockReturnValue({ type: '/', payload: {} })
         useDispatchMock().mockResolvedValue({ data: {} })
+        const onCreateMock = jest.fn()
 
-        render(<AssertionHeader productId = {1} ref = {mockRef} hasEdit/>, { initialState: mockState })
+        render(<AssertionHeader productId = {1} onCreate = {onCreateMock} hasEdit/>, { initialState: mockState })
 
         fireEvent.click(screen.getByTitle('Add new OGSM'))
 
         expect(await screen.findByTestId('AssertionHeader__icon-add')).toBeInTheDocument()
 
         expect(requestCreateAssertionMock).toHaveBeenCalledWith(blankObjective)
-        waitFor(() => { expect(scrollIntoViewMock).toBeCalled() })
+        waitFor(() => { expect(onCreateMock).toBeCalled() })
     })
 })

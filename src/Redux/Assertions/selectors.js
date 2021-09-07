@@ -21,3 +21,12 @@ export const selectAssertionsByType = (state, type) => {
 export const selectAssertionsByTypeAndProductId = (state, type, productId) => {
     return selectAssertionsByType(state, type).filter(assertion => assertion.productId === productId)
 }
+
+export const selectRootAssertionId = (state, baseId) => {
+
+    const parentId = state.assertions[baseId]?.parentId
+
+    if (parentId === undefined) return undefined
+    else if (parentId === null) return baseId
+    else return selectRootAssertionId(state, parentId)
+}

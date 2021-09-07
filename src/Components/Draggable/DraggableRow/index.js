@@ -1,1 +1,1 @@
-export { default as DraggableRow } from './DraggableRow';
+export { default as DraggableRow } from './DraggableRow'

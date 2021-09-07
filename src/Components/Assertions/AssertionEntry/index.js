@@ -1,2 +1,2 @@
-export { default as AssertionEntry } from './AssertionEntry';
+export { default as AssertionEntry } from './AssertionEntry'
 

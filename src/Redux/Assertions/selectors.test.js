@@ -48,3 +48,15 @@ test('selectAssertionsByType - invalid type', () => {
 test('selectAssertionsByTypeAndProductId - invalid type', () => {
     expect(selectors.selectAssertionsByTypeAndProductId(mockState, 'FOO', 2)).toEqual([mockState.assertions[12]])
 })
+
+test('selectRootAssertionId - undefined parentId should return undefined', () => {
+    expect(selectors.selectRootAssertionId(mockState, 14)).toEqual(undefined)
+})
+
+test('selectRootAssertionId - null parentId should return id', () => {
+    expect(selectors.selectRootAssertionId(mockState, 12)).toEqual(12)
+})
+
+test('selectRootAssertionId - not null parentId should recurse until parentId is null', () => {
+    expect(selectors.selectRootAssertionId(mockState, 13)).toEqual(12)
+})
