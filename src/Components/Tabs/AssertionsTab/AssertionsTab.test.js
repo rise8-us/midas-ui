@@ -29,8 +29,6 @@ describe('<AssertionsTab>', () => {
 
         renderWithRouter(<AssertionsTab productId = {0}/>)
 
-        expect(screen.getByText('1')).toHaveStyle('font-weight: 400')
-
         fireEvent.click(screen.getByText('Header'))
         fireEvent.click(screen.getByText('1'))
 

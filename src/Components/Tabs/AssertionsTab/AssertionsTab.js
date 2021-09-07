@@ -23,7 +23,7 @@ function AssertionsTab({ productId }) {
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => objectHash(left) === objectHash(right))
 
-    const [selectedIndex, setSelectedIndex] = useState(-1)
+    const [selectedIndex, setSelectedIndex] = useState(0)
 
     useEffect(() => {
         dispatch(requestSearchAssertions(`product.id:${productId}`))
@@ -31,7 +31,11 @@ function AssertionsTab({ productId }) {
     }, [])
 
     useEffect(() => {
-        typeof rootAssertionId === 'number' && setSelectedIndex(objectives.findIndex(o => o.id === rootAssertionId))
+        if (typeof rootAssertionId === 'number') {
+            const newIndex = objectives.findIndex(o => o.id === rootAssertionId)
+            setSelectedIndex(newIndex !== -1 ? newIndex : 0)
+
+        }
     }, [rootAssertionId])
 
     return (
