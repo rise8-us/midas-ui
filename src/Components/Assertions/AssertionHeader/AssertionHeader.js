@@ -19,20 +19,20 @@ const generateCircle = (color) => (
     />
 )
 
-const AssertionHeader = React.forwardRef(({ productId, hasEdit }, ref) => {
+const defaultData = (type, pId) => ({
+    text: `Enter new ${type} here...`,
+    type: type.toUpperCase(),
+    productId: pId,
+    parentId: undefined,
+    status: 'NOT_STARTED',
+})
+
+function AssertionHeader({ productId, hasEdit, onCreate }) {
     const dispatch = useDispatch()
 
     const allStatuses = useAssertionStatuses()
 
     const [adding, setAdding] = useState(false)
-
-    const defaultData = (type, pId) => ({
-        text: `Enter new ${type} here...`,
-        type: type.toUpperCase(),
-        productId: pId,
-        parentId: undefined,
-        status: 'NOT_STARTED',
-    })
 
     const handleAddNewOGSM = () => {
         setAdding(true)
@@ -55,8 +55,8 @@ const AssertionHeader = React.forwardRef(({ productId, hasEdit }, ref) => {
         }
 
         dispatch(requestCreateAssertion(blankObjective)).then(unwrapResult).then(() => {
-            ref && ref.current.scrollIntoView()
             setAdding(false)
+            onCreate()
         })
     }
 
@@ -112,10 +112,11 @@ const AssertionHeader = React.forwardRef(({ productId, hasEdit }, ref) => {
             </Grid>
         </Grid>
     )
-})
+}
 
 AssertionHeader.propTypes = {
     productId: PropTypes.number.isRequired,
+    onCreate: PropTypes.func.isRequired,
     hasEdit: PropTypes.bool
 }
 

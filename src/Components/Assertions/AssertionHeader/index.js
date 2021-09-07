@@ -1,2 +1,2 @@
-export { default as AssertionHeader } from './AssertionHeader';
+export { default as AssertionHeader } from './AssertionHeader'
 
