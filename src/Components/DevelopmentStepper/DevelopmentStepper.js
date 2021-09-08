@@ -1,7 +1,8 @@
-import { Step, StepLabel, Stepper, SvgIcon, useTheme } from '@material-ui/core'
+import { Link, Step, StepLabel, Stepper, SvgIcon, Tooltip, Typography, useTheme } from '@material-ui/core'
 import { FlagOutlined } from '@material-ui/icons'
 import { ReactComponent as CTFCertificate } from 'Assets/ctf.svg'
 import { ReactComponent as GitlabPipeline } from 'Assets/gitlab.svg'
+import { ReactComponent as JiraLogo } from 'Assets/jiraLogo.svg'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -63,9 +64,36 @@ Connector.propTypes = {
     completed: PropTypes.bool.isRequired
 }
 
+
+const tooltipTitle = (label) => (
+    <>
+        <Typography>{label}</Typography>
+        { label.includes('Jira') &&
+            <Link
+                href = {'https://jira.il2.dso.mil/secure/RapidBoard.jspa?rapidView=142&quickFilter=422'}
+                target = '_blank'
+                rel = 'noopener noreferrer'
+                style = {{
+                    display: 'flex',
+                    marginTop: '24px',
+                    alignItems: 'center'
+                }}
+            >
+                <SvgIcon fontSize = 'small'><JiraLogo /></SvgIcon>
+                <Typography style = {{ paddingLeft: '4px' }}>P1 IL2 Jira Kanban board</Typography>
+            </Link>
+        }
+    </>
+)
 function DevelopmentStepper({ completedIndex }) {
 
     const icons = [0, 1, 2]
+    const titles = ['Jira onboarding request not submitted', 'Pipelines not created', 'Project does not has CtF']
+
+    const parseTitle = (currentIndex) => {
+        if (completedIndex >= currentIndex) return titles[currentIndex].replace('not ', '')
+        else return titles[currentIndex]
+    }
 
     return (
         <Stepper
@@ -76,9 +104,16 @@ function DevelopmentStepper({ completedIndex }) {
             {icons.map(i =>
                 <Step key = {i} completed = {completedIndex >= i }>
                     {i > 0 && <Connector completed = {completedIndex >= i }/>}
-                    <StepLabel
-                        StepIconComponent = { () => <StepIcons index = {i} completed = {completedIndex >= i }/>}
-                    />
+                    <Tooltip
+                        arrow
+                        interactive
+                        placement = 'left'
+                        title = {tooltipTitle(parseTitle([i]))}
+                    >
+                        <StepLabel
+                            StepIconComponent = {() => <StepIcons index = {i} completed = {completedIndex >= i }/>}
+                        />
+                    </Tooltip>
                 </Step>
             )}
         </Stepper>

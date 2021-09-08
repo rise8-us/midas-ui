@@ -34,12 +34,8 @@ describe('<UserTab />', () => {
         setupScenario()
 
         expect(await screen.findByText('baby yoda')).toBeInTheDocument()
-    })
 
-    test('should render details on click', async() => {
-        setupScenario()
-
-        userEvent.click(await screen.findByTestId('Table__row'))
+        userEvent.click(screen.getByTestId('Table__row'))
 
         expect(screen.getByText('UserRoles test')).toBeInTheDocument()
         expect(screen.getByText('UserSettings test')).toBeInTheDocument()
