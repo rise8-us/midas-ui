@@ -1,18 +1,18 @@
 import { Box, TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { Popup } from 'Components/Popup'
+import { TagDropdown } from 'Components/TagDropdown'
+import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useFormReducer from '../../../Hooks/useFormReducer'
-import { selectRequestErrors } from '../../../Redux/Errors/selectors'
-import { closePopup } from '../../../Redux/Popups/actions'
-import { requestCreatePortfolio, requestUpdatePortfolio } from '../../../Redux/Portfolios/actions'
-import PortfolioConstants from '../../../Redux/Portfolios/constants'
-import { selectPortfolioById } from '../../../Redux/Portfolios/selectors'
-import { selectAvailableProducts } from '../../../Redux/Products/selectors'
-import FormatErrors from '../../../Utilities/FormatErrors'
-import { Popup } from '../../Popup'
-import { TagDropdown } from '../../TagDropdown'
+import { selectRequestErrors } from 'Redux/Errors/selectors'
+import { closePopup } from 'Redux/Popups/actions'
+import { requestCreatePortfolio, requestUpdatePortfolio } from 'Redux/Portfolios/actions'
+import PortfolioConstants from 'Redux/Portfolios/constants'
+import { selectPortfolioById } from 'Redux/Portfolios/selectors'
+import { selectAvailableProducts } from 'Redux/Products/selectors'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
     return {
@@ -62,7 +62,8 @@ function PortfolioPopup({ id }) {
             childIds: Object.values(formValues.products.map(p => p.id)),
             productManagerId: null,
             type: 'PORTFOLIO',
-            projectIds: []
+            projectIds: [],
+            teamIds: [],
         }))
     }
 

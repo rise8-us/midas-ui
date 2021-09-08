@@ -51,7 +51,7 @@ function Product() {
 
     return (
         <Page>
-            <Grid container style = {{ padding: '8px 24px' }} spacing = {6}>
+            <Grid container style = {{ padding: '0px 4px 0px 24px' }} spacing = {3}>
                 <Grid container item direction = 'column' xl = {3} lg = {4} md = {4} spacing = {2}>
                     <Grid item>
                         <ProductHeader id = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
