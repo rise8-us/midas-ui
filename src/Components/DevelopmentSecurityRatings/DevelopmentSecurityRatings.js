@@ -1,67 +1,107 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import { Grid, Tooltip, Typography } from '@material-ui/core'
 import { CircularStatus } from 'Components/CircularStatus'
+import { SonarqubeTooltip } from 'Components/SonarqubeTooltip'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const useStyles = makeStyles((theme) => ({
-    label: {
-        height: '29px',
-        paddingLeft: theme.spacing(1)
-    }
-}))
+function SecurityRow({ displayValue, totalValue, color, title, tooltipTitle }) {
+    return (
+        <Tooltip
+            title = {tooltipTitle}
+            placement = 'left'
+            interactive
+            arrow
+        >
+            <Grid container item wrap = 'nowrap' alignItems = 'center' style = {{ maxHeight: '35px' }}>
+                <Grid item>
+                    <CircularStatus
+                        thickness = {3}
+                        displayValue = {displayValue}
+                        value = {totalValue}
+                        size = {24}
+                        fontSize = '.675rem'
+                        style = {{
+                            color: color,
+                            borderRadius: '50%',
+                            boxShadow: '0 0 15px 0'
+                        }}
+                    />
+                </Grid>
+                <Grid item>
+                    <Typography color = 'textSecondary' style = {{ paddingLeft: '8px', height: '29px' }}>
+                        {title}
+                    </Typography>
+                </Grid>
+            </Grid>
+        </Tooltip>
+    )
+}
 
-const circularProgress = (displayValue, value, color) => (
-    <CircularStatus
-        thickness = {3}
-        displayValue = {displayValue}
-        value = {value}
-        size = {24}
-        fontSize = '.675rem'
-        style = {{
-            color: color,
-            borderRadius: '50%',
-            boxShadow: '0 0 15px 0'
-        }}
-    />
-)
+SecurityRow.propTypes = {
+    displayValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    totalValue: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    tooltipTitle: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired
+}
 
-function DevelopmentSecurityRatings({ codeCoverage, security, reliability, maintainability }) {
-    const classes = useStyles()
+function DevelopmentSecurityRatings({ codeCoverage, security, reliability, maintainability, ...urls }) {
+    const { projectSonarqubeUrl, projectPipelineUrl } = urls
 
     return (
         <Grid container item xs = {8} s = {8} m = {8} direction = 'column' justifyContent = 'center'>
-            <Grid container item wrap = 'nowrap' alignItems = 'center' style = {{ maxHeight: '35px' }}>
-                <Grid item>
-                    {circularProgress(codeCoverage.value, codeCoverage.value, codeCoverage.color)}
-                </Grid>
-                <Grid item>
-                    <Typography color = 'textSecondary' className = {classes.label}>Coverage</Typography>
-                </Grid>
-            </Grid>
-            <Grid container item wrap = 'nowrap' alignItems = 'center' style = {{ maxHeight: '35px' }}>
-                <Grid item>
-                    {circularProgress(security.value, 100, security.color)}
-                </Grid>
-                <Grid item>
-                    <Typography color = 'textSecondary' className = {classes.label}>Security</Typography>
-                </Grid>
-            </Grid>
-            <Grid container item wrap = 'nowrap' alignItems = 'center' style = {{ maxHeight: '35px' }}>
-                <Grid item>
-                    {circularProgress(reliability.value, 100, reliability.color)}
-                </Grid>
-                <Grid item>
-                    <Typography color = 'textSecondary' className = {classes.label}>Reliability</Typography>
-                </Grid>
-            </Grid>
-            <Grid container item wrap = 'nowrap' alignItems = 'center' style = {{ maxHeight: '35px' }}>
-                <Grid item>
-                    {circularProgress(maintainability.value, 100, maintainability.color)}
-                </Grid>
-                <Grid item>
-                    <Typography color = 'textSecondary' className = {classes.label}>Maintainability</Typography>
-                </Grid>
-            </Grid>
+            <SecurityRow
+                title = 'Coverage'
+                totalValue = {codeCoverage.value}
+                displayValue = {codeCoverage.value}
+                color = {codeCoverage.color}
+                tooltipTitle = {
+                    <SonarqubeTooltip
+                        pipelineUrl = {projectPipelineUrl}
+                        sonarqubeUrl = {projectSonarqubeUrl}
+                        message = {codeCoverage.tooltipMessage}
+                    />
+                }
+            />
+            <SecurityRow
+                title = 'Security'
+                totalValue = {100}
+                displayValue = {security.value}
+                color = {security.color}
+                tooltipTitle = {
+                    <SonarqubeTooltip
+                        pipelineUrl = {projectPipelineUrl}
+                        sonarqubeUrl = {projectSonarqubeUrl}
+                        message = {security.tooltipMessage}
+                    />
+                }
+            />
+            <SecurityRow
+                title = 'Reliability'
+                totalValue = {100}
+                displayValue = {reliability.value}
+                color = {reliability.color}
+                tooltipTitle = {
+                    <SonarqubeTooltip
+                        pipelineUrl = {projectPipelineUrl}
+                        sonarqubeUrl = {projectSonarqubeUrl}
+                        message = {reliability.tooltipMessage}
+                    />
+                }
+            />
+            <SecurityRow
+                title = 'Maintainability'
+                totalValue = {100}
+                displayValue = {maintainability.value}
+                color = {maintainability.color}
+                tooltipTitle = {
+                    <SonarqubeTooltip
+                        pipelineUrl = {projectPipelineUrl}
+                        sonarqubeUrl = {projectSonarqubeUrl}
+                        message = {maintainability.tooltipMessage}
+                    />
+                }
+            />
         </Grid>
     )
 }
@@ -69,20 +109,31 @@ function DevelopmentSecurityRatings({ codeCoverage, security, reliability, maint
 DevelopmentSecurityRatings.propTypes = {
     codeCoverage: PropTypes.shape({
         value: PropTypes.number,
-        color: PropTypes.string
+        color: PropTypes.string,
+        tooltipMessage: PropTypes.string
     }).isRequired,
     security: PropTypes.shape({
         value: PropTypes.oneOf(['U', 'A', 'B', 'C', 'D', 'E']),
-        color: PropTypes.string
+        color: PropTypes.string,
+        tooltipMessage: PropTypes.string
     }).isRequired,
     reliability: PropTypes.shape({
         value: PropTypes.oneOf(['U', 'A', 'B', 'C', 'D', 'E']),
-        color: PropTypes.string
+        color: PropTypes.string,
+        tooltipMessage: PropTypes.string
     }).isRequired,
     maintainability: PropTypes.shape({
         value: PropTypes.oneOf(['U', 'A', 'B', 'C', 'D', 'E']),
-        color: PropTypes.string
-    }).isRequired
+        color: PropTypes.string,
+        tooltipMessage: PropTypes.string
+    }).isRequired,
+    projectPipelineUrl: PropTypes.string,
+    projectSonarqubeUrl: PropTypes.string
+}
+
+DevelopmentSecurityRatings.defaultProps = {
+    projectPipelineUrl: null,
+    projectSonarqubeUrl: null
 }
 
 export default DevelopmentSecurityRatings

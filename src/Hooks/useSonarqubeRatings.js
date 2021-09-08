@@ -9,11 +9,11 @@ function useSonarqubeRatings() {
         reliability: {},
     })
 
-    const maintainabilityRating = useSelector(state => state?.app?.sonarqubeMaintainability,
+    const maintainabilityRating = useSelector(state => state.app?.sonarqubeMaintainability,
         (current, incoming) => objectHash(current) === objectHash(incoming))
-    const securityRating = useSelector(state => state?.app?.sonarqubeSecurity,
+    const securityRating = useSelector(state => state.app?.sonarqubeSecurity,
         (current, incoming) => objectHash(current) === objectHash(incoming))
-    const reliabilityRating = useSelector(state => state?.app?.sonarqubeReliability,
+    const reliabilityRating = useSelector(state => state.app?.sonarqubeReliability,
         (current, incoming) => objectHash(current) === objectHash(incoming))
 
     useEffect(() => {

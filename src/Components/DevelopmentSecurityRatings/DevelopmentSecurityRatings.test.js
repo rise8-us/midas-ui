@@ -7,19 +7,23 @@ describe('<DevelopmentSecurityRatings>', () => {
     const data = {
         codeCoverage: {
             value: 94,
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            tooltipMessage: 'code tooltip'
         },
         security: {
             value: 'C',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            tooltipMessage: 'security tooltip'
         },
         reliability: {
             value: 'B',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            tooltipMessage: 'reliability tooltip'
         },
         maintainability: {
             value: 'A',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            tooltipMessage: 'maintainability tooltip'
         }
     }
 

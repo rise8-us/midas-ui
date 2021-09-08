@@ -1,9 +1,28 @@
 import React from 'react'
-import { render, screen, useModuleMock } from 'Utilities/test-utils'
+import { act, render, screen, useModuleMock } from 'Utilities/test-utils'
 import { ProductDevelopment } from './index'
 
 describe('<ProductDevelopment />', () => {
     const selectProjectsByProductIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectsByProductId')
+
+    const mockState = {
+        app: {
+            sonarqubeSecurity: {
+                'A': { description: 'secA' },
+                'D': { description: 'secD' },
+            },
+            sonarqubeReliability: {
+                'A': { description: 'redA' },
+                'B': { description: 'relB' },
+                'E': { description: 'relE' },
+            },
+            sonarqubeMaintainability: {
+                'A': { description: 'maiA' },
+                'C': { description: 'maiC' },
+                'U': { description: 'maiU' },
+            }
+        }
+    }
 
     test('should render', () => {
         selectProjectsByProductIdMock.mockReturnValue([
@@ -37,7 +56,9 @@ describe('<ProductDevelopment />', () => {
             }
         ])
 
-        render(<ProductDevelopment id = {1} />)
+        act(() => {
+            render(<ProductDevelopment id = {1} />, { initialState: mockState })
+        })
 
         expect(screen.getAllByText(/project/)).toHaveLength(3)
     })
