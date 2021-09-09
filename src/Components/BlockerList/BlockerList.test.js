@@ -1,8 +1,11 @@
 import React from 'react'
-import { render, screen, useModuleMock } from '../../Utilities/test-utils'
+import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { BlockerList } from './index'
 
 describe('<DashboardCard />', () => {
+
+    const selectAllBlockedAssertionsWithParentIdMock = useModuleMock('Redux/BlockedAssertions/selectors',
+        'selectAllBlockedAssertionsWithParentId')
 
     const mockState = {
         app: {
@@ -49,8 +52,6 @@ describe('<DashboardCard />', () => {
     ]
 
     test('should render for all items within portfolios', () => {
-        const selectAllBlockedAssertionsWithParentIdMock = useModuleMock('Redux/BlockedAssertions/selectors',
-            'selectAllBlockedAssertionsWithParentId')
         selectAllBlockedAssertionsWithParentIdMock.mockReturnValue(blockers)
 
         render(<BlockerList portfolioId = {null}/>, { initialState: mockState })
@@ -73,7 +74,7 @@ describe('<DashboardCard />', () => {
 
         render(<BlockerList portfolioId = {1}/>, { initialState: mockState })
 
-        expect(screen.getByTestId('BlockerList__grid-container').hasChildNodes()).toBeFalsy()
+        expect(screen.getByText('No Blockers Detected! Yahoo!')).toBeInTheDocument()
     })
 
 })

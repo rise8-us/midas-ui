@@ -1,11 +1,11 @@
-import { Divider, Grid } from '@material-ui/core'
+import { Divider, Grid, Typography } from '@material-ui/core'
+import { BlockerRow } from 'Components/BlockerRow'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import {
     selectAllBlockedAssertionsWithParentId, selectBlockedAssertionsByParentId
-} from '../../Redux/BlockedAssertions/selectors'
-import { BlockerRow } from '../BlockerRow'
+} from 'Redux/BlockedAssertions/selectors'
 
 function BlockerList({ portfolioId }) {
 
@@ -42,6 +42,18 @@ function BlockerList({ portfolioId }) {
                     </React.Fragment>
                 )
             })}
+            {blockers.length === 0 &&
+                <Typography
+                    variant = 'h6'
+                    color = 'textSecondary'
+                    style = {{
+                        fontWeight: 300,
+                        fontStyle: 'italic'
+                    }}
+                >
+                    No Blockers Detected! Yahoo!
+                </Typography>
+            }
         </Grid>
     )
 }

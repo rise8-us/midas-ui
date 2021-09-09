@@ -125,7 +125,7 @@ function UserTab() {
                 </div>
                 {show &&
                     <>
-                        <UserSettings user = {user.id} />
+                        <UserSettings id = {user.id} />
                         <UserRoles user = {user} editable/>
                     </>
                 }

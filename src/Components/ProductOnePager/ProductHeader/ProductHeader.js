@@ -72,7 +72,7 @@ function ProductHeader({ id, hasEdit }) {
                 <AutoSaveTextField
                     initialValue = {product.description}
                     onSave = {onDescriptionSave}
-                    placeholder = 'Description not set...'
+                    placeholder = {hasEdit ? 'App name an acronym? Spell it out here.' : ''}
                     className = {classes.subtitle1}
                     errors = {[]}
                     multiline

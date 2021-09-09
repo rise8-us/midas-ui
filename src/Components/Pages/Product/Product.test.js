@@ -2,22 +2,22 @@ import React from 'react'
 import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Product } from './index'
 
-jest.mock('../../Tabs/ProjectsTab/ProjectsTab',
+jest.mock('Components/Tabs/ProjectsTab/ProjectsTab',
     () => function testing() { return (<div>ProjectsTab</div>) })
 
-jest.mock('../../Tabs/AssertionsTab/AssertionsTab',
+jest.mock('Components/Tabs/AssertionsTab/AssertionsTab',
     () => function testing() { return (<div>AssertionsTab</div>) })
 
-jest.mock('../../ProductOnePager/ProductRoadmap/ProductRoadmap',
+jest.mock('Components/ProductOnePager/ProductRoadmap/ProductRoadmap',
     () => function testing() { return (<div>ProductRoadmap</div>) })
 
-jest.mock('../../ProductOnePager/ProductUserPersonas/ProductUserPersonas',
+jest.mock('Components/ProductOnePager/ProductUserPersonas/ProductUserPersonas',
     () => function testing() { return (<div>ProductUserPersonas</div>) })
 
-jest.mock('../../ProductOnePager/ProductTeam/ProductTeam',
+jest.mock('Components/ProductOnePager/ProductTeam/ProductTeam',
     () => function testing() { return (<div>ProductTeam</div>) })
 
-jest.mock('../../Page/Page',
+jest.mock('Components/Page/Page',
     () => function testing({ children }) { return (<div>{children}</div>) })
 
 describe('<Product>', () => {
@@ -49,8 +49,7 @@ describe('<Product>', () => {
     test('should have correct header text', () => {
         renderWithRouter(<Product />)
 
-        expect(screen.getByTestId('ProductHeader__input-name').querySelector('input')).toHaveValue('Product 1')
-        expect(screen.getByPlaceholderText('Description not set...')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('Product 1'))
         expect(screen.getByText(/Some tags/i)).toBeInTheDocument()
     })
 

@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core'
 import { PersonaEntry } from 'Components/PersonaEntry'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -5,33 +6,46 @@ import { Draggable } from 'react-beautiful-dnd'
 
 const DraggablePersonaList = React.memo(
     function DraggablePersonaList({ personas, hasEdit, onUpdate, onDelete, onToggleIsSupported }) {
-        return personas.map((persona, index) => (
-            <Draggable
-                key = {persona.id}
-                draggableId = {persona.title}
-                index = {index}
-                isDragDisabled = {!hasEdit}
-            >
-                {provider => (
-                    <div
-                        data-testid = 'DraggablePersonaList__draggable'
-                        ref = {provider.innerRef}
-                        {...provider.draggableProps}
-                        {...provider.dragHandleProps}
+        return (
+            <>
+                {personas.map((persona, index) => (
+                    <Draggable
+                        key = {persona.id}
+                        draggableId = {persona.title}
+                        index = {index}
+                        isDragDisabled = {!hasEdit}
                     >
-                        <PersonaEntry
-                            title = {persona.title}
-                            hasEdit = {hasEdit}
-                            isSupported = {persona.isSupported}
-                            onSupportedToggle
-                            onUpdate = {newValue => onUpdate(newValue, persona)}
-                            onDelete = {() => onDelete(persona.id)}
-                            onToggleIsSupported = {() => onToggleIsSupported(persona)}
-                        />
-                    </div>
-                )}
-            </Draggable>
-        ))
+                        {provider => (
+                            <div
+                                data-testid = 'DraggablePersonaList__draggable'
+                                ref = {provider.innerRef}
+                                {...provider.draggableProps}
+                                {...provider.dragHandleProps}
+                            >
+                                <PersonaEntry
+                                    title = {persona.title}
+                                    hasEdit = {hasEdit}
+                                    isSupported = {persona.isSupported}
+                                    onSupportedToggle
+                                    onUpdate = {newValue => onUpdate(newValue, persona)}
+                                    onDelete = {() => onDelete(persona.id)}
+                                    onToggleIsSupported = {() => onToggleIsSupported(persona)}
+                                />
+                            </div>
+                        )}
+                    </Draggable>
+                ))}
+                {personas.length === 0 && !hasEdit &&
+                    <Typography
+                        color = 'textSecondary'
+                        variant = 'body2'
+                        style = {{ fontStyle: 'italic', height: '32px', padding: '5px 8px' }}
+                    >
+                        No Personas added yet.
+                    </Typography>
+                }
+            </>
+        )
     }
 )
 

@@ -29,7 +29,6 @@ describe('<ProductHeader>', () => {
         render(<ProductHeader id = {0} hasEdit/>)
 
         expect(screen.getByDisplayValue('Product 1')).toBeInTheDocument()
-        expect(screen.getByPlaceholderText('Description not set...'))
         expect(screen.getByText(/Some tags/i)).toBeInTheDocument()
     })
 
