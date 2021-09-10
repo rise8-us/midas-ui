@@ -1,22 +1,22 @@
 import { CardContent, Divider, Grid, makeStyles } from '@material-ui/core'
+import AbmsLogo from 'Assets/ABMSAppsLogo.svg'
+import { AutoSaveTextField } from 'Components/AutoSaveTextField'
+import { BlockerList } from 'Components/BlockerList'
+import { DashboardCard } from 'Components/Cards'
+import { CtfStatistics } from 'Components/CtfStatistics'
+import { LegendItem } from 'Components/LegendItem'
+import { Page } from 'Components/Page'
+import { PieChart } from 'Components/PieChart'
 import { ProductList } from 'Components/ProductList'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import AbmsLogo from '../../../Assets/ABMSAppsLogo.svg'
-import { hasProductAccess } from '../../../Redux/Auth/selectors'
-import { requestUpdatePortfolio } from '../../../Redux/Portfolios/actions'
+import { hasProductAccess } from 'Redux/Auth/selectors'
+import { requestUpdatePortfolio } from 'Redux/Portfolios/actions'
 import {
     selectAllActivePortfoliosNameAndIds, selectAllPortfolios, selectPortfolioById
-} from '../../../Redux/Portfolios/selectors'
-import { selectTagsByScope } from '../../../Redux/Tags/selectors'
-import { getNumberOrZero } from '../../../Utilities/getNumberOrZero'
-import { AutoSaveTextField } from '../../AutoSaveTextField'
-import { BlockerList } from '../../BlockerList'
-import { DashboardCard } from '../../Cards'
-import { CtfStatistics } from '../../CtfStatistics'
-import { LegendItem } from '../../LegendItem'
-import { Page } from '../../Page'
-import { PieChart } from '../../PieChart'
+} from 'Redux/Portfolios/selectors'
+import { selectTagsByScope } from 'Redux/Tags/selectors'
+import { getNumberOrZero } from 'Utilities/getNumberOrZero'
 
 const useStyles = makeStyles((theme) => ({
     portfolioInfoContainer: {
@@ -133,7 +133,7 @@ function Dashboard() {
 
     const getPortfolioDescription = (description) => {
         if (selectedPortfolioId === 0) {
-            return 'Currently view all portfolio data. ' +
+            return 'Currently viewing all portfolio data. ' +
             'To view a specific portfolio select it from the list above.'
         } else {
             return description ? description : 'No description available'

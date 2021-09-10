@@ -18,5 +18,8 @@ export const selectAllTeams = (state) => {
 }
 
 export const selectTeamByProductId = (state, productId) => {
-    return Object.values(selectAllTeams(state)).filter(team => team.productIds.includes(productId))[0] ?? {}
+    return Object.values(selectAllTeams(state)).filter(team => team.productIds.includes(productId))[0] ??
+    {
+        userIds: []
+    }
 }

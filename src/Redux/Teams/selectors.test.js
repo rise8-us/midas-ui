@@ -42,6 +42,6 @@ test('selectTeamByProductId - returns object', () => {
     expect(selectors.selectTeamByProductId(mockState, 2)).toEqual(mockState.teams[4])
 })
 
-test('selectTeamByProductId - returns empty object', () => {
-    expect(selectors.selectTeamByProductId(mockState, 0)).toEqual({})
+test('selectTeamByProductId - returns object with userIds', () => {
+    expect(selectors.selectTeamByProductId(mockState, 0)).toEqual({ userIds: [] })
 })
