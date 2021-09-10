@@ -1,12 +1,13 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { PortfolioPopup } from './index'
 
 describe('<PortfolioPopup />', () => {
-    jest.setTimeout(15000)
+    jest.setTimeout(20000)
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitPortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestCreatePortfolio')
+    const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
     const submitUpdatePortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestUpdatePortfolio')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const selectAvailableProductsMock = useModuleMock('Redux/Products/selectors', 'selectAvailableProducts')
@@ -36,23 +37,38 @@ describe('<PortfolioPopup />', () => {
         products: [returnedProducts[0]]
     }
 
+    const returnedNewPortfolio = {
+        name: '',
+        description: '',
+        tags: [],
+        products: []
+    }
+
     beforeEach(() => {
-        useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
+        selectPortfolioByIdMock.mockReturnValue(returnedNewPortfolio)
         selectTagsByTypesMock.mockReturnValue(returnedTags)
         selectAvailableProductsMock.mockReturnValue(returnedProducts)
-    })
-
-    test('should render properly', async() => {
-        render(<PortfolioPopup />)
-
-        expect(await screen.findByText('Create Portfolio')).toBeInTheDocument()
-    })
-
-    test('should call onSubmit', async() => {
         useDispatchMock().mockResolvedValue({ payload: [] })
+    })
+
+    test('should render properly', () => {
         render(<PortfolioPopup />)
 
-        fireEvent.click(await screen.findByText('Submit'))
+        expect(screen.getByText('Create Portfolio')).toBeInTheDocument()
+    })
+
+    test('should close popup', () => {
+        render(<PortfolioPopup />)
+
+        fireEvent.click(screen.getByTestId('Popup__button-close'))
+
+        expect(closePopupMock).toHaveBeenCalled()
+    })
+
+    test('should call onSubmit', () => {
+        render(<PortfolioPopup />)
+
+        fireEvent.click(screen.getByText('Submit'))
 
         expect(submitPortfolioMock).toHaveBeenCalledWith({
             name: '',
@@ -66,14 +82,6 @@ describe('<PortfolioPopup />', () => {
             productManagerId: null,
             type: 'PORTFOLIO'
         })
-    })
-
-    test('should close popup', async() => {
-        render(<PortfolioPopup />)
-
-        fireEvent.click(await screen.findByTestId('Popup__button-close'))
-
-        expect(closePopupMock).toHaveBeenCalled()
     })
 
     test('should display error messages', async() => {
@@ -92,7 +100,7 @@ describe('<PortfolioPopup />', () => {
     })
 
     test('should call onSubmit for updatePortfolio', async() => {
-        const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
+        useDispatchMock().mockResolvedValue({ payload: { id: 42, username: 'pm' } })
         selectPortfolioByIdMock.mockReturnValue(returnedFoundPortfolio)
 
         render(<PortfolioPopup id = {4} />)
@@ -126,6 +134,35 @@ describe('<PortfolioPopup />', () => {
             childIds: [20, 21],
             tagIds: [4, 13, 2],
             productManagerId: null,
+            type: 'PORTFOLIO'
+        })
+    })
+
+    test('should handle productManager', async() => {
+        useDispatchMock().mockResolvedValueOnce({
+            type: '/',
+            payload: [{
+                id: 24,
+                username: 'jsmith',
+                displayName: 'Hiemer Smith'
+            }]
+        })
+        selectPortfolioByIdMock.mockReturnValue({ ...returnedFoundPortfolio })
+
+        render(<PortfolioPopup id = {4} />)
+
+        userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
+        fireEvent.click(await screen.findByText(/jsmith/))
+
+        fireEvent.click(screen.getByText('Submit'))
+
+        expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
+            ...returnedFoundPortfolio,
+            projectIds: [],
+            teamIds: [],
+            childIds: [20],
+            tagIds: [4, 13],
+            productManagerId: 24,
             type: 'PORTFOLIO'
         })
     })

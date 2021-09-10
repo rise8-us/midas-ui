@@ -1,33 +1,47 @@
+import { Typography } from '@material-ui/core'
 import { FeatureEntry } from 'Components/FeatureEntry'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 
 const DraggableFeatureList = React.memo(function DraggableFeatureList({ features, hasEdit, onUpdate, onDelete }) {
-    return features.map((feature, index) => (
-        <Draggable
-            key = {feature.id}
-            draggableId = {feature.title}
-            index = {index}
-            isDragDisabled = {!hasEdit}
-        >
-            {provider => (
-                <div
-                    data-testid = 'DraggableFeatureList__draggable'
-                    ref = {provider.innerRef}
-                    {...provider.draggableProps}
-                    {...provider.dragHandleProps}
+    return (
+        <>
+            {features.map((feature, index) => (
+                <Draggable
+                    key = {feature.id}
+                    draggableId = {feature.title}
+                    index = {index}
+                    isDragDisabled = {!hasEdit}
                 >
-                    <FeatureEntry
-                        title = {feature.title}
-                        hasEdit = {hasEdit}
-                        onUpdate = {newValue => onUpdate(newValue, feature)}
-                        onDelete = {() => onDelete(feature.id)}
-                    />
-                </div>
-            )}
-        </Draggable>
-    ))
+                    {provider => (
+                        <div
+                            data-testid = 'DraggableFeatureList__draggable'
+                            ref = {provider.innerRef}
+                            {...provider.draggableProps}
+                            {...provider.dragHandleProps}
+                        >
+                            <FeatureEntry
+                                title = {feature.title}
+                                hasEdit = {hasEdit}
+                                onUpdate = {newValue => onUpdate(newValue, feature)}
+                                onDelete = {() => onDelete(feature.id)}
+                            />
+                        </div>
+                    )}
+                </Draggable>
+            ))}
+            {features.length === 0 && !hasEdit &&
+                <Typography
+                    color = 'textSecondary'
+                    variant = 'body2'
+                    style = {{ fontStyle: 'italic', height: '32px', padding: '5px 8px' }}
+                >
+                    No Features added yet.
+                </Typography>
+            }
+        </>
+    )
 })
 
 DraggableFeatureList.propTypes = {

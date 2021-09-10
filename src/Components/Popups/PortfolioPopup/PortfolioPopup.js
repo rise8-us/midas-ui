@@ -1,10 +1,12 @@
 import { Box, TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
+import { SearchUsers } from 'Components/Search'
 import { TagDropdown } from 'Components/TagDropdown'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'
@@ -12,6 +14,7 @@ import { requestCreatePortfolio, requestUpdatePortfolio } from 'Redux/Portfolios
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectAvailableProducts } from 'Redux/Products/selectors'
+import { requestFindUserBy } from 'Redux/Users/actions'
 import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
@@ -30,6 +33,7 @@ function PortfolioPopup({ id }) {
 
     const portfolio = useSelector(state => selectPortfolioById(state, id))
     const context = initDetails(portfolio.id === undefined)
+    const [fetched, setFetched] = useState(false)
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
@@ -42,6 +46,7 @@ function PortfolioPopup({ id }) {
         description: portfolio.description,
         tags: portfolio.tags,
         products: portfolio.products,
+        productManager: undefined
     })
 
     const handleChange = (name, value) => {
@@ -60,12 +65,20 @@ function PortfolioPopup({ id }) {
             description: formValues.description,
             tagIds: Object.values(formValues.tags.map(t => t.id)),
             childIds: Object.values(formValues.products.map(p => p.id)),
-            productManagerId: null,
+            productManagerId: formValues.productManager?.id ?? null,
             type: 'PORTFOLIO',
             projectIds: [],
             teamIds: [],
         }))
     }
+
+    useEffect(() => {
+        if (!fetched && portfolio.productManagerId > 0) {
+            setFetched(true)
+            dispatch(requestFindUserBy(`id:${portfolio.productManagerId}`)).then(unwrapResult)
+                .then(data => { handleChange('productManager', data[0]) })
+        }
+    }, [portfolio])
 
     return (
         <Popup
@@ -96,6 +109,14 @@ function PortfolioPopup({ id }) {
                     onChange = {(e) => handleChange('description', e.target.value)}
                     margin = 'dense'
                     multiline
+                />
+                <SearchUsers
+                    title = 'Portfolio Lead'
+                    growFrom = '100%'
+                    value = {formValues.productManager}
+                    onChange = {(_e, values) => handleChange('productManager', values)}
+                    freeSolo = {true}
+                    dynamicUpdate
                 />
                 <TagDropdown
                     defaultTags = {formValues.tags}
