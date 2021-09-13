@@ -109,7 +109,7 @@ describe('<TeamPopup />', () => {
             productManagerId: 10,
             designerId: 10,
             techLeadId: 10,
-            userIds: [9]
+            userIds: [9, 10]
         })
     })
 

@@ -25,7 +25,6 @@ const UserSettings = ({ id }) => {
 
     const user = useSelector(state => selectUserById(state, id))
 
-
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         username: user.username,
         displayName: user.displayName,

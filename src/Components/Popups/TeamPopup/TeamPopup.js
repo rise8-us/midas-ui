@@ -24,6 +24,8 @@ const initDetails = (create) => {
     }
 }
 
+const setNumberOrNull = (item) => item ?? null
+
 function TeamPopup({ id, productIds }) {
     const dispatch = useDispatch()
 
@@ -54,21 +56,25 @@ function TeamPopup({ id, productIds }) {
     }
 
     const onSubmit = () => {
-        const userIds = formValues.userIds.filter(uId =>
-            uId !== formValues.productManager?.id &&
-            uId !== formValues.designer?.id &&
-            uId !== formValues.techLead?.id
-        )
+        const productManagerId = setNumberOrNull(formValues.productManager?.id)
+        const designerId = setNumberOrNull(formValues.designer?.id)
+        const techLeadId = setNumberOrNull(formValues.techLead?.id)
+
+        const userIds = new Set(formValues.userIds)
+        userIds.add(productManagerId)
+        userIds.add(designerId)
+        userIds.add(techLeadId)
+        userIds.delete(null)
 
         dispatch(context.request({
             ...team,
             productIds,
             name: formValues.name,
             description: formValues.description,
-            productManagerId: formValues.productManager?.id ?? null,
-            designerId: formValues.designer?.id ?? null,
-            techLeadId: formValues.techLead?.id ?? null,
-            userIds: userIds,
+            productManagerId: productManagerId,
+            designerId: designerId,
+            techLeadId: techLeadId,
+            userIds: Array.from(userIds),
         }))
     }
 

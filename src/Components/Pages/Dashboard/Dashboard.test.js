@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { buildCtfData, buildScopedData, combinePortfolios, combineProducts, Dashboard } from './index'
 
 describe('<Dashboard>', () => {
@@ -12,7 +12,7 @@ describe('<Dashboard>', () => {
     const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
     const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
 
-    const defaultText = 'Currently view all portfolio data. ' +
+    const defaultText = 'Currently viewing all portfolio data. ' +
         'To view a specific portfolio select it from the list above.'
 
     const portfolio = {

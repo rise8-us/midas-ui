@@ -12,6 +12,11 @@ function ProductTeam({ productId, hasEdit }) {
     const dispatch = useDispatch()
 
     const team = useSelector(state => selectTeamByProductId(state, productId))
+    const userIds = team.userIds.filter(uId =>
+        uId !== team.productManagerId &&
+        uId !== team.designerId &&
+        uId !== team.techLeadId
+    )
 
     const openCreateTeamPopup = () => dispatch(
         openPopup(TeamConstants.CREATE_TEAM, 'TeamPopup', { productIds: [productId] }))
@@ -63,7 +68,7 @@ function ProductTeam({ productId, hasEdit }) {
                             noUserText = 'User Not Assigned'
                         />
                     </Grid>
-                    {team.userIds?.map((id, index) =>
+                    {userIds.map((id, index) =>
                         <Grid item xs = {6} s = {6} key = {index}>
                             <TeamMember id = {id} title = 'Developer' />
                         </Grid>
