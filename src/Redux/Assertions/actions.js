@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { handleThunkRequest } from '../../Utilities/requests'
+import { handleThunkRequest } from 'Utilities/requests'
 import Constants from './constants'
 
 export const requestSearchAssertions = createAsyncThunk(
@@ -33,5 +33,17 @@ export const requestDeleteAssertion = createAsyncThunk(
         const request = { endpoint: `/api/assertions/${id}`, method: 'DELETE', body: {} }
         const data = await handleThunkRequest(request, rejectWithValue)
         return { ...data, id }
+    }
+)
+
+export const requestFetchAllBlockedAssertions = createAsyncThunk(
+    Constants.FETCH_BLOCKED_ASSERTIONS,
+    async(_, { rejectWithValue }) => {
+        const request = {
+            endpoint: '/api/assertions?search=status:BLOCKED OR status:AT_RISK',
+            method: 'GET',
+            body: {}
+        }
+        return handleThunkRequest(request, rejectWithValue)
     }
 )

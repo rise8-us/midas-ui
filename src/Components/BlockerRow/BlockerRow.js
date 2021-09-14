@@ -1,8 +1,13 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
+import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Tag } from '../Tag'
+import { selectAssertionById } from 'Redux/Assertions/selectors'
+import { requestSearchComments } from 'Redux/Comments/actions'
+import { selectCommentById } from 'Redux/Comments/selectors'
+import { selectProductById } from 'Redux/Products/selectors'
 
 const useStyles = makeStyles(theme => ({
     link: {
@@ -14,33 +19,56 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function BlockerRow({ assertionId, productId, name, date, title, detail, tag }) {
+const buildDate = (date) => {
+    const dateParsed = date ? (new Date(date)).toDateString().split(' ') : ['', 'MMM', 'DD', 'YYYY']
+    return `${dateParsed[2]} ${dateParsed[1].toUpperCase()} ${dateParsed[3].substr(2, 2)}`
+}
+
+function BlockerRow({ assertionId, productId, commentId }) {
     const classes = useStyles()
     const history = useHistory()
+    const dispatch = useDispatch()
 
     const goToProduct = () => history.push(`/products/${productId}`)
     const goToOgsm = () => history.push(`/products/${productId}/ogsms/${assertionId}`)
+
+    const assertionStatus = useSelector(state => state.app.assertionStatus)
+    const product = useSelector(state => selectProductById(state, productId))
+    const comment = useSelector(state => selectCommentById(state, commentId))
+    const assertion = useSelector(state => selectAssertionById(state, assertionId))
+
+    const [fetchedComment, setFetchedComment] = useState(false)
+
+    useEffect(() => {
+        if (comment.id === undefined && !fetchedComment) {
+            dispatch(requestSearchComments(`id:${commentId}`))
+            setFetchedComment(true)
+        }
+    }, [comment])
 
     return (
         <Grid item container spacing = {3} justifyContent = 'space-between' style = {{ padding: '8px' }}>
             <Grid item sm = {2} xs = {2}>
                 <Typography variant = 'subtitle2' className = {classes.link} onClick = {goToProduct}>
-                    {name.toLocaleUpperCase()}
+                    {product.name.toLocaleUpperCase()}
                 </Typography>
                 <Typography variant = 'caption' color = 'textSecondary' style = {{ fontStyle: 'italic' }}>
-                    {date}
+                    {buildDate(comment.lastEdit ?? comment.creationDate)}
                 </Typography>
             </Grid>
             <Grid item sm = {5} xs = {5}>
                 <Typography variant = 'subtitle2' className = {classes.link} onClick = {goToOgsm}>
-                    {title}
+                    {assertion.text}
                 </Typography>
                 <Typography variant = 'body2' color = 'textSecondary'>
-                    {detail}
+                    {comment.text.split('###')[0]}
                 </Typography>
             </Grid>
             <Grid item sm = {4} xs = {4} style = {{ textAlign: 'right' }}>
-                <Tag {...tag}/>
+                <Tag
+                    label = {assertionStatus[assertion.status].label}
+                    color = {assertionStatus[assertion.status].color}
+                />
             </Grid>
         </Grid>
     )
@@ -49,14 +77,7 @@ function BlockerRow({ assertionId, productId, name, date, title, detail, tag }) 
 BlockerRow.propTypes = {
     assertionId: PropTypes.number.isRequired,
     productId: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    detail: PropTypes.string.isRequired,
-    tag: PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        color: PropTypes.string.isRequired
-    }).isRequired
+    commentId: PropTypes.number.isRequired
 }
 
 export default BlockerRow
