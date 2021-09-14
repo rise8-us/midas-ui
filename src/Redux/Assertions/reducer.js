@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { setStateFromArray } from 'Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const addChildren = (state, assertion) => {
@@ -28,7 +29,9 @@ const assertionSlice = createSlice({
         [actions.requestDeleteAssertion.fulfilled]: (state, action) => {
             setAssertionComment({ assertionId: null, deletedAssertionId: action.payload.id })
             delete state[action.payload.id]
-        }
+        },
+        [actions.requestFetchAllBlockedAssertions.fulfilled]: (state, action) =>
+            setStateFromArray(state, action.payload)
     }
 })
 

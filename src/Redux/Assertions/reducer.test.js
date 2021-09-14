@@ -64,4 +64,15 @@ describe('Assertions Reducer', () => {
         expect(state).toEqual({ })
     })
 
+    test('should set blocked assertions from array', () => {
+        const actions = [{
+            type: reduxActions.requestFetchAllBlockedAssertions.fulfilled,
+            payload: allAssertionsResponse
+        }]
+
+        const state = actions.reduce(reducer, {})
+
+        expect(Object.keys(state)).toHaveLength(2)
+    })
+
 })
