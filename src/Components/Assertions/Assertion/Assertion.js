@@ -7,7 +7,7 @@ import {
     requestUpdateAssertion
 } from 'Redux/Assertions/actions'
 import { selectAssertionById, selectAssertionsByParentId } from 'Redux/Assertions/selectors'
-import { hasProductAccess } from 'Redux/Auth/selectors'
+import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
 import { AssertionAccordion } from '../AssertionAccordion'
 
 const Assertion = ({ id, order, defaultExpanded, productId }) => {
@@ -20,7 +20,7 @@ const Assertion = ({ id, order, defaultExpanded, productId }) => {
 
     const assertion = useSelector(state => selectAssertionById(state, id))
     const childAssertions = useSelector(state => selectAssertionsByParentId(state, id))
-    const hasEdit = useSelector(state =>  hasProductAccess(state, productId))
+    const hasEdit = useSelector(state =>  hasProductOrTeamAccess(state, productId))
 
     const createChildAssertion = () => {
         const newChild = {

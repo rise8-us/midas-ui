@@ -8,7 +8,7 @@ import { useParams } from 'react-router'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
 import { requestSearchAssertions } from 'Redux/Assertions/actions'
 import { selectAssertionsByTypeAndProductId, selectRootAssertionId } from 'Redux/Assertions/selectors'
-import { hasProductAccess } from 'Redux/Auth/selectors'
+import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
 
 function AssertionsTab({ productId }) {
     const dispatch = useDispatch()
@@ -18,7 +18,7 @@ function AssertionsTab({ productId }) {
 
     const rootAssertionId = useSelector(state => selectRootAssertionId(state, assertionIdParsed))
 
-    const hasEdit = useSelector(state =>  hasProductAccess(state, productId))
+    const hasEdit = useSelector(state =>  hasProductOrTeamAccess(state, productId))
     const showComments = useSelector(state => state.app.assertionCommentsOpen)
     const objectives = useSelector(state => selectAssertionsByTypeAndProductId(state, 'objective', productId),
         (left, right) => objectHash(left) === objectHash(right))
