@@ -9,7 +9,7 @@ describe('<Assertion>', () => {
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
     const requestUpdateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestUpdateAssertion')
     const requestDeleteAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestDeleteAssertion')
-    const hasProductAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductAccess')
+    const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
 
     const assertionMock = {
         id: 1,
@@ -34,7 +34,7 @@ describe('<Assertion>', () => {
     test('should render', () => {
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([childAssertionMock])
-        hasProductAccessMock.mockReturnValue(false)
+        hasProductOrTeamAccessMock.mockReturnValue(false)
 
         renderWithRouter(
             <Assertion
@@ -51,7 +51,7 @@ describe('<Assertion>', () => {
     test('should not render add button', () => {
         selectAssertionByIdMock.mockReturnValue(childAssertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
-        hasProductAccessMock.mockReturnValue(true)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
         renderWithRouter(
             <Assertion
@@ -71,7 +71,7 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
-        hasProductAccessMock.mockReturnValue(true)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
         renderWithRouter(
             <Assertion
@@ -99,7 +99,7 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
-        hasProductAccessMock.mockReturnValue(true)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
         renderWithRouter(
             <Assertion
@@ -122,7 +122,7 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
-        hasProductAccessMock.mockReturnValue(true)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
         renderWithRouter(
             <Assertion
@@ -141,7 +141,7 @@ describe('<Assertion>', () => {
 
         selectAssertionByIdMock.mockReturnValue(assertionMock)
         selectAssertionsByParentIdMock.mockReturnValue([])
-        hasProductAccessMock.mockReturnValue(true)
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
         renderWithRouter(
             <Assertion
