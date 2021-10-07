@@ -1,21 +1,27 @@
 import { alpha, AppBar as AppBarMUI, IconButton, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core'
 import { AccountCircle, Gavel, LocalOffer } from '@material-ui/icons'
+import MatterMostLogo from 'Assets/mattermostLogo.svg'
+import MidasLogo from 'Assets/MidasLogo.svg'
+import { SearchBar } from 'Components/Search'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import MidasLogo from '../../Assets/MidasLogo.svg'
-import { selectUserLoggedIn } from '../../Redux/Auth/selectors'
-import { setAppBarFilterString } from '../../Redux/Filters/reducer'
-import { selectAppBarFilter } from '../../Redux/Filters/selectors'
-import { getRoot } from '../../Utilities/queryParams'
-import { SearchBar } from '../Search'
+import { selectUserLoggedIn } from 'Redux/Auth/selectors'
+import { setAppBarFilterString } from 'Redux/Filters/reducer'
+import { selectAppBarFilter } from 'Redux/Filters/selectors'
+import { getRoot } from 'Utilities/queryParams'
 
 const useStyles = makeStyles(theme => ({
     logo: {
         maxBlockSize: '36px',
         paddingRight: '5px',
         cursor: 'pointer'
+    },
+    mattermostLogo: {
+        cursor: 'pointer',
+        height: 24,
+        margin: 3
     },
     title: {
         display: 'none',
@@ -130,6 +136,11 @@ function AppBar({ height }) {
                         search = {search}
                         defaultValue = {filterString}
                     />
+                </div>
+                <div style = {{ height: '30px', marginRight: theme.spacing(1) }}>
+                    <a href = 'https://chat.il2.dso.mil/midas/' target = '_blank' rel = 'noreferrer'>
+                        <img src = {MatterMostLogo} className = {classes.mattermostLogo} title = 'IL2 Mattermost'/>
+                    </a>
                 </div>
                 <div>
                     <IconButton
