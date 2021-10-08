@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen } from 'Utilities/test-utils'
 import { AssertionStatusDropdown } from './index'
 
 describe('<AssertionStatusDropdown>', () => {
@@ -14,7 +14,7 @@ describe('<AssertionStatusDropdown>', () => {
 
     test('should call onChange', () => {
         const onChangeMock = jest.fn()
-        render(<AssertionStatusDropdown onChange = {onChangeMock} hasAccess = {true}/>, { initialState: mockState })
+        render(<AssertionStatusDropdown onChange = {onChangeMock}/>, { initialState: mockState })
 
         fireEvent.click(screen.getByText(/not started/i))
         fireEvent.click(screen.getByText(/completed/i))
@@ -24,20 +24,11 @@ describe('<AssertionStatusDropdown>', () => {
 
     test('should call onClick prop', () => {
         const onClickMock = jest.fn()
-        render(<AssertionStatusDropdown onClick = {onClickMock} hasAccess = {true}/>)
+        render(<AssertionStatusDropdown onClick = {onClickMock}/>)
 
         fireEvent.click(screen.getByText(/not started/i))
 
         expect(onClickMock).toHaveBeenCalled()
-    })
-
-    test('should not open Popper with no access', () => {
-        const onClickMock = jest.fn()
-        render(<AssertionStatusDropdown onClick = {onClickMock} hasAccess = {false}/>)
-
-        fireEvent.click(screen.getByText(/not started/i))
-
-        expect(onClickMock).not.toHaveBeenCalled()
     })
 
 })

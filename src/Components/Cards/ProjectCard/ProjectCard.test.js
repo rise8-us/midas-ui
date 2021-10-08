@@ -35,7 +35,7 @@ describe('<ProjectCard />', () => {
     }
 
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
-    const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
+    const hasProjectAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProjectAccess')
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const journeyMapUpdateMock = useModuleMock('Redux/Projects/actions', 'requestUpdateJourneyMapById')
@@ -44,7 +44,7 @@ describe('<ProjectCard />', () => {
         useDispatchMock().mockReturnValue({})
         selectProjectByIdMock.mockReturnValue(project)
         selectProductByIdMock.mockReturnValue(product)
-        hasProductOrTeamAccessMock.mockReturnValue(true)
+        hasProjectAccessMock.mockReturnValue(true)
     })
 
     test('should display data', () => {
@@ -92,7 +92,7 @@ describe('<ProjectCard />', () => {
     })
 
     test('should not be changeable', () => {
-        hasProductOrTeamAccessMock.mockReturnValue(false)
+        hasProjectAccessMock.mockReturnValue(false)
 
         render(<ProjectCard id = {project.id} />)
 

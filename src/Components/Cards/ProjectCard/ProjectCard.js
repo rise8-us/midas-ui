@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
+import { hasProjectAccess } from 'Redux/Auth/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { selectProductById } from 'Redux/Products/selectors'
 import { requestUpdateJourneyMapById } from 'Redux/Projects/actions'
@@ -43,7 +43,7 @@ function ProjectCard({ id }) {
 
     const project = useSelector(state => selectProjectById(state, id))
     const product = useSelector(state => selectProductById(state, project.productId))
-    const hasAccess = useSelector(state => hasProductOrTeamAccess(state, project.productId))
+    const hasAccess = useSelector(state => hasProjectAccess(state, project.id))
     const coverage = project.coverage ?? {}
 
     const calcStep = () => Math.log2(project.projectJourneyMap + 1)

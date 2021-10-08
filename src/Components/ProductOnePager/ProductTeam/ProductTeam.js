@@ -70,7 +70,7 @@ function ProductTeam({ productId, hasEdit }) {
                     </Grid>
                     {userIds.map((id, index) =>
                         <Grid item xs = {6} s = {6} key = {index}>
-                            <TeamMember id = {id} title = 'Developer' />
+                            <TeamMember id = {id} title = 'Team Member' />
                         </Grid>
                     )}
                 </Grid>

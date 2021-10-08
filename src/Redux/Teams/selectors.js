@@ -6,7 +6,10 @@ export const selectTeamById = (state, id) => {
         name: '',
         gitlabGroupId: '',
         description: '',
-        userIds: []
+        userIds: [],
+        productManagerId: null,
+        designerId: null,
+        techLeadId: null,
     }
     return team
 }

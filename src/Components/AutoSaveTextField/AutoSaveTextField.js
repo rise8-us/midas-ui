@@ -1,7 +1,7 @@
 import { TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
-import FormatErrors from '../../Utilities/FormatErrors'
+import FormatErrors from 'Utilities/FormatErrors'
 
 function AutoSaveTextField({
     canEdit, className, dataTestId, enableSpellCheck, errors,
@@ -12,9 +12,19 @@ function AutoSaveTextField({
     const [inEditMode, setInEditMode] = useState(false)
     const [value, setValue] = useState(initialValue)
 
+    const [hasHover, setHasHover] = useState(false)
+
     const onChange = (event) => {
         event.stopPropagation()
         setValue(event.target.value)
+    }
+
+    const onMouseEnter = () => {
+        canEdit && setHasHover(true)
+    }
+
+    const onMouseLeave = () => {
+        setHasHover(false)
     }
 
     const onMouseDown = (event) => {
@@ -25,6 +35,7 @@ function AutoSaveTextField({
     const onFocus = (event) => {
         event.stopPropagation()
         canEdit && setInEditMode(true)
+
         event.target.setSelectionRange(0, event.target.value.length)
     }
 
@@ -59,7 +70,7 @@ function AutoSaveTextField({
             {...textFieldProps}
             InputProps = {{
                 spellCheck: enableSpellCheck,
-                disableUnderline: !inEditMode,
+                disableUnderline: !inEditMode && !hasHover,
                 'data-testid': dataTestId,
                 className,
                 readOnly: !canEdit
@@ -70,6 +81,8 @@ function AutoSaveTextField({
             }}
             value = {value}
             onFocus = {onFocus}
+            onMouseEnter = {onMouseEnter}
+            onMouseLeave = {onMouseLeave}
             onMouseDown = {onMouseDown}
             onBlur = {onBlur}
             onKeyDown = {onKeyDown}

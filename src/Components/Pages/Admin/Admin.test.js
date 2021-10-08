@@ -1,21 +1,27 @@
 import React from 'react'
-import { fireEvent, render, screen } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen } from 'Utilities/test-utils'
 import { Admin } from './index'
 
-jest.mock('../../Admin/UserTab/UserTab',
+jest.mock('Components/Admin/UserTab/UserTab',
     () => function testing() { return (<div>Admin Page User Tab Test</div>) })
 
-jest.mock('../../Admin/ProjectsTab/ProjectsTab',
+jest.mock('Components/Admin/TeamsTab/TeamsTab',
+    () => function testing() { return (<div>Admin Page Team Tab Test</div>) })
+
+jest.mock('Components/Admin/ProjectsTab/ProjectsTab',
     () => function testing() { return (<div>Admin Page Project Tab Test</div>) })
 
-jest.mock('../../Admin/ProductsTab/ProductsTab',
+jest.mock('Components/Admin/ProductsTab/ProductsTab',
     () => function testing() { return (<div>Admin Page Product Tab Test</div>) })
 
-jest.mock('../../Admin/PortfoliosTab/PortfoliosTab',
+jest.mock('Components/Admin/PortfoliosTab/PortfoliosTab',
     () => function testing() { return (<div>Admin Page Portfolio Tab Test</div>) })
 
-jest.mock('../../Admin/SourceControlTab/SourceControlTab',
+jest.mock('Components/Admin/SourceControlTab/SourceControlTab',
     () => function testing() { return (<div>Admin Page sourceControls Tab Test</div>) })
+
+jest.mock('Components/Admin/DatabaseTab/DatabaseTab',
+    () => function testing() { return (<div>Admin Page dbActions Tab Test</div>) })
 
 describe('<Admin />', () => {
 
@@ -34,6 +40,14 @@ describe('<Admin />', () => {
         fireEvent.click(screen.getByText('users'))
 
         expect(await screen.findByText('Admin Page User Tab Test')).toBeInTheDocument()
+    })
+
+    test('should call TeamsTab component', async() => {
+        render(<Admin />)
+
+        fireEvent.click(screen.getByText('teams'))
+
+        expect(await screen.findByText('Admin Page Team Tab Test')).toBeInTheDocument()
     })
 
     test('should call ProjectsTab component', async() => {
@@ -66,6 +80,14 @@ describe('<Admin />', () => {
         fireEvent.click(screen.getByText('source Controls'))
 
         expect(await screen.findByText('Admin Page sourceControls Tab Test')).toBeInTheDocument()
+    })
+
+    test('should call DatabaseTab component', async() => {
+        render(<Admin />)
+
+        fireEvent.click(screen.getByText('Database Backup & Recovery'))
+
+        expect(await screen.findByText('Admin Page dbActions Tab Test')).toBeInTheDocument()
     })
 
 })

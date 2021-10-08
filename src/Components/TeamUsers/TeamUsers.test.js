@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     render, screen, useDispatchMock, useModuleMock, userEvent
-} from '../../Utilities/test-utils'
+} from 'Utilities/test-utils'
 import { TeamUsers } from './index'
 
 describe('<TeamUsers />', () => {
@@ -76,4 +76,5 @@ describe('<TeamUsers />', () => {
 
         expect(setUserIdsMock).toHaveBeenCalledWith([2])
     })
+
 })

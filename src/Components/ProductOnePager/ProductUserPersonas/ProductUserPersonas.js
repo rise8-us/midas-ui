@@ -1,5 +1,5 @@
 
-import { Chip, Grid, Typography, useTheme } from '@material-ui/core'
+import { Chip, Grid, IconButton, Typography, useTheme } from '@material-ui/core'
 import { PersonAddOutlined, PersonOutlined } from '@material-ui/icons'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggablePersonaList } from 'Components/Draggable/DraggablePersonaList'
@@ -15,6 +15,8 @@ function ProductUserPersonas({ productId, hasEdit }) {
     const theme = useTheme()
 
     const personas = useSelector(state => selectPersonasByProductId(state, productId))
+
+    let newPersonaInput = React.useRef(null)
 
     const createPersona = (value) => {
         dispatch(personaActions.requestCreatePersona({
@@ -90,13 +92,22 @@ function ProductUserPersonas({ productId, hasEdit }) {
             {hasEdit &&
                 <Grid container alignItems = 'center'>
                     <Grid item style = {{ minWidth: '24px', marginRight: '8px' }}>
-                        <PersonAddOutlined color = 'secondary' style = {{ marginLeft: '-2px' }}/>
+                        <IconButton title = 'Add Persona'
+                            size = 'small'
+                            style = {{ padding: 3, marginLeft: -3, marginRight: -2 }}
+                            onClick = {()=>
+                                newPersonaInput.current.focus()
+                            }
+                        >
+                            <PersonAddOutlined color = 'secondary'/>
+                        </IconButton>
                     </Grid>
                     <Grid item style = {{ flexGrow: 1 }}>
                         <AutoSaveTextField
-                            fullWidth
-                            color = 'secondary'
                             placeholder = 'Add new user persona...'
+                            inputRef = {newPersonaInput}
+                            color = 'secondary'
+                            fullWidth
                             onSave = {createPersona}
                             clearAfterSave
                             canEdit

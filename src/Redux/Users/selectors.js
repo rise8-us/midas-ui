@@ -1,4 +1,4 @@
-import { convertRolesLongToRolesMap } from '../../Utilities/bitwise'
+import { convertRolesLongToRolesMap } from 'Utilities/bitwise'
 
 export const selectUserById = (state, id) => {
     const user = state.users[id]

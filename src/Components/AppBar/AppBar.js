@@ -85,6 +85,9 @@ function AppBar({ height }) {
             label: 'Dashboard',
             path: 'dashboard'
         }, {
+            label: 'Capabilities',
+            path: 'capabilities'
+        }, {
             label: 'Projects',
             path: 'projects'
         }, {
@@ -138,7 +141,7 @@ function AppBar({ height }) {
                     />
                 </div>
                 <div style = {{ height: '30px', marginRight: theme.spacing(1) }}>
-                    <a href = 'https://chat.il2.dso.mil/midas/' target = '_blank' rel = 'noreferrer'>
+                    <a href = 'https://chat.il2.dso.mil/midas/channels/town-square' target = '_blank' rel = 'noreferrer'>
                         <img src = {MatterMostLogo} className = {classes.mattermostLogo} title = 'IL2 Mattermost'/>
                     </a>
                 </div>

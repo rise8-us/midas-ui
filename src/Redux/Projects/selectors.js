@@ -1,4 +1,4 @@
-import { selectTagsByIds } from '../Tags/selectors'
+import { selectTagsByIds } from 'Redux/Tags/selectors'
 
 export const selectProjectById = (state, id) => {
     const project = state.projects[id]

@@ -1,20 +1,25 @@
-import { ClickAwayListener, makeStyles, Paper, Popper, Typography } from '@material-ui/core'
+import { alpha, ClickAwayListener, makeStyles, Paper, Popper, Typography } from '@material-ui/core'
+import { Tag } from 'Components/Tag'
+import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
-import { Tag } from '../../Tag'
 
 const useStyles = makeStyles((theme) => ({
     option: {
         direction: 'ltr',
         padding: '3px 8px',
         '&:hover': {
-            backgroundColor: theme.palette.subtext
+            backgroundColor: alpha(theme.palette.background.default, .8)
         }
+    },
+    paper: {
+        width: '150px',
+        marginBottom: '10px',
+        boxShadow: `0px 0px 12px ${theme.palette.background.default}`
     }
 }))
 
-function AssertionStatusDropdown({ option, onChange, onClick, hasAccess }) {
+function AssertionStatusDropdown({ option, onChange, onClick }) {
     const classes = useStyles()
 
     const allStatuses = useAssertionStatuses()
@@ -33,12 +38,10 @@ function AssertionStatusDropdown({ option, onChange, onClick, hasAccess }) {
     }
 
     const togglePopper = (event) => {
-        if (hasAccess) {
-            setAnchorEl(anchorEl ? null : event.currentTarget)
-            setOpen(prev => !prev)
+        setAnchorEl(anchorEl ? null : event.currentTarget)
+        setOpen(prev => !prev)
 
-            typeof onClick === 'function' && onClick(event)
-        }
+        typeof onClick === 'function' && onClick(event)
     }
 
     useEffect(() => {
@@ -52,30 +55,28 @@ function AssertionStatusDropdown({ option, onChange, onClick, hasAccess }) {
                 color = {selectStatus.color}
                 onClick = {togglePopper}
             />
-            {hasAccess &&
-                <Popper
-                    placement = 'bottom-start'
-                    disablePortal = {true}
-                    anchorEl = {anchorEl}
-                    open = {open}
-                    style = {{ zIndex: 2 }}
-                >
-                    <ClickAwayListener onClickAway = {togglePopper}>
-                        <Paper style = {{ width: '150px' }} >
-                            {allStatuses.filter(status => status.label !== selectStatus?.label).map(status => (
-                                <Typography
-                                    key = {status.name}
-                                    className = {classes.option}
-                                    variant = 'subtitle1'
-                                    color = 'textSecondary'
-                                    onClick = {handleChange}
-                                    value = {status.label}
-                                >{status.label}</Typography>
-                            ))}
-                        </Paper>
-                    </ClickAwayListener>
-                </Popper>
-            }
+            <Popper
+                placement = 'bottom-start'
+                disablePortal = {true}
+                anchorEl = {anchorEl}
+                open = {open}
+                style = {{ zIndex: 2 }}
+            >
+                <ClickAwayListener onClickAway = {togglePopper}>
+                    <Paper className = {classes.paper}>
+                        {allStatuses.filter(status => status.label !== selectStatus?.label).map(status => (
+                            <Typography
+                                key = {status.name}
+                                className = {classes.option}
+                                variant = 'subtitle1'
+                                color = 'textPrimary'
+                                onClick = {handleChange}
+                                value = {status.label}
+                            >{status.label}</Typography>
+                        ))}
+                    </Paper>
+                </ClickAwayListener>
+            </Popper>
         </div>
     )
 
@@ -88,8 +89,7 @@ AssertionStatusDropdown.propTypes = {
         name: PropTypes.string
     }),
     onClick: PropTypes.func,
-    onChange: PropTypes.func,
-    hasAccess: PropTypes.bool
+    onChange: PropTypes.func
 }
 
 AssertionStatusDropdown.defaultProps = {
@@ -99,8 +99,7 @@ AssertionStatusDropdown.defaultProps = {
         color: '#c3c3c3'
     },
     onClick: undefined,
-    onChange: undefined,
-    hasAccess: false
+    onChange: undefined
 }
 
 export default AssertionStatusDropdown

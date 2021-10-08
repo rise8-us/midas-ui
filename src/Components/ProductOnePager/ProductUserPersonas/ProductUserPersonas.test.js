@@ -120,4 +120,13 @@ describe('<ProductUserPersonas>', () => {
         expect(requestUpdatePersonasBulkMock).toHaveBeenCalledWith(newPersonaOrder)
     })
 
+    test('should focus new persona input on icon click', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
+
+        render(<ProductUserPersonas productId = {3} hasEdit/>)
+
+        fireEvent.click(screen.getByTitle('Add Persona'))
+
+        expect(screen.queryByPlaceholderText('Add new user persona...')).toHaveFocus()
+    })
 })

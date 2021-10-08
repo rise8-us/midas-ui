@@ -29,6 +29,11 @@ function TeamMember({ id, title, noUserText }) {
             interactive
             title = {<UserDetails id = {id} role = {title}/>}
             classes = {{ tooltip: classes.tooltip }}
+            PopperProps = {{
+                style: {
+                    display: id ? 'unset' : 'none',
+                }
+            }}
         >
             <Grid container wrap = 'wrap' spacing = {1}>
                 <Grid item style = {{ minWidth: '42px' }}>

@@ -99,4 +99,14 @@ describe('<ProductFeatures>', () => {
         expect(requestUpdateFeaturesBulkMock).toHaveBeenCalledWith(newFeatureOrder)
     })
 
+    test('should focus new feature input on icon click', () => {
+        selectFeaturesByProductId.mockReturnValue([features[0]])
+
+        render(<ProductFeatures productId = {3} hasEdit/>)
+
+        fireEvent.click(screen.getByTitle('Add Feature'))
+
+        expect(screen.queryByPlaceholderText('Add new feature...')).toHaveFocus()
+    })
+
 })

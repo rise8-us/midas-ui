@@ -76,12 +76,12 @@ function AssertionComments({ assertionId, hasAccess }) {
             />
             <AddComment
                 assertionId = {assertionId}
-                additionalNode = {
-                    <AssertionStatusDropdown
+                additionalNode = { hasAccess
+                    ? <AssertionStatusDropdown
                         option = {selectedStatus}
                         onChange = {setStatus}
                         hasAccess = {hasAccess}
-                    />
+                    /> : null
                 }
                 onSubmit = {handleSubmit}
             />

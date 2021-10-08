@@ -46,7 +46,7 @@ function PortfolioPopup({ id }) {
         description: portfolio.description,
         tags: portfolio.tags,
         products: portfolio.products,
-        productManager: undefined
+        owner: undefined
     })
 
     const handleChange = (name, value) => {
@@ -65,7 +65,7 @@ function PortfolioPopup({ id }) {
             description: formValues.description,
             tagIds: Object.values(formValues.tags.map(t => t.id)),
             childIds: Object.values(formValues.products.map(p => p.id)),
-            productManagerId: formValues.productManager?.id ?? null,
+            ownerId: formValues.owner?.id ?? null,
             type: 'PORTFOLIO',
             projectIds: [],
             teamIds: [],
@@ -73,10 +73,10 @@ function PortfolioPopup({ id }) {
     }
 
     useEffect(() => {
-        if (!fetched && portfolio.productManagerId > 0) {
+        if (!fetched && portfolio.ownerId > 0) {
             setFetched(true)
-            dispatch(requestFindUserBy(`id:${portfolio.productManagerId}`)).then(unwrapResult)
-                .then(data => { handleChange('productManager', data[0]) })
+            dispatch(requestFindUserBy(`id:${portfolio.ownerId}`)).then(unwrapResult)
+                .then(data => { handleChange('owner', data[0]) })
         }
     }, [portfolio])
 
@@ -111,10 +111,10 @@ function PortfolioPopup({ id }) {
                     multiline
                 />
                 <SearchUsers
-                    title = 'Portfolio Lead'
+                    title = 'Portfolio Owner'
                     growFrom = '100%'
-                    value = {formValues.productManager}
-                    onChange = {(_e, values) => handleChange('productManager', values)}
+                    value = {formValues.owner}
+                    onChange = {(_e, values) => handleChange('owner', values)}
                     freeSolo = {true}
                     dynamicUpdate
                 />

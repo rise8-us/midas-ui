@@ -49,7 +49,7 @@ const TeamUsers = ({ userIds, setUserIds }) => {
     }
 
     useEffect(() => {
-        const missingUserIds = userIds.filter((id, index) => users[index].id === undefined)
+        const missingUserIds = userIds.filter((_id, index) => users[index].id === undefined)
         if (missingUserIds.length > 0) {
             dispatch(requestFindUserBy(generateTeamUsersQuery(missingUserIds)))
         }
@@ -61,7 +61,7 @@ const TeamUsers = ({ userIds, setUserIds }) => {
     }
 
     const removeUser = (userId) => {
-        const updatedUserIds = userIds.filter(id => id != userId)
+        const updatedUserIds = userIds.filter(id => id !== userId)
         setUserIds(updatedUserIds)
     }
 
@@ -84,13 +84,13 @@ const TeamUsers = ({ userIds, setUserIds }) => {
                     values && addUser(values.id)
                 }}
                 title = ''
-                placeholder = 'Add another developer...'
+                placeholder = 'Add another team member...'
                 growFrom = '100%'
                 freeSolo = {true}
                 style = {{
                     height: '32px',
                     marginTop: '8px',
-                    marginBottom: '8px'
+                    marginBottom: '24px'
                 }}
             />
             <div className = { classes.tableContainer }>

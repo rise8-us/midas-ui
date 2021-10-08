@@ -5,7 +5,7 @@ import { SearchUsers } from 'Components/Search'
 import { TeamUsers } from 'Components/TeamUsers'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'
@@ -26,6 +26,10 @@ const initDetails = (create) => {
 
 const setNumberOrNull = (item) => item ?? null
 
+export const excludeUserIds = (userIds, excludeIds) => {
+    return userIds.filter(id => !excludeIds.includes(id))
+}
+
 function TeamPopup({ id, productIds }) {
     const dispatch = useDispatch()
 
@@ -35,13 +39,15 @@ function TeamPopup({ id, productIds }) {
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const nameErrors = useMemo(() => errors.filter(error => error.includes('name')), [errors])
 
+    const [userIds, setUserIds] = useState(excludeUserIds(
+        team.userIds, [team.productManagerId, team.techLeadId, team.designerId]))
+
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: team.name,
         description: team.description,
         productManager: undefined,
         designer: undefined,
         techLead: undefined,
-        userIds: team.userIds,
     })
 
     const handleChange = (name, value) => {
@@ -60,11 +66,11 @@ function TeamPopup({ id, productIds }) {
         const designerId = setNumberOrNull(formValues.designer?.id)
         const techLeadId = setNumberOrNull(formValues.techLead?.id)
 
-        const userIds = new Set(formValues.userIds)
-        userIds.add(productManagerId)
-        userIds.add(designerId)
-        userIds.add(techLeadId)
-        userIds.delete(null)
+        const userIdsFinal = new Set(userIds)
+        userIdsFinal.add(productManagerId)
+        userIdsFinal.add(designerId)
+        userIdsFinal.add(techLeadId)
+        userIdsFinal.delete(null)
 
         dispatch(context.request({
             ...team,
@@ -74,7 +80,7 @@ function TeamPopup({ id, productIds }) {
             productManagerId: productManagerId,
             designerId: designerId,
             techLeadId: techLeadId,
-            userIds: Array.from(userIds),
+            userIds: Array.from(userIdsFinal),
         }))
     }
 
@@ -90,7 +96,7 @@ function TeamPopup({ id, productIds }) {
         team.productManagerId && requestUserData(team.productManagerId, 'productManager')
         team.designerId && requestUserData(team.designerId, 'designer')
         team.techLeadId && requestUserData(team.techLeadId, 'techLead')
-    }, [team])
+    }, [])
 
     return (
         <Popup
@@ -136,8 +142,8 @@ function TeamPopup({ id, productIds }) {
                     dynamicUpdate
                 />
                 <TeamUsers
-                    userIds = {formValues.userIds}
-                    setUserIds = {(values) => handleChange('userIds', values)}
+                    userIds = {userIds}
+                    setUserIds = {setUserIds}
                 />
             </Box>
         </Popup>
