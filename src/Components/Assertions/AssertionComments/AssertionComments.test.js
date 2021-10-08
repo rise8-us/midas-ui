@@ -2,7 +2,7 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AssertionComments } from './index'
 
-jest.mock('../../Comments/Comment/Comment', () => function testing() {
+jest.mock('Components/Comments/Comment/Comment', () => function testing() {
     return (<div>Comment</div>)
 })
 
@@ -53,12 +53,20 @@ describe('<AssertionComments>', () => {
         expect(screen.getByPlaceholderText(/enter comment here.../i)).toBeInTheDocument()
     })
 
-    test('should dispatch setAssertionComment', () => {
+    test('should dispatch setAssertionComment with hasAccess', () => {
         useDispatchMock().mockReturnValue({})
 
         render(<AssertionComments assertionId = {2} hasAccess = {true}/>, { initialState: mockState })
 
         expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: null, deletedAssertionId: null })
+    })
+
+    test('should not render status dropdown with hasAccess false', () => {
+        useDispatchMock().mockReturnValue({})
+
+        render(<AssertionComments assertionId = {3} hasAccess = {false}/>, { initialState: mockState })
+
+        expect(screen.queryByText(/status/)).not.toBeInTheDocument()
     })
 
     test('should handle submit', () => {

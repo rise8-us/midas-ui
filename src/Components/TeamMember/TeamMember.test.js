@@ -22,7 +22,7 @@ describe('<TeamMember />', () => {
     test('should render no user found', () => {
         selectUserByIdMock.mockReturnValue({})
 
-        render(<TeamMember id = {1} title = 'title' noUserText = 'out to lunch'/>)
+        render(<TeamMember id = {null} title = 'title' noUserText = 'out to lunch'/>)
 
         expect(screen.getByText('out to lunch')).toBeInTheDocument()
     })

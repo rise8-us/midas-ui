@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, IconButton, Typography } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggableFeatureList } from 'Components/Draggable'
@@ -14,6 +14,8 @@ function ProductFeatures({ productId, hasEdit }) {
     const dispatch = useDispatch()
 
     const features = useSelector(state => selectFeaturesByProductId(state, productId))
+
+    let newFeatureInput = React.useRef(null)
 
     const createFeature = (value) => {
         dispatch(featureActions.requestCreateFeature({
@@ -62,14 +64,23 @@ function ProductFeatures({ productId, hasEdit }) {
             {hasEdit &&
                 <Grid container alignItems = 'center'>
                     <Grid item style = {{ minWidth: '24px', marginRight: '8px' }}>
-                        <Add color = 'secondary' />
+                        <IconButton title = 'Add Feature'
+                            size = 'small'
+                            style = {{ padding: 0 }}
+                            onClick = {()=>
+                                newFeatureInput.current.focus()
+                            }
+                        >
+                            <Add color = 'secondary' />
+                        </IconButton>
                     </Grid>
                     <Grid item style = {{ flexGrow: 1 }}>
                         <AutoSaveTextField
-                            fullWidth
-                            color = 'secondary'
                             placeholder = 'Add new feature...'
+                            inputRef = {newFeatureInput}
+                            color = 'secondary'
                             onSave = {createFeature}
+                            fullWidth
                             clearAfterSave
                             canEdit
                         />

@@ -2,12 +2,17 @@ import { Stomp } from '@stomp/stompjs'
 import PropTypes from 'prop-types'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import assertionSubscriptions from 'Redux/Assertions/subscriptions'
+import capabilitySubscriptions from 'Redux/Capabilities/subscriptions'
 import commentSubscriptions from 'Redux/Comments/subscriptions'
+import deliverableSubscriptions from 'Redux/Deliverables/subscriptions'
 import featureSubscriptions from 'Redux/Features/subscriptions'
+import missionThreadSubscriptions from 'Redux/MissionThreads/subscriptions'
+import performanceMeasuresSubscriptions from 'Redux/PerformanceMeasures/subscriptions'
 import personaSubscriptions from 'Redux/Personas/subscriptions'
 import portfolioSubscriptions from 'Redux/Portfolios/subscriptions'
 import productSubscriptions from 'Redux/Products/subscriptions'
 import projectSubscriptions from 'Redux/Projects/subscriptions'
+import releaseSubscriptions from 'Redux/Releases/subscriptions'
 import sourceControlSubscriptions from 'Redux/SourceControls/subscriptions'
 import tagSubscriptions from 'Redux/Tags/subscriptions'
 import teamSubscriptions from 'Redux/Teams/subscriptions'
@@ -39,15 +44,20 @@ function WebsocketProvider({ children }) {
     const onConnectSuccess = () => {
         setConnected(true)
         assertionSubscriptions({ stompClient })
+        capabilitySubscriptions({ stompClient })
         commentSubscriptions({ stompClient })
-        sourceControlSubscriptions({ stompClient })
+        deliverableSubscriptions({ stompClient })
+        featureSubscriptions({ stompClient })
+        missionThreadSubscriptions({ stompClient })
+        performanceMeasuresSubscriptions({ stompClient })
+        personaSubscriptions({ stompClient })
+        portfolioSubscriptions({ stompClient })
         productSubscriptions({ stompClient })
         projectSubscriptions({ stompClient })
+        releaseSubscriptions({ stompClient })
+        sourceControlSubscriptions({ stompClient })
         tagSubscriptions({ stompClient })
         teamSubscriptions({ stompClient })
-        portfolioSubscriptions({ stompClient })
-        featureSubscriptions({ stompClient })
-        personaSubscriptions({ stompClient })
     }
 
     const onConnectFailure = (error) => {

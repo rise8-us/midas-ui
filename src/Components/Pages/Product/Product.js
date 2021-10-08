@@ -72,17 +72,6 @@ function Product() {
                             <Grid item>
                                 {hasEdit &&
                                     <IconButton
-                                        data-testid = 'ProductPage__icon-popup-edit'
-                                        onClick = {openUpdateProductPopup}
-                                        color = 'secondary'
-                                    >
-                                        <Edit />
-                                    </IconButton>
-                                }
-                            </Grid>
-                            <Grid item>
-                                {hasEdit &&
-                                    <IconButton
                                         data-testid = 'ProductPage__icon-inline-edit'
                                         onClick = {() => setPageLock(prev => !prev)}
                                         color = 'secondary'
@@ -90,6 +79,17 @@ function Product() {
                                         {pageLock ?
                                             <LockOutlined title = 'locked'/> : <LockOpenOutlined title = 'unlocked'/>
                                         }
+                                    </IconButton>
+                                }
+                            </Grid>
+                            <Grid item>
+                                {hasEdit && !pageLock &&
+                                    <IconButton
+                                        data-testid = 'ProductPage__icon-popup-edit'
+                                        onClick = {openUpdateProductPopup}
+                                        color = 'secondary'
+                                    >
+                                        <Edit />
                                     </IconButton>
                                 }
                             </Grid>

@@ -19,7 +19,6 @@ describe('<Dashboard>', () => {
         id: 1,
         name: 'test',
         description: 'yolo',
-        productManagerId: 100,
         products: [],
         tags: [{ id: 1 }],
         tagIds: [1]
@@ -28,7 +27,7 @@ describe('<Dashboard>', () => {
     beforeEach(() => {
         selectUserLoggedInMock.mockReturnValue({ id: 100 })
 
-        selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test', productManagerId: 100 }])
+        selectAllActivePortfoliosNameAndIdsMock.mockReturnValue([{ id: 1, name: 'test' }])
 
         selectTagsByScopeMock.mockReturnValue([
             { id: 1, label: 'scope::label1', color: '#FFFFFF' },

@@ -32,7 +32,7 @@ describe('<PortfolioPopup />', () => {
         isArchived: false,
         portfolioId: 2,
         tagIds: [4, 13],
-        productManagerId: null,
+        ownerId: null,
         tags: [returnedTags[0], returnedTags[2]],
         products: [returnedProducts[0]]
     }
@@ -79,7 +79,7 @@ describe('<PortfolioPopup />', () => {
             products: [],
             projectIds: [],
             childIds: [],
-            productManagerId: null,
+            ownerId: null,
             type: 'PORTFOLIO'
         })
     })
@@ -133,12 +133,12 @@ describe('<PortfolioPopup />', () => {
             teamIds: [],
             childIds: [20, 21],
             tagIds: [4, 13, 2],
-            productManagerId: null,
+            ownerId: null,
             type: 'PORTFOLIO'
         })
     })
 
-    test('should handle productManager', async() => {
+    test('should handle owner', async() => {
         useDispatchMock().mockResolvedValueOnce({
             type: '/',
             payload: [{
@@ -162,7 +162,7 @@ describe('<PortfolioPopup />', () => {
             teamIds: [],
             childIds: [20],
             tagIds: [4, 13],
-            productManagerId: 24,
+            ownerId: 24,
             type: 'PORTFOLIO'
         })
     })

@@ -33,6 +33,7 @@ describe('<AppBar />', () => {
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
         expect(screen.getByText('Dashboard')).toBeInTheDocument()
+        expect(screen.getByText('Capabilities')).toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
         expect(screen.getByText('Portfolios')).toBeInTheDocument()
@@ -91,6 +92,9 @@ describe('<AppBar />', () => {
 
         fireEvent.click(screen.getByText('Dashboard'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
+
+        fireEvent.click(screen.getByText('Capabilities'))
+        expect(mockHistoryPush).toHaveBeenCalledWith('/capabilities')
 
         fireEvent.click(screen.getByText('Projects'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/projects')

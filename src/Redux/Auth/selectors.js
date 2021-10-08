@@ -1,6 +1,6 @@
-import { convertRolesLongToRolesMap } from '../../Utilities/bitwise'
-import { selectProductById } from '../Products/selectors'
-import { selectProjectById } from '../Projects/selectors'
+import { selectProductById } from 'Redux/Products/selectors'
+import { selectProjectById } from 'Redux/Projects/selectors'
+import { convertRolesLongToRolesMap } from 'Utilities/bitwise'
 
 const selectAllProductsAndPortfolios = (state) => {
     const portfolios = state.portfolios ?? {}
@@ -44,13 +44,14 @@ export const hasProductAccess = (state, productId) => {
 
     return (
         userLoggedIn.isAdmin
-        || userLoggedIn.id === productBeingAccessed.productManagerId
+        || userLoggedIn.id === productBeingAccessed.ownerId
         || hasProductAccess(state, productBeingAccessed.parentId)
     )
 }
 
 export const hasProductOrTeamAccess = (state, productId) => {
     if (typeof productId !== 'number') return false
+
     const productBeingAccessed = selectProductById(state, productId)
 
     return (
@@ -65,13 +66,15 @@ export const hasTeamAccess = (state, teamId) => {
 }
 
 export const hasProjectAccess = (state, projectId) => {
+    if (typeof projectId !== 'number') return false
+
     const userLoggedIn = selectUserLoggedIn(state)
-    const projectBeingAccessed = selectProjectById(projectId)
+    const projectBeingAccessed = selectProjectById(state, projectId)
 
     return (
         userLoggedIn.isAdmin
-        || hasTeamAccess(state, projectBeingAccessed.teamId)
-        || hasProductAccess(state, projectBeingAccessed.productId)
+        || userLoggedIn.id === projectBeingAccessed.ownerId
+        || hasProductOrTeamAccess(state, projectBeingAccessed.productId)
     )
 }
 

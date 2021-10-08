@@ -3,7 +3,7 @@ import { Autocomplete } from '@material-ui/lab'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { selectAllTeams } from '../../../Redux/Teams/selectors'
+import { selectAllTeams } from 'Redux/Teams/selectors'
 
 function SearchTeams(props) {
     const { onChange, value, ...autocompleteProps } = props

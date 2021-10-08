@@ -3,7 +3,7 @@ import TeamConstants from 'Redux/Teams/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProductTeam } from './index'
 
-jest.mock('../../TeamMember/TeamMember', () => function testing() { return (<div>TeamMemberMock</div>) })
+jest.mock('Components/TeamMember/TeamMember', () => function testing() { return (<div>TeamMemberMock</div>) })
 
 describe('<ProductTeam />', () => {
 

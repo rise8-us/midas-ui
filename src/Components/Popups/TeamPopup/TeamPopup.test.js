@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
-import { TeamPopup } from './index'
+import { excludeUserIds, TeamPopup } from './index'
 
 describe('<TeamPopup />', () => {
     jest.setTimeout(25000)
@@ -13,16 +13,20 @@ describe('<TeamPopup />', () => {
     const returnedFoundTeam = {
         id: 4,
         name: 'My Team',
-        description: 'Description',
-        gitlabGroupId: 12345,
-        userIds: [9]
+        description: '',
+        productManagerId: 10,
+        designerId: 10,
+        techLeadId: 10,
+        userIds: [9],
     }
 
     const returnedNewTeam = {
         name: '',
         description: '',
-        gitlabGroupId: '',
-        userIds: []
+        productManagerId: null,
+        designerId: null,
+        techLeadId: null,
+        userIds: [],
     }
 
     beforeEach(() => {
@@ -36,14 +40,21 @@ describe('<TeamPopup />', () => {
         expect(screen.getByText('Create Team')).toBeInTheDocument()
     })
 
-    test('should render properly for updateTeam', () => {
+    test('should render properly for updateTeam', async() => {
+        useDispatchMock().mockResolvedValue({ type: '/', payload: [
+            {
+                id: 10,
+                username: 'byoda'
+            }
+        ] })
         selectTeamByIdMock.mockReturnValue(returnedFoundTeam)
+
         render(<TeamPopup id = {4}/>)
 
-        expect(screen.getByText('Update Team')).toBeInTheDocument()
+        expect(await screen.findByText('Update Team')).toBeInTheDocument()
     })
 
-    test('should display error messages', () => {
+    test('should display error messages', async() => {
         const state = {
             errors: {
                 'teams/createOne': [
@@ -57,14 +68,13 @@ describe('<TeamPopup />', () => {
     })
 
     test('should call onSubmit to create Team', () => {
-        render(<TeamPopup />)
+        render(<TeamPopup/>)
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitCreateTeamMock).toHaveBeenCalledWith({
             name: '',
             description: '',
-            gitlabGroupId: '',
             productManagerId: null,
             designerId: null,
             techLeadId: null,
@@ -73,18 +83,16 @@ describe('<TeamPopup />', () => {
         })
     })
 
-    test('should call onSubmit to Update team', async() => {
-        const allUsers = [
+    test('should call onSubmit to update team', async() => {
+        selectTeamByIdMock.mockReturnValue({ ...returnedNewTeam, id: 4, userIds: [9] })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: [
             {
                 id: 10,
-                username: 'jsmith',
-                displayName: 'Jon Jacob Jingle Hiemer Smith'
+                username: 'jsmith'
             }
-        ]
-        selectTeamByIdMock.mockReturnValue(returnedFoundTeam)
-        useDispatchMock().mockResolvedValue({ type: '/', payload: allUsers })
+        ] })
 
-        render(<TeamPopup id = {4} />)
+        render(<TeamPopup id = {4}/>)
 
         const name = 'My Edited Team'
 
@@ -97,8 +105,8 @@ describe('<TeamPopup />', () => {
             fireEvent.click(await screen.findByText(/jsmith/))
         }
 
-        userEvent.type(screen.getByPlaceholderText('Add another developer...'), 'jsmith')
-        fireEvent.click(await screen.findByText(/jsmith/))
+        userEvent.type(screen.getByPlaceholderText('Add another team member...'), 'jsmith')
+        fireEvent.click(await screen.findByText('jsmith'))
 
         fireEvent.click(screen.getByText('Submit'))
 
@@ -119,5 +127,9 @@ describe('<TeamPopup />', () => {
         fireEvent.click(screen.getByTestId('Popup__button-close'))
 
         expect(closePopupMock).toHaveBeenCalled()
+    })
+
+    test('should filter excludeids from userids', () => {
+        expect(excludeUserIds([1, 2, 3], [1, 2])).toEqual([3])
     })
 })

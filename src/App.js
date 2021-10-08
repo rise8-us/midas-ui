@@ -55,6 +55,7 @@ function App() {
                     <Route exact path = '/products/:productId/:productTab/:assertionId' component = {Pages.Product} />
                     <Route exact path = '/projects' component = {Pages.Projects} />
                     <Route exact path = '/tags' component = {Pages.Tags} />
+                    <Route exact path = '/capabilities' component = {Pages.Capabilities} />
                     {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}
                     <Route component = {Pages.PageNotFound} />
                 </Switch>

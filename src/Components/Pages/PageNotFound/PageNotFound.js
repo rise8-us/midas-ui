@@ -1,7 +1,7 @@
 import { Box, Link, Typography } from '@material-ui/core'
+import { Page } from 'Components/Page'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { Page } from '../../Page'
 import { useStyles } from './styles'
 
 function PageNotFound() {

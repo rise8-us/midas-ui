@@ -26,7 +26,15 @@ test('selectTeamById - returns team object', () => {
 
 test('selectTeamById - returns empty property object', () => {
     expect(selectors.selectTeamById(mockState, 2))
-        .toEqual({ name: '', gitlabGroupId: '', description: '', userIds: [] })
+        .toEqual({
+            name: '',
+            gitlabGroupId: '',
+            description: '',
+            userIds: [],
+            productManagerId: null,
+            designerId: null,
+            techLeadId: null,
+        })
 })
 
 test('selectAllTeams - returns array of team objects', () => {

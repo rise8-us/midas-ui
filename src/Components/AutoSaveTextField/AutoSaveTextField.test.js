@@ -8,6 +8,7 @@ describe('<AutoSaveTextField>', () => {
         render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'yolo'/>)
 
         expect(screen.getByDisplayValue(/yolo/)).toBeInTheDocument()
+        expect(screen.queryByTestId('AutoSaveTextField__input')).not.toHaveClass('MuiInput-underline')
     })
 
     test('should edit and call onSave on ENTER', () => {
@@ -45,4 +46,13 @@ describe('<AutoSaveTextField>', () => {
         expect(screen.getByText(/error/)).toBeInTheDocument()
     })
 
+    test('should handle underline', () => {
+        render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'test' canEdit/>)
+
+        userEvent.hover(screen.getByDisplayValue(/test/))
+        expect(screen.getByTestId('AutoSaveTextField__input')).toHaveClass('MuiInput-underline')
+
+        userEvent.unhover(screen.getByDisplayValue(/test/))
+        expect(screen.queryByTestId('AutoSaveTextField__input')).not.toHaveClass('MuiInput-underline')
+    })
 })

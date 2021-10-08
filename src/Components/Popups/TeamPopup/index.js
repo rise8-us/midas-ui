@@ -1,2 +1,2 @@
-export { default as TeamPopup } from './TeamPopup'
+export { default as TeamPopup, excludeUserIds } from './TeamPopup'
 

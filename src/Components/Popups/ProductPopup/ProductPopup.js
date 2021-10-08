@@ -1,7 +1,8 @@
-import { Box, TextField } from '@material-ui/core'
+import { Box, makeStyles, TextField } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
+import { SearchUsers } from 'Components/Search'
 import { SearchTeams } from 'Components/Search/SearchTeams'
 import { TagDropdown } from 'Components/TagDropdown'
 import useFormReducer from 'Hooks/useFormReducer'
@@ -15,8 +16,18 @@ import ProductConstants from 'Redux/Products/constants'
 import { selectProductById } from 'Redux/Products/selectors'
 import { requestCreateProject } from 'Redux/Projects/actions'
 import { selectProjectsWithNoProductId } from 'Redux/Projects/selectors'
+import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
 import { requestFindTeamBy } from 'Redux/Teams/actions'
+import { requestFindUserBy } from 'Redux/Users/actions'
 import FormatErrors from 'Utilities/FormatErrors'
+
+const useStyles = makeStyles(() => ({
+    numberField: {
+        '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+            display: 'none'
+        }
+    }
+}))
 
 const filter = createFilterOptions()
 
@@ -37,26 +48,35 @@ const generateTeamsQuery = (teamIds) => {
 
 function ProductPopup({ id }) {
     const dispatch = useDispatch()
+    const classes = useStyles()
 
     const product = useSelector(state => selectProductById(state, id))
     const context = initDetails(product.id === undefined)
 
-    const errors = useSelector(state => selectRequestErrors(state, context.constant))
-    const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
+    const allSourceControls = useSelector(selectSourceControls)
+    const orginalSourceControl = useSelector(state => selectSourceControlById(state, product.sourceControlId))
 
     const projectsWithNoProductId = useSelector(selectProjectsWithNoProductId)
     const [availableProjects, setAvailableProjects] = useState(product.projects.concat(projectsWithNoProductId))
 
+    const errors = useSelector(state => selectRequestErrors(state, context.constant))
+    const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
+    const gitlabError = useMemo(() => errors.filter(error => error.includes('Gitlab')), [errors])
+
     const [teams, setTeams] = useState([])
+    const [fetched, setFetched] = useState(false)
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         description: product.description,
         mission: product.mission,
         name: product.name,
         problemStatement: product.problemStatement,
+        gitlabGroupId: product.gitlabGroupId,
         projects: product.projects,
         tags: product.tags,
         vision: product.vision,
+        sourceControl: orginalSourceControl.id !== undefined ? orginalSourceControl : null,
+        owner: undefined,
     })
 
     const handleChange = (name, value) => {
@@ -98,11 +118,14 @@ function ProductPopup({ id }) {
             mission: formValues.mission,
             vision: formValues.vision,
             problemStatement: formValues.problemStatement,
+            gitlabGroupId: formValues.gitlabGroupId,
+            sourceControlId: formValues.sourceControl?.id ?? null,
             tagIds: Object.values(formValues.tags.map(tag => tag.id)),
             projectIds: Object.values(formValues.projects.map(project => project.id)),
             teamIds: teams.map(team => team.id),
             childIds: [],
             type: 'PRODUCT',
+            ownerId: formValues.owner?.id ?? null,
         }))
     }
 
@@ -114,6 +137,14 @@ function ProductPopup({ id }) {
                 setTeams(data)
             })
     }, [])
+
+    useEffect(() => {
+        if (!fetched && product.ownerId > 0) {
+            setFetched(true)
+            dispatch(requestFindUserBy(`id:${product.ownerId}`)).then(unwrapResult)
+                .then(data => { handleChange('owner', data[0]) })
+        }
+    }, [product])
 
     return (
         <Popup
@@ -133,6 +164,14 @@ function ProductPopup({ id }) {
                     helperText = {<FormatErrors errors = {nameError}/>}
                     margin = 'dense'
                     required
+                />
+                <SearchUsers
+                    title = 'Product Owner'
+                    growFrom = '100%'
+                    value = {formValues.owner}
+                    onChange = {(_e, values) => handleChange('owner', values)}
+                    freeSolo = {true}
+                    dynamicUpdate
                 />
                 <TextField
                     label = 'Description'
@@ -193,6 +232,36 @@ function ProductPopup({ id }) {
                     creatable
                     creatableType = 'PRODUCT'
                     forcePopupIcon
+                />
+                <Autocomplete
+                    value = {formValues.sourceControl}
+                    onChange = {(_e, values) => handleChange('sourceControl', values)}
+                    options = {allSourceControls}
+                    getOptionLabel = {option => option.name}
+                    renderInput = {(params) =>
+                        <TextField
+                            {...params}
+                            label = 'Gitlab server'
+                            InputProps = {{
+                                ...params.InputProps,
+                                readOnly: true,
+                            }}
+                            margin = 'dense'
+                        />
+                    }
+                />
+                <TextField
+                    label = 'Gitlab Group Id'
+                    type = 'number'
+                    className = {classes.numberField}
+                    inputProps = {{
+                        'data-testid': 'ProductPopup__input-gitlabGroupId'
+                    }}
+                    value = {formValues.gitlabGroupId}
+                    onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
+                    error = {gitlabError.length > 0}
+                    helperText = {<FormatErrors errors = {gitlabError}/>}
+                    margin = 'dense'
                 />
                 <Autocomplete
                     multiple
