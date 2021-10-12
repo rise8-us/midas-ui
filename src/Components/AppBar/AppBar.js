@@ -85,9 +85,6 @@ function AppBar({ height }) {
             label: 'Dashboard',
             path: 'dashboard'
         }, {
-            label: 'Capabilities',
-            path: 'capabilities'
-        }, {
             label: 'Projects',
             path: 'projects'
         }, {
