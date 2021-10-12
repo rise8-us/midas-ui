@@ -1,6 +1,7 @@
 import { Grid, IconButton, makeStyles, Tooltip } from '@material-ui/core'
 import { Close, DragIndicator } from '@material-ui/icons'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
@@ -52,7 +53,7 @@ function DraggableRow({ title, hasEdit, onUpdate, onDelete, startIcon, additiona
                 {hasEdit && hovered &&
                     <>
                         {additionalOptions}
-                        <Tooltip title = 'Delete'>
+                        <Tooltip title = {Tooltips.DELETE}>
                             <IconButton
                                 size = 'small'
                                 data-testid = 'DraggableRow__button-delete'

@@ -7,7 +7,7 @@ function ProductPageOverview({ id, hasEdit }) {
     return (
         <Grid container direction = 'row'>
             <Grid item xl = {8} lg = {8} md = {8}>
-                <ProductRoadmap productId = {id} hasEditAccess = {hasEdit}/>
+                <ProductRoadmap productId = {id} hasEdit = {hasEdit}/>
             </Grid>
             <Grid container item direction = 'column' xl = {4} lg = {4} md = {4} spacing = {2}>
                 <Grid item>

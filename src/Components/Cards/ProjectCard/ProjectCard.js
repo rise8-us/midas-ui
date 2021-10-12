@@ -6,6 +6,7 @@ import { PathToProdStepper } from 'Components/PathToProdStepper'
 import { SonarqubeIndicator } from 'Components/SonarqubeIndicator'
 import { SonarqubeTooltip } from 'Components/SonarqubeTooltip'
 import { Tag } from 'Components/Tag'
+import Tooltips from 'Constants/Tooltips'
 import useSonarqubeRatings from 'Hooks/useSonarqubeRatings'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -91,8 +92,8 @@ function ProjectCard({ id }) {
             />
             <Box display = 'flex'>
                 {hasAccess &&
-                    <Tooltip title = 'Roll back status'>
-                        <>
+                    <Tooltip title = {Tooltips.PROJECT_PROGRESS_ROLLBACK} arrow>
+                        <div style = {{ alignSelf: 'center', borderRadius: '50%' }}>
                             <IconButton
                                 onClick = {() => handleProgress(-1)}
                                 color = 'secondary'
@@ -103,13 +104,13 @@ function ProjectCard({ id }) {
                             >
                                 <ChevronLeft />
                             </IconButton>
-                        </>
+                        </div>
                     </Tooltip>
                 }
                 <PathToProdStepper step = {calcStep()} />
                 {hasAccess &&
-                    <Tooltip title = 'Complete current step'>
-                        <>
+                    <Tooltip title = {Tooltips.PROJECT_PROGRESS_COMPLETE} arrow>
+                        <div style = {{ alignSelf: 'center', borderRadius: '50%' }}>
                             <IconButton
                                 onClick = {() => handleProgress(1)}
                                 color = 'secondary'
@@ -120,7 +121,7 @@ function ProjectCard({ id }) {
                             >
                                 <ChevronRight />
                             </IconButton>
-                        </>
+                        </div>
                     </Tooltip>
                 }
             </Box>

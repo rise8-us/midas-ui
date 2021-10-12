@@ -48,7 +48,7 @@ describe('<RoadmapEntry />', () => {
     })
 
     test('should call openPopup with access', () => {
-        render(<RoadmapEntry id = {3} hasEditAccess/>)
+        render(<RoadmapEntry id = {3} hasEdit/>)
 
         fireEvent.click(screen.getByText('title'))
 

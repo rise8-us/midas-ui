@@ -34,7 +34,7 @@ function ProductOnePager({ id }) {
             </Grid>
             <Grid container item direction = 'column' lg md>
                 <Grid item>
-                    <ProductRoadmap productId = {id} hasEditAccess = {false}/>
+                    <ProductRoadmap productId = {id} hasEdit = {false}/>
                 </Grid>
             </Grid>
             <Grid container item direction = 'column' lg = {3} md = {3}>
@@ -42,7 +42,7 @@ function ProductOnePager({ id }) {
                     <div>Deliverables</div>
                 </Grid>
                 <Grid item>
-                    <ProductUserPersonas productId = {id} hasEditAccess = {false} />
+                    <ProductUserPersonas productId = {id} hasEdit = {false} />
                 </Grid>
                 <Grid item style = {{ display: 'none' }}>
                     <div>Development</div>

@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-function RoadmapEntry({ id, hasEditAccess }) {
+function RoadmapEntry({ id, hasEdit }) {
     const theme = useTheme()
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -47,9 +47,9 @@ function RoadmapEntry({ id, hasEditAccess }) {
 
     return (
         <TimelineItem
-            className = {hasEditAccess ? classes.item : undefined}
-            style = {{ cursor: hasEditAccess ? 'pointer' : 'default' }}
-            onClick = {hasEditAccess ? onClick : null}
+            className = {hasEdit ? classes.item : undefined}
+            style = {{ cursor: hasEdit ? 'pointer' : 'default' }}
+            onClick = {hasEdit ? onClick : null}
         >
             <TimelineSeparator>
                 <TimelineDot
@@ -95,11 +95,11 @@ function RoadmapEntry({ id, hasEditAccess }) {
 
 RoadmapEntry.propTypes = {
     id: PropTypes.number.isRequired,
-    hasEditAccess: PropTypes.bool
+    hasEdit: PropTypes.bool
 }
 
 RoadmapEntry.defaultProps = {
-    hasEditAccess: false
+    hasEdit: false
 }
 
 export default RoadmapEntry

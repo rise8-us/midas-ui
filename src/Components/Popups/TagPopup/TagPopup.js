@@ -1,25 +1,21 @@
 import { Box, Icon, TextField, Tooltip } from '@material-ui/core'
 import { HelpOutline } from '@material-ui/icons'
 import { Autocomplete } from '@material-ui/lab'
+import { ColorPicker } from 'Components/ColorPicker'
+import { Popup } from 'Components/Popup'
+import { Tag } from 'Components/Tag'
+import Tooltips from 'Constants/Tooltips'
+import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useFormReducer from '../../../Hooks/useFormReducer'
-import { selectTagTypes } from '../../../Redux/AppSettings/selectors'
-import { selectRequestErrors } from '../../../Redux/Errors/selectors'
-import { closePopup } from '../../../Redux/Popups/actions'
-import { requestCreateTag, requestUpdateTag } from '../../../Redux/Tags/actions'
-import TagConstants from '../../../Redux/Tags/constants'
-import { selectTagById } from '../../../Redux/Tags/selectors'
-import FormatErrors from '../../../Utilities/FormatErrors'
-import { ColorPicker } from '../../ColorPicker'
-import { Popup } from '../../Popup'
-import { Tag } from '../../Tag'
-
-const tagTypeTooltip = 'This will only allow the tag to be available at certain levels. ' +
-'A Project is the smallest component in a Product. It typically has a gitlab pipeline and CTF associated ' +
-'with it. A Product is a collection of Projects; typically composed of a front and backend project, ' +
-'but it is not confined to only that. A Portfolio is a collection of Products.'
+import { selectTagTypes } from 'Redux/AppSettings/selectors'
+import { selectRequestErrors } from 'Redux/Errors/selectors'
+import { closePopup } from 'Redux/Popups/actions'
+import { requestCreateTag, requestUpdateTag } from 'Redux/Tags/actions'
+import TagConstants from 'Redux/Tags/constants'
+import { selectTagById } from 'Redux/Tags/selectors'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
     return {
@@ -106,7 +102,7 @@ function TagPopup({ id, type }) {
                                 ...params.InputProps,
                                 readOnly: true,
                                 startAdornment:
-                                    <Tooltip arrow placement = 'top' title = {tagTypeTooltip}>
+                                    <Tooltip arrow placement = 'top' title = {Tooltips.TAG_TYPE}>
                                         <Icon color = 'secondary'>
                                             <HelpOutline viewBox = '0 0 28 28' />
                                         </Icon>

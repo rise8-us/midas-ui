@@ -2,13 +2,13 @@ import { TextField } from '@material-ui/core'
 import { ArrowDropDown } from '@material-ui/icons'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestCreateTag } from '../../Redux/Tags/actions'
-import { selectTagsByTypes } from '../../Redux/Tags/selectors'
-import FormatErrors from '../../Utilities/FormatErrors'
-import { Tag } from '../Tag'
+import { requestCreateTag } from 'Redux/Tags/actions'
+import { selectTagsByTypes } from 'Redux/Tags/selectors'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const filter = createFilterOptions()
 

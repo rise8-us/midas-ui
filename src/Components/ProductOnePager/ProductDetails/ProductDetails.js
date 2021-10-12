@@ -1,5 +1,6 @@
 import { Grid, makeStyles } from '@material-ui/core'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -48,6 +49,7 @@ function ProductDetails({ productId, hasEdit }) {
                         className: classes.inputLabel
                     }}
                     className = {classes.input}
+                    tooltip = {Tooltips.PRODUCT_VISION}
                     enableSpellCheck
                     fullWidth
                     multiline
@@ -63,6 +65,7 @@ function ProductDetails({ productId, hasEdit }) {
                         className: classes.inputLabel
                     }}
                     className = {classes.input}
+                    tooltip = {Tooltips.PRODUCT_MISSION}
                     enableSpellCheck
                     fullWidth
                     multiline
@@ -78,6 +81,7 @@ function ProductDetails({ productId, hasEdit }) {
                         className: classes.inputLabel
                     }}
                     className = {classes.input}
+                    tooltip = {Tooltips.PRODUCT_PROBLEM_STATEMENT}
                     enableSpellCheck
                     fullWidth
                     multiline

@@ -46,7 +46,7 @@ describe('<ProductRoadmap />', () => {
     })
 
     test('should call openPopup with access', () => {
-        render(<ProductRoadmap productId = {1} hasEditAccess/>)
+        render(<ProductRoadmap productId = {1} hasEdit/>)
 
         fireEvent.click(screen.getByTestId('ProductRoadmap__button-add'))
     })

@@ -3,6 +3,7 @@ import {
     CheckCircleOutlined, PersonOutlined, RadioButtonUncheckedOutlined
 } from '@material-ui/icons'
 import { DraggableRow } from 'Components/Draggable'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -22,7 +23,7 @@ function PersonaEntry({ title, isSupported, hasEdit, onUpdate, onDelete, onToggl
                 />
             }
             additionalOptions = {
-                <Tooltip title = 'Is Supported'>
+                <Tooltip title = {Tooltips.PERSONA_SUPPORTED}>
                     <IconButton
                         size = 'small'
                         data-testid = 'PersonaEntry__button-supported'

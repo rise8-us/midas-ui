@@ -1,7 +1,8 @@
-import { Grid, IconButton, Typography } from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+import { Grid, Icon, IconButton, Tooltip, Typography, useTheme } from '@material-ui/core'
+import { Add, HelpOutline } from '@material-ui/icons'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggableFeatureList } from 'Components/Draggable'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
@@ -12,6 +13,7 @@ import { onDragEnd } from 'Utilities/draggable'
 
 function ProductFeatures({ productId, hasEdit }) {
     const dispatch = useDispatch()
+    const theme = useTheme()
 
     const features = useSelector(state => selectFeaturesByProductId(state, productId))
 
@@ -45,7 +47,18 @@ function ProductFeatures({ productId, hasEdit }) {
 
     return (
         <>
-            <Typography variant = 'h6'>FEATURES</Typography>
+            <Grid container direction = 'row' alignItems = 'stretch' spacing = {1}>
+                <Grid item style = {{ paddingLeft: 6 }}>
+                    <Typography variant = 'h6' color = 'textPrimary'>FEATURES</Typography>
+                </Grid>
+                <Grid item>
+                    <Tooltip title = {Tooltips.FEATURE_DESCRIPTION} placement = 'bottom-start' enterDelay = {500} arrow>
+                        <Icon style = {{ color: theme.palette.secondary.dark }} >
+                            <HelpOutline viewBox = '0 0 25 25' fontSize = 'small'/>
+                        </Icon>
+                    </Tooltip>
+                </Grid>
+            </Grid>
             <DragDropContext onDragEnd = {(result) => onDragEnd(result, features, onDragEndAction)}>
                 <Droppable droppableId = 'list'>
                     {provided => (
