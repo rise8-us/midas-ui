@@ -129,7 +129,10 @@ function Product() {
                                 }
                                 { value === 'ogsms' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <AssertionsTab productId = {id}/>
+                                        <AssertionsTab
+                                            productId = {id}
+                                            hasEdit = {allowInLineEdits(hasEdit, pageLock)}
+                                        />
                                     </Suspense>
                                 }
                                 { value === 'projects' &&

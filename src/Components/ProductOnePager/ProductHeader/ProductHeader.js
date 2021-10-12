@@ -63,6 +63,7 @@ function ProductHeader({ id, hasEdit }) {
                     onSave = {onNameSave}
                     className = {classes.h2}
                     errors = {nameErrors}
+                    fullWidth
                     style = {{ height: '48px', marginBottom: '16px' }}
                     dataTestId = 'ProductHeader__input-name'
                     canEdit = {hasEdit}

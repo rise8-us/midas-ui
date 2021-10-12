@@ -1,8 +1,8 @@
-
-import { Chip, Grid, IconButton, Typography, useTheme } from '@material-ui/core'
-import { PersonAddOutlined, PersonOutlined } from '@material-ui/icons'
+import { Chip, Grid, Icon, IconButton, Tooltip, Typography, useTheme } from '@material-ui/core'
+import { HelpOutline, PersonAddOutlined, PersonOutlined } from '@material-ui/icons'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggablePersonaList } from 'Components/Draggable/DraggablePersonaList'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as personaActions from 'Redux/Personas/actions'
 import { selectPersonasByProductId } from 'Redux/Personas/selectors'
 import { onDragEnd } from 'Utilities/draggable'
+
 function ProductUserPersonas({ productId, hasEdit }) {
     const dispatch = useDispatch()
     const theme = useTheme()
@@ -54,8 +55,17 @@ function ProductUserPersonas({ productId, hasEdit }) {
 
     return (
         <Grid container direction = 'column' spacing = {0}>
-            <Grid item>
-                <Typography variant = 'h6' color = 'textPrimary'>PERSONAS</Typography>
+            <Grid container direction = 'row' alignItems = 'stretch' spacing = {1}>
+                <Grid item style = {{ paddingLeft: 8 }}>
+                    <Typography variant = 'h6' color = 'textPrimary'>PERSONAS</Typography>
+                </Grid>
+                <Grid item>
+                    <Tooltip title = {Tooltips.PERSONA_DESCRIPTION} placement = 'bottom-start' enterDelay = {500} arrow>
+                        <Icon style = {{ color: theme.palette.secondary.dark }} >
+                            <HelpOutline viewBox = '0 0 25 25' fontSize = 'small'/>
+                        </Icon>
+                    </Tooltip>
+                </Grid>
             </Grid>
             <Grid item>
                 <Chip

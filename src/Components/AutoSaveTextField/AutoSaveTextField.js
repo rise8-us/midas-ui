@@ -1,11 +1,12 @@
 import { TextField } from '@material-ui/core'
+import LabelTooltip from 'Components/LabelTooltip/LabelTooltip'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import FormatErrors from 'Utilities/FormatErrors'
 
 function AutoSaveTextField({
     canEdit, className, dataTestId, enableSpellCheck, errors,
-    initialValue, onSave, clearAfterSave, ...textFieldProps }) {
+    initialValue, onSave, clearAfterSave, tooltip, ...textFieldProps }) {
 
     const ref = useRef()
 
@@ -80,6 +81,9 @@ function AutoSaveTextField({
                 ...textFieldProps.inputProps
             }}
             value = {value}
+            label = {textFieldProps.label &&
+                <LabelTooltip label = {textFieldProps.label} tooltipTitle = {tooltip} />
+            }
             onFocus = {onFocus}
             onMouseEnter = {onMouseEnter}
             onMouseLeave = {onMouseLeave}
@@ -110,6 +114,7 @@ AutoSaveTextField.propTypes = {
     onSave: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     clearAfterSave: PropTypes.bool,
+    tooltip: PropTypes.string,
 }
 
 AutoSaveTextField.defaultProps = {
@@ -125,7 +130,8 @@ AutoSaveTextField.defaultProps = {
     multiline: false,
     name: '',
     placeholder: '',
-    clearAfterSave: false
+    clearAfterSave: false,
+    tooltip: '',
 }
 
 export default AutoSaveTextField

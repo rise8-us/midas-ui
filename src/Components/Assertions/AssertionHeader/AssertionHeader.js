@@ -1,6 +1,7 @@
 import { Chip, CircularProgress, Grid, IconButton, Tooltip, Typography } from '@material-ui/core'
 import { AddCircleOutline } from '@material-ui/icons'
 import { unwrapResult } from '@reduxjs/toolkit'
+import Tooltips from 'Constants/Tooltips'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
@@ -78,7 +79,7 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
                 </Grid>
                 <Grid item>
                     {hasEdit &&
-                        <Tooltip title = 'Add new OGSM'>
+                        <Tooltip title = {Tooltips.OGSM_NEW_ENTRY} arrow>
                             <IconButton
                                 color = 'primary'
                                 disabled = {adding}

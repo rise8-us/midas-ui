@@ -2,6 +2,7 @@ import { Chip, Grid, IconButton, Tooltip, Typography } from '@material-ui/core'
 import { AddLocationOutlined } from '@material-ui/icons'
 import Timeline from '@material-ui/lab/Timeline'
 import { RoadmapEntry } from 'Components/RoadmapEntry'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,7 +25,7 @@ const generateCircle = (color) => (
 
 const performActionIfAllowed = (canDo, action) => canDo ? action : null
 
-function ProductRoadmap({ productId, hasEditAccess }) {
+function ProductRoadmap({ productId, hasEdit }) {
 
     const dispatch = useDispatch()
 
@@ -41,9 +42,9 @@ function ProductRoadmap({ productId, hasEditAccess }) {
     return (
         <Grid container spacing = {2} wrap = 'wrap'>
             <Grid container item alignItems = 'center' style = {{ paddingBottom: 0 }}>
-                {performActionIfAllowed(hasEditAccess,
+                {performActionIfAllowed(hasEdit,
                     <Grid item style = {{ paddingBottom: 0 }}>
-                        <Tooltip title = 'Add a new entry' placement = 'top'>
+                        <Tooltip title = {Tooltips.ROADMAP_NEW_ENTRY} placement = 'top' arrow>
                             <IconButton
                                 color = 'secondary'
                                 size = 'small'
@@ -80,7 +81,7 @@ function ProductRoadmap({ productId, hasEditAccess }) {
             <Grid item style = {{ flexGrow: 1, paddingTop: 0 }}>
                 <Timeline align = 'left' style = {{ padding: '0px 4px' }}>
                     {roadmapEntries.map((entry, index) =>
-                        <RoadmapEntry key = {index} id = {entry.id} hasEditAccess = {hasEditAccess} />
+                        <RoadmapEntry key = {index} id = {entry.id} hasEdit = {hasEdit} />
                     )}
                 </Timeline>
             </Grid>
@@ -90,11 +91,11 @@ function ProductRoadmap({ productId, hasEditAccess }) {
 
 ProductRoadmap.propTypes = {
     productId: PropTypes.number.isRequired,
-    hasEditAccess: PropTypes.bool
+    hasEdit: PropTypes.bool
 }
 
 ProductRoadmap.defaultProps = {
-    hasEditAccess: false
+    hasEdit: false
 }
 
 export default ProductRoadmap
