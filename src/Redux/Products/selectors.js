@@ -40,3 +40,7 @@ export const selectUnarchivedProducts = (state) => {
 export const selectAvailableProducts = (state) => {
     return selectUnarchivedProducts(state).filter(p => p.parentId === null && p.type === 'PRODUCT')
 }
+
+export const selectProductOwnerByProductId = (state, productId) => {
+    return state.products[productId]?.ownerId
+}

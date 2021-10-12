@@ -9,6 +9,8 @@ describe('<TeamPopup />', () => {
     const submitCreateTeamMock = useModuleMock('Redux/Teams/actions', 'requestCreateTeam')
     const submitUpdateTeamMock = useModuleMock('Redux/Teams/actions', 'requestUpdateTeam')
     const selectTeamByIdMock = useModuleMock('Redux/Teams/selectors', 'selectTeamById')
+    const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
+    const requestUpdateProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
 
     const returnedFoundTeam = {
         id: 4,
@@ -29,9 +31,14 @@ describe('<TeamPopup />', () => {
         userIds: [],
     }
 
+    const returnedProduct = {
+        ownerId: null
+    }
+
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectTeamByIdMock.mockReturnValue(returnedNewTeam)
+        selectProductByIdMock.mockReturnValue(returnedProduct)
     })
 
     test('should render properly for createTeam', () => {
@@ -48,6 +55,7 @@ describe('<TeamPopup />', () => {
             }
         ] })
         selectTeamByIdMock.mockReturnValue(returnedFoundTeam)
+        selectProductByIdMock.mockReturnValue({ ownerId: 10 })
 
         render(<TeamPopup id = {4}/>)
 
@@ -67,7 +75,7 @@ describe('<TeamPopup />', () => {
         expect(screen.getByText('name error')).toBeInTheDocument()
     })
 
-    test('should call onSubmit to create Team', () => {
+    test('should call onSubmit to create team', () => {
         render(<TeamPopup/>)
 
         fireEvent.click(screen.getByText('Submit'))
@@ -100,7 +108,7 @@ describe('<TeamPopup />', () => {
         userEvent.clear(nameInput)
         userEvent.type(nameInput, name)
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
             userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
             fireEvent.click(await screen.findByText(/jsmith/))
         }
@@ -118,6 +126,12 @@ describe('<TeamPopup />', () => {
             designerId: 10,
             techLeadId: 10,
             userIds: [9, 10]
+        })
+
+        expect(requestUpdateProductMock).toHaveBeenCalledWith({
+            ...returnedProduct,
+            ownerId: 10,
+            childIds: []
         })
     })
 

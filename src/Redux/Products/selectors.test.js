@@ -1,4 +1,4 @@
-import { useModuleMock } from '../../Utilities/test-utils'
+import { useModuleMock } from 'Utilities/test-utils'
 import * as selectors from './selectors'
 
 const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByIds')
@@ -8,6 +8,7 @@ const mockState = {
     products: {
         4: {
             id: 4,
+            ownerId: 12,
             name: 'Midas Product',
             description: null,
             projectIds: [2],
@@ -27,6 +28,7 @@ const mockState = {
         },
         5: {
             id: 5,
+            ownerId: 13,
             name: 'Something Product',
             description: 'Something Product',
             projectIds: [3],
@@ -39,6 +41,7 @@ const mockState = {
         },
         6: {
             id: 6,
+            ownerId: 14,
             name: 'Something Product',
             description: 'Something Product',
             projectIds: [3],
@@ -96,6 +99,7 @@ test('selectProducts - returns product array', () => {
 
     const productOne = {
         id: 4,
+        ownerId: 12,
         name: 'Midas Product',
         description: '',
         projectIds: [2],
@@ -131,4 +135,12 @@ test('selectUnarchivedProductIds - returns array of numbers', () => {
 
 test('selectUnarchivedProducts - returns unarchived products & no parentId', () => {
     expect(selectors.selectAvailableProducts(mockState)).toHaveLength(1)
+})
+
+test('selectProductOwnerByProductId return null if not found', () => {
+    expect(selectors.selectProductOwnerByProductId(mockState, 7)).toBeUndefined()
+})
+
+test('selectProductOwnerByProductId return found user', () => {
+    expect(selectors.selectProductOwnerByProductId(mockState, 4)).toEqual(12)
 })
