@@ -5,12 +5,12 @@ import Constants from './constants'
 
 const subscriptions = ({ stompClient }) => {
 
-    subscribe(stompClient, Constants.WS_UPDATE_Release, (msg) => {
+    subscribe(stompClient, Constants.WS_UPDATE_RELEASE, (msg) => {
         let payload = JSON.parse(msg.body)
         store.dispatch(requestUpdateRelease.fulfilled(payload))
     })
 
-    subscribe(stompClient, Constants.WS_DELETE_Release, (msg) => {
+    subscribe(stompClient, Constants.WS_DELETE_RELEASE, (msg) => {
         let payload = JSON.parse(msg.body)
         store.dispatch(requestDeleteRelease.fulfilled(payload))
     })
