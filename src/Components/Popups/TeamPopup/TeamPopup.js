@@ -9,6 +9,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'
+import { requestUpdateProduct } from 'Redux/Products/actions'
+import { selectProductById } from 'Redux/Products/selectors'
 import { requestCreateTeam, requestUpdateTeam } from 'Redux/Teams/actions'
 import TeamsConstants from 'Redux/Teams/constants'
 import { selectTeamById } from 'Redux/Teams/selectors'
@@ -42,12 +44,16 @@ function TeamPopup({ id, productIds }) {
     const [userIds, setUserIds] = useState(excludeUserIds(
         team.userIds, [team.productManagerId, team.techLeadId, team.designerId]))
 
+    const product = useSelector(state => selectProductById(state, productIds[0]))
+
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: team.name,
         description: team.description,
+        productIds: team.productIds ?? productIds,
+        productOwner: undefined,
         productManager: undefined,
         designer: undefined,
-        techLead: undefined,
+        techLead: undefined
     })
 
     const handleChange = (name, value) => {
@@ -62,6 +68,7 @@ function TeamPopup({ id, productIds }) {
     }
 
     const onSubmit = () => {
+        const productOwnerId = setNumberOrNull(formValues.productOwner?.id)
         const productManagerId = setNumberOrNull(formValues.productManager?.id)
         const designerId = setNumberOrNull(formValues.designer?.id)
         const techLeadId = setNumberOrNull(formValues.techLead?.id)
@@ -74,13 +81,19 @@ function TeamPopup({ id, productIds }) {
 
         dispatch(context.request({
             ...team,
-            productIds,
             name: formValues.name,
             description: formValues.description,
+            productIds: formValues.productIds,
             productManagerId: productManagerId,
             designerId: designerId,
             techLeadId: techLeadId,
             userIds: Array.from(userIdsFinal),
+        }))
+
+        dispatch(requestUpdateProduct({
+            ...product,
+            ownerId: productOwnerId,
+            childIds: []
         }))
     }
 
@@ -93,6 +106,7 @@ function TeamPopup({ id, productIds }) {
     }
 
     useEffect(() => {
+        product.ownerId && requestUserData(product.ownerId, 'productOwner')
         team.productManagerId && requestUserData(team.productManagerId, 'productManager')
         team.designerId && requestUserData(team.designerId, 'designer')
         team.techLeadId && requestUserData(team.techLeadId, 'techLead')
@@ -116,6 +130,14 @@ function TeamPopup({ id, productIds }) {
                     helperText = {<FormatErrors errors = {nameErrors}/>}
                     margin = 'dense'
                     required
+                />
+                <SearchUsers
+                    title = 'Product Owner'
+                    growFrom = '100%'
+                    value = {formValues.productOwner}
+                    onChange = {(_e, values) => handleChange('productOwner', values)}
+                    freeSolo = {true}
+                    dynamicUpdate
                 />
                 <SearchUsers
                     title = 'Product Manager'

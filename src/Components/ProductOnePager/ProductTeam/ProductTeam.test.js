@@ -8,6 +8,7 @@ jest.mock('Components/TeamMember/TeamMember', () => function testing() { return 
 describe('<ProductTeam />', () => {
 
     const selectTeamByProductIdMock = useModuleMock('Redux/Teams/selectors', 'selectTeamByProductId')
+
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
     const foundTeam = {
@@ -24,7 +25,7 @@ describe('<ProductTeam />', () => {
         render(<ProductTeam productId = {1}/>)
 
         expect(screen.getByText('TEAM')).toBeInTheDocument()
-        expect(screen.getAllByText('TeamMemberMock')).toHaveLength(4)
+        expect(screen.getAllByText('TeamMemberMock')).toHaveLength(5)
     })
 
     test('should render edit button', () => {
@@ -35,7 +36,7 @@ describe('<ProductTeam />', () => {
 
         fireEvent.click(screen.getByTitle('edit team'))
 
-        expect(openPopupMock).toHaveBeenCalledWith(TeamConstants.UPDATE_TEAM, 'TeamPopup', { id: 1 })
+        expect(openPopupMock).toHaveBeenCalledWith(TeamConstants.UPDATE_TEAM, 'TeamPopup', { id: 1, productIds: [1] })
     })
 
     test('should render add button', () => {
