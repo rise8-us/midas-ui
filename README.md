@@ -33,6 +33,7 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
     "eslint.packageManager": "yarn",
     "jest.showCoverageOnLoad": true,
     "jest.jestCommandLine": "react-scripts test --coverage",
+    "jest.autoRun": "off",
     "explorer.confirmDragAndDrop": false,
     "editor.minimap.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
@@ -42,6 +43,12 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
     "prettier.trailingComma": "none",
     "git.enableSmartCommit": true,
     "sonarlint.rules": {
+        "javascript:S1529": {
+            "level": "off"
+        }
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
 
 }

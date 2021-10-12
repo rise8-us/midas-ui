@@ -2,7 +2,7 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import {
     fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
-} from '../../Utilities/test-utils'
+} from 'Utilities/test-utils'
 import { AppBar } from './index'
 
 const mockHistoryPush = jest.fn()
@@ -33,7 +33,6 @@ describe('<AppBar />', () => {
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
         expect(screen.getByText('Dashboard')).toBeInTheDocument()
-        expect(screen.getByText('Capabilities')).toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
         expect(screen.getByText('Portfolios')).toBeInTheDocument()
@@ -92,9 +91,6 @@ describe('<AppBar />', () => {
 
         fireEvent.click(screen.getByText('Dashboard'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
-
-        fireEvent.click(screen.getByText('Capabilities'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/capabilities')
 
         fireEvent.click(screen.getByText('Projects'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/projects')
