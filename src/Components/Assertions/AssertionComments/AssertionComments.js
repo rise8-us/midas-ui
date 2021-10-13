@@ -24,18 +24,24 @@ function AssertionComments({ assertionId, hasAccess }) {
     const [maxHeight, setMaxHeight] = useState((browserSize?.height ?? 0) - 88 - 33)
     const [height, setHeight] = useState(0)
 
+    const conditionalAssertionUpdate = () => {
+        if (hasAccess) {
+            return Promise.resolve(unwrapResult).then(() => {
+                dispatch(requestUpdateAssertion({
+                    id: assertionId,
+                    text: assertion.text,
+                    children: [],
+                    status: status
+                }))
+            })
+        }
+    }
+
     const handleSubmit = (value) => {
         dispatch(requestCreateComment({
             assertionId,
             text: `${value}###${status}`
-        })).then(unwrapResult).then(() => {
-            dispatch(requestUpdateAssertion({
-                id: assertionId,
-                text: assertion.text,
-                children: [],
-                status: status
-            }))
-        })
+        })).then(conditionalAssertionUpdate())
     }
 
     if (assertion === undefined) {
