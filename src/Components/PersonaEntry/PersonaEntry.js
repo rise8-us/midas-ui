@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from '@material-ui/core'
 import {
-    CheckCircleOutlined, PersonOutlined, RadioButtonUncheckedOutlined
+    CheckCircleOutlined, Person, PersonOutlined, RadioButtonUncheckedOutlined
 } from '@material-ui/icons'
 import { DraggableRow } from 'Components/Draggable'
 import Tooltips from 'Constants/Tooltips'
@@ -9,18 +9,20 @@ import React from 'react'
 
 function PersonaEntry({ title, isSupported, hasEdit, onUpdate, onDelete, onToggleIsSupported }) {
 
+    const defaultIconProps = {
+        style: { height: '32px', marginLeft: '5px' },
+        'data-testid': 'PersonaEntry__icon-person'
+    }
+
     return (
         <DraggableRow
             title = {title}
             hasEdit = {hasEdit}
             onUpdate = {onUpdate}
             onDelete = {onDelete}
-            startIcon = {
-                <PersonOutlined
-                    color = {isSupported ? 'primary' : 'secondary'}
-                    style = {{ height: '32px' }}
-                    data-testid = 'PersonaEntry__icon-person'
-                />
+            startIcon = { isSupported
+                ? <Person color = 'primary' {...defaultIconProps}/>
+                : <PersonOutlined color = 'secondary' {...defaultIconProps}/>
             }
             additionalOptions = {
                 <Tooltip title = {Tooltips.PERSONA_SUPPORTED}>

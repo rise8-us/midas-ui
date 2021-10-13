@@ -15,4 +15,5 @@ export default {
     PRODUCT_MISSION: 'The near-term goal that supports the vision.',
     PRODUCT_PROBLEM_STATEMENT: 'A single statement that describes what problem this product is aiming to ' +
     'fix/improve upon.',
+    PRODUCT_DETAILS_EMPTY: 'This field looks empty, someone should fix that.',
 }
