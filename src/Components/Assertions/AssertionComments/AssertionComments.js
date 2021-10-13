@@ -1,4 +1,4 @@
-import { Paper } from '@material-ui/core'
+import { Paper, Typography } from '@material-ui/core'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { AssertionStatusDropdown } from 'Components/Assertions'
 import { AddComment, CommentsList } from 'Components/Comments'
@@ -76,10 +76,20 @@ function AssertionComments({ assertionId, hasAccess }) {
             }}
             data-testid = 'AssertionComment__paper'
         >
+            <Typography
+                variant = 'h5'
+                style = {{
+                    padding: '6px 10px',
+                    overflowWrap: 'anywhere',
+                }}
+            >
+                {assertion.text}
+            </Typography>
             <CommentsList
                 commentProps = {{ handleStatusUpdates: true }}
                 commentIds = {assertion?.commentIds ?? []}
             />
+            <div style = {{ flexGrow: 1 }}/>
             <AddComment
                 assertionId = {assertionId}
                 additionalNode = { hasAccess
