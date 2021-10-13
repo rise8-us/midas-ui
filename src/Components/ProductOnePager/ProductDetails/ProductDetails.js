@@ -1,14 +1,14 @@
 import { Grid, makeStyles } from '@material-ui/core'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
-import Tooltips from 'Constants/Tooltips'
+import tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestUpdateProduct } from 'Redux/Products/actions'
 import { selectProductById } from 'Redux/Products/selectors'
 
-const defaultValue = (field) => {
-    return `Oh no! It looks like this product does not have a ${field}. Someone should fix that.`
+const defaultValue = (value) => {
+    return value ? value : tooltips.PRODUCT_DETAILS_EMPTY
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -42,14 +42,14 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item>
                 <AutoSaveTextField
                     label = 'OUR VISION'
-                    initialValue = {product.vision ?? defaultValue('Vision Statement')}
+                    initialValue = {defaultValue(product.vision)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('vision', e)}
                     InputLabelProps = {{
                         className: classes.inputLabel
                     }}
                     className = {classes.input}
-                    tooltip = {Tooltips.PRODUCT_VISION}
+                    tooltip = {tooltips.PRODUCT_VISION}
                     enableSpellCheck
                     fullWidth
                     multiline
@@ -58,14 +58,14 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item>
                 <AutoSaveTextField
                     label = 'OUR MISSION'
-                    initialValue = {product.mission ?? defaultValue('Mission Statement')}
+                    initialValue = {defaultValue(product.mission)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('mission', e)}
                     InputLabelProps = {{
                         className: classes.inputLabel
                     }}
                     className = {classes.input}
-                    tooltip = {Tooltips.PRODUCT_MISSION}
+                    tooltip = {tooltips.PRODUCT_MISSION}
                     enableSpellCheck
                     fullWidth
                     multiline
@@ -74,14 +74,14 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item>
                 <AutoSaveTextField
                     label = 'PROBLEM STATEMENT'
-                    initialValue = {product.problemStatement ?? defaultValue('Problem Statement')}
+                    initialValue = {defaultValue(product.problemStatement)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('problemStatement', e)}
                     InputLabelProps = {{
                         className: classes.inputLabel
                     }}
                     className = {classes.input}
-                    tooltip = {Tooltips.PRODUCT_PROBLEM_STATEMENT}
+                    tooltip = {tooltips.PRODUCT_PROBLEM_STATEMENT}
                     enableSpellCheck
                     fullWidth
                     multiline

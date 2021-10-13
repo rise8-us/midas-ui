@@ -34,6 +34,8 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const tooltipDisplay = (actual, expected) => actual !== expected ? 'unset' : 'none'
+
 function ProjectCard({ id }) {
     const dispatch = useDispatch()
     const theme = useTheme()
@@ -92,7 +94,15 @@ function ProjectCard({ id }) {
             />
             <Box display = 'flex'>
                 {hasAccess &&
-                    <Tooltip title = {Tooltips.PROJECT_PROGRESS_ROLLBACK} arrow>
+                    <Tooltip
+                        arrow
+                        title = {Tooltips.PROJECT_PROGRESS_ROLLBACK}
+                        PopperProps = {{
+                            style: {
+                                display: tooltipDisplay(project.projectJourneyMap, 0),
+                            }
+                        }}
+                    >
                         <div style = {{ alignSelf: 'center', borderRadius: '50%' }}>
                             <IconButton
                                 onClick = {() => handleProgress(-1)}
@@ -109,7 +119,15 @@ function ProjectCard({ id }) {
                 }
                 <PathToProdStepper step = {calcStep()} />
                 {hasAccess &&
-                    <Tooltip title = {Tooltips.PROJECT_PROGRESS_COMPLETE} arrow>
+                    <Tooltip
+                        arrow
+                        title = {Tooltips.PROJECT_PROGRESS_COMPLETE}
+                        PopperProps = {{
+                            style: {
+                                display: tooltipDisplay(project.projectJourneyMap, 7),
+                            }
+                        }}
+                    >
                         <div style = {{ alignSelf: 'center', borderRadius: '50%' }}>
                             <IconButton
                                 onClick = {() => handleProgress(1)}

@@ -82,7 +82,19 @@ function AutoSaveTextField({
             }}
             value = {value}
             label = {textFieldProps.label &&
-                <LabelTooltip label = {textFieldProps.label} tooltipTitle = {tooltip} />
+                <LabelTooltip
+                    text = {textFieldProps.label}
+                    typographyProps = {{
+                        variant: 'h6',
+                    }}
+                    tooltipProps = {{
+                        title: tooltip,
+                        placement: 'bottom-start',
+                        enterDelay: 500,
+                        arrow: true
+                    }}
+                    iconFontSize = 'small'
+                />
             }
             onFocus = {onFocus}
             onMouseEnter = {onMouseEnter}

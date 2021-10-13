@@ -13,6 +13,7 @@ describe('<ProductTeam />', () => {
 
     const foundTeam = {
         id: 1,
+        name: 'team',
         productManagerId: 2,
         designerId: 3,
         techLeadId: 4,

@@ -1,26 +1,34 @@
-import { Grid, Icon, Tooltip, useTheme } from '@material-ui/core'
+import { alpha, Grid, Icon, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { HelpOutline } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-function LabelTooltip({ label, tooltipTitle }) {
+const useStyles = makeStyles(theme => ({
+    icon: {
+        borderRadius: '50%',
+        display: 'flex',
+        cursor: 'help',
+        color: alpha(theme.palette.secondary.main, .5)
+    }
+}))
 
-    const theme = useTheme()
+function LabelTooltip({ text, iconFontSize, typographyProps, tooltipProps }) {
+    const classes = useStyles()
 
     return (
         <Grid container direction = 'row' alignItems = 'stretch' spacing = {1}>
             <Grid item>
-                {label}
+                <Typography {...typographyProps}>{text}</Typography>
             </Grid>
-            <Grid item>
-                {tooltipTitle &&
-                <Tooltip title = {tooltipTitle} placement = 'top' enterDelay = {500} arrow>
-                    <div>
-                        <Icon style = {{ color: theme.palette.secondary.dark }} >
-                            <HelpOutline viewBox = '0 0 25 25'/>
+            <Grid item style = {{ display: 'flex', alignItems: 'center' }}>
+                {tooltipProps.title ?
+                    <Tooltip {...tooltipProps} >
+                        <Icon className = {classes.icon} fontSize = {iconFontSize} data-testid = 'LabelTooltip__icon'>
+                            <HelpOutline fontSize = {iconFontSize}/>
                         </Icon>
-                    </div>
-                </Tooltip>
+                    </Tooltip>
+                    :
+                    null
                 }
             </Grid>
         </Grid>
@@ -28,12 +36,24 @@ function LabelTooltip({ label, tooltipTitle }) {
 }
 
 LabelTooltip.propTypes = {
-    label: PropTypes.string.isRequired,
-    tooltipTitle: PropTypes.string,
+    text: PropTypes.string.isRequired,
+    iconFontSize: PropTypes.oneOf(['inherit', 'small', 'medium', 'large']),
+    typographyProps: PropTypes.shape({
+        variant: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'subtitle1', 'subtitle2',
+            'body1', 'body2', 'button', 'caption', 'overline']),
+        color: PropTypes.oneOf(['textPrimary', 'textSecondary', 'primary', 'secondary'])
+    }),
+    tooltipProps: PropTypes.shape({
+        title: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
+    })
 }
 
 LabelTooltip.defaultProps = {
-    tooltipTitle: null,
+    iconFontSize: 'medium',
+    typographyProps: undefined,
+    tooltipProps: {
+        title: undefined
+    }
 }
 
 export default LabelTooltip

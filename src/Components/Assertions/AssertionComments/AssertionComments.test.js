@@ -67,6 +67,7 @@ describe('<AssertionComments>', () => {
         render(<AssertionComments assertionId = {3} hasAccess = {false}/>, { initialState: mockState })
 
         expect(screen.queryByText(/status/)).not.toBeInTheDocument()
+        expect(requestCreateCommentMock).not.toHaveBeenCalled()
     })
 
     test('should handle submit', () => {
