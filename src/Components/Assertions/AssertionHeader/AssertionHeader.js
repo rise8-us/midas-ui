@@ -118,11 +118,7 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
 AssertionHeader.propTypes = {
     productId: PropTypes.number.isRequired,
     onCreate: PropTypes.func.isRequired,
-    hasEdit: PropTypes.bool
-}
-
-AssertionHeader.defaultProps = {
-    hasEdit: false
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default AssertionHeader

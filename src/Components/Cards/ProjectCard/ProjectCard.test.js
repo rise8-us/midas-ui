@@ -48,14 +48,14 @@ describe('<ProjectCard />', () => {
     })
 
     test('should display data', () => {
-        render(<ProjectCard id = {project.id}/>)
+        render(<ProjectCard id = {project.id} hasEdit = {false}/>)
 
         expect(screen.getByText('project 1')).toBeInTheDocument()
     })
 
     test('should fire updateProjectPopup', () => {
         selectProjectByIdMock.mockReturnValue({ ...project, coverage: { coverageChange: 1 } })
-        render(<ProjectCard id = {project.id} canUpdate/>)
+        render(<ProjectCard id = {project.id} hasEdit/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-edit'))
 
@@ -65,7 +65,7 @@ describe('<ProjectCard />', () => {
 
     test('should fire updateProgress forward', () => {
         selectProjectByIdMock.mockReturnValue({ ...project, coverage: { coverageChange: -1 } })
-        render(<ProjectCard id = {project.id} canUpdate/>)
+        render(<ProjectCard id = {project.id} hasEdit/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-forward'))
 
@@ -74,7 +74,7 @@ describe('<ProjectCard />', () => {
     })
 
     test('should fire updateProgress backward', () => {
-        render(<ProjectCard id = {project.id} canUpdate/>)
+        render(<ProjectCard id = {project.id} hasEdit/>)
 
         fireEvent.click(screen.getByTestId('ProjectCard__button-back'))
 
@@ -85,7 +85,7 @@ describe('<ProjectCard />', () => {
     test('should go to product page on product name click', () => {
         selectProjectByIdMock.mockReturnValue({ ...project, productId: 2 })
 
-        render(<ProjectCard id = {project.id}/>)
+        render(<ProjectCard id = {project.id} hasEdit = {false}/>)
 
         fireEvent.click(screen.getByText(/productName/))
         expect(mockHistoryPush).toHaveBeenCalledWith('/products/2/overview')
@@ -94,7 +94,7 @@ describe('<ProjectCard />', () => {
     test('should not be changeable', () => {
         hasProjectAccessMock.mockReturnValue(false)
 
-        render(<ProjectCard id = {project.id} />)
+        render(<ProjectCard id = {project.id} hasEdit = {false}/>)
 
         expect(screen.queryByTestId('ProjectCard__button-edit')).not.toBeInTheDocument()
         expect(screen.queryByTestId('ProjectCard__button-back')).not.toBeInTheDocument()

@@ -1,12 +1,12 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
+import { ProjectCard } from 'Components/Cards'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openPopup } from '../../../Redux/Popups/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { selectProductById } from '../../../Redux/Products/selectors'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { ProjectCard } from '../../Cards'
+import { openPopup } from 'Redux/Popups/actions'
+import ProductConstants from 'Redux/Products/constants'
+import { selectProductById } from 'Redux/Products/selectors'
+import ProjectConstants from 'Redux/Projects/constants'
 
 const useStyles = makeStyles(() => ({
     clickable: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-function ProjectsTab({ id }) {
+function ProjectsTab({ id, hasEdit }) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
@@ -55,26 +55,30 @@ ${product.name !== undefined ? product.name : 'this product'} •`
                     style = {{ margin: '20px 0' }}
                 >
                     {projects.map(project => (
-                        <ProjectCard id = {project.id} key = {project.id}/>
+                        <ProjectCard id = {project.id} key = {project.id} hasEdit = {hasEdit}/>
                     ))}
                 </Box>
                 :
                 <div style = {{ display: 'inline-flex', padding: '12px 36px' }}>
                     <Typography {...typoProps} color = 'textSecondary'>{noProjectsString}</Typography>
-                    <Typography
-                        {...typoProps}
-                        className = {classes.clickable}
-                        color = 'primary'
-                        onClick = {updateProduct}
-                    >add an existing project</Typography>
-                    <Typography {...typoProps} color = 'textSecondary'>or</Typography>
-                    <Typography
-                        {...typoProps}
-                        className = {classes.clickable}
-                        color = 'primary'
-                        onClick = {createProject}
-                    >create a new project</Typography>
-                    <Typography variant = 'caption'>.</Typography>
+                    {hasEdit &&
+                        <>
+                            <Typography
+                                {...typoProps}
+                                className = {classes.clickable}
+                                color = 'primary'
+                                onClick = {updateProduct}
+                            >add an existing project</Typography>
+                            <Typography {...typoProps} color = 'textSecondary'>or</Typography>
+                            <Typography
+                                {...typoProps}
+                                className = {classes.clickable}
+                                color = 'primary'
+                                onClick = {createProject}
+                            >create a new project</Typography>
+                            <Typography variant = 'caption'>.</Typography>
+                        </>
+                    }
                 </div>
             }
         </div>
@@ -82,7 +86,8 @@ ${product.name !== undefined ? product.name : 'this product'} •`
 }
 
 ProjectsTab.propTypes = {
-    id: PropTypes.number.isRequired
+    id: PropTypes.number.isRequired,
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default ProjectsTab

@@ -106,8 +106,7 @@ function ProductUserPersonas({ productId, hasEdit }) {
                     )}
                 </Droppable>
             </DragDropContext>
-            {hasEdit
-                ?
+            {hasEdit ?
                 <Grid container alignItems = 'center'>
                     <Grid item style = {{ minWidth: '24px', marginRight: '8px' }}>
                         <IconButton title = 'Add Persona'
@@ -141,11 +140,7 @@ function ProductUserPersonas({ productId, hasEdit }) {
 
 ProductUserPersonas.propTypes = {
     productId: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool
-}
-
-ProductUserPersonas.defaultProps = {
-    hasEdit: false
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default ProductUserPersonas

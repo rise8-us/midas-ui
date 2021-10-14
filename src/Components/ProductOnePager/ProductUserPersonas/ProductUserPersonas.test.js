@@ -46,7 +46,7 @@ describe('<ProductUserPersonas>', () => {
     test('should render', () => {
         selectPersonasByProductId.mockReturnValue(personas)
 
-        render(<ProductUserPersonas productId = {3}/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {false}/>)
 
         expect(screen.getByText('PERSONAS')).toBeInTheDocument()
         expect(screen.getByDisplayValue('persona 1')).toBeInTheDocument()
@@ -57,7 +57,7 @@ describe('<ProductUserPersonas>', () => {
     test('should call createPersona', () => {
         selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        render(<ProductUserPersonas productId = {3} hasEdit/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         userEvent.type(screen.getByPlaceholderText('Add new user persona...'), 'a new thing{enter}')
 
@@ -67,7 +67,7 @@ describe('<ProductUserPersonas>', () => {
     test('should call updatePersona', () => {
         selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        render(<ProductUserPersonas productId = {3} hasEdit/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         userEvent.type(screen.getByDisplayValue('persona 1'), '!{enter}')
 
@@ -80,7 +80,7 @@ describe('<ProductUserPersonas>', () => {
     test('should call toggleIsSupported', () => {
         selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        render(<ProductUserPersonas productId = {3} hasEdit/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
         fireEvent.click(screen.getByTestId('PersonaEntry__button-supported'))
@@ -94,7 +94,7 @@ describe('<ProductUserPersonas>', () => {
     test('should call deletePersona', () => {
         selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        render(<ProductUserPersonas productId = {3} hasEdit/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
         fireEvent.click(screen.getByTitle('Delete'))
@@ -108,7 +108,7 @@ describe('<ProductUserPersonas>', () => {
             passedThroughFn(newPersonaOrder)
         })
 
-        render(<ProductUserPersonas productId = {3} hasEdit/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         const entries = screen.getAllByTestId('DraggablePersonaList__draggable')
 
@@ -123,7 +123,7 @@ describe('<ProductUserPersonas>', () => {
     test('should focus new persona input on icon click', () => {
         selectPersonasByProductId.mockReturnValue([personas[0]])
 
-        render(<ProductUserPersonas productId = {3} hasEdit/>)
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         fireEvent.click(screen.getByTitle('Add Persona'))
 

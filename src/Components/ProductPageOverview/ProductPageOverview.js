@@ -28,11 +28,7 @@ function ProductPageOverview({ id, hasEdit }) {
 
 ProductPageOverview.propTypes = {
     id: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool
-}
-
-ProductPageOverview.defaultProps = {
-    hasEdit: false
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default ProductPageOverview

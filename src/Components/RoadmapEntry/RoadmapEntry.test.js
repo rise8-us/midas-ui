@@ -40,7 +40,7 @@ describe('<RoadmapEntry />', () => {
     test('should render', () => {
         selectRoadmapByIdMock.mockReturnValue({ ...roadmapEntry, status: 'COMPLETE' })
 
-        render(<RoadmapEntry id = {3}/>)
+        render(<RoadmapEntry id = {3} hasEdit = {false}/>)
 
         expect(screen.getByText('title')).toBeInTheDocument()
         expect(screen.getByText('description')).toBeInTheDocument()
@@ -48,7 +48,7 @@ describe('<RoadmapEntry />', () => {
     })
 
     test('should call openPopup with access', () => {
-        render(<RoadmapEntry id = {3} hasEdit/>)
+        render(<RoadmapEntry id = {3} hasEdit = {true}/>)
 
         fireEvent.click(screen.getByText('title'))
 
@@ -58,7 +58,7 @@ describe('<RoadmapEntry />', () => {
     })
 
     test('should not call openPopup with no access', () => {
-        render(<RoadmapEntry id = {3}/>)
+        render(<RoadmapEntry id = {3} hasEdit = {false}/>)
 
         fireEvent.click(screen.getByText('title'))
 

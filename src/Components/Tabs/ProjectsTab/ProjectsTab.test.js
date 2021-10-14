@@ -1,10 +1,10 @@
 import React from 'react'
-import ProductConstants from '../../../Redux/Products/constants'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import ProductConstants from 'Redux/Products/constants'
+import ProjectConstants from 'Redux/Projects/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProjectsTab } from './index'
 
-jest.mock('../../Cards/ProjectCard/ProjectCard',
+jest.mock('Components/Cards/ProjectCard/ProjectCard',
     () => function testing() { return (<div>ProjectCard</div>) })
 
 describe('<ProjectsTab>', () => {
@@ -15,27 +15,19 @@ describe('<ProjectsTab>', () => {
     test('should not render ProjectCards', () => {
         selectProductByIdMock.mockReturnValue({})
 
-        render(<ProjectsTab id = {0}/>)
+        render(<ProjectsTab id = {0} hasEdit = {false}/>)
         expect(screen.queryByText('ProjectCard')).not.toBeInTheDocument()
+        expect(screen.getByText(/There does not seem to be any projects associated with this product/i))
+            .toBeInTheDocument()
     })
 
     test('should render project cards', () => {
         selectProductByIdMock.mockReturnValue({
             projects: [{ id: 2, isArchived: false }, { id: 3, isArchived: false  }]
         })
-        render(<ProjectsTab id = {0}/>)
+        render(<ProjectsTab id = {0} hasEdit = {false}/>)
 
         expect(screen.getAllByText('ProjectCard')).toHaveLength(2)
-    })
-
-    test('should render no projects text', () => {
-        selectProductByIdMock.mockReturnValue({
-            projects: []
-        })
-        render(<ProjectsTab id = {0}/>)
-
-        expect(screen.getByText(/There does not seem to be any projects associated with this product/i))
-            .toBeInTheDocument()
     })
 
     test('should call ProductPopup', () => {
@@ -46,7 +38,7 @@ describe('<ProjectsTab>', () => {
             id: 0
         })
 
-        render(<ProjectsTab id = {0}/>)
+        render(<ProjectsTab id = {0} hasEdit = {true}/>)
 
         fireEvent.click(screen.getByText(/add an existing project/i))
         expect(openPopupMock)
@@ -61,7 +53,7 @@ describe('<ProjectsTab>', () => {
             projects: []
         })
 
-        render(<ProjectsTab id = {0}/>)
+        render(<ProjectsTab id = {0} hasEdit = {true}/>)
 
         fireEvent.click(screen.getByText(/create a new project/i))
         expect(openPopupMock)

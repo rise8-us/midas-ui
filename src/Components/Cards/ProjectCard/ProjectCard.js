@@ -12,7 +12,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { hasProjectAccess } from 'Redux/Auth/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { selectProductById } from 'Redux/Products/selectors'
 import { requestUpdateJourneyMapById } from 'Redux/Projects/actions'
@@ -36,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 const tooltipDisplay = (actual, expected) => actual !== expected ? 'unset' : 'none'
 
-function ProjectCard({ id }) {
+function ProjectCard({ id, hasEdit }) {
     const dispatch = useDispatch()
     const theme = useTheme()
     const classes = useStyles()
@@ -46,7 +45,6 @@ function ProjectCard({ id }) {
 
     const project = useSelector(state => selectProjectById(state, id))
     const product = useSelector(state => selectProductById(state, project.productId))
-    const hasAccess = useSelector(state => hasProjectAccess(state, project.id))
     const coverage = project.coverage ?? {}
 
     const calcStep = () => Math.log2(project.projectJourneyMap + 1)
@@ -82,7 +80,7 @@ function ProjectCard({ id }) {
                     onClick: project.productId !== null ? goToProductsPage : undefined,
                     className: project.productId !== null ? classes.link : 'card',
                 }}
-                action = {hasAccess &&
+                action = {hasEdit &&
                     <IconButton
                         onClick = {updateProjectPopup}
                         color = 'secondary'
@@ -93,7 +91,7 @@ function ProjectCard({ id }) {
                 }
             />
             <Box display = 'flex'>
-                {hasAccess &&
+                {hasEdit &&
                     <Tooltip
                         arrow
                         title = {Tooltips.PROJECT_PROGRESS_ROLLBACK}
@@ -118,7 +116,7 @@ function ProjectCard({ id }) {
                     </Tooltip>
                 }
                 <PathToProdStepper step = {calcStep()} />
-                {hasAccess &&
+                {hasEdit &&
                     <Tooltip
                         arrow
                         title = {Tooltips.PROJECT_PROGRESS_COMPLETE}
@@ -216,6 +214,7 @@ function ProjectCard({ id }) {
 
 ProjectCard.propTypes = {
     id: PropTypes.number.isRequired,
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default ProjectCard

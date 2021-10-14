@@ -65,6 +65,7 @@ function AssertionsTab({ productId, hasEdit }) {
                             order = {['OBJECTIVE', 'GOAL', 'STRATEGY', 'MEASURE']}
                             id = {objectives[selectedIndex].id}
                             productId = {productId}
+                            hasEdit = {hasEdit}
                             defaultExpanded
                         />
                     }
@@ -72,7 +73,7 @@ function AssertionsTab({ productId, hasEdit }) {
             </Grid>
             { showComments &&
             <Grid item style = {{ maxWidth: '350px', minWidth: '350px' }}>
-                <AssertionComments assertionId = {showComments} hasAccess = {hasEdit}/>
+                <AssertionComments assertionId = {showComments}/>
             </Grid>
             }
         </Grid>
@@ -81,11 +82,7 @@ function AssertionsTab({ productId, hasEdit }) {
 
 AssertionsTab.propTypes = {
     productId: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool,
-}
-
-AssertionsTab.defaultProps = {
-    hasEdit: false
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default AssertionsTab

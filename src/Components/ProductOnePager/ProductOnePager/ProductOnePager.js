@@ -42,7 +42,7 @@ function ProductOnePager({ id }) {
                     <div>Deliverables</div>
                 </Grid>
                 <Grid item>
-                    <ProductUserPersonas productId = {id} hasEdit = {false} />
+                    <ProductUserPersonas productId = {id} hasEdit = {false}/>
                 </Grid>
                 <Grid item style = {{ display: 'none' }}>
                     <div>Development</div>

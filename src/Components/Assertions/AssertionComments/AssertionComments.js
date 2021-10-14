@@ -8,15 +8,17 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
 import { requestUpdateAssertion } from 'Redux/Assertions/actions'
+import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
 import { requestCreateComment } from 'Redux/Comments/actions'
 
-function AssertionComments({ assertionId, hasAccess }) {
+function AssertionComments({ assertionId }) {
     const ref = useRef()
     const browserSize = useWindowSize()
     const scroll = useSelector(state => state.app.pageScrollY)
     const dispatch = useDispatch()
 
     const assertion = useSelector(state => state.assertions[assertionId])
+    const hasAccess = useSelector(state => hasProductOrTeamAccess(state, assertion?.productId))
 
     const selectedStatus = useSelector(state => state.app.assertionStatus[assertion?.status ?? 'NOT_STARTED'])
     const [status, setStatus] = useState(selectedStatus?.name ?? 'NOT_STARTED')
@@ -83,7 +85,7 @@ function AssertionComments({ assertionId, hasAccess }) {
                     overflowWrap: 'anywhere',
                 }}
             >
-                {assertion.text}
+                {assertion?.text}
             </Typography>
             <CommentsList
                 commentProps = {{ handleStatusUpdates: true }}
@@ -96,7 +98,6 @@ function AssertionComments({ assertionId, hasAccess }) {
                     ? <AssertionStatusDropdown
                         option = {selectedStatus}
                         onChange = {setStatus}
-                        hasAccess = {hasAccess}
                     /> : null
                 }
                 onSubmit = {handleSubmit}
@@ -107,7 +108,6 @@ function AssertionComments({ assertionId, hasAccess }) {
 
 AssertionComments.propTypes = {
     assertionId: PropTypes.number.isRequired,
-    hasAccess: PropTypes.bool.isRequired
 }
 
 export default AssertionComments

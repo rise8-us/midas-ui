@@ -27,7 +27,7 @@ describe('<AssertionsTab>', () => {
     test('should render selected OGSM', () => {
         selectRootAssertionIdMock.mockReturnValue(42)
 
-        renderWithRouter(<AssertionsTab productId = {0}/>)
+        renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>)
 
         fireEvent.click(screen.getByText('Header'))
         fireEvent.click(screen.getByText('1'))
@@ -41,13 +41,13 @@ describe('<AssertionsTab>', () => {
         selectAssertionsByTypeAndProductIdMock.mockReturnValue([{ id: 1, text: '', commentIds: [] }])
         selectRootAssertionIdMock.mockReturnValue(1)
 
-        renderWithRouter(<AssertionsTab productId = {0}/>)
+        renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>)
 
         expect(screen.getByText('1')).toHaveStyle('font-weight: 900')
     })
 
     test('should show comments', () => {
-        renderWithRouter(<AssertionsTab productId = {0}/>, {
+        renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>, {
             initialState: {
                 app: {
                     assertionCommentsOpen: 1,

@@ -40,20 +40,21 @@ describe('<ProductRoadmap />', () => {
     })
 
     test('should render', () => {
-        render(<ProductRoadmap productId = {1}/>)
+        render(<ProductRoadmap productId = {1} hasEdit = {false}/>)
 
         expect(screen.getByText('RoadmapEntry')).toBeInTheDocument()
     })
 
     test('should call openPopup with access', () => {
-        render(<ProductRoadmap productId = {1} hasEdit/>)
+        render(<ProductRoadmap productId = {1} hasEdit = {true}/>)
 
         fireEvent.click(screen.getByTestId('ProductRoadmap__button-add'))
+
+        expect(openPopupMock).toHaveBeenCalled()
     })
 
-
-    test('should call openPopup with access', () => {
-        render(<ProductRoadmap productId = {1} />)
+    test('should not render add button without access', () => {
+        render(<ProductRoadmap productId = {1} hasEdit = {false}/>)
 
         expect(screen.queryByTestId('ProductRoadmap__button-add')).not.toBeInTheDocument()
     })
