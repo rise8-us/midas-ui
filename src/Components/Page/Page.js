@@ -1,9 +1,9 @@
 import { makeStyles } from '@material-ui/core'
+import { AppBar } from 'Components/AppBar'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { setPageScrollY } from '../../Redux/AppSettings/reducer'
-import { AppBar } from '../AppBar'
+import { setPageScrollY } from 'Redux/AppSettings/reducer'
 
 const useStyles = makeStyles(theme => ({
     page: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
             '-webkit-border-radius': '12px'
         },
         padding: '68px 0 20px 0',
-        overflowY: 'auto',
+        overflowY: 'overlay',
         height: '100%',
         scrollBehavior: 'smooth'
     }
