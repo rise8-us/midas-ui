@@ -81,7 +81,11 @@ function ProductRoadmap({ productId, hasEdit }) {
             <Grid item style = {{ flexGrow: 1, paddingTop: 0 }}>
                 <Timeline align = 'left' style = {{ padding: '0px 4px' }}>
                     {roadmapEntries.map((entry, index) =>
-                        <RoadmapEntry key = {index} id = {entry.id} hasEdit = {hasEdit} />
+                        <RoadmapEntry
+                            key = {index}
+                            id = {entry.id}
+                            hasEdit = {hasEdit}
+                        />
                     )}
                 </Timeline>
             </Grid>
@@ -91,11 +95,7 @@ function ProductRoadmap({ productId, hasEdit }) {
 
 ProductRoadmap.propTypes = {
     productId: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool
-}
-
-ProductRoadmap.defaultProps = {
-    hasEdit: false
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default ProductRoadmap

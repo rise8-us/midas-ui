@@ -110,7 +110,7 @@ describe('<TeamPopup />', () => {
 
         for (let i = 0; i < 4; i++) {
             userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
-            fireEvent.click(await screen.findByText(/jsmith/))
+            fireEvent.click(await screen.findByText('jsmith'))
         }
 
         userEvent.type(screen.getByPlaceholderText('Add another team member...'), 'jsmith')

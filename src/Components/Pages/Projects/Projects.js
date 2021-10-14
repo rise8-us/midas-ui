@@ -32,7 +32,7 @@ function Projects() {
                     style = {{ marginBottom: '40px', padding: '0 30px' }}
                 >
                     {filteredProducts.map((project, index) => (
-                        <ProjectCard key = {index} id = {project.id} />
+                        <ProjectCard key = {index} id = {project.id} hasEdit = {false}/>
                     ))}
                 </Box>
             </Box>

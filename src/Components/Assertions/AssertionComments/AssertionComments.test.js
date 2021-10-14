@@ -10,6 +10,7 @@ describe('<AssertionComments>', () => {
 
     const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
     const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
+    const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
 
     const mockState = {
         app: {
@@ -35,7 +36,9 @@ describe('<AssertionComments>', () => {
     }
 
     test('should set height', () => {
-        render(<AssertionComments assertionId = {3} hasAccess = {true}/>, { initialState: {
+        hasProductOrTeamAccessMock.mockReturnValue(false)
+
+        render(<AssertionComments assertionId = {3}/>, { initialState: {
             assertions: { ...mockState.assertions },
             app: {
                 assertionStatus: { },
@@ -43,28 +46,31 @@ describe('<AssertionComments>', () => {
             }
         } })
 
-        expect(screen.getByText(/Not Started/)).toBeInTheDocument()
         expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 446px')
     })
 
     test('should render', () => {
-        render(<AssertionComments assertionId = {1} hasAccess = {true}/>, { initialState: mockState })
+        hasProductOrTeamAccessMock.mockReturnValue(false)
+
+        render(<AssertionComments assertionId = {1}/>, { initialState: mockState })
 
         expect(screen.getByPlaceholderText(/enter comment here.../i)).toBeInTheDocument()
     })
 
-    test('should dispatch setAssertionComment with hasAccess', () => {
+    test('should dispatch setAssertionComment with access', () => {
         useDispatchMock().mockReturnValue({})
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
-        render(<AssertionComments assertionId = {2} hasAccess = {true}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {2}/>, { initialState: mockState })
 
         expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: null, deletedAssertionId: null })
     })
 
-    test('should not render status dropdown with hasAccess false', () => {
+    test('should not render status dropdown without access', () => {
         useDispatchMock().mockReturnValue({})
+        hasProductOrTeamAccessMock.mockReturnValue(false)
 
-        render(<AssertionComments assertionId = {3} hasAccess = {false}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {3}/>, { initialState: mockState })
 
         expect(screen.queryByText(/status/)).not.toBeInTheDocument()
         expect(requestCreateCommentMock).not.toHaveBeenCalled()
@@ -72,8 +78,9 @@ describe('<AssertionComments>', () => {
 
     test('should handle submit', () => {
         useDispatchMock().mockResolvedValue({ data: {} })
+        hasProductOrTeamAccessMock.mockReturnValue(true)
 
-        render(<AssertionComments assertionId = {1} hasAccess = {true}/>, { initialState: mockState })
+        render(<AssertionComments assertionId = {1}/>, { initialState: mockState })
 
         userEvent.type(screen.getByPlaceholderText(/enter comment here.../i), 'new comment')
         fireEvent.click(screen.getByText(/submit/i))

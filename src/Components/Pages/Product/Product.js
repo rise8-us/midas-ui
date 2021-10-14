@@ -16,7 +16,7 @@ import { requestFetchRoadmapsByProductId } from 'Redux/Roadmaps/actions'
 
 const knownTabs = ['overview', 'ogsms', 'projects']
 const validTab = (potentialTab) => knownTabs.includes(potentialTab)
-const allowInLineEdits = (canEdit, readOnly) => canEdit && (!readOnly)
+const calculateHasEdit = (canEdit, readOnly) => canEdit && (!readOnly)
 
 function Product() {
     const history = useHistory()
@@ -25,10 +25,11 @@ function Product() {
     const { productId, productTab, assertionId } = useParams()
     const id = parseInt(productId)
 
-    const hasEdit = useSelector(state => hasProductOrTeamAccess(state, id))
+    const hasPermission = useSelector(state => hasProductOrTeamAccess(state, id))
 
     const [value, setValue] = useState(false)
     const [pageLock, setPageLock] = useState(true)
+    const [hasEdit, setHasEdit] = useState(false)
 
     const handleChange = (_e, newValue) => {
         setValue(newValue)
@@ -49,28 +50,32 @@ function Product() {
         dispatch(requestFetchFeaturesByProductId(id))
     }, [])
 
+    useEffect(() => {
+        setHasEdit(calculateHasEdit(hasPermission, pageLock))
+    }, [hasPermission, pageLock])
+
     return (
         <Page>
             <Grid container style = {{ padding: '0px 4px 0px 24px' }} spacing = {3}>
                 <Grid container item direction = 'column' xl = {3} lg = {4} md = {4} spacing = {2}>
                     <Grid item>
-                        <ProductHeader id = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
+                        <ProductHeader id = {id} hasEdit = {hasEdit}/>
                     </Grid>
                     <Grid item>
-                        <ProductTeam productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
+                        <ProductTeam productId = {id} hasEdit = {hasEdit}/>
                     </Grid>
                     <Grid item>
-                        <ProductDetails productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
+                        <ProductDetails productId = {id} hasEdit = {hasEdit}/>
                     </Grid>
                     <Grid item>
-                        <ProductFeatures productId = {id} hasEdit = {allowInLineEdits(hasEdit, pageLock)}/>
+                        <ProductFeatures productId = {id} hasEdit = {hasEdit}/>
                     </Grid>
                 </Grid>
                 <Grid container item direction = 'column' xl = {9} lg = {8} md = {8}>
                     <Grid container item direction = 'column'>
                         <Grid container item style = {{ height: '48px' }} direction = 'row-reverse'>
                             <Grid item>
-                                {hasEdit &&
+                                {hasPermission &&
                                     <IconButton
                                         data-testid = 'ProductPage__icon-inline-edit'
                                         onClick = {() => setPageLock(prev => !prev)}
@@ -83,7 +88,7 @@ function Product() {
                                 }
                             </Grid>
                             <Grid item>
-                                {hasEdit && !pageLock &&
+                                {hasEdit &&
                                     <IconButton
                                         data-testid = 'ProductPage__icon-popup-edit'
                                         onClick = {openUpdateProductPopup}
@@ -123,7 +128,7 @@ function Product() {
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <ProductPageOverview
                                             id = {id}
-                                            hasEdit = {allowInLineEdits(hasEdit, pageLock)}
+                                            hasEdit = {hasEdit}
                                         />
                                     </Suspense>
                                 }
@@ -131,13 +136,16 @@ function Product() {
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <AssertionsTab
                                             productId = {id}
-                                            hasEdit = {allowInLineEdits(hasEdit, pageLock)}
+                                            hasEdit = {hasEdit}
                                         />
                                     </Suspense>
                                 }
                                 { value === 'projects' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <ProjectsTab id = {id} />
+                                        <ProjectsTab
+                                            id = {id}
+                                            hasEdit = {hasEdit}
+                                        />
                                     </Suspense>
                                 }
                             </div>

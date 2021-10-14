@@ -95,11 +95,7 @@ function RoadmapEntry({ id, hasEdit }) {
 
 RoadmapEntry.propTypes = {
     id: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool
-}
-
-RoadmapEntry.defaultProps = {
-    hasEdit: false
+    hasEdit: PropTypes.bool.isRequired,
 }
 
 export default RoadmapEntry
