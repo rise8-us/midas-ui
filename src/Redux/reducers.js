@@ -4,6 +4,7 @@ import assertionReducer from './Assertions/reducer'
 import authReducer from './Auth/reducer'
 import capabilityReducer from './Capabilities/reducer'
 import commentReducer from './Comments/reducer'
+import epicReducer from './Epics/reducer'
 import errorReducer from './Errors/reducer'
 import featureReducer from './Features/reducer'
 import filterReducer from './Filters/reducer'
@@ -28,6 +29,7 @@ export const rootReducer = combineReducers({
     auth: authReducer,
     capabilities: capabilityReducer,
     comments: commentReducer,
+    epics: epicReducer,
     errors: errorReducer,
     features: featureReducer,
     filters: filterReducer,

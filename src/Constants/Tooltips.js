@@ -16,4 +16,5 @@ export default {
     PRODUCT_PROBLEM_STATEMENT: 'A single statement that describes what problem this product is aiming to ' +
     'fix/improve upon.',
     PRODUCT_DETAILS_EMPTY: 'This field looks empty, someone should fix that.',
+    EPICS_ROADMAP_SYNC: 'Sync Epics with GitLab.',
 }
