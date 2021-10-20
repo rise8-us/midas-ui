@@ -1,9 +1,9 @@
 import React from 'react'
-import ProductConstants from '../../../Redux/Products/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import ProductConstants from 'Redux/Products/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Products } from './index'
 
-jest.mock('../../Cards/ProductCard/ProductCard', () =>
+jest.mock('Components/Cards/ProductCard/ProductCard', () =>
     function testing() { return (<div>Product Card mock</div>) })
 
 describe('<Products>', () => {

@@ -5,6 +5,7 @@ import assertionSubscriptions from 'Redux/Assertions/subscriptions'
 import capabilitySubscriptions from 'Redux/Capabilities/subscriptions'
 import commentSubscriptions from 'Redux/Comments/subscriptions'
 import deliverableSubscriptions from 'Redux/Deliverables/subscriptions'
+import epicSubscriptions from 'Redux/Epics/subscriptions'
 import featureSubscriptions from 'Redux/Features/subscriptions'
 import missionThreadSubscriptions from 'Redux/MissionThreads/subscriptions'
 import performanceMeasuresSubscriptions from 'Redux/PerformanceMeasures/subscriptions'
@@ -47,6 +48,7 @@ function WebsocketProvider({ children }) {
         capabilitySubscriptions({ stompClient })
         commentSubscriptions({ stompClient })
         deliverableSubscriptions({ stompClient })
+        epicSubscriptions({ stompClient })
         featureSubscriptions({ stompClient })
         missionThreadSubscriptions({ stompClient })
         performanceMeasuresSubscriptions({ stompClient })

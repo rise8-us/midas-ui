@@ -8,6 +8,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
+import { requestFetchEpicsByProductId } from 'Redux/Epics/actions'
 import { requestFetchFeaturesByProductId } from 'Redux/Features/actions'
 import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'
 import { openPopup } from 'Redux/Popups/actions'
@@ -48,6 +49,7 @@ function Product() {
         dispatch(requestFetchPersonasByProductId(id))
         dispatch(requestFetchRoadmapsByProductId(id))
         dispatch(requestFetchFeaturesByProductId(id))
+        dispatch(requestFetchEpicsByProductId(id))
     }, [])
 
     useEffect(() => {

@@ -1,8 +1,9 @@
 import { Grid } from '@material-ui/core'
-import { ProductDetails, ProductHeader, ProductRoadmap, ProductUserPersonas } from 'Components/ProductOnePager'
+import { ProductDetails, ProductEpicsRoadmap, ProductHeader, ProductUserPersonas } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { requestFetchEpicsByProductId } from 'Redux/Epics/actions'
 import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'
 import { requestFetchRoadmapsByProductId } from 'Redux/Roadmaps/actions'
 
@@ -12,6 +13,7 @@ function ProductOnePager({ id }) {
     useEffect(() => {
         dispatch(requestFetchPersonasByProductId(id))
         dispatch(requestFetchRoadmapsByProductId(id))
+        dispatch(requestFetchEpicsByProductId(id))
     }, [])
 
     return (
@@ -34,7 +36,7 @@ function ProductOnePager({ id }) {
             </Grid>
             <Grid container item direction = 'column' lg md>
                 <Grid item>
-                    <ProductRoadmap productId = {id} hasEdit = {false}/>
+                    <ProductEpicsRoadmap productId = {id} hasEdit = {false}/>
                 </Grid>
             </Grid>
             <Grid container item direction = 'column' lg = {3} md = {3}>
