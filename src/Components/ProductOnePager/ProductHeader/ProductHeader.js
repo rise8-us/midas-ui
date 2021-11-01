@@ -1,4 +1,4 @@
-import { Chip, makeStyles } from '@material-ui/core'
+import { Chip, Grid } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
@@ -7,25 +7,18 @@ import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { requestUpdateProduct } from 'Redux/Products/actions'
 import ProductConstants from 'Redux/Products/constants'
 import { selectProductById } from 'Redux/Products/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles((theme) => ({
-    row: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    h2: {
-        ...theme.typography.h3,
-        color: theme.palette.text.primary,
-    },
-    subtitle1: {
-        ...theme.typography.subtitle1,
-        color: theme.palette.text.secondary,
-    }
+const StyledHeader = styled(AutoSaveTextField)(({ theme }) => ({
+    ...theme.typography.h3
+}))
+
+const StyledSubheader = styled(AutoSaveTextField)(({ theme }) => ({
+    ...theme.typography.subtitle1,
+    color: theme.palette.text.secondary
 }))
 
 function ProductHeader({ id, hasEdit }) {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, id))
@@ -56,25 +49,23 @@ function ProductHeader({ id, hasEdit }) {
     }
 
     return (
-        <>
-            <div className = {classes.row}>
-                <AutoSaveTextField
+        <Grid container direction = 'column'>
+            <Grid item>
+                <StyledHeader
                     initialValue = {product.name}
                     onSave = {onNameSave}
-                    className = {classes.h2}
                     errors = {nameErrors}
                     fullWidth
-                    style = {{ height: '48px', marginBottom: '16px' }}
+                    style = {{ height: '56px', marginBottom: '16px' }}
                     dataTestId = 'ProductHeader__input-name'
                     canEdit = {hasEdit}
                 />
-            </div>
-            <div className = {classes.row}>
-                <AutoSaveTextField
+            </Grid>
+            <Grid>
+                <StyledSubheader
                     initialValue = {product.description}
                     onSave = {onDescriptionSave}
                     placeholder = {hasEdit ? 'App name an acronym? Spell it out here.' : ''}
-                    className = {classes.subtitle1}
                     errors = {[]}
                     multiline
                     fullWidth
@@ -82,8 +73,8 @@ function ProductHeader({ id, hasEdit }) {
                     dataTestId = 'ProductHeader__input-description'
                     canEdit = {hasEdit}
                 />
-            </div>
-            <div style = {{ display: 'flex', flexWrap: 'wrap' }}>
+            </Grid>
+            <Grid style = {{ display: 'flex', flexWrap: 'wrap' }}>
                 {product.tags.map((tag, index) =>
                     <Chip
                         key = {index}
@@ -96,8 +87,8 @@ function ProductHeader({ id, hasEdit }) {
                         variant = 'outlined'
                     />
                 )}
-            </div>
-        </>
+            </Grid>
+        </Grid>
     )
 }
 

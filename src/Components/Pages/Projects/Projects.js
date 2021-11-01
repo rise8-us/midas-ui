@@ -1,13 +1,13 @@
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
+import { ProjectCard } from 'Components/Cards'
+import { FloatingActionButton } from 'Components/FloatingActionButton'
+import { Page } from 'Components/Page'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectAppBarFilter } from '../../../Redux/Filters/selectors'
-import { openPopup } from '../../../Redux/Popups/actions'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { selectUnarchivedProjects } from '../../../Redux/Projects/selectors'
-import { ProjectCard } from '../../Cards'
-import { FloatingActionButton } from '../../FloatingActionButton'
-import { Page } from '../../Page'
+import { selectAppBarFilter } from 'Redux/Filters/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import ProjectConstants from 'Redux/Projects/constants'
+import { selectUnarchivedProjects } from 'Redux/Projects/selectors'
 
 function Projects() {
     const dispatch = useDispatch()
@@ -27,7 +27,7 @@ function Projects() {
                     justifyContent = 'center'
                     gridTemplateColumns = 'repeat(auto-fit, 450px)'
                     gridAutoRows = '1fr'
-                    gridGap = '10px 10px'
+                    gap = '10px 10px'
                     gridAutoFlow = 'row'
                     style = {{ marginBottom: '40px', padding: '0 30px' }}
                 >

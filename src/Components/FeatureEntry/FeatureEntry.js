@@ -1,4 +1,4 @@
-import { CheckCircleOutlined } from '@material-ui/icons'
+import { CheckCircleOutlined } from '@mui/icons-material'
 import { DraggableRow } from 'Components/Draggable'
 import PropTypes from 'prop-types'
 import React from 'react'

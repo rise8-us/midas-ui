@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, screen, useModuleMock } from '../../../Utilities/test-utils'
+import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { CommentsList } from './index'
 
 jest.mock('../Comment/Comment',
-    () => function testing() { return (<div>Comment</div>) })
+    () => (function testing() { return (<div>Comment</div>) }))
 
 describe('<CommentsList>', () => {
     const commentsList = [12, 11, 143]

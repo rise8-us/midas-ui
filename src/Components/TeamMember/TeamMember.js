@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core'
+import { Grid, Tooltip, Typography } from '@mui/material'
 import { UserDetails } from 'Components/UserDetails'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
@@ -6,16 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchOneUser } from 'Redux/Users/actions'
 import { selectUserById } from 'Redux/Users/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    tooltip: {
-        background: theme.palette.background.paper,
-        boxShadow: `0 0 1em ${theme.palette.background.default}`
-    }
-}))
-
 function TeamMember({ id, title, noUserText }) {
     const dispatch = useDispatch()
-    const classes = useStyles()
 
     const user = useSelector(state => selectUserById(state, id))
     const userNotFound = user.id === undefined
@@ -26,9 +18,7 @@ function TeamMember({ id, title, noUserText }) {
 
     return (
         <Tooltip
-            interactive
             title = {<UserDetails id = {id} role = {title}/>}
-            classes = {{ tooltip: classes.tooltip }}
             PopperProps = {{
                 style: {
                     display: id ? 'unset' : 'none',
@@ -61,7 +51,7 @@ function TeamMember({ id, title, noUserText }) {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant = 'body2' color = 'textSecondary' noWrap>{title}</Typography>
+                        <Typography variant = 'body2' color = 'text.secondary' noWrap>{title}</Typography>
                     </Grid>
                 </Grid>
             </Grid>

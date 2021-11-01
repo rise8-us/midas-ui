@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Page } from './index'
 
 describe('<Page />', () => {

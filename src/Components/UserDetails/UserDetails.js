@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -8,7 +8,7 @@ function DataRow({ label, value }) {
     return (
         <Grid container spacing = {2} justifyContent = 'space-between'>
             <Grid item>
-                <Typography variant = 'subtitle1' color = 'textSecondary'>{label}</Typography>
+                <Typography variant = 'subtitle1' color = 'text.secondary'>{label}</Typography>
             </Grid>
             <Grid item>
                 <Typography variant = 'subtitle1'>{value}</Typography>
@@ -33,7 +33,7 @@ function UserDetails({ id, role }) {
                 <Typography variant = 'h6'>{user.username}</Typography>
             </Grid>
             <Grid item>
-                <Typography variant = 'subtitle1' color = 'textSecondary'>
+                <Typography variant = 'subtitle1' color = 'text.secondary'>
                     {user.displayName !== user.username && user.displayName.length > 0 ? user.displayName : ''}
                 </Typography>
             </Grid>

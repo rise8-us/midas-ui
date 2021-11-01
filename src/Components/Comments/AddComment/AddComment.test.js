@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, userEvent } from '../../../Utilities/test-utils'
+import { fireEvent, render, screen, userEvent } from 'Utilities/test-utils'
 import { AddComment } from './index'
 
 describe('<AddComment>', () => {

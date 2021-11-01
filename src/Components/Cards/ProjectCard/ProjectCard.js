@@ -1,7 +1,5 @@
-import {
-    Box, Card, CardContent, CardHeader, IconButton, makeStyles, Tooltip, useTheme
-} from '@material-ui/core'
-import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@material-ui/icons'
+import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@mui/icons-material'
+import { Box, Card, CardContent, CardHeader, IconButton, Tooltip, useTheme } from '@mui/material'
 import { PathToProdStepper } from 'Components/PathToProdStepper'
 import { SonarqubeIndicator } from 'Components/SonarqubeIndicator'
 import { SonarqubeTooltip } from 'Components/SonarqubeTooltip'
@@ -17,20 +15,12 @@ import { selectProductById } from 'Redux/Products/selectors'
 import { requestUpdateJourneyMapById } from 'Redux/Projects/actions'
 import ProjectConstants from 'Redux/Projects/constants'
 import { selectProjectById } from 'Redux/Projects/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    card: {
-        width: '450px',
-        height: '100%',
-        backgroundColor: theme.palette.grey[1100]
-    },
-    link: {
-        '&:hover': {
-            color: theme.palette.primary.main,
-            cursor: 'pointer'
-        },
-        width: 'fit-content'
-    }
+const StyledCard = styled(Card)(({ theme }) => ({
+    width: '450px',
+    height: '100%',
+    backgroundColor: theme.palette.grey[1100]
 }))
 
 const tooltipDisplay = (actual, expected) => actual !== expected ? 'unset' : 'none'
@@ -38,7 +28,6 @@ const tooltipDisplay = (actual, expected) => actual !== expected ? 'unset' : 'no
 function ProjectCard({ id, hasEdit }) {
     const dispatch = useDispatch()
     const theme = useTheme()
-    const classes = useStyles()
     const history = useHistory()
 
     const sonarqube = useSonarqubeRatings()
@@ -53,10 +42,12 @@ function ProjectCard({ id, hasEdit }) {
         const step = calcStep() + increment
         const journey = Math.pow(2, step) - 1
 
-        dispatch(requestUpdateJourneyMapById({
-            id,
-            projectJourneyMap: journey
-        }))
+        dispatch(
+            requestUpdateJourneyMapById({
+                id,
+                projectJourneyMap: journey
+            })
+        )
     }
 
     const updateProjectPopup = () => {
@@ -66,19 +57,26 @@ function ProjectCard({ id, hasEdit }) {
     const goToProductsPage = () => history.push(`/products/${project.productId}/overview`)
 
     return (
-        <Card className = {classes.card}>
+        <StyledCard>
             <CardHeader
                 title = {project.name}
                 subheader = {product.name}
                 titleTypographyProps = {{
                     variant: 'h5',
-                    color: 'textPrimary',
-                    'data-testid': 'ProjectCard__header-title',
+                    color: 'text.primary',
+                    'data-testid': 'ProjectCard__header-title'
                 }}
                 subheaderTypographyProps = {{
                     'data-testid': 'ProjectCard__header-subheader',
                     onClick: project.productId !== null ? goToProductsPage : undefined,
-                    className: project.productId !== null ? classes.link : 'card',
+                    sx: {
+                        '&:hover': {
+                            color: theme.palette.primary.main,
+                            cursor: 'pointer'
+                        },
+                        width: 'fit-content',
+                        height: 24
+                    }
                 }}
                 action = {hasEdit &&
                     <IconButton
@@ -90,7 +88,7 @@ function ProjectCard({ id, hasEdit }) {
                     </IconButton>
                 }
             />
-            <Box display = 'flex'>
+            <Box display = 'flex' paddingX = {2}>
                 {hasEdit &&
                     <Tooltip
                         arrow
@@ -109,6 +107,7 @@ function ProjectCard({ id, hasEdit }) {
                                 disabled = {project.projectJourneyMap === 0}
                                 style = {{ height: '48px', margin: 'auto' }}
                                 disableRipple
+                                size = 'large'
                             >
                                 <ChevronLeft />
                             </IconButton>
@@ -134,6 +133,7 @@ function ProjectCard({ id, hasEdit }) {
                                 disabled = {project.projectJourneyMap === 7}
                                 style = {{ height: '48px', margin: 'auto' }}
                                 disableRipple
+                                size = 'large'
                             >
                                 <ChevronRight />
                             </IconButton>
@@ -146,17 +146,19 @@ function ProjectCard({ id, hasEdit }) {
                     <SonarqubeIndicator
                         title = 'Coverage'
                         value = {coverage.testCoverage ?? '?'}
-                        adornment = { coverage.coverageChange !== 0 &&
-                            coverage.coverageChange !== undefined &&
-                            <TrendingUp
-                                fontSize = 'small'
-                                style = {{
-                                    margin: 'auto',
-                                    transform: coverage.coverageChange < 0 ? 'scaleY(-1)' : 'unset',
-                                    color: coverage.coverageChange < 0 ? theme.palette.error.main :
-                                        theme.palette.success.main
-                                }}
-                            />
+                        adornment = {
+                            coverage.coverageChange !== 0 &&
+              coverage.coverageChange !== undefined && (
+                                <TrendingUp
+                                    fontSize = 'small'
+                                    style = {{
+                                        margin: 'auto',
+                                        transform: coverage.coverageChange < 0 ? 'scaleY(-1)' : 'unset',
+                                        color: coverage.coverageChange < 0 ?
+                                            theme.palette.error.main : theme.palette.success.main
+                                    }}
+                                />
+                            )
                         }
                         tooltip = {
                             <SonarqubeTooltip
@@ -200,15 +202,15 @@ function ProjectCard({ id, hasEdit }) {
                         }
                     />
                 </Box>
-                {project.tags?.length > 0 &&
+                {project.tags?.length > 0 && (
                     <Box display = 'flex' flexWrap = 'wrap' marginTop = {2}>
                         {project.tags.map((tag, index) => (
-                            <Tag { ...tag } key = {index}/>
+                            <Tag {...tag} key = {index} />
                         ))}
                     </Box>
-                }
+                )}
             </CardContent>
-        </Card>
+        </StyledCard>
     )
 }
 

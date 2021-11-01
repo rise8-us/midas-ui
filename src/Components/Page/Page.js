@@ -1,31 +1,32 @@
-import { makeStyles } from '@material-ui/core'
 import { AppBar } from 'Components/AppBar'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageScrollY } from 'Redux/AppSettings/reducer'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    page: {
-        '&::-webkit-scrollbar': {
-            width: '12px'
-        },
-        '&::-webkit-scrollbar-thumb': {
-            height: '15%',
-            border: '3px solid rgba(0, 0, 0, 0)',
-            backgroundClip: 'padding-box',
-            backgroundColor: theme.palette.divider,
-            '-webkit-border-radius': '12px'
-        },
-        padding: '68px 0 20px 0',
-        overflowY: 'overlay',
-        height: '100%',
-        scrollBehavior: 'smooth'
-    }
+const DivStyled = styled('div')(({ theme }) => ({
+    '&::-webkit-scrollbar': {
+        width: '12px'
+    },
+    '&::-webkit-scrollbar-thumb': {
+        height: '15%',
+        border: '3px solid transparent',
+        backgroundClip: 'padding-box',
+        backgroundColor: theme.palette.divider,
+        WebkitBorderRadius: '12px'
+    },
+    position: 'fixed',
+    top: '68px',
+    paddingBottom: '24px',
+    overflowY: 'scroll',
+    height: 'calc(100vh - 88px)',
+    width: '100vw',
+    scrollBehavior: 'smooth'
 }))
 
 function Page({ children }) {
-    const classes = useStyles()
+
     const dispatch = useDispatch()
 
     const onScroll = (e) => dispatch(setPageScrollY(e.target.scrollTop))
@@ -33,18 +34,15 @@ function Page({ children }) {
     return (
         <>
             <AppBar />
-            <div className = {classes.page} onScroll = {onScroll} data-testid = 'Page__div'>
+            <DivStyled onScroll = {onScroll} data-testid = 'Page__div'>
                 {children}
-            </div>
+            </DivStyled>
         </>
     )
 }
 
 Page.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.arrayOf(PropTypes.element)
-    ]).isRequired
+    children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired
 }
 
 export default Page

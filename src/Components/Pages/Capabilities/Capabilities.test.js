@@ -3,7 +3,7 @@ import { render, screen, useDispatchMock } from 'Utilities/test-utils'
 import { Capabilities } from './index'
 
 jest.mock('Components/Cards/CapabilitiesSidebar/CapabilitiesSidebar',
-    () => function testing() { return (<div>Sidebar</div>) })
+    () => (function testing() { return (<div>Sidebar</div>) }))
 
 describe('<CapabilitesPage />', () => {
 

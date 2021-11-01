@@ -1,7 +1,7 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
+import { Popup } from 'Components/Popup'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import { Popup } from '../../Popup'
 
 function ConfirmationPopup({ onConfirm, onCancel, detail, open }) {
 

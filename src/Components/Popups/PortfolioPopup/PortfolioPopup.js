@@ -1,5 +1,4 @@
-import { Box, TextField } from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
@@ -134,7 +133,7 @@ function PortfolioPopup({ id }) {
                     autoSelect
                     options = {availableProducts}
                     getOptionLabel = {(option) => option.name}
-                    getOptionSelected = {(option, value) => option.id === value.id}
+                    isOptionEqualToValue = {(option, value) => option.id === value.id}
                     groupBy = {(option) => option.firstLetter}
                     data-testid = 'PortfolioPopup__select-products'
                     onChange = {(_e, values) => handleChange('products', values)}

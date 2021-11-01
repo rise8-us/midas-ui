@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import { Assertion, AssertionComments, AssertionHeader, AssertionRootIdentifier } from 'Components/Assertions'
 import objectHash from 'object-hash'
 import PropTypes from 'prop-types'

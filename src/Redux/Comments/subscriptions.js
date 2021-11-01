@@ -1,4 +1,4 @@
-import { subscribe } from '../../Utilities/requests'
+import { subscribe } from 'Utilities/requests'
 import store from '../store'
 import { requestDeleteComment, requestUpdateComment } from './actions'
 import Constants from './constants'

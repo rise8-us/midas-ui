@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     act, fireEvent, render, screen, userEvent, waitFor, waitForElementToBeRemoved
-} from '../../../Utilities/test-utils'
+} from 'Utilities/test-utils'
 import { SearchBar } from './index'
 
 describe('<SearchBar>', () => {
@@ -61,4 +61,5 @@ describe('<SearchBar>', () => {
 
         waitFor(() => expect(searchMock).toHaveBeenCalledWith('testing'))
     })
+
 })

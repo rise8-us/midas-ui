@@ -1,4 +1,4 @@
-import { subscribe } from '../../Utilities/requests'
+import { subscribe } from 'Utilities/requests'
 import store from '../store'
 import { requestDeleteAssertion, requestUpdateAssertion } from './actions'
 import Constants from './constants'

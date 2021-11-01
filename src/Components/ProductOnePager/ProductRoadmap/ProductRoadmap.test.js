@@ -3,7 +3,7 @@ import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utili
 import { ProductRoadmap } from './index'
 
 jest.mock('Components/RoadmapEntry/RoadmapEntry',
-    () => function testing() { return (<div>RoadmapEntry</div>) })
+    () => (function testing() { return (<div>RoadmapEntry</div>) }))
 
 describe('<ProductRoadmap />', () => {
 

@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core'
-import LabelTooltip from 'Components/LabelTooltip/LabelTooltip'
+import { TextField } from '@mui/material'
+import { LabelTooltip } from 'Components/LabelTooltip'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import FormatErrors from 'Utilities/FormatErrors'
@@ -86,6 +86,7 @@ function AutoSaveTextField({
                     text = {textFieldProps.label}
                     typographyProps = {{
                         variant: 'h6',
+                        color: 'text.primary'
                     }}
                     tooltipProps = {{
                         title: tooltip,

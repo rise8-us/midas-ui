@@ -1,4 +1,4 @@
-import { Box, makeStyles, Paper, Table as MUITable, TableBody, TableCell, TableRow, useTheme } from '@material-ui/core'
+import { Box, Paper, Table as MUITable, TableBody, TableCell, TableRow, useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { TableHeaders } from '../'
@@ -6,17 +6,6 @@ import { TableHeaders } from '../'
 // NOTE: reference - MUI Sticky Header Table -- https://codesandbox.io/s/x17ef?file=/demo.js:1069-1212
 // Can handle pagination if/when it needs to be implemented.
 //Table container and maxheight allow for scrolling on table instead of page
-
-const useStyles = makeStyles(theme => ({
-    actions: {
-        padding: '0',
-    },
-    regular: {
-        maxWidth: 'auto',
-        padding: '12px 16px',
-        color: theme.palette.text.primary
-    },
-}))
 
 const calculateSettings = (transparent, disableRowDividers, onRowClick, align) => {
     return {
@@ -35,10 +24,19 @@ const getCellAlign = (align, end, invertLastColumnAlign, max, current) => {
     else return align
 }
 
-function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
-    disableHeaders, onRowClick, invertLastColumnAlign, disableRowDividers, slantHeaders }) {
-
-    const classes = useStyles()
+function Table({
+    tableWidth,
+    align,
+    stickyHeader,
+    rows,
+    columns,
+    transparent,
+    disableHeaders,
+    onRowClick,
+    invertLastColumnAlign,
+    disableRowDividers,
+    slantHeaders
+}) {
     const theme = useTheme()
 
     const tableSettings = calculateSettings(transparent, disableRowDividers, onRowClick, align)
@@ -47,6 +45,22 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
 
     const getAlign = (columnsLength, currentIndex) => {
         return getCellAlign(align, end, invertLastColumnAlign, columnsLength, currentIndex)
+    }
+
+    const tableDataStyles = (contentLength) => {
+        const border = { borderBottom: tableSettings.borderBottom }
+
+        if (contentLength) {
+            return {
+                padding: '0',
+                ...border
+            }
+        }
+        return {
+            padding: '12px 16px',
+            maxWidth: 'auto',
+            ...border
+        }
     }
 
     return (
@@ -59,7 +73,7 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
             }}
             elevation = {tableSettings.elevation}
         >
-            <MUITable { ...stickyHeader }>
+            <MUITable {...stickyHeader}>
                 <TableHeaders
                     show = {!disableHeaders}
                     columns = {columns}
@@ -75,7 +89,9 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                 key = {index}
                                 hover
                                 data-testid = 'Table__row'
-                                onClick = {() => { typeof onRowClick === 'function' && onRowClick(row.data) }}
+                                onClick = {() => {
+                                    typeof onRowClick === 'function' && onRowClick(row.data)
+                                }}
                                 style = {{
                                     cursor: tableSettings.rowCursor,
                                     borderBottom: tableSettings.borderBottom
@@ -85,25 +101,22 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
                                     <TableCell
                                         key = {`${index}-${idx}`}
                                         align = {getAlign(columns.length, idx)}
-                                        className = {column.length === 0 ? classes.actions  : classes.regular }
-                                        style = {{
-                                            borderBottom: tableSettings.borderBottom
-                                        }}
+                                        style = {tableDataStyles(column.length === 0)}
                                     >
                                         <Box
                                             display = 'flex'
-                                            flexDirection = {
-                                                columns.length - 1 === idx && column.length === 0 ?
-                                                    'row-reverse' : 'row'
-                                            }
+                                            flexDirection = {columns.length - 1 === idx && column.length === 0 ?
+                                                'row-reverse' : 'row'}
                                             textAlign = {getAlign(columns.length, idx)}
                                             style = {{
                                                 color: row.properties.strikeThrough ?
                                                     theme.palette.text.disabled : theme.palette.text.primary,
                                                 textDecorationLine: row.properties.strikeThrough ?
-                                                    'line-through' : 'none',
+                                                    'line-through' : 'none'
                                             }}
-                                        >{row.data[idx]}</Box>
+                                        >
+                                            {row.data[idx]}
+                                        </Box>
                                     </TableCell>
                                 ))}
                             </TableRow>
@@ -117,12 +130,14 @@ function Table({ tableWidth, align, stickyHeader, rows, columns, transparent,
 
 Table.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string).isRequired,
-    rows: PropTypes.arrayOf(PropTypes.shape({
-        data: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
-        properties: PropTypes.shape({
-            strikeThrough: PropTypes.bool
+    rows: PropTypes.arrayOf(
+        PropTypes.shape({
+            data: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
+            properties: PropTypes.shape({
+                strikeThrough: PropTypes.bool
+            })
         })
-    })).isRequired,
+    ).isRequired,
     disableHeaders: PropTypes.bool,
     stickyHeader: PropTypes.bool,
     tableWidth: PropTypes.string,

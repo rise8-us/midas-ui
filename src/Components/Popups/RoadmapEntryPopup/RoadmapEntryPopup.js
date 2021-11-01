@@ -1,5 +1,5 @@
-import { Box, Button, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
-import { Delete } from '@material-ui/icons'
+import { Delete } from '@mui/icons-material'
+import { Box, Button, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { Popup } from 'Components/Popup'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'

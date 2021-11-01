@@ -1,6 +1,6 @@
 import React from 'react'
-import SourceControlConstants from '../../../Redux/SourceControls/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import SourceControlConstants from 'Redux/SourceControls/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { SourceControlTab } from './index'
 
 describe('<SourceControlsTab />', () => {

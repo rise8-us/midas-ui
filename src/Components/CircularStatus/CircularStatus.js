@@ -1,18 +1,18 @@
-import { Box, CircularProgress, Tooltip, Typography } from '@material-ui/core'
+import { Box, CircularProgress, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
-
 function CircularStatus(props) {
+
     const { title, titleAdornment, variant, value, displayValue, size, tooltip, interactive, ...more } = props
     const { valueColor, displayValueColor, titleColor, fontSize, ...circularProgressProps } = more
-
     return (
+
         <Box display = 'flex' justifyContent = 'space-around' flexDirection = 'column'>
             {title &&
                 <div style = {{ display: 'flex' }}>
                     <Typography
                         variant = 'subtitle2'
-                        color = 'textSecondary'
+                        color = 'text.secondary'
                         style = {{
                             alignSelf: 'center',
                             margin: '4px 0',
@@ -41,7 +41,7 @@ function CircularStatus(props) {
                                 minWidth: '350px',
                             }
                         }}
-                        interactive = {interactive}
+                        disableInteractive = {!interactive}
                     >
                         <Typography
                             variant = 'subtitle2'

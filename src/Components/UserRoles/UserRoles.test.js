@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from '../../Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, within } from 'Utilities/test-utils'
 import { UserRoles } from './index'
 
 describe('<UserRoles />', () => {

@@ -1,6 +1,6 @@
 import React from 'react'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from '../../../Utilities/test-utils'
+import ProjectConstants from 'Redux/Projects/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import { ProjectsTab } from './index'
 
 describe('<ProjectsTab />', () => {

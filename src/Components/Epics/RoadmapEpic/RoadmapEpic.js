@@ -1,7 +1,7 @@
-import { alpha, Grid, IconButton, Link, SvgIcon, Typography, useTheme } from '@material-ui/core'
 import {
     EventAvailableOutlined, EventBusyOutlined, EventOutlined, VisibilityOffOutlined, VisibilityOutlined
-} from '@material-ui/icons'
+} from '@mui/icons-material'
+import { alpha, Grid, IconButton, Link, SvgIcon, Typography, useTheme } from '@mui/material'
 import { ReactComponent as GitLabLogo } from 'Assets/gitlabLogo.svg'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
@@ -135,7 +135,7 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
                         <Typography
                             noWrap
                             variant = 'h6'
-                            color = {status?.name === 'FUTURE' ? 'textSecondary' : 'textPrimary'}
+                            color = {status?.name === 'FUTURE' ? 'text.secondary' : 'text.primary'}
                             style = {{ lineHeight: 'normal' }}
                         >
                             {roadmapEpic.title}
@@ -144,10 +144,10 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
                     {date &&
                         <Grid item>
                             <Typography
-                                variant = 'h6'
-                                color = 'textSecondary'
-                                style = {{ lineHeight: 'normal', paddingLeft: '8px' }}
                                 noWrap
+                                variant = 'h6'
+                                color = 'text.secondary'
+                                style = {{ lineHeight: 'normal', paddingLeft: '8px' }}
                                 title = {`${monthNames[month]} ${year}`}
                             >
                                 {`• ${monthNames[month]} ${year}`}
@@ -158,7 +158,7 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
                 <Grid item zeroMinWidth>
                     <Typography
                         variant = 'body2'
-                        color = 'textSecondary'
+                        color = 'text.secondary'
                         style = {{
                             lineHeight: 'normal',
                             WebkitLineClamp: 3,

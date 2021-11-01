@@ -1,17 +1,19 @@
 /* eslint-disable security/detect-non-literal-require */
 /* eslint-disable react/prop-types */
+import { ThemeProvider } from '@mui/material/styles'
 import { render as rtlRender } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryHistory } from 'history'
-import React from 'react'
+import { default as React } from 'react'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { createStore } from 'redux'
-import { rootReducer } from '../Redux/reducers'
+import { rootReducer } from 'Redux/reducers'
+import { theme } from 'Styles/materialThemes'
 
 function render(ui, { initialState, store = createStore(rootReducer, initialState), ...renderOptions } = {}) {
     function Wrapper({ children }) {
-        return <Provider store = {store}>{children}</Provider>
+        return <Provider store = {store}><ThemeProvider theme = {theme}>{children}</ThemeProvider></Provider>
     }
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
 }

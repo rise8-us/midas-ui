@@ -1,8 +1,8 @@
-import { useTheme } from '@material-ui/core'
-import { Delete, Edit } from '@material-ui/icons'
+import { Delete, Edit } from '@mui/icons-material'
+import { useTheme } from '@mui/material'
+import { MoreOptionsPopperMenu } from 'Components/MoreOptionsPopperMenu'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { MoreOptionsPopperMenu } from '../../MoreOptionsPopperMenu'
 
 function EditCommentOptions({ onEditClick, onDeleteClick }) {
     const theme = useTheme()

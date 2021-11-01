@@ -1,52 +1,30 @@
-import { createTheme } from '@material-ui/core/styles'
+import { createTheme } from '@mui/material/styles'
+import { createStyled } from '@mui/system'
 
-// Generated using https://bareynol.github.io/mui-theme-creator/
-
-export const darkTheme = createTheme({
+const theme = createTheme({
     palette: {
-        type: 'dark',
-        appColor: '#d4af37',
+        mode: 'dark',
         primary: {
-            main: '#d4af37',
-            reactBlue: '#26c6da',
+            main: '#D4AF37'
         },
         secondary: {
-            main: '#818b98',
-        },
-        background: {
-            default: '#161a1d',
-            paper: '#24292e',
-        },
-        error: {
-            main: '#d45555',
-        },
-        success: {
-            main: '#46b058',
-        },
-        warning: {
-            main: '#f7b500',
-        },
-        info: {
-            main: '#26c6da',
+            main: '#818B98'
         },
         text: {
             primary: '#DDDDDD',
             secondary: '#797979'
         },
-        divider: '#3e4548',
-        subtext: '#778185',
-        classification: {
-            UNCLASS: '#5bad76',
-            CUI: '#2849b8',
-            NOFORN: '#be4242',
-            SCI: '#eff01a'
+        background: {
+            paper: '#24292E',
+            default: '#161A1D'
         },
-        status: {
-            success: '#46b058',
-            error: '#d45555',
-            warning: '#f7b500',
-            info: '#26c6da'
-        }
+        classification: {
+            UNCLASS: '#5BAD76',
+            CUI: '#2849B8',
+            NOFORN: '#BE4242',
+            SCI: '#EFF01A'
+        },
+        divider: '#3E4548',
     },
     typography: {
         fontFamily: [
@@ -62,64 +40,82 @@ export const darkTheme = createTheme({
             '"Segoe UI Symbol"',
         ].join(','),
     },
-    overrides: {
-        MuiPaper: {
-            outlined: {
-                border: '2px solid black'
+    components: {
+        MuiTabs: {
+            defaultProps: {
+                indicatorColor: 'secondary',
+                textColor: 'inherit'
+            }
+        },
+        MuiTab: {
+            defaultProps: {
+                disableRipple: true
+            }
+        },
+        MuiButton: {
+            defaultProps: {
+                color: 'inherit'
+            }
+        },
+        MuiTextField: {
+            defaultProps: {
+                variant: 'standard'
+            }
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#24292E'
+                }
             }
         },
         MuiCard: {
-            root: {
-                backgroundColor: '#FFFFFF0A'
+            styleOverrides: {
+                root: {
+                    backgroundImage: 'none',
+                    backgroundColor: '#FFFFFF0A'
+                },
+                defaultProps: {
+                    elevation: 0
+                }
             }
         },
-        MuiDialog: {
-            paper: {
-                minWidth: '350px',
-                backgroundColor: '#24292e'
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    backgroundImage: 'none',
+                },
+                outlined: {
+                    backgroundImage: 'none',
+                    border: '2px solid black'
+                }
             }
         },
         MuiTooltip: {
-            tooltip: {
-                backgroundColor: '#3e4548',
-                fontSize: '14px',
-                padding: '8px 10px'
-            },
-            arrow: {
-                color: '#3e4548'
+            styleOverrides: {
+                tooltip: {
+                    backgroundColor: '#24292E',
+                    fontSize: '14px',
+                    padding: '8px 10px',
+                    boxShadow: '0 0 1em #000000AA'
+                },
+                arrow: {
+                    color: '#24292E'
+                }
             }
         },
-        MuiStepConnector: {
-            alternativeLabel: {
-                top: 17
-            },
-            active: {
-                '& $line': {
-                    backgroundImage:
-                    'linear-gradient( 95deg, #46b058 0%, #46b058 20%, #d45555 100%)',
-                    border: 0
-                },
-            },
-            completed: {
-                '& $line': {
-                    backgroundColor: '#46b058',
-                    border: 0
-                },
-            },
-            line: {
-                height: 3,
-                border: 0,
-                borderRadius: 1,
-            },
-        }
-    },
-    accordion: {
-        accordionPadding: {
-            margin: '20px',
-            padding: '10px'
-        },
-        accordionFlex: {
-            flexGrow: 1
+        MuiAutocomplete: {
+            styleOverrides: {
+                popper: {
+                    borderLeft: '1em solid #24292E',
+                    borderRight: '1em solid #24292E',
+                    borderBottom: '1em solid #24292E',
+                }
+            }
         }
     }
 })
+
+const styled = createStyled({ defaultTheme: theme })
+
+export { styled, theme }

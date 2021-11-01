@@ -1,4 +1,4 @@
-import { subscribe } from '../../Utilities/requests'
+import { subscribe } from 'Utilities/requests'
 import store from '../store'
 import { requestUpdateProduct } from './actions'
 import Constants from './constants'

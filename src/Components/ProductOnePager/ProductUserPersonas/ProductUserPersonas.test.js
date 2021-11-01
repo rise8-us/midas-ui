@@ -97,7 +97,7 @@ describe('<ProductUserPersonas>', () => {
         render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
 
         fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
-        fireEvent.click(screen.getByTitle('Delete'))
+        fireEvent.click(screen.getByLabelText('Delete'))
 
         expect(requestDeletePersonaMock).toHaveBeenCalled()
     })

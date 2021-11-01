@@ -1,4 +1,4 @@
-import { Grid, Tooltip, Typography } from '@material-ui/core'
+import { Grid, Stack, Tooltip, Typography } from '@mui/material'
 import { CircularStatus } from 'Components/CircularStatus'
 import { SonarqubeTooltip } from 'Components/SonarqubeTooltip'
 import PropTypes from 'prop-types'
@@ -9,7 +9,6 @@ function SecurityRow({ displayValue, totalValue, color, title, tooltipTitle }) {
         <Tooltip
             title = {tooltipTitle}
             placement = 'left'
-            interactive
             arrow
         >
             <Grid container item wrap = 'nowrap' alignItems = 'center' style = {{ maxHeight: '35px' }}>
@@ -28,7 +27,7 @@ function SecurityRow({ displayValue, totalValue, color, title, tooltipTitle }) {
                     />
                 </Grid>
                 <Grid item>
-                    <Typography color = 'textSecondary' style = {{ paddingLeft: '8px', height: '29px' }}>
+                    <Typography color = 'text.secondary' style = {{ paddingLeft: '8px', height: '29px' }}>
                         {title}
                     </Typography>
                 </Grid>
@@ -49,7 +48,7 @@ function DevelopmentSecurityRatings({ codeCoverage, security, reliability, maint
     const { projectSonarqubeUrl, projectPipelineUrl } = urls
 
     return (
-        <Grid container item xs = {8} s = {8} m = {8} direction = 'column' justifyContent = 'center'>
+        <Stack>
             <SecurityRow
                 title = 'Coverage'
                 totalValue = {codeCoverage.value}
@@ -102,7 +101,7 @@ function DevelopmentSecurityRatings({ codeCoverage, security, reliability, maint
                     />
                 }
             />
-        </Grid>
+        </Stack>
     )
 }
 

@@ -1,4 +1,4 @@
-import { alpha, Grid, useTheme } from '@material-ui/core'
+import { alpha, Grid, useTheme } from '@mui/material'
 import { ProductBox } from 'Components/ProductBox'
 import PropTypes from 'prop-types'
 import React from 'react'

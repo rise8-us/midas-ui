@@ -1,5 +1,5 @@
-import { Grid, makeStyles, Paper } from '@material-ui/core'
-import { EventNoteOutlined } from '@material-ui/icons'
+import { EventNoteOutlined } from '@mui/icons-material'
+import { Grid, Paper } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -7,30 +7,25 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateCapability, requestUpdateCapability } from 'Redux/Capabilities/actions'
 import CapabilityConstants from 'Redux/Capabilities/constants'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        padding: 8,
-        backgroundColor: 'inherit',
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: theme.palette.secondary.main,
-        '&:hover': {
-            borderColor: theme.palette.text.primary
-        }
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    padding: 8,
+    backgroundColor: 'inherit',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: theme.palette.secondary.main,
+
+    '&:hover': {
+        borderColor: theme.palette.text.primary,
     },
-    description: {
-        lineHeight: '21px',
-        letterSpacing: '0.25px',
-        fontSize: '11px',
-        color: theme.palette.secondary.main
-    },
-    iconUnsaved: {
-        color: theme.palette.text.primary
-    },
-    iconSaved: {
-        color: theme.palette.primary.main
-    }
+}))
+
+const AutoSaveTextFieldDescription = styled(AutoSaveTextField)(({ theme }) => ({
+    lineHeight: '21px',
+    letterSpacing: '0.25px',
+    fontSize: '11px',
+    color: theme.palette.secondary.main,
 }))
 
 const initDetails = (create) => {
@@ -41,30 +36,34 @@ const initDetails = (create) => {
         request: (data) => create ? requestCreateCapability(data) : requestUpdateCapability(data)
     }
 }
-
 function Capability({ id, hasEdit }) {
     const dispatch = useDispatch()
-    const classes = useStyles()
 
-    const capability = useSelector(state => selectCapabilityById(state, id))
+    const capability = useSelector((state) => selectCapabilityById(state, id))
     const context = initDetails(capability.id === undefined)
 
     const updateCapability = (key, value) => {
-        if (key !== 'description' && value.trim().length === 0)
-            return
+        if (key !== 'description' && value.trim().length === 0) return
 
-        dispatch(context.request({
-            ...capability,
-            [key]: value,
-            referenceId: 0
-        }))
+        dispatch(
+            context.request({
+                ...capability,
+                [key]: value,
+                referenceId: 0,
+            })
+        )
     }
 
     return (
-        <Paper variant = 'outlined' className = {classes.paper}>
+        <StyledPaper variant = 'outlined'>
             <Grid container spacing = {1}>
-                <Grid item className = {context.isCreate ? classes.iconUnsaved : classes.iconSaved}>
-                    <EventNoteOutlined fontSize = 'small'/>
+                <Grid
+                    item
+                    sx = {{
+                        color: context.isCreate ? 'text.primary' : 'primary.main'
+                    }}
+                >
+                    <EventNoteOutlined fontSize = 'small' />
                 </Grid>
                 <Grid container item direction = 'column' xs = {10} s = {10}>
                     <Grid item style = {{ paddingTop: 1 }}>
@@ -76,34 +75,33 @@ function Capability({ id, hasEdit }) {
                             inputProps = {{
                                 style: {
                                     paddingTop: 0,
-                                    paddingBottom: 0
-                                }
+                                    paddingBottom: 0,
+                                },
                             }}
                             fullWidth
                             clearAfterSave
                         />
                     </Grid>
-                    {!context.isCreate &&
+                    {!context.isCreate && (
                         <Grid item>
-                            <AutoSaveTextField
+                            <AutoSaveTextFieldDescription
                                 canEdit = {hasEdit}
-                                className = {classes.description}
                                 initialValue = {capability.description}
                                 onSave = {(value) => updateCapability('description', value)}
                                 placeholder = 'Enter Operational Context'
                                 InputProps = {{
                                     style: {
-                                        paddingTop: 0
-                                    }
+                                        paddingTop: 0,
+                                    },
                                 }}
                                 fullWidth
                                 multiline
                             />
                         </Grid>
-                    }
+                    )}
                 </Grid>
             </Grid>
-        </Paper>
+        </StyledPaper>
     )
 }
 

@@ -1,43 +1,48 @@
-import { Box, Button, IconButton, makeStyles } from '@material-ui/core'
-import { Add, Edit } from '@material-ui/icons'
+import { Add, Edit } from '@mui/icons-material'
+import { Box, Button, IconButton } from '@mui/material'
+import { Table } from 'Components/Table'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openPopup } from '../../../Redux/Popups/actions'
-import SourceControlConstants from '../../../Redux/SourceControls/constants'
-import { selectSourceControls } from '../../../Redux/SourceControls/selectors'
-import { Table } from '../../Table'
+import { openPopup } from 'Redux/Popups/actions'
+import SourceControlConstants from 'Redux/SourceControls/constants'
+import { selectSourceControls } from 'Redux/SourceControls/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    button: {
-        '&:hover': {
-            color: theme.palette.primary.main
-        },
-        height: 40
-    }
+const StyledButton = styled(Button)(({ theme }) => ({
+    '&:hover': {
+        color: theme.palette.primary.main,
+    },
+
+    height: 40,
 }))
 
 function SourceControlTab() {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const allSourceControls = useSelector(selectSourceControls)
 
     const createSourceControl = () => {
-        dispatch(openPopup(SourceControlConstants.CREATE_CONFIG, 'SourceControlPopup'))
+        dispatch(
+            openPopup(SourceControlConstants.CREATE_CONFIG, 'SourceControlPopup')
+        )
     }
 
     const updateSourceControl = (id) => {
-        dispatch(openPopup(SourceControlConstants.UPDATE_CONFIG, 'SourceControlPopup', { id }))
+        dispatch(
+            openPopup(SourceControlConstants.UPDATE_CONFIG, 'SourceControlPopup', {
+                id,
+            })
+        )
     }
 
     const buildRows = () => {
-        return allSourceControls.map(SourceControl => ({
+        return allSourceControls.map((SourceControl) => ({
             data: [
                 SourceControl.name,
                 SourceControl.description,
                 SourceControl.baseUrl,
-                buildActions(SourceControl.id)
+                buildActions(SourceControl.id),
             ],
-            properties: { strikeThrough: false }
+            properties: { strikeThrough: false },
         }))
     }
 
@@ -48,6 +53,7 @@ function SourceControlTab() {
                     title = 'edit'
                     color = 'secondary'
                     onClick = {() => updateSourceControl(id)}
+                    size = 'large'
                 >
                     <Edit />
                 </IconButton>
@@ -57,15 +63,20 @@ function SourceControlTab() {
 
     return (
         <div style = {{ padding: '24px' }}>
-            <Box display = 'block' width = '75vw' margin = 'auto' textAlign = 'right' padding = '24px 0'>
-                <Button
+            <Box
+                display = 'block'
+                width = '75vw'
+                margin = 'auto'
+                textAlign = 'right'
+                padding = '24px 0'
+            >
+                <StyledButton
                     variant = 'text'
-                    startIcon = {<Add/>}
-                    className = {classes.button}
+                    startIcon = {<Add />}
                     onClick = {createSourceControl}
                 >
                     Add New Source Control
-                </Button>
+                </StyledButton>
             </Box>
             <Table
                 rows = {buildRows()}

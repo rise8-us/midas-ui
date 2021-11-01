@@ -1,31 +1,32 @@
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(() => ({
-    box: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    row: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: '16px'
-    }
+const GridStyled = styled(Grid)(({ theme }) => ({
+    padding: theme.spacing(2)
 }))
 
-function Header({ title, subtitle, titleVariant, subtitleVariant, icon }) {
-    const classes = useStyles()
-
+function Header({ title, subtitle, titleVariant, subtitleVariant, icon, additionalNode }) {
     return (
-        <Box className = {classes.row}>
-            <Box className = {classes.box} data-testid = 'Account__header'>
-                <Typography variant = {titleVariant} color = 'textPrimary'>{title}</Typography>
-                <Typography variant = {subtitleVariant} color = 'textSecondary'>{subtitle}</Typography>
-            </Box>
-            {icon}
-        </Box>
+        <GridStyled container direction = 'column'>
+            <Grid container item justifyContent = 'space-between' alignItems = 'center'>
+                <Grid item>
+                    <Typography variant = {titleVariant}>
+                        {title}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    {icon}
+                </Grid>
+            </Grid>
+            {subtitle &&
+                <Grid item>
+                    <Typography variant = {subtitleVariant} color = 'text.secondary'>{subtitle}</Typography>
+                </Grid>
+            }
+            {additionalNode && <>{additionalNode}</>}
+        </GridStyled>
     )
 }
 
@@ -34,14 +35,16 @@ Header.propTypes = {
     titleVariant: PropTypes.string,
     subtitle: PropTypes.string,
     subtitleVariant: PropTypes.string,
-    icon: PropTypes.element
+    icon: PropTypes.node,
+    additionalNode: PropTypes.node
 }
 
 Header.defaultProps = {
     titleVariant: 'h4',
     subtitleVariant: 'h6',
     subtitle: '',
-    icon: null
+    icon: null,
+    additionalNode: null
 }
 
 export default Header

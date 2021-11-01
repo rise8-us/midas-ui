@@ -1,62 +1,57 @@
-import { Accordion, AccordionDetails, AccordionSummary, alpha, makeStyles } from '@material-ui/core'
+import { Accordion, AccordionDetails, AccordionSummary, alpha } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { styled } from 'Styles/materialThemes'
 import { AssertionEntry } from '../'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        boxShadow: 'none'
-    },
-    accordionRoot: {
-        '&:before': {
-            display: 'none',
-        }
-    },
-    accordionDetails: {
-        borderLeft: 'solid 1px',
-        borderColor: alpha(theme.palette.text.secondary, .4),
-        margin: '0px 0px 0px 16px',
-        padding: '0px 0px 0px 8px',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    accordionSummaryRoot: {
+const AccordionStyled = styled(Accordion)(() => ({
+    boxShadow: 'none',
+    backgroundColor: 'transparent'
+}))
+
+const AccordionDetailsStyled = styled(AccordionDetails)(({ theme }) => ({
+    borderLeft: 'solid 1px',
+    borderColor: alpha(theme.palette.text.secondary, 0.4),
+    margin: '0px 0px 0px 16px',
+    padding: '0px 0px 0px 8px',
+    display: 'flex',
+    flexDirection: 'column'
+}))
+
+const AccordionSummaryStyled = styled(AccordionSummary)(() => ({
+    minHeight: 42,
+    height: 42,
+    padding: 0,
+    width: '100%',
+    '&.Mui-expanded': {
         minHeight: 42,
-        height: 42,
-        padding: 0,
-        width: '100%',
-        '&.Mui-expanded': {
-            minHeight: 42,
-            height: 42,
-        }
+        height: 42
+    },
+    '&.MuiPaper-root-MuiAccordion-root:before': {
+        backgroundColor: 'red',
+        height: '10px'
     }
 }))
 
 function AssertionAccordion({ assertionEntryProps, children, category, defaultExpanded, expanded, rootAssertion }) {
-    const classes = useStyles()
-
     return (
-        <Accordion
-            className = { classes.root }
-            defaultExpanded = { defaultExpanded }
-            expanded = { expanded }
-            classes = {{ root: classes.accordionRoot }}
+        <AccordionStyled
+            defaultExpanded = {defaultExpanded}
+            expanded = {expanded}
             TransitionProps = {{ unmountOnExit: true }}
-            style = {{ backgroundColor: 'transparent' }}
+            sx = {{
+                '&:before': {
+                    display: 'none'
+                }
+            }}
         >
-            <AccordionSummary
-                expandIcon = {null}
-                classes = {{ root: classes.accordionSummaryRoot }}
-            >
-                <AssertionEntry {...assertionEntryProps} category = {category[0]}/>
-            </AccordionSummary>
-            <AccordionDetails
-                className = {classes.accordionDetails}
-                style = {(rootAssertion) ? { marginBottom: 16 } : undefined}
-            >
+            <AccordionSummaryStyled expandIcon = {null}>
+                <AssertionEntry {...assertionEntryProps} category = {category[0]} />
+            </AccordionSummaryStyled>
+            <AccordionDetailsStyled style = {rootAssertion ? { marginBottom: 16 } : undefined}>
                 {children}
-            </AccordionDetails>
-        </Accordion>
+            </AccordionDetailsStyled>
+        </AccordionStyled>
     )
 }
 
@@ -69,13 +64,13 @@ AssertionAccordion.propTypes = {
         onDelete: PropTypes.func,
         status: PropTypes.string,
         addChildAssertion: PropTypes.func,
-        addChildAssertionLabel: PropTypes.string,
+        addChildAssertionLabel: PropTypes.string
     }),
     category: PropTypes.string.isRequired,
     expanded: PropTypes.bool,
     defaultExpanded: PropTypes.bool,
     rootAssertion: PropTypes.bool,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
 }
 
 AssertionAccordion.defaultProps = {
@@ -85,7 +80,7 @@ AssertionAccordion.defaultProps = {
         title: '',
         onSave: undefined,
         onDelete: undefined,
-        expandable: true,
+        expandable: true
     },
     expanded: undefined,
     defaultExpanded: false,

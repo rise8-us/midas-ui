@@ -3,13 +3,13 @@ import { fireEvent, renderWithRouter, screen, useModuleMock } from 'Utilities/te
 import { AssertionsTab } from './index'
 
 jest.mock('Components/Assertions/AssertionHeader/AssertionHeader',
-    () => function testing(props) { return (<div onClick = {props.onCreate}>Header</div>) })
+    () => (function testing(props) { return (<div onClick = {props.onCreate}>Header</div>) }))
 
 jest.mock('Components/Assertions/Assertion/Assertion',
-    () => function testing() { return (<div>Assertion</div>) })
+    () => (function testing() { return (<div>Assertion</div>) }))
 
 jest.mock('Components/Assertions/AssertionComments/AssertionComments',
-    () => function testing() { return (<div>AssertionCommentsComponent</div>) })
+    () => (function testing() { return (<div>AssertionCommentsComponent</div>) }))
 
 describe('<AssertionsTab>', () => {
     const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')

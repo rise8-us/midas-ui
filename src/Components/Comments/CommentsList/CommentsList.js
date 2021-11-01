@@ -1,38 +1,37 @@
-import { Box, makeStyles } from '@material-ui/core'
+import { Box } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { styled } from 'Styles/materialThemes'
 import { Comment } from '../'
 
-const useStyles = makeStyles(theme => ({
-    wrap: {
-        margin: theme.spacing(1),
-        display: 'flex',
-        flexDirection: 'column-reverse',
-        overflowY: 'auto',
-        '&::-webkit-scrollbar': {
-            width: '12px'
-        },
-        '&::-webkit-scrollbar-thumb': {
-            height: '15%',
-            border: '3px solid rgba(0, 0, 0, 0)',
-            backgroundClip: 'padding-box',
-            backgroundColor: theme.palette.divider,
-            '-webkit-border-radius': '12px'
-        }
+const BoxWrap = styled(Box)(({ theme }) => ({
+    margin: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    overflowY: 'auto',
+
+    '&::-webkit-scrollbar': {
+        width: '12px'
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+        height: '15%',
+        border: '3px solid transparent',
+        backgroundClip: 'padding-box',
+        backgroundColor: theme.palette.divider,
+        WebkitBorderRadius: '12px'
     }
 }))
 
 function CommentsList({ commentProps, commentIds }) {
-    const classes = useStyles()
-
     const commentsListSorted = Array.from(commentIds).sort((a, b) => b - a)
 
     return (
-        <Box className = {classes.wrap}>
-            {commentsListSorted.map(id => (
+        <BoxWrap>
+            {commentsListSorted.map((id) => (
                 <Comment {...commentProps} id = {id} key = {id} />
             ))}
-        </Box>
+        </BoxWrap>
     )
 }
 
@@ -40,7 +39,7 @@ CommentsList.propTypes = {
     commentIds: PropTypes.arrayOf(PropTypes.number).isRequired,
     commentProps: PropTypes.shape({
         handleStatusUpdates: PropTypes.bool
-    }),
+    })
 }
 
 CommentsList.defaultProps = {

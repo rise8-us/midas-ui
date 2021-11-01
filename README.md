@@ -37,10 +37,6 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
     "explorer.confirmDragAndDrop": false,
     "editor.minimap.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
-    "prettier.printWidth": 120,
-    "prettier.semi": false,
-    "prettier.singleQuote": true,
-    "prettier.trailingComma": "none",
     "git.enableSmartCommit": true,
     "sonarlint.rules": {
         "javascript:S1529": {

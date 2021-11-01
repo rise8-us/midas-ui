@@ -1,21 +1,21 @@
-import { Box, makeStyles } from '@material-ui/core'
+import { Box } from '@mui/material'
+import useWindowSize from 'Hooks/useWindowSize'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import useWindowSize from '../../Hooks/useWindowSize'
 
-const useStyles = makeStyles(() => ({
-    banner: {
-        zIndex: 100,
-        display: 'flex',
-        justifyContent: 'center',
-        width: '100%',
-        position: 'fixed'
-    }
-}))
+const styles = {
+    zIndex: 10000,
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    position: 'fixed',
+    lineHeight: '20px',
+    fontSize: '0.875rem'
+}
 
 function Banner({ children }) {
-    const classes = useStyles()
+
     const window = useWindowSize()
 
     const classification = useSelector(state => state.app.classification)
@@ -27,17 +27,18 @@ function Banner({ children }) {
     if (classification.caveat) banner = banner + `//${classification.caveat}`
 
     const bannerStyle = {
+        ...styles,
         backgroundColor: classification.backgroundColor ?? '#DBDBDB',
-        color: classification.textColor ?? '#000000'
+        color: classification.textColor ?? '#000000',
     }
 
     return (
         <>
-            <Box className = {classes.banner} style = {bannerStyle}>
+            <Box style = {bannerStyle}>
                 {banner}
             </Box>
             <>{children}</>
-            <Box className = {classes.banner} style = {{ top: `${bottomBannerTopStyle}px`, ...bannerStyle }}>
+            <Box style = {{ top: `${bottomBannerTopStyle}px`, ...bannerStyle }}>
                 {banner}
             </Box>
         </>

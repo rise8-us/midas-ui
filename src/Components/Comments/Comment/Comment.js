@@ -1,21 +1,20 @@
-import { Box, makeStyles, TextField, Typography } from '@material-ui/core'
+import { Box, TextField, Typography } from '@mui/material'
+import { Tag } from 'Components/Tag'
+import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useAssertionStatuses from '../../../Hooks/useAssertionStatuses'
-import { selectUserLoggedIn } from '../../../Redux/Auth/selectors'
-import { requestDeleteComment, requestUpdateComment } from '../../../Redux/Comments/actions'
-import { selectCommentById } from '../../../Redux/Comments/selectors'
-import { Tag } from '../../Tag'
+import { selectUserLoggedIn } from 'Redux/Auth/selectors'
+import { requestDeleteComment, requestUpdateComment } from 'Redux/Comments/actions'
+import { selectCommentById } from 'Redux/Comments/selectors'
+import { styled } from 'Styles/materialThemes'
 import { EditCommentOptions } from '../EditCommentOptions'
 
-const useStyles = makeStyles(() => ({
-    clickable: {
-        '&:hover': {
-            cursor: 'pointer',
-            textDecoration: 'underline'
-        }
-    }
+const TypographyClickable = styled(Typography)(() => ({
+    '&:hover': {
+        cursor: 'pointer',
+        textDecoration: 'underline',
+    },
 }))
 
 const parseStatus = (statusReceived) => {
@@ -35,13 +34,13 @@ const parseStatus = (statusReceived) => {
 
 function Comment({ id, handleStatusUpdates }) {
     const dispatch = useDispatch()
-    const classes = useStyles()
 
-    const comment = useSelector(state => selectCommentById(state, id))
+    const comment = useSelector((state) => selectCommentById(state, id))
     const userLoggedIn = useSelector(selectUserLoggedIn)
 
     const [body, status] = comment?.text?.split('###')
-    const canEdit = comment.author?.id === userLoggedIn.id || userLoggedIn.isAdmin
+    const canEdit =
+      comment.author?.id === userLoggedIn.id || userLoggedIn.isAdmin
     const modified = comment.lastEdit ? true : false
     const lastEdit = comment.lastEdit ?? comment.creationDate
 
@@ -53,7 +52,7 @@ function Comment({ id, handleStatusUpdates }) {
     }
 
     const onEditClick = () => {
-        setEditable(prev => !prev)
+        setEditable((prev) => !prev)
     }
 
     const onDeleteClick = () => {
@@ -83,29 +82,39 @@ function Comment({ id, handleStatusUpdates }) {
     const typoProps = {
         variant: 'caption',
         style: {
-            padding: '0 2px'
-        }
+            padding: '0 2px',
+        },
     }
 
     return (
-        <Box display = 'flex' flexDirection = 'column' id = {id} margin = '4px' style = {{ marginBottom: '16px' }}>
-            <div style = {{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <Typography color = 'textSecondary' style = {{ fontWeight: 'bold' }}>
+        <Box
+            display = 'flex'
+            flexDirection = 'column'
+            id = {id}
+            margin = '4px'
+            style = {{ marginBottom: '16px' }}
+        >
+            <div
+                style = {{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                }}
+            >
+                <Typography color = 'text.secondary' style = {{ fontWeight: 'bold' }}>
                     {comment.author?.displayName || comment.author?.email || comment.author?.username}
                 </Typography>
                 <div style = {{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant = 'caption' color = 'textSecondary'>
-                        {lastEdit?.split(':', 2).toString().replace(',', ':')} {modified && '(edited)'}
+                    <Typography variant = 'caption' color = 'text.secondary'>
+                        {lastEdit?.split(':', 2).toString().replace(',', ':')}{' '}
+                        {modified && '(edited)'}
                     </Typography>
-                    {canEdit &&
-                        <EditCommentOptions
-                            onEditClick = {onEditClick}
-                            onDeleteClick = {onDeleteClick}
-                        />
-                    }
+                    {canEdit && (
+                        <EditCommentOptions onEditClick = {onEditClick} onDeleteClick = {onDeleteClick} />
+                    )}
                 </div>
             </div>
-            {editable ?
+            {editable ? (
                 <div style = {{ display: 'flex', flexDirection: 'column' }}>
                     <TextField
                         value = {content}
@@ -115,32 +124,36 @@ function Comment({ id, handleStatusUpdates }) {
                         InputProps = {{ disableUnderline: true }}
                         inputProps = {{
                             style: {
-                                padding: '6px'
-                            }
+                                padding: '6px',
+                            },
                         }}
                     />
                     <div style = {{ display: 'inline-flex' }}>
-                        <Typography {...typoProps} color = 'textSecondary'>escape to</Typography>
-                        <Typography
+                        <Typography {...typoProps} color = 'text.secondary'>
+                            escape to
+                        </Typography>
+                        <TypographyClickable
                             {...typoProps}
-                            className = {classes.clickable}
                             color = 'primary'
                             onClick = {onExit}
-                        >cancel</Typography>
-                        <Typography {...typoProps} color = 'textSecondary'>• enter to</Typography>
-                        <Typography
+                        >
+                            cancel
+                        </TypographyClickable>
+                        <Typography {...typoProps} color = 'text.secondary'>
+                            • enter to
+                        </Typography>
+                        <TypographyClickable
                             {...typoProps}
-                            className = {classes.clickable}
                             color = 'primary'
                             onClick = {onSave}
-                        >save</Typography>
+                        >
+                            save
+                        </TypographyClickable>
                     </div>
                 </div>
-                :
-                <Typography color = 'textSecondary' >
-                    {content}
-                </Typography>
-            }
+            ) : (
+                <Typography color = 'text.secondary'>{content}</Typography>
+            )}
             {handleStatusUpdates && parseStatus(status)}
         </Box>
     )

@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import { FeatureEntry } from 'Components/FeatureEntry'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -33,7 +33,7 @@ const DraggableFeatureList = React.memo(function DraggableFeatureList({ features
             ))}
             {features.length === 0 && !hasEdit &&
                 <Typography
-                    color = 'textSecondary'
+                    color = 'text.secondary'
                     variant = 'body2'
                     style = {{ fontStyle: 'italic', height: '32px', padding: '5px 8px' }}
                 >

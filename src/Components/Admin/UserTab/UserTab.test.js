@@ -2,11 +2,11 @@ import React from 'react'
 import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { UserTab } from './index'
 
-jest.mock('../../UserRoles/UserRoles',
-    () => function testing() { return (<div>UserRoles test</div>) })
+jest.mock('Components/UserRoles/UserRoles',
+    () => (function testing() { return (<div>UserRoles test</div>) }))
 
-jest.mock('../../UserSettings/UserSettings',
-    () => function testing() { return (<div>UserSettings test</div>) })
+jest.mock('Components/UserSettings/UserSettings',
+    () => (function testing() { return (<div>UserSettings test</div>) }))
 
 describe('<UserTab />', () => {
     jest.setTimeout(15000)

@@ -1,5 +1,5 @@
-import { IconButton, makeStyles } from '@material-ui/core'
-import { HighlightOff } from '@material-ui/icons'
+import { HighlightOff } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 import { SearchUsers } from 'Components/Search/SearchUsers'
 import { Table } from 'Components/Table'
 import PropTypes from 'prop-types'
@@ -7,22 +7,23 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFindUserBy } from 'Redux/Users/actions'
 import { selectUsersByIds } from 'Redux/Users/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles((theme) => ({
-    tableContainer: {
-        '&::-webkit-scrollbar': {
-            width: '12px'
-        },
-        '&::-webkit-scrollbar-thumb': {
-            height: '15%',
-            border: '3px solid rgba(0, 0, 0, 0)',
-            backgroundClip: 'padding-box',
-            backgroundColor: theme.palette.divider,
-            '-webkit-border-radius': '12px'
-        },
-        overflowY: 'auto',
-        maxHeight: '300px'
-    }
+const DivTableContainer = styled('div')(({ theme }) => ({
+    '&::-webkit-scrollbar': {
+        width: '12px',
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+        height: '15%',
+        border: '3px solid transparent',
+        backgroundClip: 'padding-box',
+        backgroundColor: theme.palette.divider,
+        WebkitBorderRadius: '12px',
+    },
+
+    overflowY: 'auto',
+    maxHeight: '300px',
 }))
 
 const generateTeamUsersQuery = (userIds) => {
@@ -30,26 +31,23 @@ const generateTeamUsersQuery = (userIds) => {
 }
 
 const TeamUsers = ({ userIds, setUserIds }) => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
-    const users = useSelector(state => selectUsersByIds(state, userIds))
+    const users = useSelector((state) => selectUsersByIds(state, userIds))
 
     const buildRows = () => {
-        return users.map(user => ({
-            data: [
-                user.username,
-                user.displayName,
-                buildActions(user.id)
-            ],
+        return users.map((user) => ({
+            data: [user.username, user.displayName, buildActions(user.id)],
             properties: {
-                strikeThrough: false
-            }
+                strikeThrough: false,
+            },
         }))
     }
 
     useEffect(() => {
-        const missingUserIds = userIds.filter((_id, index) => users[index].id === undefined)
+        const missingUserIds = userIds.filter(
+            (_id, index) => users[index].id === undefined
+        )
         if (missingUserIds.length > 0) {
             dispatch(requestFindUserBy(generateTeamUsersQuery(missingUserIds)))
         }
@@ -61,7 +59,7 @@ const TeamUsers = ({ userIds, setUserIds }) => {
     }
 
     const removeUser = (userId) => {
-        const updatedUserIds = userIds.filter(id => id !== userId)
+        const updatedUserIds = userIds.filter((id) => id !== userId)
         setUserIds(updatedUserIds)
     }
 
@@ -71,6 +69,7 @@ const TeamUsers = ({ userIds, setUserIds }) => {
                 title = 'remove user'
                 color = 'secondary'
                 onClick = {() => removeUser(userId)}
+                size = 'large'
             >
                 <HighlightOff />
             </IconButton>
@@ -90,10 +89,10 @@ const TeamUsers = ({ userIds, setUserIds }) => {
                 style = {{
                     height: '32px',
                     marginTop: '8px',
-                    marginBottom: '24px'
+                    marginBottom: '24px',
                 }}
             />
-            <div className = { classes.tableContainer }>
+            <DivTableContainer>
                 <Table
                     columns = {['username', 'display name', '']}
                     rows = {buildRows()}
@@ -103,7 +102,7 @@ const TeamUsers = ({ userIds, setUserIds }) => {
                     stickyHeader = {true}
                     data-testid = 'TeamUsers__Table'
                 />
-            </div>
+            </DivTableContainer>
         </>
     )
 }

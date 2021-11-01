@@ -1,49 +1,39 @@
-import { alpha, CircularProgress, IconButton, makeStyles, TextField } from '@material-ui/core'
-import { Close, Search } from '@material-ui/icons'
+import { Close, Search } from '@mui/icons-material'
+import { CircularProgress, IconButton, TextField } from '@mui/material'
+import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import useDebounce from '../../../Hooks/useDebounce'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    searchIcon: {
-        width: 36,
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: theme.palette.secondary.main
-    },
-    inputRoot: props => ({
-        height: props.height,
-        color: 'inherit',
-        borderRadius: props.borderRadius,
-        backgroundColor: theme.palette.background.paper,
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.background.paper, 0.85)
-        },
-        width: props.growFrom,
-        '&:focus-within': {
-            width: props.growTo,
-            transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen
-            })
-        },
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    }),
-    clearableIcon: {
-        margin: theme.spacing(1)
-    }
+const SearchStyled = styled(Search)(({ theme }) => ({
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.secondary.main
 }))
 
-function SearchBar(props) {
-    const { growFrom, growTo, enableUnderline, disableClearable, fontSize, defaultValue,
-        search, height, borderRadius, searchIconHeight, ...textFieldProps } = props
+const transitions = {
+    transition: (theme) => theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+    })
+}
 
-    const classes = useStyles({ growFrom, growTo, height, borderRadius })
+function SearchBar(props) {
+    const {
+        growFrom,
+        growTo,
+        enableUnderline,
+        disableClearable,
+        fontSize,
+        defaultValue,
+        search,
+        height,
+        borderRadius,
+        searchIconHeight,
+        ...textFieldProps
+    } = props
 
     const [searchTerm, setSearchTerm] = useState(defaultValue)
     const [isSearching, setIsSearching] = useState(false)
@@ -60,48 +50,60 @@ function SearchBar(props) {
 
     return (
         <TextField
-            { ...textFieldProps }
-            classes = {{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-                focused: classes.inputFocus
+            {...textFieldProps}
+            sx = {{
+                height: height,
+                width: growFrom,
+                '&:focus-within': {
+                    ...transitions,
+                    width: growTo,
+                },
+                ...transitions,
             }}
             onChange = {handleOnChange}
             value = {searchTerm}
             InputProps = {{
-                endAdornment: <>
-                    {isSearching &&
+                endAdornment: (
+                    <>
+                        {isSearching &&
                         <CircularProgress
                             color = 'primary'
                             size = {20}
                             title = 'searching'
-                            style = {{ margin: '8px' }}
-                        />
-                    }
-                    {!disableClearable && searchTerm.length > 0 &&
-                        <IconButton
-                            title = 'clear'
-                            size = 'small'
-                            className = {classes.clearableIcon}
-                            onClick = {() => setSearchTerm('')}
-                        >
-                            <Close/>
-                        </IconButton>
-                    }
-                </>,
-                startAdornment: <Search className = {classes.searchIcon} style = {{ height: searchIconHeight }}/>,
+                            sx = {{ m: '8px' }}
+                        />}
+                        {!disableClearable && searchTerm.length > 0 && (
+                            <IconButton
+                                sx = {{ m: 1 }}
+                                title = 'clear'
+                                size = 'small'
+                                onClick = {() => setSearchTerm('')}
+                            >
+                                <Close />
+                            </IconButton>
+                        )}
+                    </>
+                ),
+                startAdornment: <SearchStyled sx = {{ width: '36px', height: searchIconHeight }} />,
                 disableUnderline: !enableUnderline,
+                sx: {
+                    backgroundColor: 'background.paper',
+                    '&:hover': {
+                        borderRadius,
+                        backgroundColor: 'grey.800'
+                    },
+                },
                 style: {
                     height: '100%',
                     margin: 'auto 0',
-                    fontSize
+                    fontSize,
+                    borderRadius,
                 },
                 'data-testid': 'Search__input'
             }}
         />
     )
 }
-
 SearchBar.propTypes = {
     borderRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     defaultValue: PropTypes.string,
@@ -117,7 +119,7 @@ SearchBar.propTypes = {
     search: PropTypes.func,
     searchIconHeight: PropTypes.string,
     title: PropTypes.string,
-    variant: PropTypes.oneOf(['standard', 'outlined', 'filled']),
+    variant: PropTypes.oneOf(['standard', 'outlined', 'filled'])
 }
 
 SearchBar.defaultProps = {
@@ -135,7 +137,7 @@ SearchBar.defaultProps = {
     search: undefined,
     searchIconHeight: '28px',
     title: 'Search',
-    variant: 'standard',
+    variant: 'standard'
 }
 
 export default SearchBar

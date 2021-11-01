@@ -1,4 +1,4 @@
-import { useModuleMock } from '../../Utilities/test-utils'
+import { useModuleMock } from 'Utilities/test-utils'
 import * as selectors from './selectors'
 
 const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByIds')

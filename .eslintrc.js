@@ -12,18 +12,30 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:security/recommended',
     ],
-    'parser': 'babel-eslint',
+    'parser': '@babel/eslint-parser',
     'globals': {
         'Atomics': 'readonly',
         'SharedArrayBuffer': 'readonly'
     },
     'parserOptions': {
+        'babelOptions': {
+            'presets': [ '@babel/preset-typescript','@babel/preset-react']
+         },
+        'requireConfigFile': false,
         'ecmaFeatures': {
             'jsx': true
         },
         'ecmaVersion': 2018,
         'sourceType': 'module'
     },
+    'overrides': [
+        {
+          'files': ['*.{ts,tsx}'],
+          'parser': '@typescript-eslint/parser',
+          'plugins': ['@typescript-eslint'],
+          'extends': ['plugin:@typescript-eslint/recommended']
+        }
+      ],
     'plugins': [
         'react',
         'security',

@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { selectOpenPopups } from '../../Redux/Popups/selectors'
+import { selectOpenPopups } from 'Redux/Popups/selectors'
 
 const importPopup = componentName => lazy(() => {
     const cleanComponentName = componentName.replace(/[^a-z0-9]/gi, '')

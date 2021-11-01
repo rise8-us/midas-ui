@@ -1,4 +1,4 @@
-import { Box, InputAdornment, TextField } from '@material-ui/core'
+import { Box, InputAdornment, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { CirclePicker } from 'react-color'

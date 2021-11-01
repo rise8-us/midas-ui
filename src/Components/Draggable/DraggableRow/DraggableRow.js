@@ -1,56 +1,66 @@
-import { Grid, IconButton, makeStyles, Tooltip } from '@material-ui/core'
-import { Close, DragIndicator } from '@material-ui/icons'
+import { Close, DragIndicator } from '@mui/icons-material'
+import { Grid, IconButton, Tooltip } from '@mui/material'
+import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles((theme) => ({
-    row: {
-        '&:hover': {
-            backgroundColor: '#FFFFFF06',
-            borderRadius: 3
-        }
-    },
-    title: {
-        color: theme.palette.text.secondary
+const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    height: '34px',
+    marginLeft: theme.spacing(1)
+}))
+
+const StyledEditableGrid = styled(Grid)(({ theme, selected })=> ({
+    '&:hover': {
+        backgroundColor: selected  ? alpha(theme.palette.text.primary, .04) : 'inherit',
+        borderRadius: selected  ? 3 : 'inherit'
     }
 }))
 
-function DraggableRow({ title, hasEdit, onUpdate, onDelete, startIcon, additionalOptions }) {
-    const classes = useStyles()
+function DraggableRow({
+    title,
+    hasEdit,
+    onUpdate,
+    onDelete,
+    startIcon,
+    additionalOptions,
+}) {
+
     const [hovered, setHovered] = useState(false)
 
     return (
-        <Grid
+        <StyledEditableGrid
             container
             alignItems = 'center'
             onMouseEnter = {() => setHovered(true)}
             onMouseLeave = {() => setHovered(false)}
-            className = {hasEdit ? classes.row : ''}
+            selected = {hasEdit}
             data-testid = 'DraggableRow__container'
         >
-            <Grid item style = {{ minWidth: '24px', height: '32px', marginRight: '8px' }}>
-                {hasEdit && hovered
-                    ? <DragIndicator
+            <Grid item maxWidth = '28px' minWidth = '28' height = '34px'>
+                {hasEdit && hovered ? (
+                    <DragIndicator
                         color = 'secondary'
-                        style = {{ height: '32px' }}
+                        style = {{ height: '90%' }}
                         data-testid = 'DraggableRow__icon-drag'
                     />
-                    : <>{startIcon}</>
-                }
+                ) : (
+                    <>{startIcon}</>
+                )}
             </Grid>
             <Grid item style = {{ flexGrow: 1 }}>
-                <AutoSaveTextField
+                <AutoSaveTextFieldTitle
                     fullWidth
                     initialValue = {title}
                     canEdit = {hasEdit}
                     onSave = {onUpdate}
-                    className = {classes.title}
                 />
             </Grid>
             <Grid item>
-                {hasEdit && hovered &&
+                {hasEdit && hovered && (
                     <>
                         {additionalOptions}
                         <Tooltip title = {Tooltips.DELETE}>
@@ -59,13 +69,13 @@ function DraggableRow({ title, hasEdit, onUpdate, onDelete, startIcon, additiona
                                 data-testid = 'DraggableRow__button-delete'
                                 onClick = {onDelete}
                             >
-                                <Close color = 'secondary'/>
+                                <Close color = 'secondary' />
                             </IconButton>
                         </Tooltip>
                     </>
-                }
+                )}
             </Grid>
-        </Grid>
+        </StyledEditableGrid>
     )
 }
 

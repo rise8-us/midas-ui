@@ -1,10 +1,10 @@
 import React from 'react'
-import PortfolioConstants from '../../../Redux/Portfolios/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import PortfolioConstants from 'Redux/Portfolios/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Portfolios } from './index'
 
-jest.mock('../../Cards/PortfolioCard/PortfolioCard', () =>
-    function testing() { return (<div>Portfolio Card mock</div>) })
+jest.mock('Components/Cards/PortfolioCard/PortfolioCard', () =>
+    (function testing() { return (<div>Portfolio Card mock</div>) }))
 
 describe('<Portfolios>', () => {
 

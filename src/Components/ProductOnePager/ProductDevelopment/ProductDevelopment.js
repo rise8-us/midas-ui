@@ -1,4 +1,4 @@
-import { alpha, Grid, Typography, useTheme } from '@material-ui/core'
+import { alpha, Grid, Typography, useTheme } from '@mui/material'
 import { DevelopmentSecurityRatings } from 'Components/DevelopmentSecurityRatings'
 import { DevelopmentStepper } from 'Components/DevelopmentStepper'
 import useSonarqubeRatings from 'Hooks/useSonarqubeRatings'
@@ -18,6 +18,7 @@ function DiagonalLines({ color }) {
         <div
             style = {{
                 width: '22px',
+                maxWidth: '22px',
                 height: '100%',
                 background: buildLine('134deg', 39, alpha(color, .4)) + ', ' +
                     buildLine('154deg', 46, alpha(color, .4)) + ', ' +
@@ -54,7 +55,7 @@ function ProductDevelopment({ id }) {
                     <Grid item>
                         <Typography
                             variant = 'body2'
-                            color = 'textSecondary'
+                            color = 'text.secondary'
                             style = {{
                                 textTransform: 'uppercase',
                                 fontStyle: 'italic'
@@ -63,40 +64,42 @@ function ProductDevelopment({ id }) {
                             {project.name}
                         </Typography>
                     </Grid>
-                    <Grid container item wrap = 'nowrap'>
-                        <Grid item s = {2} m = {1}>
+                    <Grid container item wrap = 'nowrap' columnSpacing = {0}>
+                        <Grid item>
                             <DevelopmentStepper completedIndex = {calculateStep(project.projectJourneyMap)} />
                         </Grid>
-                        <Grid item s = {2} m = {2} style = {{ marginRight: '10px' }}>
+                        <Grid item style = {{ marginRight: '10px' }}>
                             <DiagonalLines color = {theme.palette.text.secondary} />
                         </Grid>
-                        <DevelopmentSecurityRatings
-                            projectSonarqubeUrl = {project.coverage.sonarqubeUrl}
-                            projectPipelineUrl = {project.coverage.pipelineUrl}
-                            codeCoverage = {{
-                                value: project.coverage.testCoverage,
-                                color: determineColor(project.coverage.testCoverage, theme),
-                                tooltipMessage: `Code coverage is currently at ${project.coverage.testCoverage}%`
-                            }}
-                            security = {{
-                                value: project.coverage.securityRating,
-                                color: determineColor(project.coverage.securityRating, theme),
-                                tooltipMessage:
-                                    sonarqube.security[project.coverage.securityRating]?.description
-                            }}
-                            reliability = {{
-                                value: project.coverage.reliabilityRating,
-                                color: determineColor(project.coverage.reliabilityRating, theme),
-                                tooltipMessage:
-                                    sonarqube.reliability[project.coverage.reliabilityRating]?.description
-                            }}
-                            maintainability = {{
-                                value: project.coverage.maintainabilityRating,
-                                color: determineColor(project.coverage.maintainabilityRating, theme),
-                                tooltipMessage:
-                                    sonarqube.maintainability[project.coverage.maintainabilityRating]?.description
-                            }}
-                        />
+                        <Grid item style = {{ margin: 'auto 0' }}>
+                            <DevelopmentSecurityRatings
+                                projectSonarqubeUrl = {project.coverage.sonarqubeUrl}
+                                projectPipelineUrl = {project.coverage.pipelineUrl}
+                                codeCoverage = {{
+                                    value: project.coverage.testCoverage,
+                                    color: determineColor(project.coverage.testCoverage, theme),
+                                    tooltipMessage: `Code coverage is currently at ${project.coverage.testCoverage}%`
+                                }}
+                                security = {{
+                                    value: project.coverage.securityRating,
+                                    color: determineColor(project.coverage.securityRating, theme),
+                                    tooltipMessage:
+                                        sonarqube.security[project.coverage.securityRating]?.description
+                                }}
+                                reliability = {{
+                                    value: project.coverage.reliabilityRating,
+                                    color: determineColor(project.coverage.reliabilityRating, theme),
+                                    tooltipMessage:
+                                        sonarqube.reliability[project.coverage.reliabilityRating]?.description
+                                }}
+                                maintainability = {{
+                                    value: project.coverage.maintainabilityRating,
+                                    color: determineColor(project.coverage.maintainabilityRating, theme),
+                                    tooltipMessage:
+                                        sonarqube.maintainability[project.coverage.maintainabilityRating]?.description
+                                }}
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
             ))}

@@ -54,7 +54,7 @@ describe('<AssertionHeader>', () => {
 
         render(<AssertionHeader productId = {1} onCreate = {onCreateMock} hasEdit/>, { initialState: mockState })
 
-        fireEvent.click(screen.getByTitle('Add new OGSM'))
+        fireEvent.click(screen.getByLabelText('Add new OGSM'))
 
         expect(await screen.findByTestId('AssertionHeader__icon-add')).toBeInTheDocument()
 

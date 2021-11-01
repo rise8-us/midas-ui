@@ -20,7 +20,7 @@ describe('<ProductCard />', () => {
                 color: ''
             }
         ],
-        projects: [{ id: 2, name: 'project 1' }]
+        projects: [{ id: 2, name: 'project 1', projectJourneyMap: 0 }]
     }
     const product2 = {
         ...product,

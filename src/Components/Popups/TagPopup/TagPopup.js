@@ -1,6 +1,5 @@
-import { Box, Icon, TextField, Tooltip } from '@material-ui/core'
-import { HelpOutline } from '@material-ui/icons'
-import { Autocomplete } from '@material-ui/lab'
+import { HelpOutline } from '@mui/icons-material'
+import { Autocomplete, Box, Icon, TextField, Tooltip } from '@mui/material'
 import { ColorPicker } from 'Components/ColorPicker'
 import { Popup } from 'Components/Popup'
 import { Tag } from 'Components/Tag'

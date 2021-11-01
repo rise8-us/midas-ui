@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import { CapabilitiesSidebar } from 'Components/Cards'
 import { Page } from 'Components/Page'
 import React, { useEffect } from 'react'

@@ -1,13 +1,13 @@
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
+import { PortfolioCard } from 'Components/Cards'
+import { FloatingActionButton } from 'Components/FloatingActionButton'
+import { Page } from 'Components/Page'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isProductCreator } from '../../../Redux/Auth/selectors'
-import { openPopup } from '../../../Redux/Popups/actions'
-import PortfolioConstant from '../../../Redux/Portfolios/constants'
-import { selectUnarchivedPortfolios } from '../../../Redux/Portfolios/selectors'
-import { PortfolioCard } from '../../Cards'
-import { FloatingActionButton } from '../../FloatingActionButton'
-import { Page } from '../../Page'
+import { isProductCreator } from 'Redux/Auth/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import PortfolioConstant from 'Redux/Portfolios/constants'
+import { selectUnarchivedPortfolios } from 'Redux/Portfolios/selectors'
 
 function Portfolios() {
     const dispatch = useDispatch()
@@ -26,7 +26,7 @@ function Portfolios() {
                         justifyContent = 'center'
                         gridTemplateColumns = 'repeat(auto-fit, 450px)'
                         gridAutoRows = '2px'
-                        gridGap = '0 10px'
+                        gap = '0 10px'
                         gridAutoFlow = 'row'
                         style = {{ marginBottom: '40px', padding: '0 30px' }}
                     >
