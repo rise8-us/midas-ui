@@ -1,70 +1,62 @@
-import { Card, CardContent, CardHeader, IconButton, makeStyles } from '@material-ui/core'
-import { LockOpenOutlined, LockOutlined } from '@material-ui/icons'
+import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
+import { Card, CardContent, CardHeader, IconButton } from '@mui/material'
 import CapabilitiesList from 'Components/CapabilitiesList/CapabilitiesList'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    card: {
-        width: '100%',
-        height: 'fit-content',
-        backgroundColor: theme.palette.grey[1100],
-        borderRadius: 16
-    },
-    link: {
-        '&:hover': {
-            color: theme.palette.primary.main,
-            cursor: 'pointer'
-        },
-    },
-    unlockedIcon: {
-        color: theme.palette.text.primary
-    }
+const StyledCard = styled(Card)(({ theme }) => ({
+    width: '100%',
+    height: 'fit-content',
+    backgroundColor: theme.palette.grey[1100],
+    borderRadius: 16,
+}))
+
+const LockOpenOutlinedUnlockedIcon = styled(LockOpenOutlined)(({ theme }) => ({
+    color: theme.palette.text.primary,
 }))
 
 function CapabilitiesSidebar() {
-    const classes = useStyles()
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
 
     const [hasEdit, setHasEdit] = useState(false)
 
     return (
-        <Card className = {classes.card}>
+        <StyledCard>
             <CardHeader
                 title = 'Mission Thread'
                 subheader = 'Integrated Air and Missile Defense'
                 titleTypographyProps = {{
                     variant: 'h5',
-                    color: 'textPrimary',
-                    'data-testid': 'CapabilitiesSidebar__header-title'
+                    color: 'text.primary',
+                    'data-testid': 'CapabilitiesSidebar__header-title',
                 }}
                 action = {
-                    userLoggedIn?.roles?.PORTFOLIO_LEAD &&
+                    userLoggedIn?.roles?.PORTFOLIO_LEAD && (
                         <IconButton
-                            onClick = {() => setHasEdit(prev => !prev)}
+                            onClick = {() => setHasEdit((prev) => !prev)}
                             color = 'secondary'
                             data-testid = 'CapabilitiesSidebar__button-edit'
+                            size = 'large'
                         >
-                            {hasEdit
-                                ? <LockOpenOutlined
+                            {hasEdit ? (
+                                <LockOpenOutlinedUnlockedIcon
                                     fontSize = 'small'
                                     title = 'unlocked'
-                                    className = {classes.unlockedIcon}
                                 />
-                                : <LockOutlined
-                                    fontSize = 'small'
-                                    title = 'locked'
-                                />
-                            }
+                            ) : (
+                                <LockOutlined fontSize = 'small' title = 'locked' />
+                            )}
                         </IconButton>
+                    )
                 }
             />
             <CardContent>
-                <CapabilitiesList hasEdit = {hasEdit}/>
+                <CapabilitiesList hasEdit = {hasEdit} />
             </CardContent>
-        </Card>
+        </StyledCard>
     )
 }
 

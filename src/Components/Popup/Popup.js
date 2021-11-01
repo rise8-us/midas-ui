@@ -1,43 +1,10 @@
-import {
-    Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, makeStyles, Typography
-} from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import { Close } from '@mui/icons-material'
+import { Button, Dialog, DialogActions, DialogContent, Divider, IconButton, Typography } from '@mui/material'
+import { Header } from 'Components/Header'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const useStyles = makeStyles(theme => ({
-    closeButton: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500]
-    },
-    dialogTitle: {
-        margin: 0,
-        padding: theme.spacing(2)
-    },
-    dialogContent: {
-        '&::-webkit-scrollbar': {
-            width: '12px'
-        },
-        '&::-webkit-scrollbar-thumb': {
-            height: '15%',
-            border: '3px solid rgba(0, 0, 0, 0)',
-            backgroundClip: 'padding-box',
-            backgroundColor: theme.palette.divider,
-            '-webkit-border-radius': '12px'
-        },
-        padding: theme.spacing(2)
-    },
-    dialogActions: {
-        margin: 0,
-        padding: theme.spacing(1)
-    }
-}))
-
 const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, onSubmit, onClose }) => {
-    const classes = useStyles()
-
     return (
         <Dialog
             data-testid = 'Popup__dialog'
@@ -45,27 +12,43 @@ const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, 
             scroll = 'paper'
             PaperProps = {{ style: { width: '395px' } }}
         >
-            <DialogTitle disableTypography className = {classes.dialogTitle} >
-                <Typography variant = 'h6'>{title}</Typography>
-                {subtitle &&
-                    <Typography variant = 'caption' color = 'textSecondary'>{subtitle}</Typography>
+            <Header
+                title = {title}
+                titleVariant = 'h6'
+                subtitle = {subtitle}
+                icon = {
+                    <IconButton
+                        data-testid = 'Popup__button-close'
+                        color = 'secondary'
+                        onClick = {onClose}
+                        size = 'medium'
+                    >
+                        <Close />
+                    </IconButton>
                 }
-                {!hideRequiredText &&
-                    <Typography variant = 'caption' color = 'textSecondary'>* are required</Typography>
+                additionalNode = {!hideRequiredText &&
+                    <Typography variant = 'caption' color = 'text.secondary'>
+                        * are required
+                    </Typography>
                 }
-                <IconButton
-                    data-testid = 'Popup__button-close'
-                    className = {classes.closeButton}
-                    onClick = {onClose}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </DialogTitle>
+            />
             <Divider />
-            <DialogContent className = {classes.dialogContent} style = {{ paddingBottom: '50px' }}>
+            <DialogContent sx = {{
+                '&::-webkit-scrollbar': {
+                    width: '12px'
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    height: '15%',
+                    border: '3px solid transparent',
+                    backgroundClip: 'padding-box',
+                    backgroundColor: 'divider',
+                    WebkitBorderRadius: '12px'
+                },
+                p: '16px 16px 50px 16px'
+            }}>
                 {children}
             </DialogContent>
-            <DialogActions className = {classes.dialogActions}>
+            <DialogActions sx = {{ m: 0, p: 1 }}>
                 <Button
                     data-testid = 'Popup__button-cancel'
                     onClick = {onClose}

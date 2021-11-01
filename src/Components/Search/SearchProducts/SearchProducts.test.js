@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, useDispatchMock } from '../../../Utilities/test-utils'
+import { render, screen, useDispatchMock } from 'Utilities/test-utils'
 import { SearchProducts } from './index'
 
 describe('<SearchProducts>', () => {

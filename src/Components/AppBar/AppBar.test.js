@@ -1,8 +1,6 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
-} from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { AppBar } from './index'
 
 const mockHistoryPush = jest.fn()
@@ -51,6 +49,7 @@ describe('<AppBar />', () => {
         expect(screen.queryByTitle('admin')).not.toBeInTheDocument()
     })
 
+
     test('should render admin user', () => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
 
@@ -59,6 +58,7 @@ describe('<AppBar />', () => {
         expect(screen.getByTitle('account')).toBeInTheDocument()
         expect(screen.getByTitle('admin')).toBeInTheDocument()
     })
+
 
     test('should handle search input', async() => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
@@ -101,4 +101,5 @@ describe('<AppBar />', () => {
         fireEvent.click(screen.getByText('Portfolios'))
         expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios')
     })
+
 })

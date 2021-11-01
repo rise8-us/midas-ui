@@ -1,5 +1,4 @@
-import { Paper, Typography } from '@material-ui/core'
-import { unwrapResult } from '@reduxjs/toolkit'
+import { Paper, Typography } from '@mui/material'
 import { AssertionStatusDropdown } from 'Components/Assertions'
 import { AddComment, CommentsList } from 'Components/Comments'
 import useWindowSize from 'Hooks/useWindowSize'
@@ -28,14 +27,12 @@ function AssertionComments({ assertionId }) {
 
     const conditionalAssertionUpdate = () => {
         if (hasAccess) {
-            return Promise.resolve(unwrapResult).then(() => {
-                dispatch(requestUpdateAssertion({
-                    id: assertionId,
-                    text: assertion.text,
-                    children: [],
-                    status: status
-                }))
-            })
+            dispatch(requestUpdateAssertion({
+                id: assertionId,
+                text: assertion.text,
+                children: [],
+                status: status
+            }))
         }
     }
 
@@ -43,7 +40,7 @@ function AssertionComments({ assertionId }) {
         dispatch(requestCreateComment({
             assertionId,
             text: `${value}###${status}`
-        })).then(conditionalAssertionUpdate())
+        })).then(() => conditionalAssertionUpdate())
     }
 
     if (assertion === undefined) {
@@ -51,7 +48,7 @@ function AssertionComments({ assertionId }) {
     }
 
     useLayoutEffect(() => {
-        const offsetTop = ref.current?.offsetTop - 88
+        const offsetTop = ref.current?.offsetTop
         if (offsetTop > scroll) setHeight(maxHeight - offsetTop + scroll)
         else setHeight(maxHeight)
     }, [scroll, maxHeight])

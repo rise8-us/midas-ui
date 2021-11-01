@@ -1,42 +1,42 @@
-import { alpha, Box, Grid, makeStyles, SvgIcon, Tooltip, Typography, useTheme } from '@material-ui/core'
+import { alpha, Box, Grid, SvgIcon, Tooltip, Typography, useTheme } from '@mui/material'
 import { ReactComponent as CTFCertificate } from 'Assets/ctf.svg'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles((theme) => ({
-    box: props => ({
-        height: 128,
-        width: 128,
-        borderRadius: 8,
-        border: '1px solid',
-        cursor: 'pointer',
-        borderColor: alpha(theme.palette.text.secondary, .4),
-        color: theme.palette.text.secondary,
-        '&:hover': {
-            borderColor: props.color,
-            color: theme.palette.text.primary
-        },
-    }),
-    title: {
-        display: 'flex',
-        justifyContent: 'space-around',
-        padding: '16px 0',
-        color: 'inherit'
-    }
+const BoxStyled = styled(Box)(({ theme }) => ({
+    height: 128,
+    width: 128,
+    borderRadius: 8,
+    border: '1px solid',
+    cursor: 'pointer',
+    borderColor: alpha(theme.palette.text.secondary, 0.4),
+    color: theme.palette.text.secondary
+}))
+
+const TypographyTitleStyled = styled(Typography)(() => ({
+    display: 'flex',
+    justifyContent: 'space-around',
+    padding: '16px 0',
+    color: 'inherit'
 }))
 
 function ProductBox({ name, onClick, color, projects }) {
-    const classes = useStyles({ color })
     const theme = useTheme()
 
     return (
-        <Box
-            className = {classes.box}
+        <BoxStyled
+            sx = {{
+                '&:hover': {
+                    borderColor: color,
+                    color: 'text.primary'
+                }
+            }}
             onClick = {onClick}
         >
-            <Typography variant = 'h6' className = {classes.title}>{name}</Typography>
+            <TypographyTitleStyled variant = 'h6'>{name}</TypographyTitleStyled>
             <Grid container justifyContent = 'center' wrap = 'wrap' data-testid = 'ProductBox__Grid-container'>
-                {projects.map((project, index) =>
+                {projects.map((project, index) => (
                     <Grid item key = {index} data-testid = 'ProductBox__Grid-item'>
                         <Tooltip title = {project.name}>
                             <SvgIcon
@@ -48,17 +48,18 @@ function ProductBox({ name, onClick, color, projects }) {
                                     border: '1px solid',
                                     borderRadius: '14px',
                                     overflow: 'visible',
-                                    color: project.projectJourneyMap === 7 ?
-                                        theme.palette.text.primary : alpha(theme.palette.text.secondary, .4)
+                                    color: project.projectJourneyMap === 7
+                                        ? theme.palette.text.primary
+                                        : alpha(theme.palette.text.secondary, 0.4)
                                 }}
                             >
                                 <CTFCertificate />
                             </SvgIcon>
                         </Tooltip>
                     </Grid>
-                )}
+                ))}
             </Grid>
-        </Box>
+        </BoxStyled>
     )
 }
 
@@ -66,10 +67,12 @@ ProductBox.propTypes = {
     name: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
-    projects: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string,
-        projectJourneyMap: PropTypes.number
-    }))
+    projects: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string,
+            projectJourneyMap: PropTypes.number
+        })
+    )
 }
 
 ProductBox.defaultProps = {

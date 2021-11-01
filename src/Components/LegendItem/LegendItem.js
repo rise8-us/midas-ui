@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -16,8 +16,8 @@ function LegendItem({ color, text }) {
                 data-testid = 'LegendItem__circle'
             />
             <Typography
-                style = {{ paddingLeft: '8px', whiteSpace: 'nowrap' }}
-                color = 'textSecondary'
+                style = {{ paddingLeft: '5px', whiteSpace: 'nowrap' }}
+                color = 'text.secondary'
                 variant = 'body2'
             >{text}</Typography>
         </div>

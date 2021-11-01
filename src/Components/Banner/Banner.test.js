@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, useSelectorMock } from '../../Utilities/test-utils'
+import { render, screen, useSelectorMock } from 'Utilities/test-utils'
 import { Banner } from './index'
 
 

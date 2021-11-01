@@ -1,4 +1,4 @@
-import { TableCell, TableHead, TableRow, Typography } from '@material-ui/core'
+import { TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 

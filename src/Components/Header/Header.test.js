@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '../../Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { Header } from './index'
 
 test('<Header /> - Title displays correct information', () => {

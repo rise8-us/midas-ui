@@ -28,6 +28,6 @@ describe('<CircularStatus />', () => {
     test('should render tooltip', () => {
         render(<CircularStatus value = {80} tooltip = 'foobar'/>)
 
-        expect(screen.getByTitle('foobar')).toBeInTheDocument()
+        expect(screen.getByLabelText('foobar')).toBeInTheDocument()
     })
 })

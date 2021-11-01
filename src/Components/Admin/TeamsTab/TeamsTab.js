@@ -1,24 +1,14 @@
-import { Box, Button, IconButton, makeStyles } from '@material-ui/core'
-import { Add, Archive, Unarchive } from '@material-ui/icons'
+import { Add, Archive, Unarchive } from '@mui/icons-material'
+import { Box, Button, IconButton } from '@mui/material'
+import { Table } from 'Components/Table'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openPopup } from '../../../Redux/Popups/actions'
-import { requestArchiveTeam } from '../../../Redux/Teams/actions'
-import TeamsConstant from '../../../Redux/Teams/constants'
-import { selectAllTeams } from '../../../Redux/Teams/selectors'
-import { Table } from '../../Table'
-
-const useStyles = makeStyles(theme => ({
-    addButton: {
-        '&:hover': {
-            color: theme.palette.primary.main
-        },
-        height: 40
-    }
-}))
+import { openPopup } from 'Redux/Popups/actions'
+import { requestArchiveTeam } from 'Redux/Teams/actions'
+import TeamsConstant from 'Redux/Teams/constants'
+import { selectAllTeams } from 'Redux/Teams/selectors'
 
 const TeamsTab = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const allTeams = useSelector(selectAllTeams)
@@ -39,6 +29,7 @@ const TeamsTab = () => {
                     e.stopPropagation()
                     archiveTeam(id, isArchived)
                 }}
+                size = 'large'
             >
                 {isArchived ? <Unarchive /> : <Archive />}
             </IconButton>
@@ -60,15 +51,11 @@ const TeamsTab = () => {
     }
 
     return (
-        <div style = {{ padding: 24 }}>
-            <Box
-                textAlign = 'right'
-                padding = '24px 0'
-            >
+        <div style = {{ padding: '24px' }}>
+            <Box display = 'block' width = '75vw' margin = 'auto' textAlign = 'right' padding = '24px 0'>
                 <Button
                     varient = 'text'
                     startIcon = {<Add/>}
-                    className = {classes.addButton}
                     onClick = {createTeam}
                 >
                     Add New Team
@@ -81,7 +68,6 @@ const TeamsTab = () => {
                     const id = data[0]
                     !archivedTeams.find(team => team.id == id) && updateTeam(id)
                 }}
-                tableWidth = '100%'
             />
         </div>
     )

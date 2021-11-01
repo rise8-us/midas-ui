@@ -2,8 +2,8 @@ import React from 'react'
 import { render, screen } from 'Utilities/test-utils'
 import { OnePagerPopup } from './index'
 
-jest.mock('../../ProductOnePager/ProductOnePager/ProductOnePager',
-    () => function testing() { return (<div>ProductOnePager</div>) })
+jest.mock('Components/ProductOnePager/ProductOnePager/ProductOnePager',
+    () => (function testing() { return (<div>ProductOnePager</div>) }))
 
 describe('<OnePagerPopup>', () => {
     test('should render', () => {

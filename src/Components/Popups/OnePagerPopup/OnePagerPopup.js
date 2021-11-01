@@ -1,28 +1,26 @@
-import { Dialog, DialogContent, makeStyles, useTheme } from '@material-ui/core'
+import { Dialog, DialogContent, useTheme } from '@mui/material'
 import { ProductOnePager } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    dialogContent: {
-        overflowX: 'clip',
-        '&::-webkit-scrollbar': {
-            width: '12px'
-        },
-        '&::-webkit-scrollbar-thumb': {
-            height: '15%',
-            border: '3px solid rgba(0, 0, 0, 0)',
-            backgroundClip: 'padding-box',
-            backgroundColor: theme.palette.divider,
-            '-webkit-border-radius': '12px'
-        },
-        padding: theme.spacing(2)
-    }
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+    overflowX: 'clip',
+    '&::-webkit-scrollbar': {
+        width: '12px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        height: '15%',
+        border: '3px solid transparent',
+        backgroundClip: 'padding-box',
+        backgroundColor: theme.palette.divider,
+        WebkitBorderRadius: '12px',
+    },
+    padding: theme.spacing(2),
 }))
 
 function OnePagerPopup({ productId, open, onClose }) {
     const theme = useTheme()
-    const classes = useStyles()
 
     return (
         <Dialog
@@ -37,18 +35,18 @@ function OnePagerPopup({ productId, open, onClose }) {
                     maxHeight: '100%',
                     padding: 0,
                     margin: 0,
-                    backgroundColor: theme.palette.background.default
-                }
+                    backgroundColor: theme.palette.background.default,
+                },
             }}
             style = {{
                 width: '95%',
                 height: 'calc(100% - 40px)',
-                margin: 'auto'
+                margin: 'auto',
             }}
         >
-            <DialogContent className = {classes.dialogContent}>
+            <StyledDialogContent>
                 <ProductOnePager id = {productId} readOnly />
-            </DialogContent>
+            </StyledDialogContent>
         </Dialog>
     )
 }

@@ -46,12 +46,15 @@
     ]
   },
   "dependencies": {
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.60",
-    "@material-ui/styles": "^4.11.4",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.5",
+    "@mui/lab": "^5.0.0-alpha.52",
+    "@mui/material": "^5.0.5",
+    "@mui/styles": "^5.0.2",
     "@reduxjs/toolkit": "^1.6.1",
     "@stomp/stompjs": "^6.1.2",
+    "ansi-html": "https://registry.yarnpkg.com/ansi-html-community/-/ansi-html-community-0.0.8.tgz#69fbc4d6ccbe383f9736934ae34c3f8290f1bf41",
     "axios": "^0.22.0",
     "object-hash": "^2.2.0",
     "react": "^17.0.2",
@@ -78,14 +81,24 @@
     "tar": "^4.4.18"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
+    "@babel/plugin-transform-typescript": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
     "@cypress/react": "^5.9.4",
     "@cypress/webpack-dev-server": "^1.5.0",
     "@testing-library/dom": "^8.7.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.9",
+    "@types/react": "^17.0.30",
+    "@types/react-dom": "^17.0.9",
+    "@typescript-eslint/parser": "^5.0.0",
+    "agent-base": "^6.0.2",
     "cypress": "^8.5.0",
-    "eslint": "^7.32.0",
     "eslint-plugin-jest": "^24.5.2",
     "eslint-plugin-no-unsanitized": "^3.1.5",
     "eslint-plugin-security": "^1.4.0",
@@ -93,6 +106,7 @@
     "prop-types": "^15.7.2",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
-    "stylelint": "^13.13.1"
+    "stylelint": "^13.13.1",
+    "typescript": "^4.4.4"
   }
 }

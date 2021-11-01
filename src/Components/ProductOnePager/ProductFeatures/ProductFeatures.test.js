@@ -76,7 +76,7 @@ describe('<ProductFeatures>', () => {
         render(<ProductFeatures productId = {3} hasEdit/>)
 
         fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
-        fireEvent.click(screen.getByTitle('Delete'))
+        fireEvent.click(screen.getByLabelText('Delete'))
 
         expect(requestDeleteFeatureMock).toHaveBeenCalled()
     })

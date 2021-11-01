@@ -1,5 +1,5 @@
-import { Grid, IconButton, Typography } from '@material-ui/core'
-import { Add, Edit } from '@material-ui/icons'
+import { Add, Edit } from '@mui/icons-material'
+import { Grid, IconButton, Typography } from '@mui/material'
 import { TeamMember } from 'Components/TeamMember'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -29,7 +29,7 @@ function ProductTeam({ productId, hasEdit }) {
 
     return (
         <Grid container wrap = 'wrap' style = {{ marginLeft: '3px' }}>
-            <Grid container item xs = {12} s = {12} style = {{ paddingBottom: '8px' }} justifyContent = 'space-between'>
+            <Grid container item style = {{ paddingBottom: '8px', height: '34px' }} justifyContent = 'space-between'>
                 <Grid item>
                     <Typography variant = 'h6'>TEAM</Typography>
                 </Grid>

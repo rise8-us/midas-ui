@@ -1,5 +1,5 @@
-import { Grid, IconButton } from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+import { Add } from '@mui/icons-material'
+import { Grid, IconButton } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggableFeatureList } from 'Components/Draggable'
 import { LabelTooltip } from 'Components/LabelTooltip'
@@ -52,7 +52,7 @@ function ProductFeatures({ productId, hasEdit }) {
                     <LabelTooltip
                         typographyProps = {{
                             variant: 'h6',
-                            color: 'textPrimary'
+                            color: 'text.primary'
                         }}
                         tooltipProps = {{
                             title: Tooltips.FEATURE_DESCRIPTION,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '../../Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { SonarqubeIndicator } from './index'
 
 describe('<SonarqubeIndicator />', () => {
@@ -15,13 +15,13 @@ describe('<SonarqubeIndicator />', () => {
         render(<SonarqubeIndicator title = 'test' value = {80}/>)
 
         expect(screen.getByText('test')).toBeInTheDocument()
-        checkLogic(80, 'rgb(76, 175, 80)')
+        checkLogic(80, 'rgb(102, 187, 106)')
     })
 
     test('should handle between 55 & 80%', () => {
         render(<SonarqubeIndicator title = 'test' value = {55}/>)
 
-        checkLogic(55, 'rgb(255, 152, 0)')
+        checkLogic(55, 'rgb(255, 167, 38)')
     })
 
     test('should handle below 55%', () => {
@@ -33,19 +33,19 @@ describe('<SonarqubeIndicator />', () => {
     test('should handle A', () => {
         render(<SonarqubeIndicator title = 'test' value = {'A'}/>)
 
-        checkLogic('A', 'rgb(76, 175, 80)')
+        checkLogic('A', 'rgb(102, 187, 106)')
     })
 
     test('should handle B', () => {
         render(<SonarqubeIndicator title = 'test' value = {'B'}/>)
 
-        checkLogic('B', 'rgb(255, 152, 0)')
+        checkLogic('B', 'rgb(255, 167, 38)')
     })
 
     test('should handle C', () => {
         render(<SonarqubeIndicator title = 'test' value = {'C'}/>)
 
-        checkLogic('C', 'rgb(255, 152, 0)')
+        checkLogic('C', 'rgb(255, 167, 38)')
     })
     test('should handle D', () => {
         render(<SonarqubeIndicator title = 'test' value = {'D'}/>)
@@ -62,6 +62,6 @@ describe('<SonarqubeIndicator />', () => {
     test('should handle U', () => {
         render(<SonarqubeIndicator title = 'test' value = {'U'}/>)
 
-        checkLogic('U', 'rgb(33, 150, 243)')
+        checkLogic('U', 'rgb(41, 182, 246)')
     })
 })

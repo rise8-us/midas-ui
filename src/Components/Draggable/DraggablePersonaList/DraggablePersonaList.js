@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import { PersonaEntry } from 'Components/PersonaEntry'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -37,7 +37,7 @@ const DraggablePersonaList = React.memo(
                 ))}
                 {personas.length === 0 && !hasEdit &&
                     <Typography
-                        color = 'textSecondary'
+                        color = 'text.secondary'
                         variant = 'body2'
                         style = {{ fontStyle: 'italic', height: '32px', padding: '5px 8px' }}
                     >

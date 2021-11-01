@@ -1,7 +1,5 @@
-import {
-    Box, Card, CardActions, CardContent, CardHeader, IconButton, makeStyles, Typography
-} from '@material-ui/core'
-import { Edit } from '@material-ui/icons'
+import { Edit } from '@mui/icons-material'
+import { Box, Card, CardActions, CardContent, CardHeader, IconButton, Typography } from '@mui/material'
 import { PathToProdStepper } from 'Components/PathToProdStepper'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
@@ -12,31 +10,21 @@ import { hasProductAccess } from 'Redux/Auth/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import ProductConstants from 'Redux/Products/constants'
 import { selectProductById } from 'Redux/Products/selectors'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    card: {
-        width: '450px',
-        height: 'fit-content',
-        backgroundColor: theme.palette.grey[1100]
-    },
-    link: {
-        '&:hover': {
-            color: theme.palette.primary.main,
-            cursor: 'pointer'
-        },
-        height: 40,
-        width: 'fit-content'
-    }
+const StyledCard = styled(Card)(({ theme }) => ({
+    width: '450px',
+    height: 'fit-content',
+    backgroundColor: theme.palette.grey[1100],
 }))
 
 function ProductCard({ id }) {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const ref = useRef()
     const history = useHistory()
 
-    const product = useSelector(state => selectProductById(state, id))
-    const hasAccess = useSelector(state =>  hasProductAccess(state, id))
+    const product = useSelector((state) => selectProductById(state, id))
+    const hasAccess = useSelector((state) => hasProductAccess(state, id))
 
     const hasProjects = product.projects.length > 0
     const hasTags = product.tags.length > 0
@@ -44,9 +32,12 @@ function ProductCard({ id }) {
     const calcStep = (project) => Math.log2(project.projectJourneyMap + 1)
 
     const updateProductPopup = () =>
-        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id }))
+        dispatch(
+            openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id })
+        )
 
-    const goToProductsPage = () => history.push(`/products/${product.id}/overview`)
+    const goToProductsPage = () =>
+        history.push(`/products/${product.id}/overview`)
 
     useLayoutEffect(() => {
         const spans = Math.ceil(ref.current.clientHeight / 2) + 5
@@ -54,55 +45,70 @@ function ProductCard({ id }) {
     })
 
     return (
-        <Card ref = {ref} className = {classes.card}>
+        <StyledCard ref = {ref}>
             <CardHeader
                 title = {product.name}
                 titleTypographyProps = {{
                     variant: 'h5',
-                    color: 'textPrimary',
+                    color: 'text.primary',
                     onClick: goToProductsPage,
-                    className: classes.link,
-                    'data-testid': 'ProductCard__header-title'
+                    'data-testid': 'ProductCard__header-title',
+                    sx: {
+                        '&:hover': {
+                            color: 'primary.main',
+                            cursor: 'pointer'
+                        },
+                        height: 40,
+                        width: 'fit-content'
+                    }
                 }}
                 subheader = {product.description}
                 action = {
-                    hasAccess &&
+                    hasAccess && (
                         <IconButton
                             onClick = {updateProductPopup}
                             color = 'secondary'
                             data-testid = 'ProductCard__button-edit'
+                            size = 'large'
                         >
                             <Edit />
                         </IconButton>
+                    )
                 }
             />
-            { hasProjects &&
+            {hasProjects && (
                 <>
                     <CardContent>
                         {product.projects.map((project, index) => (
                             <Box key = {index} style = {{ paddingBottom: '30px' }}>
-                                <Typography variant = 'h6' color = 'textPrimary' style = {{ marginLeft: '10px' }}>
+                                <Typography
+                                    variant = 'h6'
+                                    color = 'text.primary'
+                                    style = {{ marginLeft: '10px' }}
+                                >
                                     {project.name}
                                 </Typography>
-                                <PathToProdStepper step = {calcStep(project)} padding = '5px 20px 5px 20px'/>
+                                <PathToProdStepper
+                                    step = {calcStep(project)}
+                                    padding = '5px 20px 5px 20px'
+                                />
                             </Box>
                         ))}
                     </CardContent>
                 </>
-            }
-            { hasTags &&
+            )}
+            {hasTags && (
                 <>
                     <CardActions style = {{ padding: '5px 16px' }}>
-                        <Box display = 'flex' flexWrap = 'wrap' >
+                        <Box display = 'flex' flexWrap = 'wrap'>
                             {product.tags.map((tag, index) => (
-                                <Tag { ...tag } key = {index}/>
+                                <Tag {...tag} key = {index} />
                             ))}
                         </Box>
                     </CardActions>
                 </>
-            }
-        </Card>
-
+            )}
+        </StyledCard>
     )
 }
 

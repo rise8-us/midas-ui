@@ -1,7 +1,7 @@
-import { IconButton, Tooltip } from '@material-ui/core'
 import {
     CheckCircleOutlined, Person, PersonOutlined, RadioButtonUncheckedOutlined
-} from '@material-ui/icons'
+} from '@mui/icons-material'
+import { IconButton, Tooltip } from '@mui/material'
 import { DraggableRow } from 'Components/Draggable'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'

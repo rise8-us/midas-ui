@@ -1,14 +1,14 @@
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
+import { ProductCard } from 'Components/Cards'
+import { FloatingActionButton } from 'Components/FloatingActionButton'
+import { Page } from 'Components/Page'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isProductCreator } from '../../../Redux/Auth/selectors'
-import { selectAppBarFilter } from '../../../Redux/Filters/selectors'
-import { openPopup } from '../../../Redux/Popups/actions'
-import ProductConstant from '../../../Redux/Products/constants'
-import { selectUnarchivedProducts } from '../../../Redux/Products/selectors'
-import { ProductCard } from '../../Cards'
-import { FloatingActionButton } from '../../FloatingActionButton'
-import { Page } from '../../Page'
+import { isProductCreator } from 'Redux/Auth/selectors'
+import { selectAppBarFilter } from 'Redux/Filters/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import ProductConstant from 'Redux/Products/constants'
+import { selectUnarchivedProducts } from 'Redux/Products/selectors'
 
 function Products() {
     const dispatch = useDispatch()
@@ -33,7 +33,7 @@ function Products() {
                         justifyContent = 'center'
                         gridTemplateColumns = 'repeat(auto-fit, 450px)'
                         gridAutoRows = '2px'
-                        gridGap = '0 10px'
+                        gap = '0 10px'
                         gridAutoFlow = 'row'
                         style = {{ marginBottom: '40px', padding: '0 30px' }}
                     >

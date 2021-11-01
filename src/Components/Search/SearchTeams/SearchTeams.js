@@ -1,5 +1,4 @@
-import { TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Autocomplete, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -19,7 +18,7 @@ function SearchTeams(props) {
             multiple
             options = {allTeams}
             getOptionLabel = {(option) => option.name}
-            getOptionSelected = {(option, selectedOption) => option.id === selectedOption.id}
+            isOptionEqualToValue = {(option, selectedOption) => option.id === selectedOption.id}
             onChange = {onTeamChange}
             value = {value ?? []}
             ChipProps = {{ variant: 'outlined' }}

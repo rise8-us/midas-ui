@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { setStateFromArray } from '../../Utilities/reduxHelpers'
+import { setStateFromArray } from 'Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const commentsSlice = createSlice({
@@ -19,7 +19,5 @@ const commentsSlice = createSlice({
         [actions.requestSearchComments.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
     }
 })
-
-export const { requestDeleteComment, requestUpdateComment } = actions
 
 export default commentsSlice.reducer

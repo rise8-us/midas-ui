@@ -1,5 +1,4 @@
-import { Box, makeStyles, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
 import { TagDropdown } from 'Components/TagDropdown'
@@ -14,14 +13,14 @@ import { requestCreateProject, requestUpdateProject } from 'Redux/Projects/actio
 import ProjectConstants from 'Redux/Projects/constants'
 import { selectProjectById } from 'Redux/Projects/selectors'
 import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
+import { styled } from 'Styles/materialThemes'
 import FormatErrors from 'Utilities/FormatErrors'
 
-const useStyles = makeStyles(() => ({
-    numberField: {
-        '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-            display: 'none'
-        }
-    }
+const TextFieldStyled = styled(TextField)(() => ({
+    '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+      {
+          display: 'none',
+      },
 }))
 
 const initDetails = (create) => {
@@ -35,31 +34,44 @@ const initDetails = (create) => {
 
 function ProjectPopup({ id, parentId }) {
     const dispatch = useDispatch()
-    const classes = useStyles()
 
-    const project = useSelector(state => selectProjectById(state, id))
+    const project = useSelector((state) => selectProjectById(state, id))
     const context = initDetails(project.id === undefined)
 
     const allSourceControls = useSelector(selectSourceControls)
-    const orginalSourceControl = useSelector(state => selectSourceControlById(state, project.sourceControlId))
+    const orginalSourceControl = useSelector((state) =>
+        selectSourceControlById(state, project.sourceControlId)
+    )
 
-    const errors = useSelector(state => selectRequestErrors(state, context.constant))
-    const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
-    const gitlabError = useMemo(() => errors.filter(error => error.includes('Gitlab')), [errors])
-    const tagsError = useMemo(() => errors.filter(error => error.includes('Tag')), [errors])
+    const errors = useSelector((state) =>
+        selectRequestErrors(state, context.constant)
+    )
+    const nameError = useMemo(
+        () => errors.filter((error) => error.includes('name')),
+        [errors]
+    )
+    const gitlabError = useMemo(
+        () => errors.filter((error) => error.includes('Gitlab')),
+        [errors]
+    )
+    const tagsError = useMemo(
+        () => errors.filter((error) => error.includes('Tag')),
+        [errors]
+    )
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: project.name,
         description: project.description,
         gitlabProjectId: project.gitlabProjectId,
         tags: project.tags,
-        sourceControl: orginalSourceControl.id !== undefined ? orginalSourceControl : null
+        sourceControl:
+        orginalSourceControl.id !== undefined ? orginalSourceControl : null,
     })
 
     const handleChange = (name, value) => {
         formDispatch({
             type: 'onChange',
-            payload: { name, value }
+            payload: { name, value },
         })
     }
 
@@ -72,30 +84,26 @@ function ProjectPopup({ id, parentId }) {
             description: formValues.description,
             gitlabProjectId: formValues.gitlabProjectId,
             sourceControlId: formValues.sourceControl?.id ?? null,
-            tagIds: Object.values(formValues.tags.map(t => t.id))
+            tagIds: Object.values(formValues.tags.map((t) => t.id)),
         }
         if (parentId !== null) data.productId = parentId
-        dispatch(context.request(data)).then(unwrapResult).then(() =>
-            parentId && dispatch(requestSearchProduct(`id:${parentId}`))
-        )
+        dispatch(context.request(data))
+            .then(unwrapResult)
+            .then(() => parentId && dispatch(requestSearchProduct(`id:${parentId}`)))
     }
 
     return (
-        <Popup
-            title = {context.title}
-            onClose = {onClose}
-            onSubmit = {onSubmit}
-        >
+        <Popup title = {context.title} onClose = {onClose} onSubmit = {onSubmit}>
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Project Name'
                     inputProps = {{
-                        'data-testid': 'ProjectPopup__input-name'
+                        'data-testid': 'ProjectPopup__input-name',
                     }}
                     value = {formValues.name}
                     onChange = {(e) => handleChange('name', e.target.value)}
                     error = {nameError.length > 0}
-                    helperText = {<FormatErrors errors = {nameError}/>}
+                    helperText = {<FormatErrors errors = {nameError} />}
                     margin = 'dense'
                     required
                 />
@@ -103,8 +111,8 @@ function ProjectPopup({ id, parentId }) {
                     value = {formValues.sourceControl}
                     onChange = {(_e, values) => handleChange('sourceControl', values)}
                     options = {allSourceControls}
-                    getOptionLabel = {option => option.name}
-                    renderInput = {(params) =>
+                    getOptionLabel = {(option) => option.name}
+                    renderInput = {(params) => (
                         <TextField
                             {...params}
                             label = 'Gitlab server'
@@ -114,25 +122,24 @@ function ProjectPopup({ id, parentId }) {
                             }}
                             margin = 'dense'
                         />
-                    }
+                    )}
                 />
-                <TextField
+                <TextFieldStyled
                     label = 'Gitlab Project Id'
                     type = 'number'
-                    className = {classes.numberField}
                     inputProps = {{
-                        'data-testid': 'ProjectPopup__input-gitlabProjectId'
+                        'data-testid': 'ProjectPopup__input-gitlabProjectId',
                     }}
                     value = {formValues.gitlabProjectId}
                     onChange = {(e) => handleChange('gitlabProjectId', e.target.value)}
                     error = {gitlabError.length > 0}
-                    helperText = {<FormatErrors errors = {gitlabError}/>}
+                    helperText = {<FormatErrors errors = {gitlabError} />}
                     margin = 'dense'
                 />
                 <TextField
                     label = 'Description'
                     inputProps = {{
-                        'data-testid': 'ProjectPopup__input-description'
+                        'data-testid': 'ProjectPopup__input-description',
                     }}
                     value = {formValues.description}
                     onChange = {(e) => handleChange('description', e.target.value)}

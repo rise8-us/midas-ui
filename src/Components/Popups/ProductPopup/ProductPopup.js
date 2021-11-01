@@ -1,5 +1,5 @@
-import { Box, makeStyles, TextField } from '@material-ui/core'
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
+import { Box, TextField } from '@mui/material'
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
@@ -19,14 +19,14 @@ import { selectProjectsWithNoProductId } from 'Redux/Projects/selectors'
 import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
 import { requestFindTeamBy } from 'Redux/Teams/actions'
 import { requestFindUserBy } from 'Redux/Users/actions'
+import { styled } from 'Styles/materialThemes'
 import FormatErrors from 'Utilities/FormatErrors'
 
-const useStyles = makeStyles(() => ({
-    numberField: {
-        '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-            display: 'none'
-        }
-    }
+const TextFieldStyled = styled(TextField)(() => ({
+    '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+      {
+          display: 'none',
+      },
 }))
 
 const filter = createFilterOptions()
@@ -48,20 +48,31 @@ const generateTeamsQuery = (teamIds) => {
 
 function ProductPopup({ id }) {
     const dispatch = useDispatch()
-    const classes = useStyles()
 
-    const product = useSelector(state => selectProductById(state, id))
+    const product = useSelector((state) => selectProductById(state, id))
     const context = initDetails(product.id === undefined)
 
     const allSourceControls = useSelector(selectSourceControls)
-    const orginalSourceControl = useSelector(state => selectSourceControlById(state, product.sourceControlId))
+    const orginalSourceControl = useSelector((state) =>
+        selectSourceControlById(state, product.sourceControlId)
+    )
 
     const projectsWithNoProductId = useSelector(selectProjectsWithNoProductId)
-    const [availableProjects, setAvailableProjects] = useState(product.projects.concat(projectsWithNoProductId))
+    const [availableProjects, setAvailableProjects] = useState(
+        product.projects.concat(projectsWithNoProductId)
+    )
 
-    const errors = useSelector(state => selectRequestErrors(state, context.constant))
-    const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
-    const gitlabError = useMemo(() => errors.filter(error => error.includes('Gitlab')), [errors])
+    const errors = useSelector((state) =>
+        selectRequestErrors(state, context.constant)
+    )
+    const nameError = useMemo(
+        () => errors.filter((error) => error.includes('name')),
+        [errors]
+    )
+    const gitlabError = useMemo(
+        () => errors.filter((error) => error.includes('Gitlab')),
+        [errors]
+    )
 
     const [teams, setTeams] = useState([])
     const [fetched, setFetched] = useState(false)
@@ -75,30 +86,34 @@ function ProductPopup({ id }) {
         projects: product.projects,
         tags: product.tags,
         vision: product.vision,
-        sourceControl: orginalSourceControl.id !== undefined ? orginalSourceControl : null,
+        sourceControl:
+        orginalSourceControl.id !== undefined ? orginalSourceControl : null,
         owner: undefined,
     })
 
     const handleChange = (name, value) => {
         formDispatch({
             type: 'onChange',
-            payload: { name, value }
+            payload: { name, value },
         })
     }
 
     const onSelectProjects = (_e, values) => {
-        const newProject = values.filter(o => o.id === -1)
+        const newProject = values.filter((o) => o.id === -1)
 
         if (newProject.length > 0) {
             const newName = newProject[0].name.split('"')[1]
-            const currentValues = values.filter(o => o.id !== -1)
+            const currentValues = values.filter((o) => o.id !== -1)
 
-            dispatch(requestCreateProject({
-                name: newName,
-                productId: product.id,
-                tagIds: []
-            })).then(unwrapResult)
-                .then(results => {
+            dispatch(
+                requestCreateProject({
+                    name: newName,
+                    productId: product.id,
+                    tagIds: [],
+                })
+            )
+                .then(unwrapResult)
+                .then((results) => {
                     currentValues.push(results)
                     setAvailableProjects([...availableProjects, results])
                     handleChange('projects', currentValues)
@@ -111,29 +126,34 @@ function ProductPopup({ id }) {
     const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
-        dispatch(context.request({
-            ...product,
-            name: formValues.name,
-            description: formValues.description,
-            mission: formValues.mission,
-            vision: formValues.vision,
-            problemStatement: formValues.problemStatement,
-            gitlabGroupId: formValues.gitlabGroupId,
-            sourceControlId: formValues.sourceControl?.id ?? null,
-            tagIds: Object.values(formValues.tags.map(tag => tag.id)),
-            projectIds: Object.values(formValues.projects.map(project => project.id)),
-            teamIds: teams.map(team => team.id),
-            childIds: [],
-            type: 'PRODUCT',
-            ownerId: formValues.owner?.id ?? null,
-        }))
+        dispatch(
+            context.request({
+                ...product,
+                name: formValues.name,
+                description: formValues.description,
+                mission: formValues.mission,
+                vision: formValues.vision,
+                problemStatement: formValues.problemStatement,
+                gitlabGroupId: formValues.gitlabGroupId,
+                sourceControlId: formValues.sourceControl?.id ?? null,
+                tagIds: Object.values(formValues.tags.map((tag) => tag.id)),
+                projectIds: Object.values(
+                    formValues.projects.map((project) => project.id)
+                ),
+                teamIds: teams.map((team) => team.id),
+                childIds: [],
+                type: 'PRODUCT',
+                ownerId: formValues.owner?.id ?? null,
+            })
+        )
     }
 
     // TODO: Can the useEffect be removed and teams be moved to formValues?
     useEffect(() => {
-        product.teamIds?.length > 0 && dispatch(requestFindTeamBy(generateTeamsQuery(product.teamIds)))
+        product.teamIds?.length > 0 &&
+        dispatch(requestFindTeamBy(generateTeamsQuery(product.teamIds)))
             .then(unwrapResult)
-            .then(data => {
+            .then((data) => {
                 setTeams(data)
             })
     }, [])
@@ -141,27 +161,26 @@ function ProductPopup({ id }) {
     useEffect(() => {
         if (!fetched && product.ownerId > 0) {
             setFetched(true)
-            dispatch(requestFindUserBy(`id:${product.ownerId}`)).then(unwrapResult)
-                .then(data => { handleChange('owner', data[0]) })
+            dispatch(requestFindUserBy(`id:${product.ownerId}`))
+                .then(unwrapResult)
+                .then((data) => {
+                    handleChange('owner', data[0])
+                })
         }
     }, [product])
 
     return (
-        <Popup
-            title = {context.title}
-            onClose = {onClose}
-            onSubmit = {onSubmit}
-        >
+        <Popup title = {context.title} onClose = {onClose} onSubmit = {onSubmit}>
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
                     label = 'Product Name'
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-name'
+                        'data-testid': 'ProductPopup__input-name',
                     }}
                     value = {formValues.name}
                     onChange = {(e) => handleChange('name', e.target.value)}
                     error = {nameError.length > 0}
-                    helperText = {<FormatErrors errors = {nameError}/>}
+                    helperText = {<FormatErrors errors = {nameError} />}
                     margin = 'dense'
                     required
                 />
@@ -176,7 +195,7 @@ function ProductPopup({ id }) {
                 <TextField
                     label = 'Description'
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-description'
+                        'data-testid': 'ProductPopup__input-description',
                     }}
                     value = {formValues.description}
                     onChange = {(e) => handleChange('description', e.target.value)}
@@ -187,7 +206,7 @@ function ProductPopup({ id }) {
                     label = 'Mission'
                     placeholder = 'mission'
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-mission'
+                        'data-testid': 'ProductPopup__input-mission',
                     }}
                     value = {formValues.mission}
                     onChange = {(e) => handleChange('mission', e.target.value)}
@@ -198,7 +217,7 @@ function ProductPopup({ id }) {
                     label = 'Vision'
                     placeholder = 'vision'
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-vision'
+                        'data-testid': 'ProductPopup__input-vision',
                     }}
                     value = {formValues.vision}
                     onChange = {(e) => handleChange('vision', e.target.value)}
@@ -209,7 +228,7 @@ function ProductPopup({ id }) {
                     label = 'Problem Statement'
                     placeholder = 'Problem'
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-problem'
+                        'data-testid': 'ProductPopup__input-problem',
                     }}
                     value = {formValues.problemStatement}
                     onChange = {(e) => handleChange('problemStatement', e.target.value)}
@@ -237,10 +256,11 @@ function ProductPopup({ id }) {
                     value = {formValues.sourceControl}
                     onChange = {(_e, values) => handleChange('sourceControl', values)}
                     options = {allSourceControls}
-                    getOptionLabel = {option => option.name}
-                    renderInput = {(params) =>
+                    getOptionLabel = {(option) => option.name}
+                    renderInput = {(params) => (
                         <TextField
                             {...params}
+                            variant = 'standard'
                             label = 'Gitlab server'
                             InputProps = {{
                                 ...params.InputProps,
@@ -248,19 +268,18 @@ function ProductPopup({ id }) {
                             }}
                             margin = 'dense'
                         />
-                    }
+                    )}
                 />
-                <TextField
+                <TextFieldStyled
                     label = 'Gitlab Group Id'
                     type = 'number'
-                    className = {classes.numberField}
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-gitlabGroupId'
+                        'data-testid': 'ProductPopup__input-gitlabGroupId',
                     }}
                     value = {formValues.gitlabGroupId}
                     onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
                     error = {gitlabError.length > 0}
-                    helperText = {<FormatErrors errors = {gitlabError}/>}
+                    helperText = {<FormatErrors errors = {gitlabError} />}
                     margin = 'dense'
                 />
                 <Autocomplete
@@ -268,11 +287,11 @@ function ProductPopup({ id }) {
                     autoSelect
                     options = {availableProjects}
                     getOptionLabel = {(option) => option.name}
-                    getOptionSelected = {(option, value) => option.id === value.id}
+                    isOptionEqualToValue = {(option, value) => option.id === value.id}
                     onChange = {onSelectProjects}
                     value = {formValues.projects}
                     ChipProps = {{ variant: 'outlined' }}
-                    renderInput = {(params) =>
+                    renderInput = {(params) => (
                         <TextField
                             {...params}
                             label = 'Gitlab Project(s)'
@@ -280,21 +299,24 @@ function ProductPopup({ id }) {
                             error = {searchErrors(errors, 'Project with').length > 0}
                             placeholder = {'Project(s) that have CTF pipeline'}
                             helperText = {
-                                searchErrors(errors, 'Project with').length > 0 ?
-                                    <FormatErrors errors = {searchErrors(errors, 'Project with')}/>
-                                    :
+                                searchErrors(errors, 'Project with').length > 0 ? (
+                                    <FormatErrors errors = {searchErrors(errors, 'Project with')} />
+                                ) : (
                                     'Don\'t see what you\'re looking for? Add it by typing it.'
+                                )
                             }
                             data-testid = 'ProductPopup__input-projects'
                         />
-                    }
+                    )}
                     filterOptions = {(options, params) => {
                         const filtered = filter(options, params)
 
-                        params.inputValue !== '' && filtered.length === 0 && filtered.push({
-                            id: -1,
-                            name: `Add "${params.inputValue}"`
-                        })
+                        params.inputValue !== '' &&
+                filtered.length === 0 &&
+                filtered.push({
+                    id: -1,
+                    name: `Add "${params.inputValue}"`,
+                })
 
                         return filtered
                     }}

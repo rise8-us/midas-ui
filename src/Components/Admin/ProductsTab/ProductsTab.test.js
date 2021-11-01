@@ -1,6 +1,6 @@
 import React from 'react'
-import ProductConstants from '../../../Redux/Products/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from '../../../Utilities/test-utils'
+import ProductConstants from 'Redux/Products/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import { ProductsTab } from './index'
 
 

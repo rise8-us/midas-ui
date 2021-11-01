@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, useModuleMock, userEvent } from '../../../Utilities/test-utils'
+import { render, screen, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { SearchTeams } from './index'
 
 describe('<SearchTeams />', () => {

@@ -1,53 +1,51 @@
-import { alpha, CircularProgress, makeStyles, TextField } from '@material-ui/core'
-import { Search } from '@material-ui/icons'
-import { Autocomplete } from '@material-ui/lab'
+import { Search } from '@mui/icons-material'
+import { alpha, Autocomplete, CircularProgress, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles(theme => ({
-    searchIcon: {
-        width: 36,
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: theme.palette.secondary.main
+const TextFieldStyled = styled(TextField)(({ theme }) => ({
+    height: 48,
+    color: 'inherit',
+    backgroundColor: theme.palette.background.paper,
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.background.paper, 0.85)
     },
-    inputRoot: props => ({
-        height: 48,
-        color: 'inherit',
-        backgroundColor: theme.palette.background.paper,
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.background.paper, 0.85)
-        },
-        borderRadius: 3,
-        width: props.growFrom,
-        '&:focus-within': {
-            width: '100%',
-            transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen
-            })
-        }
-    }),
-    searching: {
-        padding: theme.spacing(1),
-        marginRight: theme.spacing(1)
-    },
-    tableWrap: {
-        margin: theme.spacing(1, 3)
+    borderRadius: 3,
+    '&:focus-within': {
+        width: '100%',
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        })
     }
+}))
+const SearchStyled = styled(Search)(({ theme }) => ({
+    width: 36,
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.secondary.main,
 }))
 
 const AutocompleteSearch = (props) => {
     const {
-        title, placeholder, options, selectedOption, noOptionsText,
-        onOptionChange, onTextChange, getOptionLabel,
-        setIsSearching, isSearching, growFrom, freeSolo,
+        title,
+        placeholder,
+        options,
+        selectedOption,
+        noOptionsText,
+        onOptionChange,
+        onTextChange,
+        getOptionLabel,
+        setIsSearching,
+        isSearching,
+        growFrom,
+        freeSolo,
         ...autoCompleteProps
     } = props
 
-    const classes = useStyles({ growFrom })
 
     const [open, setOpen] = useState(false)
 
@@ -55,7 +53,9 @@ const AutocompleteSearch = (props) => {
         return option ? getOptionLabel(option) : ''
     }
 
-    useEffect(() => { !open && setIsSearching(false) }, [open])
+    useEffect(() => {
+        !open && setIsSearching(false)
+    }, [open])
 
     return (
         <Autocomplete
@@ -66,36 +66,36 @@ const AutocompleteSearch = (props) => {
             onFocus = {() => setOpen(true)}
             onBlur = {() => setOpen(false)}
             getOptionLabel = {generateOptionLabel}
-            getOptionSelected = {(option, selectedValue) => option.id === selectedValue.id}
+            isOptionEqualToValue = {(option, selectedValue) =>
+                option.id === selectedValue.id
+            }
             loading = {isSearching}
             loadingText = 'Searching…'
             value = {selectedOption ?? ''}
             onChange = {onOptionChange}
-            renderInput = {(params) =>
-                <TextField
+            renderInput = {(params) => (
+                <TextFieldStyled
                     {...params}
                     label = {title}
                     margin = 'dense'
                     placeholder = {placeholder}
-                    classes = {{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                        focused: classes.inputFocus
+                    sx = {{
+                        width: growFrom
                     }}
                     InputProps = {{
                         ...params.InputProps,
-                        endAdornment: isSearching
-                            ? <CircularProgress color = 'inherit' size = {20} />
-                            : <>{params.InputProps.endAdornment}</>,
-                        startAdornment: open
-                            ? <Search className = {classes.searchIcon}/>
-                            : null,
+                        endAdornment: isSearching ? (
+                            <CircularProgress color = 'inherit' size = {20} />
+                        ) : (
+                            <>{params.InputProps.endAdornment}</>
+                        ),
+                        startAdornment: open ? <SearchStyled /> : null,
                         style: { paddingRight: '24px' },
                         onChange: onTextChange,
-                        'data-testid': 'AutocompleteSearch__input'
+                        'data-testid': 'AutocompleteSearch__input',
                     }}
                 />
-            }
+            )}
             {...autoCompleteProps}
         />
     )

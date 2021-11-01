@@ -1,5 +1,5 @@
-import { Chip, Grid, IconButton, Typography, useTheme } from '@material-ui/core'
-import { Person, PersonAddOutlined, PersonOutlined } from '@material-ui/icons'
+import { Person, PersonAddOutlined, PersonOutlined } from '@mui/icons-material'
+import { Chip, Grid, IconButton, Typography, useTheme } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggablePersonaList } from 'Components/Draggable/DraggablePersonaList'
 import { LabelTooltip } from 'Components/LabelTooltip'
@@ -61,10 +61,10 @@ function ProductUserPersonas({ productId, hasEdit }) {
                     <LabelTooltip
                         typographyProps = {{
                             variant: 'h6',
-                            color: 'textPrimary'
+                            color: 'text.primary'
                         }}
                         tooltipProps = {{
-                            title: Tooltips.FEATURE_DESCRIPTION,
+                            title: Tooltips.PERSONA_DESCRIPTION,
                             placement: 'bottom-start',
                             enterDelay: 500,
                             arrow: true
@@ -76,14 +76,14 @@ function ProductUserPersonas({ productId, hasEdit }) {
             </Grid>
             <Grid item>
                 <Chip
-                    label = {<Typography variant = 'caption' color = 'textSecondary'>CURRENT</Typography>}
+                    label = {<Typography variant = 'caption' color = 'text.secondary'>CURRENT</Typography>}
                     size = 'small'
                     variant = 'outlined'
                     style = {{ margin: '8px', marginLeft: 0, borderWidth: 0 }}
                     icon = {<Person style = {{ color: theme.palette.primary.main }}/>}
                 />
                 <Chip
-                    label = {<Typography variant = 'caption' color = 'textSecondary'>FUTURE</Typography>}
+                    label = {<Typography variant = 'caption' color = 'text.secondary'>FUTURE</Typography>}
                     size = 'small'
                     variant = 'outlined'
                     style = {{ margin: '8px', borderWidth: 0 }}
@@ -107,11 +107,10 @@ function ProductUserPersonas({ productId, hasEdit }) {
                 </Droppable>
             </DragDropContext>
             {hasEdit ?
-                <Grid container alignItems = 'center'>
+                <Grid container alignItems = 'center' style = {{ height: '34px' }}>
                     <Grid item style = {{ minWidth: '24px', marginRight: '8px' }}>
                         <IconButton title = 'Add Persona'
                             size = 'small'
-                            // style = {{ padding: 3, marginLeft: -3, marginRight: -2 }}
                             onClick = {()=>
                                 newPersonaInput.current.focus()
                             }
@@ -119,7 +118,7 @@ function ProductUserPersonas({ productId, hasEdit }) {
                             <PersonAddOutlined color = 'secondary'/>
                         </IconButton>
                     </Grid>
-                    <Grid item style = {{ flexGrow: 1 }}>
+                    <Grid item flexGrow = {1}>
                         <AutoSaveTextField
                             placeholder = 'Add new user persona...'
                             inputRef = {newPersonaInput}
@@ -132,7 +131,7 @@ function ProductUserPersonas({ productId, hasEdit }) {
                     </Grid>
                 </Grid>
                 :
-                <div style = {{ height: '32px' }} />
+                <div style = {{ height: '34px' }} />
             }
         </Grid>
     )

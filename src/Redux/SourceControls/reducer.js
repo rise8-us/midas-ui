@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { setStateFromArray } from '../../Utilities/reduxHelpers'
+import { setStateFromArray } from 'Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const sourceControlSlice = createSlice({

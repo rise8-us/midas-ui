@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, userEvent } from '../../Utilities/test-utils'
+import { render, screen, userEvent } from 'Utilities/test-utils'
 import { AutoSaveTextField } from './index'
 
 describe('<AutoSaveTextField>', () => {

@@ -1,6 +1,6 @@
-import { Chip, Grid, IconButton, Tooltip, Typography } from '@material-ui/core'
-import { AddLocationOutlined } from '@material-ui/icons'
-import Timeline from '@material-ui/lab/Timeline'
+import { AddLocationOutlined } from '@mui/icons-material'
+import Timeline from '@mui/lab/Timeline'
+import { Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { RoadmapEntry } from 'Components/RoadmapEntry'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
@@ -58,7 +58,7 @@ function ProductRoadmap({ productId, hasEdit }) {
                     </Grid>
                 )}
                 <Grid item style = {{ paddingBottom: 0 }}>
-                    <Typography variant = 'h6' color = 'textPrimary'>ROADMAP</Typography>
+                    <Typography variant = 'h6' color = 'text.primary'>ROADMAP</Typography>
                 </Grid>
             </Grid>
             <Grid container item style = {{ paddingBottom: 0, paddingTop: 0 }}>

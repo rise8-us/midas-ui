@@ -1,29 +1,29 @@
-import { alpha, Grid, Icon, makeStyles, Tooltip, Typography } from '@material-ui/core'
-import { HelpOutline } from '@material-ui/icons'
+import { HelpOutline } from '@mui/icons-material'
+import { Grid, Icon, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const useStyles = makeStyles(theme => ({
-    icon: {
-        borderRadius: '50%',
-        display: 'flex',
-        cursor: 'help',
-        color: alpha(theme.palette.secondary.main, .5)
-    }
-}))
-
 function LabelTooltip({ text, iconFontSize, typographyProps, tooltipProps }) {
-    const classes = useStyles()
 
     return (
-        <Grid container direction = 'row' alignItems = 'stretch' spacing = {1}>
+        <Grid container flexWrap = 'nowrap'>
             <Grid item>
                 <Typography {...typographyProps}>{text}</Typography>
             </Grid>
             <Grid item style = {{ display: 'flex', alignItems: 'center' }}>
                 {tooltipProps.title ?
                     <Tooltip {...tooltipProps} >
-                        <Icon className = {classes.icon} fontSize = {iconFontSize} data-testid = 'LabelTooltip__icon'>
+                        <Icon
+                            sx = {{
+                                borderRadius: '50%',
+                                display: 'flex',
+                                cursor: 'help',
+                                color: 'text.secondary',
+                                ml: '4px'
+                            }}
+                            fontSize = {iconFontSize}
+                            data-testid = 'LabelTooltip__icon'
+                        >
                             <HelpOutline fontSize = {iconFontSize}/>
                         </Icon>
                     </Tooltip>
@@ -41,7 +41,7 @@ LabelTooltip.propTypes = {
     typographyProps: PropTypes.shape({
         variant: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'subtitle1', 'subtitle2',
             'body1', 'body2', 'button', 'caption', 'overline']),
-        color: PropTypes.oneOf(['textPrimary', 'textSecondary', 'primary', 'secondary'])
+        color: PropTypes.oneOf(['text.primary', 'text.secondary', 'primary', 'secondary'])
     }),
     tooltipProps: PropTypes.shape({
         title: PropTypes.oneOfType([PropTypes.node, PropTypes.string])

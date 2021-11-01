@@ -2,9 +2,9 @@ import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AssertionComments } from './index'
 
-jest.mock('Components/Comments/Comment/Comment', () => function testing() {
+jest.mock('Components/Comments/Comment/Comment', () => (function testing() {
     return (<div>Comment</div>)
-})
+}))
 
 describe('<AssertionComments>', () => {
 
@@ -46,7 +46,7 @@ describe('<AssertionComments>', () => {
             }
         } })
 
-        expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 446px')
+        expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 358px')
     })
 
     test('should render', () => {

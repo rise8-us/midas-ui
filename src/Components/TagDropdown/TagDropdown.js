@@ -1,6 +1,6 @@
-import { TextField } from '@material-ui/core'
-import { ArrowDropDown } from '@material-ui/icons'
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
+import { ArrowDropDown } from '@mui/icons-material'
+import { TextField } from '@mui/material'
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
@@ -79,7 +79,7 @@ function TagDropdown(props) {
             forcePopupIcon = {forcePopupIcon}
             options = {options ?? allTags}
             getOptionLabel = {(option) => option.label}
-            getOptionSelected = {(option, value) => option.id === value.id}
+            isOptionEqualToValue = {(option, value) => option.id === value.id}
             onChange = {onSelectTag}
             value = {tags}
             defaultValue = {tags}

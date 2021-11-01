@@ -1,25 +1,15 @@
-import { Box, Button, Chip, IconButton, makeStyles } from '@material-ui/core'
-import { Add, Archive, Edit, Unarchive } from '@material-ui/icons'
+import { Add, Archive, Edit, Unarchive } from '@mui/icons-material'
+import { Box, Button, Chip, IconButton } from '@mui/material'
+import { Table } from 'Components/Table'
+import { Tag } from 'Components/Tag'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openPopup } from '../../../Redux/Popups/actions'
-import { requestArchiveProduct } from '../../../Redux/Products/actions'
-import ProductConstants from '../../../Redux/Products/constants'
-import { selectProducts } from '../../../Redux/Products/selectors'
-import { Table } from '../../Table'
-import { Tag } from '../../Tag'
-
-const useStyles = makeStyles(theme => ({
-    button: {
-        '&:hover': {
-            color: theme.palette.primary.main
-        },
-        height: 40
-    }
-}))
+import { openPopup } from 'Redux/Popups/actions'
+import { requestArchiveProduct } from 'Redux/Products/actions'
+import ProductConstants from 'Redux/Products/constants'
+import { selectProducts } from 'Redux/Products/selectors'
 
 function ProductsTab() {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const allProducts = useSelector(selectProducts)
 
@@ -62,26 +52,26 @@ function ProductsTab() {
     }
 
     const buildActions = (id, isArchived) => {
-        return (
-            <>
+        return <>
+            <IconButton
+                title = {isArchived ? 'unarchive' : 'archive' }
+                color = 'secondary'
+                onClick = {() => archiveProduct(id, isArchived)}
+                size = 'large'
+            >
+                {isArchived ? <Unarchive /> : <Archive />}
+            </IconButton>
+            {!isArchived &&
                 <IconButton
-                    title = {isArchived ? 'unarchive' : 'archive' }
+                    title = 'edit'
                     color = 'secondary'
-                    onClick = {() => archiveProduct(id, isArchived)}
+                    onClick = {() => updateProduct(id)}
+                    size = 'large'
                 >
-                    {isArchived ? <Unarchive /> : <Archive />}
+                    <Edit />
                 </IconButton>
-                {!isArchived &&
-                    <IconButton
-                        title = 'edit'
-                        color = 'secondary'
-                        onClick = {() => updateProduct(id)}
-                    >
-                        <Edit />
-                    </IconButton>
-                }
-            </>
-        )
+            }
+        </>
     }
 
     return (
@@ -90,7 +80,6 @@ function ProductsTab() {
                 <Button
                     variant = 'text'
                     startIcon = {<Add/>}
-                    className = {classes.button}
                     onClick = {createProduct}
                 >
                     Add New Product

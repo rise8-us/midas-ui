@@ -1,34 +1,37 @@
-import { Card, ClickAwayListener, IconButton, makeStyles, Popper, Typography } from '@material-ui/core'
-import { MoreVert } from '@material-ui/icons'
+import { MoreVert } from '@mui/icons-material'
+import { Card, ClickAwayListener, IconButton, Popper, Typography } from '@mui/material'
+import { alpha } from '@mui/system'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles((theme) => ({
-    option: {
-        direction: 'ltr',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '3px 8px',
-        '&:hover': {
-            backgroundColor: theme.palette.grey[800]
-        }
+const DivOption = styled('div')(({ theme }) => ({
+    direction: 'ltr',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '3px 8px',
+    '&:hover': {
+        backgroundColor: theme.palette.grey[800],
     },
-    card: {
-        width: '180px',
-        backgroundColor: theme.palette.background.default
-    }
 }))
 
-function MoreOptionsPopperMenu({ options }) {
-    const classes = useStyles()
+const StyledCard = styled(Card)(({ theme }) => ({
+    width: '180px',
+    backgroundColor: theme.palette.background.default,
+    border: '1px solid',
+    borderColor: alpha(theme.palette.text.primary, .04),
+    boxShadow: '0 0 12px 0 #000'
+}))
+
+function MoreOptionsPopperMenu({ options, icon }) {
 
     const [open, setOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
 
     const togglePopper = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget)
-        setOpen(prev => !prev)
+        setOpen((prev) => !prev)
     }
 
     const handleOptionClick = (event, onClick) => {
@@ -38,8 +41,13 @@ function MoreOptionsPopperMenu({ options }) {
 
     return (
         <div style = {{ cursor: 'pointer', margin: 'auto 0' }}>
-            <IconButton size = 'small' onClick = {togglePopper} title = 'more' color = 'secondary'>
-                <MoreVert />
+            <IconButton
+                size = 'small'
+                onClick = {togglePopper}
+                title = 'more'
+                color = 'secondary'
+            >
+                {icon}
             </IconButton>
             <Popper
                 placement = 'top-start'
@@ -49,18 +57,19 @@ function MoreOptionsPopperMenu({ options }) {
                 style = {{ zIndex: 2 }}
             >
                 <ClickAwayListener onClickAway = {togglePopper}>
-                    <Card className = {classes.card}>
-                        {options.map(option => (
-                            <div
-                                className = {classes.option}
+                    <StyledCard>
+                        {options.map((option) => (
+                            <DivOption
                                 key = {option.text}
-                                onClick = {e => handleOptionClick(e, option.onClick)}
+                                onClick = {(e) => handleOptionClick(e, option.onClick)}
                             >
-                                <Typography style = {{ color: option.color }}>{option.text}</Typography>
+                                <Typography style = {{ color: option.color }}>
+                                    {option.text}
+                                </Typography>
                                 {option.icon}
-                            </div>
+                            </DivOption>
                         ))}
-                    </Card>
+                    </StyledCard>
                 </ClickAwayListener>
             </Popper>
         </div>
@@ -73,7 +82,8 @@ MoreOptionsPopperMenu.propTypes = {
         text: PropTypes.string,
         onClick: PropTypes.func,
         color: PropTypes.string
-    }))
+    })),
+    icon: PropTypes.node
 }
 
 MoreOptionsPopperMenu.defaultProps = {
@@ -82,7 +92,8 @@ MoreOptionsPopperMenu.defaultProps = {
         text: 'No options',
         onClick: undefined,
         color: 'inherit'
-    }]
+    }],
+    icon: <MoreVert />
 }
 
 export default MoreOptionsPopperMenu

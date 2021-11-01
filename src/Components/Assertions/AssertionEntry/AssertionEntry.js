@@ -1,5 +1,5 @@
-import { alpha, Badge, Box, Grid, Grow, IconButton, makeStyles } from '@material-ui/core'
-import { Chat, Delete, KeyboardReturn } from '@material-ui/icons'
+import { Chat, Delete, KeyboardReturn } from '@mui/icons-material'
+import { alpha, Badge, Box, Grid, Grow, IconButton } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
@@ -8,47 +8,61 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
 import { requestSearchComments } from 'Redux/Comments/actions'
+import { styled } from 'Styles/materialThemes'
 
-const useStyles = makeStyles((theme) => ({
-    row: {
-        paddingLeft: 6,
-        borderWidth: 1,
-        borderRadius: theme.spacing(1),
-        borderStyle: 'solid',
-        borderColor: 'transparent',
-        '&:hover': {
-            borderColor: alpha(theme.palette.text.primary, .6),
-        }
-    },
-    title: {
-        ...theme.typography.h6,
-        margin: 'auto 0',
-        marginRight: 'auto',
-        paddingLeft: theme.spacing(1),
-        color: alpha(theme.palette.text.primary, .6)
-    },
-    indicator: {
-        height: 20,
-        width: 20,
-        borderRadius: '50%',
-        fontWeight: 900,
-        textAlign: 'center',
-        color: theme.palette.background.paper
+const GridRow = styled(Grid)(({ theme }) => ({
+    paddingLeft: 6,
+    borderWidth: 1,
+    borderRadius: theme.spacing(1),
+    borderStyle: 'solid',
+    borderColor: 'transparent',
+
+    '&:hover': {
+        borderColor: alpha(theme.palette.text.primary, 0.6)
     }
+}))
+
+const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
+    ...theme.typography.h6,
+    margin: 'auto 0',
+    marginRight: 'auto',
+    paddingLeft: theme.spacing(1),
+    color: alpha(theme.palette.text.primary, 0.6)
+}))
+
+const DivIndicator = styled('div')(({ theme }) => ({
+    height: 20,
+    width: 20,
+    borderRadius: '50%',
+    fontSize: '0.875rem',
+    fontWeight: 900,
+    textAlign: 'center',
+    color: theme.palette.background.paper,
+    lineHeight: '1.43'
 }))
 
 function AssertionEntry(props) {
     const {
-        id, category, title, status, commentCount, addChildAssertionLabel,
-        onSave, onDelete, addChildAssertion, hasEdit
+        id,
+        category,
+        title,
+        status,
+        commentCount,
+        addChildAssertionLabel,
+        onSave,
+        onDelete,
+        addChildAssertion,
+        hasEdit
     } = props
 
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const statuses = useAssertionStatuses()
 
-    const defaultTag = statuses.filter(t => t.name === status)[0] ?? { label: 'Not Started', color: '#c3c3c3' }
+    const defaultTag = statuses.filter((t) => t.name === status)[0] ?? {
+        label: 'Not Started',
+        color: '#c3c3c3'
+    }
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [showActions, setShowActions] = useState(false)
@@ -69,7 +83,7 @@ function AssertionEntry(props) {
         dispatch(setAssertionComment({ assertionId: id, deletedAssertionId: null }))
     }
 
-    const handlePopup = () => setOpenConfirmation(prev => !prev)
+    const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
     const handlePopupCancel = (event) => {
         event.stopPropagation()
@@ -84,30 +98,27 @@ function AssertionEntry(props) {
 
     return (
         <>
-            <Grid
+            <GridRow
                 container
                 wrap = 'nowrap'
                 alignItems = 'center'
-                className = {classes.row}
                 onMouseEnter = {() => setShowActions(true)}
                 onMouseLeave = {() => setShowActions(false)}
             >
                 <Grid item>
-                    <div
-                        className = {classes.indicator}
+                    <DivIndicator
                         style = {{
                             backgroundColor: defaultTag?.color ?? '#797979'
                         }}
                     >
                         {category}
-                    </div>
+                    </DivIndicator>
                 </Grid>
                 <Grid item onClick = {(e) => e.stopPropagation()} style = {{ flexGrow: 1 }}>
-                    <AutoSaveTextField
+                    <AutoSaveTextFieldTitle
                         canEdit = {hasEdit}
                         initialValue = {title}
                         onSave = {onSave}
-                        className = {classes.title}
                         title = {title}
                         fullWidth
                         inputProps = {{
@@ -119,49 +130,49 @@ function AssertionEntry(props) {
                 </Grid>
                 <Grid item onClick = {(e) => e.stopPropagation()}>
                     <Grow in = {showActions} unmountOnExit>
-                        <Box display = 'flex' flexDirection = 'row'>
-                            { hasEdit && addChildAssertion &&
+                        <Box display = 'flex' flexDirection = 'row' id = 'test'>
+                            {hasEdit && addChildAssertion && (
                                 <IconButton
                                     color = 'secondary'
                                     title = {addChildAssertionLabel}
                                     size = 'small'
                                     onClick = {onAddChildAssertionClick}
-                                ><KeyboardReturn /></IconButton>
-                            }
-                            { hasEdit &&
+                                >
+                                    <KeyboardReturn />
+                                </IconButton>
+                            )}
+                            {hasEdit && (
                                 <IconButton
                                     color = 'secondary'
                                     title = 'delete'
                                     size = 'small'
                                     onClick = {onDeleteClick}
-                                ><Delete /></IconButton>
-                            }
+                                >
+                                    <Delete />
+                                </IconButton>
+                            )}
                             <Badge
                                 badgeContent = {commentCount}
                                 overlap = 'circular'
                                 color = 'primary'
                                 onClick = {onCommentsClick}
                             >
-                                <IconButton
-                                    color = 'secondary'
-                                    title = 'comment'
-                                    size = 'small'
-                                >
+                                <IconButton color = 'secondary' title = 'comment' size = 'small'>
                                     <Chat />
                                 </IconButton>
                             </Badge>
                         </Box>
                     </Grow>
                 </Grid>
-            </Grid>
-            {openConfirmation &&
+            </GridRow>
+            {openConfirmation && (
                 <ConfirmationPopup
                     open = {openConfirmation}
                     onConfirm = {handlePopupConfirm}
                     onCancel = {handlePopupCancel}
                     detail = {`You are about to delete '${category}: ${title}'`}
                 />
-            }
+            )}
         </>
     )
 }
@@ -184,7 +195,7 @@ AssertionEntry.defaultProps = {
     title: '',
     status: undefined,
     addChildAssertion: undefined,
-    addChildAssertionLabel: undefined,
+    addChildAssertionLabel: undefined
 }
 
 export default AssertionEntry

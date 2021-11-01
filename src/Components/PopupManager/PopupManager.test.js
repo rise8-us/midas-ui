@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, screen, useSelectorMock, waitFor } from '../../Utilities/test-utils'
+import { render, screen, useSelectorMock, waitFor } from 'Utilities/test-utils'
 import { PopupManager } from './index'
 
 jest.mock('../Popups/TeamPopup/TeamPopup',
-    () => function testing() { return (<div>PopupManagerTest</div>) })
+    () => (function testing() { return (<div>PopupManagerTest</div>) }))
 
 const popup = {
     componentName: 'TeamPopup',

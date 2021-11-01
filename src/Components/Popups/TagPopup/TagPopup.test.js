@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, within
-} from '../../../Utilities/test-utils'
+} from 'Utilities/test-utils'
 import { TagPopup } from './index'
 
 describe('<TagPopup />', () => {

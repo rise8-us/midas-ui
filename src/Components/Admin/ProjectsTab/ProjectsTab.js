@@ -1,25 +1,15 @@
-import { Box, Button, IconButton, makeStyles } from '@material-ui/core'
-import { Add, Archive, Edit, Unarchive } from '@material-ui/icons'
+import { Add, Archive, Edit, Unarchive } from '@mui/icons-material'
+import { Box, Button, IconButton } from '@mui/material'
+import { Table } from 'Components/Table'
+import { Tag } from 'Components/Tag'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openPopup } from '../../../Redux/Popups/actions'
-import { requestArchiveProject } from '../../../Redux/Projects/actions'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { selectProjects } from '../../../Redux/Projects/selectors'
-import { Table } from '../../Table'
-import { Tag } from '../../Tag'
-
-const useStyles = makeStyles(theme => ({
-    button: {
-        '&:hover': {
-            color: theme.palette.primary.main
-        },
-        height: 40
-    }
-}))
+import { openPopup } from 'Redux/Popups/actions'
+import { requestArchiveProject } from 'Redux/Projects/actions'
+import ProjectConstants from 'Redux/Projects/constants'
+import { selectProjects } from 'Redux/Projects/selectors'
 
 function ProjectsTab() {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const allProjects = useSelector(selectProjects)
 
@@ -54,26 +44,26 @@ function ProjectsTab() {
     }
 
     const buildActions = (id, isArchived) => {
-        return (
-            <>
+        return <>
+            <IconButton
+                title = {isArchived ? 'unarchive' : 'archive' }
+                color = 'secondary'
+                onClick = {() => archiveProject(id, isArchived)}
+                size = 'large'
+            >
+                {isArchived ? <Unarchive /> : <Archive />}
+            </IconButton>
+            {!isArchived &&
                 <IconButton
-                    title = {isArchived ? 'unarchive' : 'archive' }
+                    title = 'edit'
                     color = 'secondary'
-                    onClick = {() => archiveProject(id, isArchived)}
+                    onClick = {() => updateProject(id)}
+                    size = 'large'
                 >
-                    {isArchived ? <Unarchive /> : <Archive />}
+                    <Edit />
                 </IconButton>
-                {!isArchived &&
-                    <IconButton
-                        title = 'edit'
-                        color = 'secondary'
-                        onClick = {() => updateProject(id)}
-                    >
-                        <Edit />
-                    </IconButton>
-                }
-            </>
-        )
+            }
+        </>
     }
 
     return (
@@ -82,7 +72,6 @@ function ProjectsTab() {
                 <Button
                     variant = 'text'
                     startIcon = {<Add/>}
-                    className = {classes.button}
                     onClick = {createProject}
                 >
                             Add New Project

@@ -1,25 +1,15 @@
-import { Box, Button, Chip, IconButton, makeStyles } from '@material-ui/core'
-import { Add, Archive, Edit, Unarchive } from '@material-ui/icons'
+import { Add, Archive, Edit, Unarchive } from '@mui/icons-material'
+import { Box, Button, Chip, IconButton } from '@mui/material'
+import { Table } from 'Components/Table'
+import { Tag } from 'Components/Tag'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openPopup } from '../../../Redux/Popups/actions'
-import { requestArchivePortfolio } from '../../../Redux/Portfolios/actions'
-import PortfolioConstant from '../../../Redux/Portfolios/constants'
-import { selectAllPortfolios } from '../../../Redux/Portfolios/selectors'
-import { Table } from '../../Table'
-import { Tag } from '../../Tag'
-
-const useStyles = makeStyles(theme => ({
-    button: {
-        '&:hover': {
-            color: theme.palette.primary.main
-        },
-        height: 40
-    }
-}))
+import { openPopup } from 'Redux/Popups/actions'
+import { requestArchivePortfolio } from 'Redux/Portfolios/actions'
+import PortfolioConstant from 'Redux/Portfolios/constants'
+import { selectAllPortfolios } from 'Redux/Portfolios/selectors'
 
 function PortfoliosTab() {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const allPortfolios = useSelector(selectAllPortfolios)
 
@@ -62,26 +52,26 @@ function PortfoliosTab() {
     }
 
     const buildActions = (id, isArchived) => {
-        return (
-            <>
+        return <>
+            <IconButton
+                title = {isArchived ? 'unarchive' : 'archive' }
+                color = 'secondary'
+                onClick = {() => archivePortfolio(id, isArchived)}
+                size = 'large'
+            >
+                {isArchived ? <Unarchive /> : <Archive />}
+            </IconButton>
+            {!isArchived &&
                 <IconButton
-                    title = {isArchived ? 'unarchive' : 'archive' }
+                    title = 'edit'
                     color = 'secondary'
-                    onClick = {() => archivePortfolio(id, isArchived)}
+                    onClick = {() => updatePortfolio(id)}
+                    size = 'large'
                 >
-                    {isArchived ? <Unarchive /> : <Archive />}
+                    <Edit />
                 </IconButton>
-                {!isArchived &&
-                    <IconButton
-                        title = 'edit'
-                        color = 'secondary'
-                        onClick = {() => updatePortfolio(id)}
-                    >
-                        <Edit />
-                    </IconButton>
-                }
-            </>
-        )
+            }
+        </>
     }
 
     return (
@@ -90,7 +80,6 @@ function PortfoliosTab() {
                 <Button
                     variant = 'text'
                     startIcon = {<Add/>}
-                    className = {classes.button}
                     onClick = {createPortfolio}
                 >
                     Add New Portfolio

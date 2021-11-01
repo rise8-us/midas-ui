@@ -1,5 +1,5 @@
-import { Chip, Tooltip, useTheme } from '@material-ui/core'
-import { Cancel } from '@material-ui/icons'
+import { Cancel } from '@mui/icons-material'
+import { Chip, Tooltip, useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 

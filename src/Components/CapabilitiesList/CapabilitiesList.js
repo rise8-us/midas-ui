@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@mui/material'
 import Capability from 'Components/Capability/Capability'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -17,7 +17,7 @@ function CapabilitiesList({ hasEdit }) {
                 </Grid>
             ))}
             {!hasEdit && selectedCapabilityIds.length === 0 &&
-                <Typography color = 'textSecondary' variant = 'body2' style = {{ paddingTop: 10, paddingBottom: 13 }}>
+                <Typography color = 'text.secondary' variant = 'body2' style = {{ paddingTop: 10, paddingBottom: 13 }}>
                     There are no Capability Needs Statements to display.
                 </Typography>
             }

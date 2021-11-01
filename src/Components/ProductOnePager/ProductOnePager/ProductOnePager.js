@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import { ProductDetails, ProductEpicsRoadmap, ProductHeader, ProductUserPersonas } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
@@ -31,7 +31,7 @@ function ProductOnePager({ id }) {
                     <div>Team Info (User&aposs name & role)</div>
                 </Grid>
                 <Grid item>
-                    <ProductDetails hasEdit = {false} productId = {id}/>
+                    <ProductDetails productId = {id} hasEdit = {false}/>
                 </Grid>
             </Grid>
             <Grid container item direction = 'column' lg md>

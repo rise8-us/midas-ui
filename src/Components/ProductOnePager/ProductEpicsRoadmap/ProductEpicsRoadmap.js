@@ -1,6 +1,5 @@
-import { Chip, Grid, IconButton, Tooltip, Typography } from '@material-ui/core'
-import { Sync } from '@material-ui/icons'
-import Timeline from '@material-ui/lab/Timeline'
+import { Sync } from '@mui/icons-material'
+import { Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { RoadmapEpic } from 'Components/Epics/RoadmapEpic'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
@@ -50,8 +49,8 @@ function ProductEpicsRoadmap({ productId, hasEdit }) {
     return (
         <Grid container spacing = {2} wrap = 'wrap'>
             <Grid container item alignItems = 'center' style = {{ paddingBottom: 0 }}>
-                <Grid item style = {{ paddingBottom: 0 }}>
-                    <Typography variant = 'h6' color = 'textPrimary'>ROADMAP</Typography>
+                <Grid item style = {{ paddingBottom: 0, height: '34px' }}>
+                    <Typography variant = 'h6' color = 'text.primary'>ROADMAP</Typography>
                 </Grid>
                 {performActionIfAllowed(hasEdit,
                     <Grid item style = {{ paddingBottom: 0 }}>
@@ -86,17 +85,16 @@ function ProductEpicsRoadmap({ productId, hasEdit }) {
                     </Grid>
                 )}
             </Grid>
-            <Grid item style = {{ flexGrow: 1, paddingTop: 0, maxWidth: '100%' }}>
-                <Timeline align = 'left' style = {{ padding: '0px 4px' }}>
-                    {sortProductEpics(productId).map((epic, index) =>
+            <Grid container item direction = 'column'>
+                {sortProductEpics(productId).map((epic, index) =>
+                    <Grid item key = {index}>
                         <RoadmapEpic
-                            key = {index}
                             id = {epic.id}
                             dateDisplayed = {epic.state === 'closed' ? 'closedAt' : 'dueDate'}
                             hasEdit = {hasEdit}
                         />
-                    )}
-                </Timeline>
+                    </Grid>
+                )}
             </Grid>
         </Grid>
     )

@@ -1,5 +1,5 @@
-import { Divider, Grid, IconButton, Tab, Tabs } from '@material-ui/core'
-import { Edit, LockOpenOutlined, LockOutlined } from '@material-ui/icons'
+import { Edit, LockOpenOutlined, LockOutlined } from '@mui/icons-material'
+import { Divider, Grid, IconButton, Tab, Tabs } from '@mui/material'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { ProductPageOverview } from 'Components/ProductPageOverview'
@@ -82,7 +82,7 @@ function Product() {
                                         data-testid = 'ProductPage__icon-inline-edit'
                                         onClick = {() => setPageLock(prev => !prev)}
                                         color = 'secondary'
-                                    >
+                                        size = 'large'>
                                         {pageLock ?
                                             <LockOutlined title = 'locked'/> : <LockOpenOutlined title = 'unlocked'/>
                                         }
@@ -95,6 +95,7 @@ function Product() {
                                         data-testid = 'ProductPage__icon-popup-edit'
                                         onClick = {openUpdateProductPopup}
                                         color = 'secondary'
+                                        size = 'large'
                                     >
                                         <Edit />
                                     </IconButton>
@@ -106,19 +107,16 @@ function Product() {
                                 <Tab
                                     label = 'overview'
                                     value = 'overview'
-                                    disableRipple
                                     data-testid = 'Product__overview'
                                 />
                                 <Tab
                                     label = 'measures'
                                     value = 'ogsms'
-                                    disableRipple
                                     data-testid = 'Product__ogsms'
                                 />
                                 <Tab
                                     label = 'Projects'
                                     value = 'projects'
-                                    disableRipple
                                     data-testid = 'Product__projects'
                                 />
                             </Tabs>

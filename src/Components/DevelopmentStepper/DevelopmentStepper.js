@@ -1,5 +1,5 @@
-import { Link, Step, StepLabel, Stepper, SvgIcon, Tooltip, Typography, useTheme } from '@material-ui/core'
-import { FlagOutlined } from '@material-ui/icons'
+import { FlagOutlined } from '@mui/icons-material'
+import { Link, Step, StepLabel, Stepper, SvgIcon, Tooltip, Typography, useTheme } from '@mui/material'
 import { ReactComponent as CTFCertificate } from 'Assets/ctf.svg'
 import { ReactComponent as GitlabPipeline } from 'Assets/gitlab.svg'
 import { ReactComponent as JiraLogo } from 'Assets/jiraLogo.svg'
@@ -64,7 +64,6 @@ Connector.propTypes = {
     completed: PropTypes.bool.isRequired
 }
 
-
 const tooltipTitle = (label) => (
     <>
         <Typography>{label}</Typography>
@@ -106,7 +105,6 @@ function DevelopmentStepper({ completedIndex }) {
                     {i > 0 && <Connector completed = {completedIndex >= i }/>}
                     <Tooltip
                         arrow
-                        interactive
                         placement = 'left'
                         title = {tooltipTitle(parseTitle([i]))}
                     >

@@ -1,4 +1,4 @@
-import { Divider, Grid, Typography } from '@material-ui/core'
+import { Divider, Grid, Typography } from '@mui/material'
 import { BlockerRow } from 'Components/BlockerRow'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -33,7 +33,7 @@ function BlockerList({ portfolioId }) {
             {blockers.length === 0 &&
                 <Typography
                     variant = 'h6'
-                    color = 'textSecondary'
+                    color = 'text.secondary'
                     style = {{
                         fontWeight: 300,
                         fontStyle: 'italic'

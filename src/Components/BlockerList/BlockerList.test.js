@@ -3,7 +3,7 @@ import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { BlockerList } from './index'
 
 
-jest.mock('Components/BlockerRow/BlockerRow', () => function testing(props) {
+jest.mock('Components/BlockerRow/BlockerRow', () => (function testing(props) {
     return (
         <>
             <div>aId {props.assertionId}</div>
@@ -11,7 +11,7 @@ jest.mock('Components/BlockerRow/BlockerRow', () => function testing(props) {
             <div>pId {props.productId}</div>
         </>
     )
-})
+}))
 
 describe('<BlockerList />', () => {
 

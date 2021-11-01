@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { setHomePageFilterString } from '../../../Redux/Filters/reducer'
+import { setHomePageFilterString } from 'Redux/Filters/reducer'
 import { SearchBar } from '../SearchBar'
 
 

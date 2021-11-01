@@ -1,7 +1,9 @@
 import React from 'react'
-import ProjectConstants from '../../../Redux/Projects/constants'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from '../../../Utilities/test-utils'
+import ProjectConstants from 'Redux/Projects/constants'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Projects } from './index'
+
+jest.mock('Components/Cards/ProjectCard/ProjectCard', () => function testing() { return (<div>ProjectCard</div>) })
 
 describe('<Projects>', () => {
 
@@ -9,13 +11,13 @@ describe('<Projects>', () => {
     const selectUnarchivedProjectsMock = useModuleMock('Redux/Projects/selectors', 'selectUnarchivedProjects')
     const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
 
-    const projects = {
+    const projects = [{
         id: 0,
         name: 'project 1',
         description: 'desc 1',
         projectJourneyMap: 2,
         tagIds: [1],
-    }
+    }]
 
     const project = {
         id: 0,
@@ -34,18 +36,18 @@ describe('<Projects>', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        selectUnarchivedProjectsMock.mockReturnValue([projects])
+        selectUnarchivedProjectsMock.mockReturnValue(projects)
         selectProjectByIdMock.mockReturnValue(project)
     })
 
     test('should filter results', () => {
         render(<Projects />, { initialState: { filters: { appBar: { filterString: 'project' } } } })
-        expect(screen.getByText('project 1')).toBeInTheDocument()
+        expect(screen.getByText('ProjectCard')).toBeInTheDocument()
     })
 
     test('should filter out results', () => {
         render(<Projects />, { initialState: { filters: { appBar: { filterString: 'nope' } } } })
-        expect(screen.queryByText('project 1')).not.toBeInTheDocument()
+        expect(screen.queryByText('ProjectCard')).not.toBeInTheDocument()
     })
 
     test('Add Project calls openPopup', () => {

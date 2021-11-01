@@ -1,5 +1,5 @@
-import { Chip, CircularProgress, Grid, IconButton, Tooltip, Typography } from '@material-ui/core'
-import { AddCircleOutline } from '@material-ui/icons'
+import { AddCircleOutline } from '@mui/icons-material'
+import { Chip, CircularProgress, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import Tooltips from 'Constants/Tooltips'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
@@ -67,7 +67,7 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
                 <Grid item>
                     <Typography
                         variant = 'h6'
-                        color = 'textPrimary'
+                        color = 'text.primary'
                         style = {{
                             marginLeft: '2px',
                             marginRight: '8px',

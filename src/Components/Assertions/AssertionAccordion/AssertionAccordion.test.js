@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, screen } from '../../../Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { AssertionAccordion } from './index'
 
-jest.mock('../../Assertions/AssertionEntry/AssertionEntry',
-    () => function testing() { return (<div>AssertionEntryComponent</div>) })
+jest.mock('Components/Assertions/AssertionEntry/AssertionEntry',
+    () => (function testing() { return (<div>AssertionEntryComponent</div>) }))
 
 
 describe('<AssertionAccordion>', () => {

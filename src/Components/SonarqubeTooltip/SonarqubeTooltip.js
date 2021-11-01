@@ -1,4 +1,4 @@
-import { Grid, Link, Typography } from '@material-ui/core'
+import { Grid, Link, Typography } from '@mui/material'
 import { ReactComponent as SonarqubeLogo } from 'Assets/sonarqubeLogo.svg'
 import PropTypes from 'prop-types'
 import React from 'react'

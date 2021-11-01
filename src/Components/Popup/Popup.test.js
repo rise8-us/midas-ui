@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen } from '../../Utilities/test-utils'
+import { fireEvent, render, screen } from 'Utilities/test-utils'
 import { Popup } from './index'
 
 describe('<Popup />', () => {
