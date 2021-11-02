@@ -1,6 +1,17 @@
 import Axios from 'axios'
+import fileDownload from 'js-file-download'
 
 export const getAPIURL = () => window.REACT_APP_API_URL ?? 'http://localhost:8000'
+
+const handleErrors = async(error, action) => {
+    if (error.response.data.errors) {
+        return action(error.response.data.errors)
+    } else if (error.response.data.message) {
+        return action([error.response.data.message])
+    } else {
+        return action('Unknown error occured')
+    }
+}
 
 export const handleThunkRequest = async({ endpoint, method, body }, rejectWithValue) => {
     const request = createAxiosRequest(endpoint, method, body)
@@ -8,14 +19,26 @@ export const handleThunkRequest = async({ endpoint, method, body }, rejectWithVa
         const response = await Axios(request)
         return response.data
     } catch (error) {
-        if (error.response.data.errors) {
-            return rejectWithValue(error.response.data.errors)
-        } else if (error.response.data.message) {
-            return rejectWithValue([error.response.data.message])
-        } else {
-            return rejectWithValue('Unknown error occured')
-        }
+        return handleErrors(error, rejectWithValue)
     }
+}
+
+export const handleThunkDownloadRequest = async({ endpoint, method, body }, rejectWithValue) => {
+    const request = createAxiosDownloadRequest(endpoint, method, body)
+    try {
+        const response = await Axios(request)
+        return fileDownload(response.data, body?.fileName ?? 'unknown-file')
+    } catch (error) {
+        return handleErrors(error, rejectWithValue)
+    }
+}
+
+export const createAxiosDownloadRequest = (routeSuffix, method, body) => {
+    let request = createAxiosRequest(routeSuffix, method, body)
+    request.responseType = 'blob'
+    request.headers['Content-Disposition'] = 'attachment'
+
+    return request
 }
 
 export const createAxiosRequest = (routeSuffix, method, body) => {
@@ -25,7 +48,8 @@ export const createAxiosRequest = (routeSuffix, method, body) => {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-        }
+        },
+        responseType: 'json'
     }
     if (body) request.data = body
     return request

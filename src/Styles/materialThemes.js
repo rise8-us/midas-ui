@@ -107,9 +107,11 @@ const theme = createTheme({
         MuiAutocomplete: {
             styleOverrides: {
                 popper: {
-                    borderLeft: '1em solid #24292E',
-                    borderRight: '1em solid #24292E',
-                    borderBottom: '1em solid #24292E',
+                    borderRadius: '2px',
+                    borderLeft: '1px solid #24292E',
+                    borderRight: '1px solid #24292E',
+                    borderBottom: '1px solid #24292E',
+                    boxShadow: '0 3px 5px -2px #000'
                 }
             }
         }

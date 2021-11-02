@@ -1,7 +1,7 @@
 export default {
+    BACKUP_DB: 'database/backupDB',
+    DOWNLOAD_FILE: 'database/downloadBackup',
+    GET_BACKUP_LIST: 'database/getBackupList',
     GET_TABLE_NAMES: 'database/getTableNames',
-    BACKUP_JSON: 'database/backupAsJson',
-    BACKUP_STRING: 'database/backupAsString',
-    RESTORE_JSON: 'database/restoreAsJson',
-    RESTORE_STRING: 'database/restoreAsString',
+    RESTORE_FILE: 'database/restoreFile',
 }

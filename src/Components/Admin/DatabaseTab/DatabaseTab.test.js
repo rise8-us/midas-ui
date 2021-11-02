@@ -1,33 +1,52 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
+} from 'Utilities/test-utils'
 import { DatabaseTab } from './index'
 
 describe('<DatabaseTab />', () => {
 
-    const requestGetBackupAsStringMock = useModuleMock('Redux/DatabaseActions/actions', 'requestGetBackupAsString')
-    const requestPostBackupAsJsonMock = useModuleMock('Redux/DatabaseActions/actions', 'requestPostBackupAsJson')
+    const requestTakeBackupMock = useModuleMock('Redux/DatabaseActions/actions', 'requestTakeBackup')
+    const requestRestoreMock = useModuleMock('Redux/DatabaseActions/actions', 'requestRestore')
+    const requestDownloadBackupFileMock = useModuleMock('Redux/DatabaseActions/actions', 'requestDownloadBackupFile')
 
-    test('should get backup as string', async() => {
-        useDispatchMock().mockResolvedValue({ type: '/', payload: 'mysql db dump' })
-
-        render(<DatabaseTab />)
-
-        fireEvent.click(screen.getByText(/retrieve backup/i))
-
-        expect(requestGetBackupAsStringMock).toHaveBeenCalledTimes(1)
-        expect(await screen.findByText('mysql db dump')).toBeInTheDocument()
+    beforeEach(() => {
+        useDispatchMock()
+            .mockResolvedValue({ type: '/', payload: ['backups/1738/file42.fun'] })
     })
 
-    test('should render no authd user', () => {
-        useDispatchMock().mockReturnValue({})
-
+    test('should take backup', () => {
         render(<DatabaseTab />)
 
-        userEvent.type(screen.getByPlaceholderText('PLACE BACKUP TEXT HERE'), 'backup string')
-        fireEvent.click(screen.getByText(/upload backup/i))
+        fireEvent.click(screen.getByText('take backup'))
 
-        expect(requestPostBackupAsJsonMock).toHaveBeenCalledTimes(1)
-        expect(requestPostBackupAsJsonMock).toHaveBeenCalledWith('backup string')
+        waitForElementToBeRemoved(screen.getByTestId('DatabaseTab__waiting-icon'))
+
+        expect(requestTakeBackupMock).toHaveBeenCalledTimes(1)
+    })
+
+    test('should restore', async() => {
+        render(<DatabaseTab />)
+
+        fireEvent.click(screen.getByTitle('Open'))
+        await screen.findByText('Retrieving backups...')
+
+        fireEvent.click(screen.getByText('file42.fun'))
+        fireEvent.click(screen.getByText('restore'))
+
+        expect(requestRestoreMock).toHaveBeenCalledTimes(1)
+    })
+
+    test('should download backup', async() => {
+        render(<DatabaseTab />)
+
+        fireEvent.click(screen.getByTitle('Open'))
+        await screen.findByText('Retrieving backups...')
+
+        fireEvent.click(screen.getByText('file42.fun'))
+        fireEvent.click(screen.getByText('download'))
+
+        expect(requestDownloadBackupFileMock).toHaveBeenCalledTimes(1)
     })
 
 })
