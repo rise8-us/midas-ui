@@ -1,55 +1,113 @@
-import { Button, CircularProgress, Grid, TextField } from '@mui/material'
+import { Backup, CloudDownload, Restore } from '@mui/icons-material'
+import { Autocomplete, Button, CircularProgress, Grid, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { requestGetBackupAsString, requestPostBackupAsJson } from 'Redux/DatabaseActions/actions'
+import * as dbActions from 'Redux/DatabaseActions/actions'
+
+const getIcon = (processing, icon) => processing
+    ? <CircularProgress color = 'inherit' size = {20} data-testid = 'DatabaseTab__waiting-icon'/>
+    : icon
 
 export default function DatabaseTab() {
     const dispatch = useDispatch()
 
-    const [backupValue, setBackupValue] = useState('')
-    const [isProcessing, setIsProcessing] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isProcessingBackup, setIsProcessingBackup] = useState(false)
+    const [isProcessingRestore, setIsProcessingRestore] = useState(false)
+    const [isProcessingDownload, setIsProcessingDownload] = useState(false)
+    const [backupsList, setBackupsList] = useState([])
+    const [selectedBackupFile, setSelectedBackupFile] = useState(null)
 
-    const requestGetBackup = async() => {
-        setIsProcessing(true)
-        dispatch(requestGetBackupAsString())
+    const executeGetBackupsList = () => {
+        setIsLoading(true)
+        dispatch(dbActions.requestGetBackupList())
             .then(unwrapResult)
             .then(data => {
-                setBackupValue(data)
-                setIsProcessing(false)
+                setBackupsList(data)
+                setIsLoading(false)
             })
     }
 
-    const requestPutBackup = () => {
-        backupValue.trim().length > 0 && dispatch(requestPostBackupAsJson(backupValue))
+    const dispatchAction = (toggleFn, action) => {
+        toggleFn(true)
+        dispatch(action).then(() => toggleFn(false))
     }
 
+    const handleDownloadClick = () =>
+        dispatchAction(setIsProcessingDownload, dbActions.requestDownloadBackupFile(selectedBackupFile))
+
+    const handleBackupClick = () =>
+        dispatchAction(setIsProcessingBackup, dbActions.requestTakeBackup())
+
+    const handleRestoreClick = () =>
+        dispatchAction(setIsProcessingRestore, dbActions.requestRestore(selectedBackupFile))
+
+    const handleSelectedBackupChange = (_e, selectedValue) =>
+        setSelectedBackupFile(selectedValue)
+
     return (
-        <Grid container style = {{ padding: '24px' }}>
-            <Grid container item spacing = {2} direction = 'column' md = {3} lg = {2} xl = {1}>
-                <Grid item style = {{ position: 'absolute' }}>
-                    <Button onClick = {requestGetBackup} variant = 'outlined' style = {{ width: '160px' }}>
-                        Retrieve Backup
-                    </Button>
-                </Grid>
-                <Grid item style = {{ position: 'absolute', marginTop: '48px' }}>
-                    <Button onClick = {requestPutBackup} variant = 'outlined' style = {{ width: '160px' }}>
-                        Upload Backup
-                    </Button>
-                </Grid>
+        <Grid container marginY = '48px' padding = {3} rowSpacing = {2} direction = 'column' alignItems = 'center'>
+            <Grid item justifyContent = 'center' flexGrow = {1} width = '375px'>
+                <Button
+                    onClick = {handleBackupClick}
+                    variant = 'outlined'
+                    endIcon = {getIcon(isProcessingBackup, <Backup />)}
+                    disableRipple
+                    fullWidth
+                >
+                    take backup
+                </Button>
             </Grid>
-            <Grid item xs = {12} sm = {12} md = {9} lg = {10} xl = {11}>
-                {isProcessing
-                    ? <CircularProgress variant = 'indeterminate'/>
-                    : <TextField
-                        multiline
+            <Grid item flexGrow = {1} width = '375px'>
+                <Autocomplete
+                    options = {backupsList}
+                    groupBy = {(option) => 'v' + option.split('/')[1]}
+                    getOptionLabel = {(option) => option.split('/')[2]}
+                    onChange = {handleSelectedBackupChange}
+                    onOpen = {executeGetBackupsList}
+                    loadingText = 'Retrieving backups...'
+                    loading = {isLoading}
+                    ListboxProps = {{ style: { fontFamily: 'monospace' } }}
+                    renderInput = {(params) =>
+                        <TextField
+                            {...params}
+                            fullWidth
+                            variant = 'outlined'
+                            label = 'DB Backups'
+                            InputProps = {{
+                                ...params.InputProps,
+                                endAdornment: getIcon(isLoading, <>{params.InputProps.endAdornment}</>),
+                            }}
+                        />
+                    }
+                />
+            </Grid>
+            <Grid container item justifyContent = 'center' width = '375px' columnGap = {2}>
+                <Grid item xs>
+                    <Button
+                        disabled = {selectedBackupFile === null}
+                        onClick = {handleRestoreClick}
+                        variant = 'outlined'
+                        endIcon = {getIcon(isProcessingRestore, <Restore />)}
+                        disableRipple
                         fullWidth
-                        variant = 'filled'
-                        placeholder = 'PLACE BACKUP TEXT HERE'
-                        value = {backupValue}
-                        onChange = {e => setBackupValue(e.target.value)}
-                    />
-                }
+                    >
+                        restore
+                    </Button>
+                </Grid>
+                <Grid item xs>
+                    <Button
+                        disabled = {selectedBackupFile === null}
+                        variant = 'outlined'
+                        onClick = {handleDownloadClick}
+                        endIcon = {getIcon(isProcessingDownload, <CloudDownload />)}
+                        disableRipple
+                        fullWidth
+                    >
+                        download
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
     )
