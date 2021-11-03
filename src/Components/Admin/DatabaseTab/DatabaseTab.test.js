@@ -49,4 +49,16 @@ describe('<DatabaseTab />', () => {
         expect(requestDownloadBackupFileMock).toHaveBeenCalledTimes(1)
     })
 
+    test('should handle errors', async() => {
+        useDispatchMock().mockRejectedValue(['errors'])
+
+        render(<DatabaseTab />)
+
+        fireEvent.click(screen.getByTitle('Open'))
+        await screen.findByText('Retrieving backups...')
+
+        expect(screen.getByText('No backups retrieved.')).toBeInTheDocument()
+        expect(screen.getByTestId('DatabaseTab__warning-icon')).toBeInTheDocument()
+    })
+
 })
