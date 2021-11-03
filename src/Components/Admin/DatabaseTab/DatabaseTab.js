@@ -1,13 +1,31 @@
-import { Backup, CloudDownload, Restore } from '@mui/icons-material'
-import { Autocomplete, Button, CircularProgress, Grid, TextField } from '@mui/material'
+import { Backup, CloudDownload, Restore, WarningAmberRounded } from '@mui/icons-material'
+import { Autocomplete, Button, CircularProgress, Grid, TextField, Tooltip } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import * as dbActions from 'Redux/DatabaseActions/actions'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const getIcon = (processing, icon) => processing
     ? <CircularProgress color = 'inherit' size = {20} data-testid = 'DatabaseTab__waiting-icon'/>
     : icon
+
+function WarningIcon({ errors }) {
+    return (
+        <Tooltip title = {<FormatErrors errors = {errors} />}>
+            <WarningAmberRounded
+                color = 'warning'
+                style = {{ cursor: 'help' }}
+                data-testid = 'DatabaseTab__warning-icon'
+            />
+        </Tooltip>
+    )
+}
+
+WarningIcon.propTypes = {
+    errors: PropTypes.arrayOf(PropTypes.string).isRequired
+}
 
 export default function DatabaseTab() {
     const dispatch = useDispatch()
@@ -17,6 +35,7 @@ export default function DatabaseTab() {
     const [isProcessingRestore, setIsProcessingRestore] = useState(false)
     const [isProcessingDownload, setIsProcessingDownload] = useState(false)
     const [backupsList, setBackupsList] = useState([])
+    const [fetchErrors, setFetchErrors] = useState([])
     const [selectedBackupFile, setSelectedBackupFile] = useState(null)
 
     const executeGetBackupsList = () => {
@@ -24,7 +43,11 @@ export default function DatabaseTab() {
         dispatch(dbActions.requestGetBackupList())
             .then(unwrapResult)
             .then(data => {
-                setBackupsList(data)
+                setBackupsList(data.reverse())
+                setIsLoading(false)
+            })
+            .catch(errors => {
+                setFetchErrors(errors)
                 setIsLoading(false)
             })
     }
@@ -67,6 +90,7 @@ export default function DatabaseTab() {
                     onChange = {handleSelectedBackupChange}
                     onOpen = {executeGetBackupsList}
                     loadingText = 'Retrieving backups...'
+                    noOptionsText = 'No backups retrieved.'
                     loading = {isLoading}
                     ListboxProps = {{ style: { fontFamily: 'monospace' } }}
                     renderInput = {(params) =>
@@ -77,7 +101,9 @@ export default function DatabaseTab() {
                             label = 'DB Backups'
                             InputProps = {{
                                 ...params.InputProps,
-                                endAdornment: getIcon(isLoading, <>{params.InputProps.endAdornment}</>),
+                                endAdornment: fetchErrors.length > 0
+                                    ? <WarningIcon errors = {fetchErrors} />
+                                    : getIcon(isLoading, <>{params.InputProps.endAdornment}</>),
                             }}
                         />
                     }
