@@ -1,4 +1,4 @@
-import { Sync } from '@mui/icons-material'
+import { EventAvailableOutlined, EventBusyOutlined, EventOutlined, Sync } from '@mui/icons-material'
 import { Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { RoadmapEpic } from 'Components/Epics/RoadmapEpic'
 import Tooltips from 'Constants/Tooltips'
@@ -9,17 +9,17 @@ import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
 import { requestSyncEpicsByProductId } from 'Redux/Epics/actions'
 import { selectEpicsByProductId } from 'Redux/Epics/selectors'
 
-const generateCircle = (color) => (
-    <div
-        style = {{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            marginLeft: '5px',
-            backgroundColor: color
-        }}
-    />
-)
+const getLegendIcon = (key, color) => {
+    const defProps = { style: { color } }
+
+    const icons = {
+        COMPLETE: <EventAvailableOutlined {...defProps}/>,
+        IN_PROGRESS: <EventOutlined {...defProps}/>,
+        FUTURE: <EventBusyOutlined {...defProps}/>
+    }
+
+    return icons[key]
+}
 
 const performActionIfAllowed = (canDo, action) => canDo ? action : null
 
@@ -47,40 +47,40 @@ function ProductEpicsRoadmap({ productId, hasEdit }) {
     }
 
     return (
-        <Grid container spacing = {2} wrap = 'wrap'>
-            <Grid container item alignItems = 'center' style = {{ paddingBottom: 0 }}>
-                <Grid item style = {{ paddingBottom: 0, height: '34px' }}>
+        <Grid container spacing = {2} direction = 'column'>
+            <Grid container item alignItems = 'center' spacing = {1}>
+                <Grid item height = '40px'>
                     <Typography variant = 'h6' color = 'text.primary'>ROADMAP</Typography>
                 </Grid>
-                {performActionIfAllowed(hasEdit,
-                    <Grid item style = {{ paddingBottom: 0 }}>
+                <Grid item height = '40px'>
+                    {performActionIfAllowed(hasEdit,
                         <Tooltip title = {Tooltips.EPICS_ROADMAP_SYNC} placement = 'top' arrow>
                             <IconButton
                                 color = 'secondary'
                                 size = 'small'
                                 data-testid = 'ProductEpicsRoadmap__button-sync'
-                                style = {{ left: '6px' }}
-                                onClick = {() => syncEpics()}
+                                onClick = {syncEpics}
                             >
                                 <Sync />
                             </IconButton>
                         </Tooltip>
-                    </Grid>
-                )}
+                    )}
+                </Grid>
             </Grid>
-            <Grid container item style = {{ paddingBottom: 0, paddingTop: 0 }}>
+            <Grid container item style = {{ paddingTop: '8px' }} spacing = {1}>
                 {Object.values(roadmapStatuses).map((status, index) =>
                     <Grid item key = {index}>
                         <Chip
-                            label = {status.label.toUpperCase()}
-                            icon = {generateCircle(status.color)}
+                            label = {
+                                <Typography variant = 'caption' color = 'text.secondary'>
+                                    {status.label.toUpperCase()}
+                                </Typography>
+                            }
+                            icon = {getLegendIcon(status.name, status.color)}
                             variant = 'outlined'
                             color = 'secondary'
-                            style = {{
-                                border: 0,
-                                fontSize: '10px',
-                                height: '16px'
-                            }}
+                            size = 'small'
+                            style = {{  borderWidth: 0 }}
                         />
                     </Grid>
                 )}

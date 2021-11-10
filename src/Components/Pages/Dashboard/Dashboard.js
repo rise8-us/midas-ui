@@ -173,7 +173,9 @@ function Dashboard() {
                                     <Grid container item direction = 'column' paddingY = '12px'>
                                         <Grid item marginY = 'auto'>
                                             <AutoSaveTextFieldStyled
-                                                initialValue = {getPortfolioDescription(selectedPortfolio?.description)}
+                                                initialValue = {getPortfolioDescription(
+                                                    selectedPortfolio?.description
+                                                )}
                                                 canEdit = {hasEdit}
                                                 multiline
                                                 fullWidth
@@ -183,7 +185,10 @@ function Dashboard() {
                                         <Grid container item columnSpacing = {2} rowSpacing = {1}>
                                             {scopedTags.map((tag) => (
                                                 <Grid item key = {tag.id}>
-                                                    <LegendItem color = {tag.color} text = {tag.label.split('::')[1]} />
+                                                    <LegendItem
+                                                        color = {tag.color}
+                                                        text = {tag.label.split('::')[1]}
+                                                    />
                                                 </Grid>
                                             ))}
                                         </Grid>

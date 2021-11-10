@@ -1,9 +1,10 @@
 import { AccountCircle, Gavel, LocalOffer, Menu } from '@mui/icons-material'
-import { Button, Grid, IconButton, Typography } from '@mui/material'
+import { Button, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import MatterMostLogo from 'Assets/mattermostLogo.svg'
 import MidasLogo from 'Assets/MidasLogo.svg'
 import { MoreOptionsPopperMenu } from 'Components/MoreOptionsPopperMenu'
 import { SearchBar } from 'Components/Search'
+import tooltipConstants from 'Constants/Tooltips'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -131,14 +132,16 @@ function AppBar() {
                 />
             </Grid>
             <GridItemStyled item>
-                <a
-                    href = 'https://chat.il2.dso.mil/midas/channels/town-square'
-                    target = '_blank'
-                    rel = 'noreferrer'
-                    style = {{ display: 'flex' }}
-                >
-                    <ImgMattermostLogo src = {MatterMostLogo} title = 'IL2 Mattermost' />
-                </a>
+                <Tooltip title = {tooltipConstants.MATTERMOST_LOGO} postion = 'bottom'>
+                    <a
+                        href = 'https://chat.il2.dso.mil/midas/channels/town-square'
+                        target = '_blank'
+                        rel = 'noreferrer'
+                        style = {{ display: 'flex' }}
+                    >
+                        <ImgMattermostLogo src = {MatterMostLogo}/>
+                    </a>
+                </Tooltip>
             </GridItemStyled>
             <GridItemStyled item>
                 <IconButton
@@ -163,7 +166,7 @@ function AppBar() {
                 </GridItemStyled>
             )}
             {user.id && (
-                <GridItemStyled item>
+                <GridItemStyled item whiteSpace = 'nowrap'>
                     <Button
                         color = 'secondary'
                         onClick = {() => history.push('/account')}

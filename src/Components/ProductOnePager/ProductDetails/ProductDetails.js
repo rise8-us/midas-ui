@@ -10,7 +10,7 @@ import { styled } from 'Styles/materialThemes'
 
 const AutoSaveTextFieldStyled = styled(AutoSaveTextField)(({ theme }) => ({
     color: theme.palette.text.secondary,
-    paddingBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2)
 }))
 
 const defaultValue = (value) => {
