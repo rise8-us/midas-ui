@@ -28,10 +28,15 @@ function ProductTeam({ productId, hasEdit }) {
         openPopup(TeamConstants.UPDATE_TEAM, 'TeamPopup', { id: team.id, productIds: [productId] }))
 
     return (
-        <Grid container wrap = 'wrap' style = {{ marginLeft: '3px' }}>
-            <Grid container item style = {{ paddingBottom: '8px', height: '34px' }} justifyContent = 'space-between'>
+        <Grid container wrap = 'wrap' marginLeft = '3px'>
+            <Grid container item height = '34px' paddingBottom = {1} columnSpacing = {1}>
                 <Grid item>
                     <Typography variant = 'h6'>TEAM</Typography>
+                </Grid>
+                <Grid item>
+                    <Typography variant = 'h6' color = 'text.secondary'>
+                        {team.name ? '(' + team.name + ')' : '(None)'}
+                    </Typography>
                 </Grid>
                 {hasEdit && team.id !== undefined &&
                     <Grid item>
@@ -49,28 +54,28 @@ function ProductTeam({ productId, hasEdit }) {
                 }
             </Grid>
             <Grid container item spacing = {1}>
-                <Grid item xs = {6} s = {6}>
+                <Grid item xs = {6}>
                     <TeamMember
                         id = {productOwnerId}
                         title = 'Product Owner'
                         noUserText = 'User Not Assigned'
                     />
                 </Grid>
-                <Grid item xs = {6} s = {6}>
+                <Grid item xs = {6}>
                     <TeamMember
                         id = {team.productManagerId}
                         title = 'Product Manager'
                         noUserText = 'User Not Assigned'
                     />
                 </Grid>
-                <Grid item xs = {6} s = {6}>
+                <Grid item xs = {6}>
                     <TeamMember
                         id = {team.designerId}
                         title = 'Product Designer'
                         noUserText = 'User Not Assigned'
                     />
                 </Grid>
-                <Grid item xs = {6} s = {6}>
+                <Grid item xs = {6}>
                     <TeamMember
                         id = {team.techLeadId}
                         title = 'Technical Lead'
@@ -78,7 +83,7 @@ function ProductTeam({ productId, hasEdit }) {
                     />
                 </Grid>
                 {userIds.map((id, index) =>
-                    <Grid item xs = {6} s = {6} key = {index}>
+                    <Grid item xs = {6} key = {index}>
                         <TeamMember id = {id} title = 'Team Member' />
                     </Grid>
                 )}

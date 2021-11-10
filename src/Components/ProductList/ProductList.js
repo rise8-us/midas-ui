@@ -3,6 +3,7 @@ import { ProductBox } from 'Components/ProductBox'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useHistory } from 'react-router'
+import { sortArrayAlphabetically } from 'Utilities/sorting'
 
 function ProductList({ products, tagScope }) {
     const history = useHistory()
@@ -12,10 +13,12 @@ function ProductList({ products, tagScope }) {
         history.push(`/products/${id}/overview`)
     }
 
+    const sortedProducts = sortArrayAlphabetically(products, 'name')
+
     return (
         <>
             <Grid container spacing = {2} wrap = 'wrap'>
-                {products.map((product, index) => {
+                {sortedProducts.map((product, index) => {
                     const ownership = product.tags
                         .find(tag => tag.label.includes(tagScope))
 

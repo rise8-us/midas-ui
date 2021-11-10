@@ -9,6 +9,7 @@ import { selectAppBarFilter } from 'Redux/Filters/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import ProductConstant from 'Redux/Products/constants'
 import { selectUnarchivedProducts } from 'Redux/Products/selectors'
+import { sortArrayAlphabetically } from 'Utilities/sorting'
 
 function Products() {
     const dispatch = useDispatch()
@@ -21,6 +22,8 @@ function Products() {
         if (product.name.toLowerCase().includes(filterString) ||
             product.description.toLowerCase().includes(filterString)) return true
     })
+
+    const sortedProducts = sortArrayAlphabetically(filteredProducts, 'name')
 
     const create = () => dispatch(openPopup(ProductConstant.CREATE_PRODUCT, 'ProductPopup'))
 
@@ -37,7 +40,7 @@ function Products() {
                         gridAutoFlow = 'row'
                         style = {{ marginBottom: '40px', padding: '0 30px' }}
                     >
-                        {filteredProducts.map((product) => (
+                        {sortedProducts.map((product) => (
                             <ProductCard key = {product.id} id = {product.id}/>
                         ))}
                     </Box>

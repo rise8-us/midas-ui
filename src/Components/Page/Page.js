@@ -20,6 +20,7 @@ const DivStyled = styled('div')(({ theme }) => ({
     top: '68px',
     paddingBottom: '24px',
     overflowY: 'scroll',
+    overflowX: 'hidden',
     height: 'calc(100vh - 88px)',
     width: '100vw',
     scrollBehavior: 'smooth'
