@@ -186,11 +186,8 @@ function ProductPopup({ id }) {
                 />
                 <SearchUsers
                     title = 'Product Owner'
-                    growFrom = '100%'
                     value = {formValues.owner}
                     onChange = {(_e, values) => handleChange('owner', values)}
-                    freeSolo = {true}
-                    dynamicUpdate
                 />
                 <TextField
                     label = 'Description'
@@ -260,7 +257,6 @@ function ProductPopup({ id }) {
                     renderInput = {(params) => (
                         <TextField
                             {...params}
-                            variant = 'standard'
                             label = 'Gitlab server'
                             InputProps = {{
                                 ...params.InputProps,

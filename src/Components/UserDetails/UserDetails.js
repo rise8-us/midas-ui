@@ -34,7 +34,7 @@ function UserDetails({ id, role }) {
             </Grid>
             <Grid item>
                 <Typography variant = 'subtitle1' color = 'text.secondary'>
-                    {user.displayName !== user.username && user.displayName.length > 0 ? user.displayName : ''}
+                    {user.displayName !== user.username && user.displayName?.length > 0 ? user.displayName : ''}
                 </Typography>
             </Grid>
             <Grid item container style = {{ marginTop: '18px' }} spacing = {1}>

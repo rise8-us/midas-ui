@@ -111,11 +111,8 @@ function PortfolioPopup({ id }) {
                 />
                 <SearchUsers
                     title = 'Portfolio Owner'
-                    growFrom = '100%'
                     value = {formValues.owner}
                     onChange = {(_e, values) => handleChange('owner', values)}
-                    freeSolo = {true}
-                    dynamicUpdate
                 />
                 <TagDropdown
                     defaultTags = {formValues.tags}
@@ -138,7 +135,6 @@ function PortfolioPopup({ id }) {
                     data-testid = 'PortfolioPopup__select-products'
                     onChange = {(_e, values) => handleChange('products', values)}
                     value = {formValues.products}
-                    ChipProps = {{ variant: 'outlined' }}
                     renderInput = {(params) =>
                         <TextField
                             {...params}

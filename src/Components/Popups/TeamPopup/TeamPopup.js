@@ -133,35 +133,23 @@ function TeamPopup({ id, productIds }) {
                 />
                 <SearchUsers
                     title = 'Product Owner'
-                    growFrom = '100%'
                     value = {formValues.productOwner}
                     onChange = {(_e, values) => handleChange('productOwner', values)}
-                    freeSolo = {true}
-                    dynamicUpdate
                 />
                 <SearchUsers
                     title = 'Product Manager'
-                    growFrom = '100%'
                     value = {formValues.productManager}
                     onChange = {(_e, values) => handleChange('productManager', values)}
-                    freeSolo = {true}
-                    dynamicUpdate
                 />
                 <SearchUsers
                     title = 'Designer (UI/UX)'
-                    growFrom = '100%'
                     value = {formValues.designer}
                     onChange = {(_e, values) => handleChange('designer', values)}
-                    freeSolo = {true}
-                    dynamicUpdate
                 />
                 <SearchUsers
                     title = 'Tech Lead'
-                    growFrom = '100%'
                     value = {formValues.techLead}
                     onChange = {(_e, values) => handleChange('techLead', values)}
-                    freeSolo = {true}
-                    dynamicUpdate
                 />
                 <TeamUsers
                     userIds = {userIds}

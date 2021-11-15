@@ -3,14 +3,12 @@ import { Button, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import MatterMostLogo from 'Assets/mattermostLogo.svg'
 import MidasLogo from 'Assets/MidasLogo.svg'
 import { MoreOptionsPopperMenu } from 'Components/MoreOptionsPopperMenu'
-import { SearchBar } from 'Components/Search'
+import { AppBarSearch } from 'Components/Search'
 import tooltipConstants from 'Constants/Tooltips'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
-import { setAppBarFilterString } from 'Redux/Filters/reducer'
-import { selectAppBarFilter } from 'Redux/Filters/selectors'
 import { styled } from 'Styles/materialThemes'
 import { getRoot } from 'Utilities/queryParams'
 
@@ -53,33 +51,28 @@ const PageTypographyStyled = styled(Typography)(({ theme, selected }) => ({
 
 function AppBar() {
     const history = useHistory()
-    const dispatch = useDispatch()
 
     const currentPage = getRoot()
     const user = useSelector(selectUserLoggedIn)
-    const filterString = useSelector(selectAppBarFilter)
 
     const goHome = () => history.push('/dashboard')
-    const search = (searchString) => dispatch(setAppBarFilterString(searchString))
 
     const pages = [
         {
             text: 'Dashboard',
             onClick: () => history.push('/dashboard')
-        },
-        {
+        }, {
             text: 'Projects',
             onClick: () => history.push('/projects')
-        },
-        {
+        }, {
             text: 'Products',
             onClick: () => history.push('/products')
-        },
-        {
+        }, {
             text: 'Portfolios',
             onClick: () => history.push('/portfolios')
         }
     ]
+
     return (
         <GridWrapStyled container alignItems = 'center' wrap = 'nowrap'>
             <Grid item style = {{ height: '18px' }} sx = {{ display: { xs: 'none', md: 'flex' } }}>
@@ -118,18 +111,7 @@ function AppBar() {
                 <MoreOptionsPopperMenu options = {pages} icon = {<Menu color = 'primary'/>}/>
             </GridPagesContainerStyled>
             <Grid item>
-                <SearchBar
-                    height = {24}
-                    borderRadius = {12}
-                    growFrom = '150px'
-                    growTo = '225px'
-                    placeholder = 'Search'
-                    searchIconHeight = '18px'
-                    fontSize = 'small'
-                    disableClearable
-                    search = {search}
-                    defaultValue = {filterString}
-                />
+                <AppBarSearch />
             </Grid>
             <GridItemStyled item>
                 <Tooltip title = {tooltipConstants.MATTERMOST_LOGO} postion = 'bottom'>

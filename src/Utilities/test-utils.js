@@ -56,6 +56,21 @@ export const useModuleMock = (moduleName, property) => {
     return mock
 }
 
+export function mockSearchUsersComponent({ onChange, ...everythingElse }) {
+    return (
+        <input
+            title = 'searchUsersMock'
+            onChange = {e => onChange(e, {
+                id: 24,
+                username: 'jsmith',
+                displayName: 'Hiemer Smith'
+            })}
+            placeholder = 'username, display name, or email'
+            {...everythingElse}
+        />
+    )
+}
+
 // re-export everything
 export * from '@testing-library/react'
 export * from '@testing-library/user-event'

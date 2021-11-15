@@ -1,6 +1,12 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent, mockSearchUsersComponent, render, screen, useDispatchMock, useModuleMock, userEvent
+} from 'Utilities/test-utils'
 import { excludeUserIds, TeamPopup } from './index'
+
+jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange }) {
+    return mockSearchUsersComponent({ title, onChange })
+})
 
 describe('<TeamPopup />', () => {
     jest.setTimeout(60000)
@@ -93,8 +99,7 @@ describe('<TeamPopup />', () => {
         })
     })
 
-    test.skip('should call onSubmit to update team', async() => {
-
+    test('should call onSubmit to update team', async() => {
         selectTeamByIdMock.mockReturnValue({ ...returnedNewTeam, id: 4, userIds: [9] })
         useDispatchMock().mockResolvedValue({ type: '/', payload: [
             {
@@ -111,13 +116,9 @@ describe('<TeamPopup />', () => {
         userEvent.clear(nameInput)
         userEvent.type(nameInput, name)
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
-            fireEvent.click(await screen.findByText('jsmith'))
         }
-
-        userEvent.type(screen.getByPlaceholderText('Add another team member...'), 'jsmith')
-        fireEvent.click(await screen.findByText('jsmith'))
 
         fireEvent.click(screen.getByText('Submit'))
 
@@ -125,15 +126,15 @@ describe('<TeamPopup />', () => {
             ...returnedFoundTeam,
             productIds: [],
             name,
-            productManagerId: 10,
-            designerId: 10,
-            techLeadId: 10,
-            userIds: [9, 10]
+            productManagerId: 24,
+            designerId: 24,
+            techLeadId: 24,
+            userIds: [9, 24]
         })
 
         expect(requestUpdateProductMock).toHaveBeenCalledWith({
             ...returnedProduct,
-            ownerId: 10,
+            ownerId: 24,
             childIds: []
         })
     })
