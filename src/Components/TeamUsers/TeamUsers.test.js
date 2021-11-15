@@ -1,8 +1,12 @@
 import React from 'react'
 import {
-    render, screen, useDispatchMock, useModuleMock, userEvent
+    mockSearchUsersComponent, render, screen, useDispatchMock, useModuleMock, userEvent
 } from 'Utilities/test-utils'
 import { TeamUsers } from './index'
+
+jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing(props) {
+    return mockSearchUsersComponent(props)
+})
 
 describe('<TeamUsers />', () => {
     jest.setTimeout(15000)
@@ -20,18 +24,6 @@ describe('<TeamUsers />', () => {
         username: 'user2',
         displayName: 'sis1'
     }
-
-    const addUsersList = [
-        {
-            id: 10,
-            username: 'jsmith',
-            displayName: 'Jon Jacob Jingle Hiemer Smith'
-        }, {
-            id: 11,
-            username: 'foobar',
-            dislayName: ''
-        }
-    ]
 
     const setUserIdsMock = jest.fn()
 
@@ -57,15 +49,13 @@ describe('<TeamUsers />', () => {
         expect(requestFindUserByMock).toHaveBeenCalledWith('id:2 OR id:3')
     })
 
-    test('should add user to userids list', async() => {
-        useDispatchMock().mockResolvedValue({ type: '/', payload: addUsersList })
+    test('should add user to userids list', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
         render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
-        userEvent.type(screen.getByTestId('AutocompleteSearch__input'), 'foobar')
-        userEvent.click(await screen.findByText('foobar'))
+        userEvent.type(screen.getByPlaceholderText('Add another team member...'), 'foobar')
 
-        expect(setUserIdsMock).toHaveBeenCalledWith([1, 2, 11])
+        expect(setUserIdsMock).toHaveBeenCalledWith([1, 2, 24])
     })
 
     test('should remove user from userids list', () => {

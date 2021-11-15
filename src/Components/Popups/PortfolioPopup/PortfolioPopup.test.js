@@ -1,6 +1,12 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent, mockSearchUsersComponent, render, screen, useDispatchMock, useModuleMock, userEvent
+} from 'Utilities/test-utils'
 import { PortfolioPopup } from './index'
+
+jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange }) {
+    return mockSearchUsersComponent({ title, onChange })
+})
 
 describe('<PortfolioPopup />', () => {
     jest.setTimeout(20000)
@@ -48,7 +54,7 @@ describe('<PortfolioPopup />', () => {
         selectPortfolioByIdMock.mockReturnValue(returnedNewPortfolio)
         selectTagsByTypesMock.mockReturnValue(returnedTags)
         selectAvailableProductsMock.mockReturnValue(returnedProducts)
-        useDispatchMock().mockResolvedValue({ payload: [] })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
     })
 
     test('should render properly', () => {
@@ -100,7 +106,7 @@ describe('<PortfolioPopup />', () => {
     })
 
     test('should call onSubmit for updatePortfolio', async() => {
-        useDispatchMock().mockResolvedValue({ payload: { id: 42, username: 'pm' } })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: { id: 42, username: 'pm' } })
         selectPortfolioByIdMock.mockReturnValue(returnedFoundPortfolio)
 
         render(<PortfolioPopup id = {4} />)
@@ -138,22 +144,12 @@ describe('<PortfolioPopup />', () => {
         })
     })
 
-    test('should handle owner', async() => {
-        useDispatchMock().mockResolvedValueOnce({
-            type: '/',
-            payload: [{
-                id: 24,
-                username: 'jsmith',
-                displayName: 'Hiemer Smith'
-            }]
-        })
+    test('should handle owner', () => {
         selectPortfolioByIdMock.mockReturnValue({ ...returnedFoundPortfolio })
 
         render(<PortfolioPopup id = {4} />)
 
-        userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
-        fireEvent.click(await screen.findByText(/jsmith/))
-
+        userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'bogus')
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({

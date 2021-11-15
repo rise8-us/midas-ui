@@ -1,99 +1,74 @@
 import { unwrapResult } from '@reduxjs/toolkit'
-import useDebounce from 'Hooks/useDebounce'
+import { SearchBar } from 'Components/Search'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestFindUserBy } from 'Redux/Users/actions'
-import { AutocompleteSearch } from '../AutocompleteSearch'
 
-function SearchUsers(props) {
-    const { onChange, value, growFrom, dynamicUpdate, ...autoCompleteProps } = props
-
+function SearchUsers({ onDataReturn, onChange, title, placeholder, value, ...autoCompleteProps }) {
     const dispatch = useDispatch()
 
     const [options, setOptions] = useState([])
-    const [searchTerm, setSearchTerm] = useState('')
-    const [isSearching, setIsSearching] = useState(false)
-    const [selectedUser, setSelectedUser] = useState(value)
-
-    const debouncedSearchTerm = useDebounce(searchTerm, 325)
-
-    const onUserChange = (event, values) => {
-        setSelectedUser(values)
-        typeof onChange === 'function' && onChange(event, values)
-    }
-
-    const onSearchChange = (event) => {
-        event.preventDefault()
-        setSearchTerm(event.target.value)
-    }
 
     const getOptionLabel = (option) => {
-        const displayName = option.displayName ? ` (${option.displayName})` : ''
-        return `${option.username}${displayName}`
+        if (option.displayName && option.username) {
+            return `${option.username} (${option.displayName})`
+        } else if (option.username) {
+            return `${option.username}`
+        } else {
+            return ''
+        }
     }
 
-    useEffect(() => {
-        if (debouncedSearchTerm) {
-            setIsSearching(true)
-            const searchString = `username:*${debouncedSearchTerm}* OR \
-            email:*${debouncedSearchTerm}* OR \
-            displayName:*${debouncedSearchTerm}*`
+    const onTextFieldChange = (input) => {
+        const searchValue = `username:*${input}* OR email:*${input}* OR displayName:*${input}*`
 
-            dispatch(requestFindUserBy(searchString)).then(unwrapResult)
-                .then(data => {
-                    setOptions(data)
-                    setIsSearching(false)
-                })
-        } else {
-            setOptions([])
-        }
-    }, [debouncedSearchTerm])
-
-    useEffect(() => {
-        dynamicUpdate && setSelectedUser(value)
-    }, [value])
+        dispatch(requestFindUserBy(searchValue))
+            .then(unwrapResult)
+            .then(data => {
+                typeof onDataReturn === 'function' ? onDataReturn(data) : setOptions(data)
+            })
+    }
 
     return (
-        <AutocompleteSearch
+        <SearchBar
             {...autoCompleteProps}
-            options = {options}
-            selectedOption = {selectedUser}
-            onOptionChange = {onUserChange}
-            onTextChange = {onSearchChange}
+            value = {value}
+            onChange = {onChange}
+            onTextFieldChange = {onTextFieldChange}
             getOptionLabel = {getOptionLabel}
-            noOptionsText = {(debouncedSearchTerm.length === 0)
-                ? 'Search for a user…'
-                : 'No user(s) found…'}
-            isSearching = {isSearching}
-            setIsSearching = {setIsSearching}
-            growFrom = {growFrom}
+            options = {options}
+            freeSolo
+            loadingText = 'Searching for user(s)...'
+            textFieldProps = {{
+                label: title,
+                placeholder: placeholder,
+                margin: 'dense'
+            }}
         />
     )
 }
 
 SearchUsers.propTypes = {
-    onChange: PropTypes.func,
-    growFrom: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
     title: PropTypes.string,
-    value: PropTypes.shape({
-        id: PropTypes.number,
-        username: PropTypes.string,
-        displayName: PropTypes.string
-    }),
-    freeSolo: PropTypes.bool,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+            id: PropTypes.number,
+            username: PropTypes.string,
+            displayName: PropTypes.string
+        })
+    ]),
     placeholder: PropTypes.string,
-    dynamicUpdate: PropTypes.bool,
+    onDataReturn: PropTypes.func
 }
 
 SearchUsers.defaultProps = {
-    onChange: undefined,
-    growFrom: '50%',
     title: 'Search users',
-    value: undefined,
-    freeSolo: false,
+    value: '',
     placeholder: 'username, display name, or email',
-    dynamicUpdate: false
+    onDataReturn: undefined
 }
 
 export default SearchUsers

@@ -84,8 +84,6 @@ const TeamUsers = ({ userIds, setUserIds }) => {
                 }}
                 title = ''
                 placeholder = 'Add another team member...'
-                growFrom = '100%'
-                freeSolo = {true}
                 style = {{
                     height: '32px',
                     marginTop: '8px',

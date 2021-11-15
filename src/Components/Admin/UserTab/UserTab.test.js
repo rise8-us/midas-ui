@@ -24,7 +24,11 @@ describe('<UserTab />', () => {
         email: 'yoda.2@mando.space'
     }
 
-    test('Renders', () => {
+    test('should render', async() => {
+        act(() => {
+            useDispatchMock().mockResolvedValue({ action: '/', payload: null })
+        })
+
         render(<UserTab />)
 
         expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument()

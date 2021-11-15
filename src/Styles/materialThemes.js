@@ -62,6 +62,11 @@ const theme = createTheme({
                 variant: 'standard'
             }
         },
+        MuiChip: {
+            defaultProps: {
+                variant: 'outlined'
+            }
+        },
         MuiAppBar: {
             styleOverrides: {
                 root: {
@@ -101,17 +106,6 @@ const theme = createTheme({
                 },
                 arrow: {
                     color: '#24292E'
-                }
-            }
-        },
-        MuiAutocomplete: {
-            styleOverrides: {
-                popper: {
-                    borderRadius: '2px',
-                    borderLeft: '1px solid #24292E',
-                    borderRight: '1px solid #24292E',
-                    borderBottom: '1px solid #24292E',
-                    boxShadow: '0 3px 5px -2px #000'
                 }
             }
         }

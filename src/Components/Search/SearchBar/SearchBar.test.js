@@ -1,65 +1,56 @@
 import React from 'react'
-import {
-    act, fireEvent, render, screen, userEvent, waitFor, waitForElementToBeRemoved
-} from 'Utilities/test-utils'
+import { fireEvent, render, screen, userEvent } from 'Utilities/test-utils'
 import { SearchBar } from './index'
 
 describe('<SearchBar>', () => {
 
-    test('should render', () => {
-        render(<SearchBar placeholder = 'placeholder'/>)
+    test('should handle clearing input on default render', () => {
+        render(<SearchBar
+            placeholder = 'placeholder'
+            onChange = {() => {}}
+            onTextFieldChange = {() => {}} />)
 
-        expect(screen.getByPlaceholderText('placeholder')).toBeInTheDocument()
-        expect(screen.getByTitle('Search')).toBeInTheDocument()
-    })
 
-    test('should handle clear input', () => {
-        render(<SearchBar placeholder = 'placeholder'/>)
-
-        expect(screen.queryByTitle('clear')).not.toBeInTheDocument()
         userEvent.type(screen.getByPlaceholderText('placeholder'), 'testing')
-
         expect(screen.getByDisplayValue('testing')).toBeInTheDocument()
-        expect(screen.getByTitle('clear')).toBeInTheDocument()
-        fireEvent.click(screen.getByTitle('clear'))
-        expect(screen.queryByTitle('clear')).not.toBeInTheDocument()
+
+        userEvent.clear(screen.getByDisplayValue('testing'))
         expect(screen.queryByDisplayValue('testing')).not.toBeInTheDocument()
     })
 
-    test('should not render clear icon', () => {
-        render(<SearchBar placeholder = 'placeholder' disableClearable/>)
+    test('should call getOptionLabel', async() => {
+        const getOptionalLabelMock = jest.fn((val) => val.name)
 
-        expect(screen.queryByTitle('clear')).not.toBeInTheDocument()
+        render(<SearchBar
+            placeholder = 'placeholder'
+            onChange = {() => {}}
+            onTextFieldChange = {() => {}}
+            options = {[{ name: 'testString' }]}
+            getOptionLabel = {getOptionalLabelMock}/>)
 
-        userEvent.type(screen.getByPlaceholderText('placeholder'), 'testing')
-        expect(screen.queryByTitle('clear')).not.toBeInTheDocument()
+        userEvent.type(screen.getByPlaceholderText('placeholder'), 'test')
+        fireEvent.click(await screen.findByText('testString'))
+        userEvent.tab()
+
+        expect(screen.getByDisplayValue('testString')).toBeInTheDocument()
+        expect(getOptionalLabelMock).toHaveBeenCalledWith({ name: 'testString' })
+
     })
 
-    // not triggering -- need to loook into once we starting using net reqs w/ searching & pagination
-    test.skip('should show searching icon on long running jobs', async() => {
-        const longRunningSearchMock = async() => new Promise(resolve =>
-            setTimeout(() => resolve('success'), 2000))
-        jest.useFakeTimers()
+    test('should show options', async() => {
+        const onTextFieldChangeMock = jest.fn()
+        const onChangeMock = jest.fn()
 
-        render(<SearchBar placeholder = 'placeholder' search = {longRunningSearchMock}/>)
-        userEvent.type(screen.getByPlaceholderText('placeholder'), 'testing')
+        render(<SearchBar
+            placeholder = 'placeholder'
+            onChange = { onChangeMock }
+            onTextFieldChange = { onTextFieldChangeMock }
+            options = {['testString']}
+            displayOnSearch = {false} />)
 
-        act(() => {
-            jest.advanceTimersByTime(1000)
-        })
+        userEvent.type(screen.getByPlaceholderText('placeholder'), 'test')
 
-        expect(screen.getByTitle('searching')).toBeInTheDocument()
-
-        waitForElementToBeRemoved(() => screen.getByTitle('searching'))
-    })
-
-    test('should call search prop', async() => {
-        const searchMock = jest.fn()
-
-        render(<SearchBar placeholder = 'placeholder' search = {searchMock}/>)
-        userEvent.type(screen.getByPlaceholderText('placeholder'), 'testing')
-
-        waitFor(() => expect(searchMock).toHaveBeenCalledWith('testing'))
+        expect(screen.getByText('testString')).toBeInTheDocument()
     })
 
 })

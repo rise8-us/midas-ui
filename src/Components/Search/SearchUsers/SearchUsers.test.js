@@ -1,5 +1,5 @@
 import React from 'react'
-import { act, fireEvent, render, screen, useDispatchMock, userEvent } from 'Utilities/test-utils'
+import { act, render, screen, useDispatchMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { SearchUsers } from './index'
 
 describe('<SearchUsers />', () => {
@@ -17,35 +17,32 @@ describe('<SearchUsers />', () => {
         }
     ]
 
-    test('should render default', () => {
-        render(<SearchUsers />)
-
-        expect(screen.getByText(/Search users/i)).toBeInTheDocument()
-        expect(screen.getByDisplayValue('')).toBeInTheDocument()
+    beforeEach(() => {
+        useDispatchMock()
+            .mockResolvedValue({ type: '/', payload: allUsers })
     })
 
-    test('should render props', () => {
-        useDispatchMock().mockResolvedValue({ payload: allUsers })
-        render(<SearchUsers value = {allUsers[1]} title = 'test title'/>)
+    test('should dispatch to onDataReturn', async() => {
+        const onDataReturnMock = jest.fn()
+        render(<SearchUsers onChange = {() => {}} onDataReturn = { onDataReturnMock }/>)
 
-        expect(screen.getByText('test title')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('foobar')).toBeInTheDocument()
+        act(() => {
+            userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
+        })
+
+        waitFor(() => {
+            expect(onDataReturnMock).toHaveBeenCalledWith(allUsers)
+        })
     })
 
-    test('should call onChange prop', async() => {
-        jest.useFakeTimers()
-        const onChangePropMock = jest.fn()
-        useDispatchMock().mockResolvedValue({ type: '/', payload: allUsers })
+    test('should display users in dropdown', async() => {
+        render(<SearchUsers onChange = {() => {}} />)
 
-        render(<SearchUsers onChange = {onChangePropMock} freeSolo dynamicUpdate/>)
+        act(() => {
+            userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'o')
+        })
 
-        userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
-
-        act(() => { jest.runAllTimers() })
-
-        fireEvent.click(await screen.findByText(/jsmith/))
-
-        expect(onChangePropMock).toHaveBeenCalledTimes(1)
+        expect(await screen.findByText(/Jacob/)).toBeInTheDocument()
+        expect(screen.getByText('foobar')).toBeInTheDocument()
     })
-
 })

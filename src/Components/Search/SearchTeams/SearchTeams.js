@@ -4,8 +4,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectAllTeams } from 'Redux/Teams/selectors'
 
-function SearchTeams(props) {
-    const { onChange, value, ...autocompleteProps } = props
+function SearchTeams({ onChange, value, ...autocompleteProps }) {
 
     const allTeams = useSelector(selectAllTeams)
 
