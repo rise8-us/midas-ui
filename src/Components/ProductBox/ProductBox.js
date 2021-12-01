@@ -15,10 +15,16 @@ const BoxStyled = styled(Box)(({ theme }) => ({
 }))
 
 const TypographyTitleStyled = styled(Typography)(() => ({
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: '16px 0',
-    color: 'inherit'
+    padding: '16px 0 0',
+    color: 'inherit',
+    textOverflow: 'ellipsis',
+    lineHeight: 'normal',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    display: '-webkit-box',
+    overflow: 'hidden',
+    wordBreak: 'break-word',
+    textAlign: 'center'
 }))
 
 function ProductBox({ name, onClick, color, projects }) {
@@ -34,8 +40,14 @@ function ProductBox({ name, onClick, color, projects }) {
             }}
             onClick = {onClick}
         >
-            <TypographyTitleStyled variant = 'h6'>{name}</TypographyTitleStyled>
-            <Grid container justifyContent = 'center' wrap = 'wrap' data-testid = 'ProductBox__Grid-container'>
+
+            <TypographyTitleStyled variant = 'h6' >{name}</TypographyTitleStyled>
+            <Grid container
+                justifyContent = 'center'
+                wrap = 'wrap'
+                data-testid = 'ProductBox__Grid-container'
+                paddingTop = '16px'
+            >
                 {projects.map((project, index) => (
                     <Grid item key = {index} data-testid = 'ProductBox__Grid-item'>
                         <Tooltip title = {project.name}>

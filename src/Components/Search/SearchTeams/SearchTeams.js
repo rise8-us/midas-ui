@@ -9,7 +9,7 @@ function SearchTeams({ onChange, value, ...autocompleteProps }) {
     const allTeams = useSelector(selectAllTeams)
 
     const onTeamChange = (event, values) => {
-        typeof onChange === 'function' && onChange(event, values)
+        onChange(event, values)
     }
 
     return (
@@ -20,13 +20,13 @@ function SearchTeams({ onChange, value, ...autocompleteProps }) {
             isOptionEqualToValue = {(option, selectedOption) => option.id === selectedOption.id}
             onChange = {onTeamChange}
             value = {value ?? []}
-            ChipProps = {{ variant: 'outlined' }}
+            ChipProps = {{ variant: 'outlined', size: 'small' }}
             renderInput = {(params) =>
                 <TextField
                     {...params}
                     label = {'Team(s)'}
                     margin = 'dense'
-                    placeholder = {'teamname'}
+                    placeholder = {'team name'}
                 />
             }
             {...autocompleteProps}
@@ -40,7 +40,7 @@ SearchTeams.propTypes = {
 }
 
 SearchTeams.defaultProps = {
-    onChange: undefined,
+    onChange: (_e, v) => v,
     value: undefined,
 }
 

@@ -8,6 +8,7 @@ import { styled } from 'Styles/materialThemes'
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
+    maxWidth: '450px',
     height: 'fit-content',
     backgroundColor: theme.palette.grey[1100],
     borderRadius: 16,
@@ -28,11 +29,8 @@ function CapabilitiesSidebar() {
             <CardHeader
                 title = 'Mission Thread'
                 subheader = 'Integrated Air and Missile Defense'
-                titleTypographyProps = {{
-                    variant: 'h5',
-                    color: 'text.primary',
-                    'data-testid': 'CapabilitiesSidebar__header-title',
-                }}
+                titleTypographyProps = {{ variant: 'h6' }}
+                subheaderTypographyProps = {{ variant: 'body2' }}
                 action = {
                     userLoggedIn?.roles?.PORTFOLIO_LEAD && (
                         <IconButton

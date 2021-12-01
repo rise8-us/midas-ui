@@ -99,7 +99,7 @@ describe('<TeamPopup />', () => {
         })
     })
 
-    test('should call onSubmit to update team', async() => {
+    test('should call onSubmit to update team without ProductOwner', async() => {
         selectTeamByIdMock.mockReturnValue({ ...returnedNewTeam, id: 4, userIds: [9] })
         useDispatchMock().mockResolvedValue({ type: '/', payload: [
             {
@@ -116,7 +116,7 @@ describe('<TeamPopup />', () => {
         userEvent.clear(nameInput)
         userEvent.type(nameInput, name)
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
             userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
         }
 
@@ -132,12 +132,50 @@ describe('<TeamPopup />', () => {
             userIds: [9, 24]
         })
 
+    })
+
+
+    test('should call onSubmit to update team with ProductOwner', async() => {
+        selectTeamByIdMock.mockReturnValue({ ...returnedNewTeam, id: 4, userIds: [9] })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: [
+            {
+                id: 10,
+                username: 'jsmith'
+            }
+        ] })
+
+        render(<TeamPopup id = {4} productIds = {[24]} />)
+
+        const name = 'My Edited Team'
+
+        const nameInput = screen.getByTestId('TeamPopup__input-name')
+        userEvent.clear(nameInput)
+        userEvent.type(nameInput, name)
+
+        for (let i = 0; i < 4; i++) {
+            userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
+        }
+
+        fireEvent.click(screen.getByText('Submit'))
+
+        expect(screen.getByTitle('Product Owner'))
+        expect(submitUpdateTeamMock).toHaveBeenCalledWith({
+            ...returnedFoundTeam,
+            productIds: [24],
+            name,
+            productManagerId: 24,
+            designerId: 24,
+            techLeadId: 24,
+            userIds: [9, 24]
+        })
+
         expect(requestUpdateProductMock).toHaveBeenCalledWith({
             ...returnedProduct,
             ownerId: 24,
             childIds: []
         })
     })
+
 
     test('should close popup', () => {
         render(<TeamPopup />)

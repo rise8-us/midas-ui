@@ -5,10 +5,7 @@ import { SearchBar } from './index'
 describe('<SearchBar>', () => {
 
     test('should handle clearing input on default render', () => {
-        render(<SearchBar
-            placeholder = 'placeholder'
-            onChange = {() => {}}
-            onTextFieldChange = {() => {}} />)
+        render(<SearchBar placeholder = 'placeholder' onChange = {jest.fn} onTextFieldChange = {jest.fn} />)
 
 
         userEvent.type(screen.getByPlaceholderText('placeholder'), 'testing')
@@ -23,10 +20,11 @@ describe('<SearchBar>', () => {
 
         render(<SearchBar
             placeholder = 'placeholder'
-            onChange = {() => {}}
-            onTextFieldChange = {() => {}}
+            onChange = {jest.fn}
+            onTextFieldChange = {jest.fn}
             options = {[{ name: 'testString' }]}
-            getOptionLabel = {getOptionalLabelMock}/>)
+            getOptionLabel = {getOptionalLabelMock}
+        />)
 
         userEvent.type(screen.getByPlaceholderText('placeholder'), 'test')
         fireEvent.click(await screen.findByText('testString'))

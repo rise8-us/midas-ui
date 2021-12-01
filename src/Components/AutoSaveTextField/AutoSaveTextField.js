@@ -4,9 +4,13 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import FormatErrors from 'Utilities/FormatErrors'
 
+const performAction = (canDo, action, value) => canDo && action(value)
+
+const doubleValidate = (first, second) => first && second ? true : false
+
 function AutoSaveTextField({
     canEdit, className, dataTestId, enableSpellCheck, errors,
-    initialValue, onSave, clearAfterSave, tooltip, ...textFieldProps }) {
+    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, ...textFieldProps }) {
 
     const ref = useRef()
 
@@ -21,7 +25,7 @@ function AutoSaveTextField({
     }
 
     const onMouseEnter = () => {
-        canEdit && setHasHover(true)
+        performAction(canEdit, setHasHover, true)
     }
 
     const onMouseLeave = () => {
@@ -30,12 +34,12 @@ function AutoSaveTextField({
 
     const onMouseDown = (event) => {
         event.stopPropagation()
-        canEdit && setInEditMode(true)
+        performAction(canEdit, setInEditMode, true)
     }
 
     const onFocus = (event) => {
         event.stopPropagation()
-        canEdit && setInEditMode(true)
+        performAction(canEdit, setInEditMode, true)
 
         event.target.setSelectionRange(0, event.target.value.length)
     }
@@ -49,17 +53,22 @@ function AutoSaveTextField({
     const onKeyDown = (event) => {
         event.stopPropagation()
 
-        if (event.key === 'Enter') {
-            ref.current.blur()
-        } else if (event.key === 'Escape') {
+        if (event.key === 'Enter') ref.current.blur()
+        else if (event.key === 'Escape') {
             setValue(initialValue)
             setInEditMode(false)
         }
     }
 
     const executeSave = () => {
-        canEdit && onSave(value)
-        clearAfterSave && setValue('')
+        if (!canEdit) return
+
+        if (!revertOnEmpty || (revertOnEmpty && value.trim().length > 0)) {
+            onSave(value)
+            performAction(clearAfterSave, setValue, '')
+        } else {
+            setValue(initialValue)
+        }
     }
 
     useEffect(() => {
@@ -71,18 +80,19 @@ function AutoSaveTextField({
             {...textFieldProps}
             InputProps = {{
                 spellCheck: enableSpellCheck,
-                disableUnderline: !inEditMode && !hasHover,
+                disableUnderline: doubleValidate(!inEditMode, !hasHover),
                 'data-testid': dataTestId,
                 className,
-                readOnly: !canEdit
+                readOnly: !canEdit,
+                ...textFieldProps.InputProps,
             }}
             inputProps = {{
                 ref,
                 ...textFieldProps.inputProps
             }}
             value = {value}
-            label = {textFieldProps.label &&
-                <LabelTooltip
+            label = {doubleValidate(textFieldProps.label, tooltip)
+                ? <LabelTooltip
                     text = {textFieldProps.label}
                     typographyProps = {{
                         variant: 'h6',
@@ -96,6 +106,7 @@ function AutoSaveTextField({
                     }}
                     iconFontSize = 'small'
                 />
+                : textFieldProps.label
             }
             onFocus = {onFocus}
             onMouseEnter = {onMouseEnter}
@@ -127,6 +138,7 @@ AutoSaveTextField.propTypes = {
     onSave: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     clearAfterSave: PropTypes.bool,
+    revertOnEmpty: PropTypes.bool,
     tooltip: PropTypes.string,
 }
 
@@ -144,6 +156,7 @@ AutoSaveTextField.defaultProps = {
     name: '',
     placeholder: '',
     clearAfterSave: false,
+    revertOnEmpty: false,
     tooltip: '',
 }
 

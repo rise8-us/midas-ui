@@ -13,7 +13,7 @@ describe('<DraggableRow>', () => {
     test('should render readonly', () => {
         const newProps = { ...props, hasEdit: false }
 
-        render(<DraggableRow {...newProps} />)
+        render(<DraggableRow {...newProps} tooltipText = 'test'/>)
 
         fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
 

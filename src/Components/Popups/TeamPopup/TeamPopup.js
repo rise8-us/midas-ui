@@ -43,7 +43,6 @@ function TeamPopup({ id, productIds }) {
 
     const [userIds, setUserIds] = useState(excludeUserIds(
         team.userIds, [team.productManagerId, team.techLeadId, team.designerId]))
-
     const product = useSelector(state => selectProductById(state, productIds[0]))
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
@@ -90,11 +89,14 @@ function TeamPopup({ id, productIds }) {
             userIds: Array.from(userIdsFinal),
         }))
 
-        dispatch(requestUpdateProduct({
-            ...product,
-            ownerId: productOwnerId,
-            childIds: []
-        }))
+        if (productIds.length) {
+            dispatch(requestUpdateProduct({
+                ...product,
+                ownerId: productOwnerId,
+                childIds: []
+            }))
+        }
+
     }
 
     const requestUserData = (userId, field) => {
@@ -105,6 +107,15 @@ function TeamPopup({ id, productIds }) {
             })
     }
 
+    const displayProductOwner = () => {
+        return productIds.length ?
+            <SearchUsers
+                title = 'Product Owner'
+                value = {formValues.productOwner}
+                onChange = {(_e, values) => handleChange('productOwner', values)}
+            /> :
+            null
+    }
     useEffect(() => {
         product.ownerId && requestUserData(product.ownerId, 'productOwner')
         team.productManagerId && requestUserData(team.productManagerId, 'productManager')
@@ -131,11 +142,7 @@ function TeamPopup({ id, productIds }) {
                     margin = 'dense'
                     required
                 />
-                <SearchUsers
-                    title = 'Product Owner'
-                    value = {formValues.productOwner}
-                    onChange = {(_e, values) => handleChange('productOwner', values)}
-                />
+                {displayProductOwner()}
                 <SearchUsers
                     title = 'Product Manager'
                     value = {formValues.productManager}

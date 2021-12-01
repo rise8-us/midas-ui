@@ -4,7 +4,20 @@ import { Header } from 'Components/Header'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, onSubmit, onClose }) => {
+const Popup = ({
+    children,
+    disableDefaultPadding,
+    disableDefaultDivider,
+    hideRequiredText,
+    onClose,
+    onSubmit,
+    open,
+    submitText,
+    subtitle,
+    subtitleVariant,
+    title,
+}) => {
+
     return (
         <Dialog
             data-testid = 'Popup__dialog'
@@ -16,6 +29,7 @@ const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, 
                 title = {title}
                 titleVariant = 'h6'
                 subtitle = {subtitle}
+                subtitleVariant = {subtitleVariant}
                 icon = {
                     <IconButton
                         data-testid = 'Popup__button-close'
@@ -32,7 +46,7 @@ const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, 
                     </Typography>
                 }
             />
-            <Divider />
+            {!disableDefaultDivider && <Divider />}
             <DialogContent sx = {{
                 '&::-webkit-scrollbar': {
                     width: '12px'
@@ -44,7 +58,7 @@ const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, 
                     backgroundColor: 'divider',
                     WebkitBorderRadius: '12px'
                 },
-                p: '16px 16px 50px 16px'
+                p: disableDefaultPadding ? '20px 24px' : '16px 16px 50px 16px'
             }}>
                 {children}
             </DialogContent>
@@ -73,25 +87,31 @@ const Popup = ({ children, submitText, title, subtitle, hideRequiredText, open, 
 }
 
 Popup.propTypes = {
-    title: PropTypes.string.isRequired,
-    open: PropTypes.bool,
-    subtitle: PropTypes.string,
-    submitText: PropTypes.string,
-    onSubmit: PropTypes.func,
-    hideRequiredText: PropTypes.bool,
-    onClose: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.arrayOf(PropTypes.element)
-    ]).isRequired
+    ]).isRequired,
+    disableDefaultDivider: PropTypes.bool,
+    disableDefaultPadding: PropTypes.bool,
+    hideRequiredText: PropTypes.bool,
+    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func,
+    open: PropTypes.bool,
+    submitText: PropTypes.string,
+    subtitle: PropTypes.string,
+    subtitleVariant: PropTypes.string,
+    title: PropTypes.string.isRequired,
 }
 
 Popup.defaultProps = {
+    disableDefaultDivider: false,
+    disableDefaultPadding: false,
+    hideRequiredText: false,
+    onSubmit: undefined,
     open: true,
     submitText: 'Submit',
     subtitle: null,
-    hideRequiredText: false,
-    onSubmit: undefined
+    subtitleVariant: 'h6'
 }
 
 export default Popup

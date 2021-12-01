@@ -31,7 +31,8 @@ test('selectRoadmapById - returns default roadmap object', () => {
     expect(roadmaps).toEqual({
         title: '',
         description: '',
-        status: 'FUTURE'
+        status: 'FUTURE',
+        index: 0
     })
 })
 

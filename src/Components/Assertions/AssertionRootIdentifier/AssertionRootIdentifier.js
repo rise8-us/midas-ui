@@ -1,49 +1,51 @@
-import { alpha, Tooltip, Typography } from '@mui/material'
+import { alpha, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { styled } from 'Styles/materialThemes'
 
-const defaultStyles = {
-    borderRadius: 4,
-    minWidth: 32,
-    textAlign: 'center',
-    padding: '0 4px',
-    cursor: 'pointer'
-}
-
-const TypographyStyled = styled(Typography)(({ theme, selected }) => ({
+const StyledDiv = styled('div')(({ theme, selected }) => ({
     border: selected
         ? `1px solid ${theme.palette.text.primary}`
         : `1px solid ${alpha(theme.palette.secondary.main, 0.4)}`,
-    fontWeight: selected ? 900 : 400,
     '&:hover': {
         borderColor: theme.palette.text.primary
     },
-    ...defaultStyles
+    borderRadius: 4,
+    minWidth: 32,
+    minHeight: 26,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0 4px',
+    cursor: 'pointer',
+    '& *:first-of-type': {
+        color: selected ? theme.palette.text.primary : theme.palette.text.secondary,
+        fontWeight: selected ? 900 : 400
+    }
 }))
-function AssertionRootIdentifier({ id, title, selected, onClick }) {
+
+export default function AssertionRootIdentifier({ title, selected, indicator, onClick }) {
     return (
         <Tooltip title = {title} arrow placement = 'top'>
-            <TypographyStyled
+            <StyledDiv
                 selected = {selected}
-                color = {selected ? 'text.primary' : 'text.secondary'}
                 onClick = {onClick}
+                data-testid = {`AssertionRootIdentifier-${selected}`}
             >
-                {id}
-            </TypographyStyled>
+                {indicator}
+            </StyledDiv>
         </Tooltip>
     )
 }
 
 AssertionRootIdentifier.propTypes = {
-    id: PropTypes.number.isRequired,
-    onClick: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    selected: PropTypes.bool
+    indicator: PropTypes.node.isRequired,
+    title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
+    selected: PropTypes.bool,
+    onClick: PropTypes.func
 }
 
 AssertionRootIdentifier.defaultProps = {
+    onClick: (e) => e,
     selected: false
 }
-
-export default AssertionRootIdentifier

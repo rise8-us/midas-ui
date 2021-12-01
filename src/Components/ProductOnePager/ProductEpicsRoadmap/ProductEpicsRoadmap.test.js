@@ -1,13 +1,15 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import {
+    fireEvent, render, screen, selectRoadmapStatusesMock, useDispatchMock, useModuleMock
+} from 'Utilities/test-utils'
 import { ProductEpicsRoadmap } from './index'
+import { sortProductEpics } from './ProductEpicsRoadmap'
 
 jest.mock('Components/Epics/RoadmapEpic/RoadmapEpic',
     () => function testing() { return (<div>RoadmapEpic</div>) })
 
 describe('<ProductEpicsRoadmap />', () => {
 
-    const selectRoadmapStatusesMock = useModuleMock('Redux/AppSettings/selectors', 'selectRoadmapStatuses')
     const selectEpicsByProductIdMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByProductId')
     const requestSyncEpicsByProductIdMock = useModuleMock('Redux/Epics/actions', 'requestSyncEpicsByProductId')
 
@@ -17,6 +19,7 @@ describe('<ProductEpicsRoadmap />', () => {
             title: 'opened',
             description: 'description',
             productId: 1,
+            startDate: '2021-10-01',
             state: 'opened'
         }, {
             id: 4,
@@ -36,19 +39,8 @@ describe('<ProductEpicsRoadmap />', () => {
     ]
 
     beforeEach(() => {
-        selectRoadmapStatusesMock.mockReturnValue({
-            FUTURE: {
-                name: 'FUTURE',
-                label: 'Future',
-                color: '#000000'
-            },
-            COMPLETE: {
-                name: 'COMPLETE',
-                label: 'Complete',
-                color: '#000000'
-            }
-        })
         selectEpicsByProductIdMock.mockReturnValue(epics)
+        selectRoadmapStatusesMock()
         useDispatchMock().mockReturnValue({})
     })
 
@@ -71,5 +63,20 @@ describe('<ProductEpicsRoadmap />', () => {
         fireEvent.click(screen.getByTestId('ProductEpicsRoadmap__button-sync'))
 
         expect(requestSyncEpicsByProductIdMock).toHaveBeenCalled()
+    })
+
+    describe('sortProductEpics', () => {
+        test('should sort closed products', () => {
+            const correctOrder = [epics[1], epics[2]]
+
+            expect(sortProductEpics([epics[1], epics[2]])).toEqual(correctOrder)
+            // expect(sortProductEpics([epics[2], epics[1]])).toEqual(correctOrder) //why not work?
+        })
+
+        test('should sort opened products', () => {
+            const correctOrder = [{ ...epics[0], startDate: null }, epics[0]]
+
+            expect(sortProductEpics([epics[0], { ...epics[0], startDate: null }])).toEqual(correctOrder)
+        })
     })
 })

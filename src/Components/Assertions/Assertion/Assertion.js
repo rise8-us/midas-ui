@@ -64,7 +64,7 @@ const Assertion = ({ id, order, defaultExpanded, productId, hasEdit }) => {
             expandable = {childAssertions.length > 0}
             defaultExpanded = {defaultExpanded}
             expanded = {childType ? undefined : false}
-            rootAssertion = {type === 'OBJECTIVE'}
+            rootAssertion = {assertion.productId === productId}
         >
             {childAssertions.map((child, key) => {
                 return (

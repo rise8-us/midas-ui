@@ -5,14 +5,17 @@ const mockState = {
         12: {
             id: 12,
             productId: 2,
-            parentId: null,
-            type: 'FOO'
+            parentId: null
         },
         13: {
             id: 13,
             productId: 2,
-            parentId: 12,
-            type: 'BAR'
+            parentId: 12
+        },
+        14: {
+            id: 13,
+            productId: 3,
+            parentId: 13
         }
     }
 }
@@ -69,20 +72,18 @@ test('selectAssertionsByParentId - returns array of items', () => {
     expect(assertions).toEqual([mockState.assertions[13]])
 })
 
-test('selectAssertionsByType - returns object in array', () => {
-    expect(selectors.selectAssertionsByType(mockState, 'foo')).toEqual([mockState.assertions[12]])
+test('selectAssertionsByProductId - returns array of product objectives', () => {
+    const assertions = selectors.selectAssertionsByProductId(mockState, 3)
+
+    expect(assertions).toEqual([mockState.assertions[14]])
 })
 
-test('selectAssertionsByType - invalid type', () => {
-    expect(selectors.selectAssertionsByType(mockState, 1)).toEqual([])
-})
-
-test('selectAssertionsByTypeAndProductId - invalid type', () => {
-    expect(selectors.selectAssertionsByTypeAndProductId(mockState, 'FOO', 2)).toEqual([mockState.assertions[12]])
+test('selectAssertionsByProductId - invalid product id', () => {
+    expect(selectors.selectAssertionsByProductId(mockState, 6)).toEqual([])
 })
 
 test('selectRootAssertionId - undefined parentId should return undefined', () => {
-    expect(selectors.selectRootAssertionId(mockState, 14)).toEqual(undefined)
+    expect(selectors.selectRootAssertionId(mockState, 15)).toEqual(undefined)
 })
 
 test('selectRootAssertionId - null parentId should return id', () => {

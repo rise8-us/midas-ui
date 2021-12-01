@@ -3,7 +3,8 @@ export const selectRoadmapById = (state, id) => {
     if (!roadmap) return {
         title: '',
         description: '',
-        status: 'FUTURE'
+        status: 'FUTURE',
+        index: 0
     }
 
     return roadmap

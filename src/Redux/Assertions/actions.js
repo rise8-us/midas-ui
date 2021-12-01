@@ -36,6 +36,14 @@ export const requestDeleteAssertion = createAsyncThunk(
     }
 )
 
+export const requestArchiveAssertion = createAsyncThunk(
+    Constants.ARCHIVE_ASSERTION,
+    async({ id, isArchived }, { rejectWithValue }) => {
+        const request = { endpoint: `/api/assertions/${id}/archive`, method: 'PUT', body: { isArchived } }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
+
 export const requestFetchAllBlockedAssertions = createAsyncThunk(
     Constants.FETCH_BLOCKED_ASSERTIONS,
     async(_, { rejectWithValue }) => {

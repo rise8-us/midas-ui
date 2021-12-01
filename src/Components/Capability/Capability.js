@@ -1,5 +1,6 @@
-import { EventNoteOutlined } from '@mui/icons-material'
-import { Grid, Paper } from '@mui/material'
+import { Article } from '@mui/icons-material'
+import { Box, Grid } from '@mui/material'
+import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -9,23 +10,29 @@ import CapabilityConstants from 'Redux/Capabilities/constants'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
 import { styled } from 'Styles/materialThemes'
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
-    padding: 8,
-    backgroundColor: 'inherit',
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: theme.palette.secondary.main,
-
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    padding: theme.spacing(1),
+    border: '1px solid',
+    borderRadius: theme.spacing(1),
+    borderColor: alpha(theme.palette.secondary.main, .4),
     '&:hover': {
         borderColor: theme.palette.text.primary,
     },
 }))
 
-const AutoSaveTextFieldDescription = styled(AutoSaveTextField)(({ theme }) => ({
-    lineHeight: '21px',
-    letterSpacing: '0.25px',
-    fontSize: '11px',
-    color: theme.palette.secondary.main,
+const StyledArticle = styled(Article)(({ theme }) => ({
+    marginRight: theme.spacing(1)
+}))
+
+const StyledAutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme, color }) => ({
+    ...theme.typography.body2,
+    color: theme.palette[color].main,
+    '&> *': { textTransform: 'uppercase' }
+}))
+
+const StyledAutoSaveTextFieldDescription = styled(AutoSaveTextField)(({ theme }) => ({
+    ...theme.typography.caption,
+    color: theme.palette.text.secondary,
 }))
 
 const initDetails = (create) => {
@@ -43,65 +50,43 @@ function Capability({ id, hasEdit }) {
     const context = initDetails(capability.id === undefined)
 
     const updateCapability = (key, value) => {
-        if (key !== 'description' && value.trim().length === 0) return
-
-        dispatch(
-            context.request({
-                ...capability,
-                [key]: value,
-                referenceId: 0,
-            })
-        )
+        dispatch(context.request({
+            referenceId: 0,
+            ...capability,
+            [key]: value,
+        }))
     }
 
     return (
-        <StyledPaper variant = 'outlined'>
-            <Grid container spacing = {1}>
-                <Grid
-                    item
-                    sx = {{
-                        color: context.isCreate ? 'text.primary' : 'primary.main'
-                    }}
-                >
-                    <EventNoteOutlined fontSize = 'small' />
-                </Grid>
-                <Grid container item direction = 'column' xs = {10} s = {10}>
-                    <Grid item style = {{ paddingTop: 1 }}>
-                        <AutoSaveTextField
-                            canEdit = {hasEdit}
-                            initialValue = {capability.title}
-                            onSave = {(value) => updateCapability('title', value)}
-                            placeholder = 'NEW CAPABILITY NEEDS STATEMENT'
-                            inputProps = {{
-                                style: {
-                                    paddingTop: 0,
-                                    paddingBottom: 0,
-                                },
-                            }}
-                            fullWidth
-                            clearAfterSave
-                        />
-                    </Grid>
-                    {!context.isCreate && (
-                        <Grid item>
-                            <AutoSaveTextFieldDescription
-                                canEdit = {hasEdit}
-                                initialValue = {capability.description}
-                                onSave = {(value) => updateCapability('description', value)}
-                                placeholder = 'Enter Operational Context'
-                                InputProps = {{
-                                    style: {
-                                        paddingTop: 0,
-                                    },
-                                }}
-                                fullWidth
-                                multiline
-                            />
-                        </Grid>
-                    )}
-                </Grid>
+        <StyledGrid container direction = 'column'>
+            <Grid item>
+                <Box display = 'flex' alignItems = 'center'>
+                    <StyledArticle fontSize = 'small' color = {context.isCreate ? 'secondary' : 'primary'}/>
+                    <StyledAutoSaveTextFieldTitle
+                        color = {context.isCreate ? 'secondary' : 'primary'}
+                        canEdit = {hasEdit}
+                        initialValue = {capability.title}
+                        onSave = {(value) => updateCapability('title', value)}
+                        placeholder = 'NEW CAPABILITY NEEDS STATEMENT'
+                        clearAfterSave = {context.isCreate}
+                        revertOnEmpty
+                        fullWidth
+                    />
+                </Box>
             </Grid>
-        </StyledPaper>
+            <Grid item paddingLeft = '30px'>
+                {!context.isCreate && (hasEdit || capability.description) &&
+                    <StyledAutoSaveTextFieldDescription
+                        canEdit = {hasEdit}
+                        initialValue = {capability.description}
+                        onSave = {(value) => updateCapability('description', value)}
+                        placeholder = 'Enter Operational Context'
+                        fullWidth
+                        multiline
+                    />
+                }
+            </Grid>
+        </StyledGrid>
     )
 }
 

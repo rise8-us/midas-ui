@@ -13,7 +13,8 @@ const allRoadmapsResponse = [
         title: 'roadmap2',
         description: 'description2',
         productId: 3,
-        isSupported: false
+        isSupported: false,
+        isHidden: false
     }
 ]
 
@@ -26,6 +27,7 @@ const updatedRoadmap = {
 }
 
 const deleteRoadmap = { id: 1 }
+const hiddenRoadmap = { id: 2, isHidden: true }
 
 describe('Roadmaps Reducer', () => {
     test('should handle initial state', () => {
@@ -57,5 +59,11 @@ describe('Roadmaps Reducer', () => {
         const actions = [{ type: reduxActions.requestDeleteRoadmap.fulfilled, payload: deleteRoadmap }]
         const state = actions.reduce(reducer, { 1: allRoadmapsResponse[0] })
         expect(state).toEqual({})
+    })
+
+    test('Hide Roadmap', () => {
+        const actions = [{ type: reduxActions.requestHideRoadmap.fulfilled, payload: hiddenRoadmap }]
+        const state = actions.reduce(reducer, { 2: allRoadmapsResponse[1] })
+        expect(state).toEqual({ 2: hiddenRoadmap })
     })
 })

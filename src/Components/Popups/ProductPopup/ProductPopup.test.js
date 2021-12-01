@@ -1,41 +1,35 @@
 import React from 'react'
-import { act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent,
+    mockProductConfigurationFields,
+    mockSearchUsersComponent,
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
+} from 'Utilities/test-utils'
 import { ProductPopup } from './index'
+
+jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange }) {
+    return mockSearchUsersComponent({ title, onChange })
+})
+
+jest.mock('Components/ProductConfigurationFields/ProductConfigurationFields', () => function testing(props) {
+    return mockProductConfigurationFields(props)
+})
 
 describe('<ProductPopup />', () => {
     jest.setTimeout(60000)
 
+    const selectRequestErrorsMock = useModuleMock('Redux/Errors/selectors', 'selectRequestErrors')
+    const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
+
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
-    const submitProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
+    const submitCreateProductMock = useModuleMock('Redux/Products/actions', 'requestCreateProduct')
     const submitUpdateProductMock = useModuleMock('Redux/Products/actions', 'requestUpdateProduct')
-    const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
-    const selectProjectsWithNoProductIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectsWithNoProductId')
 
-    const returnedTags = [
-        { id: 4, label: 'Tag 1', description: '', color: '#000000' },
-        { id: 2, label: 'Tag 2', description: '', color: '#000000' },
-        { id: 13, label: 'scoped::label 1', description: '', color: '#000000' },
-        { id: 14, label: 'scoped::label 2', description: '', color: '#000000' }
-    ]
-
-    const returnedProjects = [
-        { id: 20, name: 'project 1' },
-        { id: 21, name: 'project 2' },
-    ]
-
-    const returnedSourceControl = [
-        { id: 10, name: 'orig source control', description: '', baseUrl: 'orig_fake_url' },
-        { id: 13, name: 'test source control', description: '', baseUrl: 'fake_url' }
-    ]
-
-    const returnedTeams = [
-        { id: 1, name: 'team 1' },
-        { id: 2, name: 'team 2' },
-        { id: 3, name: 'team 3' },
-        { id: 4, name: 'team 4' },
-    ]
-
-    const returnedFoundProduct = {
+    const existingProduct = {
         id: 4,
         name: 'Midas Product',
         description: 'New Product',
@@ -45,32 +39,59 @@ describe('<ProductPopup />', () => {
         tagIds: [4, 13],
         ownerId: null,
         teamIds: [1],
-        tags: [returnedTags[0], returnedTags[2]],
-        projects: [returnedProjects[0]],
+        tags: [],
+        projects: [],
         gitlabGroupId: 1,
         sourceControlId: 10,
     }
 
+    const newProduct = {
+        name: '',
+        description: '',
+        tagIds: [],
+        tags: [],
+        projects: [],
+        teamIds: []
+    }
+
     beforeEach(() => {
-        useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
-        selectTagsByTypesMock.mockReturnValue(returnedTags)
-        selectProjectsWithNoProductIdMock.mockReturnValue(returnedProjects)
+        useDispatchMock().mockResolvedValue()
+        selectProductByIdMock.mockReturnValue(existingProduct)
+        selectRequestErrorsMock.mockReturnValue([])
     })
 
-    test('should render properly', async() => {
-        render(<ProductPopup />)
-
-        expect(await screen.findByText('Create Product')).toBeInTheDocument()
-    })
-
-    test('should call onSubmit', async() => {
-        useDispatchMock().mockResolvedValue({ payload: [] })
+    test('should render properly', () => {
+        selectProductByIdMock.mockReturnValue(newProduct)
 
         render(<ProductPopup />)
 
-        fireEvent.click(await screen.findByText('Submit'))
+        expect(screen.getByText('Create Product')).toBeInTheDocument()
+    })
 
-        expect(submitProductMock).toHaveBeenCalledWith({
+    test('should close popup', () => {
+        render(<ProductPopup />)
+
+        fireEvent.click(screen.getByText('cancel'))
+
+        expect(closePopupMock).toHaveBeenCalled()
+    })
+
+    test('should display error messages', () => {
+        selectRequestErrorsMock.mockReturnValue(['product name'])
+
+        render(<ProductPopup/>)
+
+        expect(screen.getByText('product name')).toBeInTheDocument()
+    })
+
+    test('should call onSubmit', () => {
+        selectProductByIdMock.mockReturnValue(newProduct)
+
+        render(<ProductPopup />)
+
+        fireEvent.click(screen.getByText('Submit'))
+
+        expect(submitCreateProductMock).toHaveBeenCalledWith({
             name: '',
             description: '',
             vision: undefined,
@@ -83,131 +104,96 @@ describe('<ProductPopup />', () => {
             teamIds: [],
             type: 'PRODUCT',
             childIds: [],
-            gitlabGroupId: undefined,
+            gitlabGroupId: null,
             sourceControlId: null,
             ownerId: null,
+            roadmapType: 'MANUAL'
         })
     })
 
-    test('should close popup', async() => {
-        render(<ProductPopup />)
-
-        fireEvent.click(await screen.findByTestId('Popup__button-close'))
-
-        expect(closePopupMock).toHaveBeenCalled()
-    })
-
-    test('should display error messages', async() => {
-        const state = {
-            errors: {
-                'products/createOne': [
-                    'product name',
-                    'Project with error 1',
-                    'Project with error 2',
-                    'Tag error'
-                ]
-            }
-        }
-        render(<ProductPopup />, { initialState: state })
-
-        expect(await screen.findByText('product name')).toBeInTheDocument()
-        expect(screen.getByText('Tag error')).toBeInTheDocument()
-        expect(screen.getByText(/Project with error 1/i)).toBeInTheDocument()
-        expect(screen.getByText(/Project with error 2/i)).toBeInTheDocument()
-    })
-
-    test('should create new Project', async() => {
-        const newProject = {
-            id: 42,
-            name: 'new-Project42'
-        }
-
-        useDispatchMock().mockResolvedValue({ payload: newProject })
-
-        render(<ProductPopup />)
-
-        userEvent.type(screen.getByTestId('ProductPopup__input-projects'), newProject.name)
-        expect(await screen.findByText(`Add "${newProject.name}"`)).toBeInTheDocument()
-        const option = screen.getByText(`Add "${newProject.name}"`)
-
-        act(() => {
-            fireEvent.click(option)
-        })
-
-        expect(await screen.findByText(newProject.name)).toBeInTheDocument()
-    })
-
-    test('should call onSubmit for updateProduct', async() => {
-        const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
-        selectProductByIdMock.mockReturnValue(returnedFoundProduct)
-        const selectSourceControlsMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControls')
-        selectSourceControlsMock.mockReturnValue(returnedSourceControl)
-        const selectSourceControlByIdMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControlById')
-        selectSourceControlByIdMock.mockReturnValue(returnedSourceControl[0])
-        const selectAllTeamsMock = useModuleMock('Redux/Teams/selectors', 'selectAllTeams')
-        selectAllTeamsMock.mockReturnValue(returnedTeams)
-
-        useDispatchMock().mockResolvedValue({ payload: [{ id: 1, name: 'team 1' }] })
-
+    test('should call onSubmit for updateProduct', () => {
         render(<ProductPopup id = {4} />)
 
         const name = 'My Edited Product'
         const description = 'New description'
         const vision = 'vision'
         const mission = 'mission'
-        const problem = 'problem'
-        const gitlabGroupId = '2'
+        const problemStatement = 'problem'
 
         const nameInput = screen.getByTestId('ProductPopup__input-name')
         const descriptionInput = screen.getByTestId('ProductPopup__input-description')
         const visionInput = screen.getByTestId('ProductPopup__input-vision')
         const missionInput = screen.getByTestId('ProductPopup__input-mission')
         const problemInput = screen.getByTestId('ProductPopup__input-problem')
-        const gitlabGroupIdInput = screen.getByTestId('ProductPopup__input-gitlabGroupId')
 
         userEvent.clear(descriptionInput)
         userEvent.clear(nameInput)
         userEvent.clear(visionInput)
         userEvent.clear(missionInput)
         userEvent.clear(problemInput)
-        userEvent.clear(gitlabGroupIdInput)
 
         userEvent.type(descriptionInput, description)
         userEvent.type(nameInput, name)
         userEvent.type(visionInput, vision)
         userEvent.type(missionInput, mission)
-        userEvent.type(problemInput, problem)
-        userEvent.type(gitlabGroupIdInput, gitlabGroupId)
+        userEvent.type(problemInput, problemStatement)
 
-        fireEvent.click(screen.getAllByTitle(/open/i)[0])
-        fireEvent.click(await screen.findByText('team 2'))
-
-        fireEvent.click(screen.getAllByTitle(/open/i)[1])
-        fireEvent.click(await screen.getByText(/Tag 2/i))
-
-        fireEvent.click(screen.getAllByTitle(/open/i)[2])
-        fireEvent.click(await screen.findByText('test source control'))
-
-        fireEvent.click(screen.getAllByTitle(/open/i)[3])
-        fireEvent.click(await screen.findByText('project 2'))
+        userEvent.type(screen.getByPlaceholderText('tags'), 'a')
+        userEvent.type(screen.getByPlaceholderText('team'), 'b')
+        userEvent.type(screen.getByPlaceholderText('projects'), 'c')
+        userEvent.type(screen.getByPlaceholderText('srcc'), 'd')
+        userEvent.type(screen.getByPlaceholderText('group'), 'e')
+        userEvent.type(screen.getByPlaceholderText('roadmaptype'), 'f')
 
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdateProductMock).toHaveBeenCalledWith({
-            ...returnedFoundProduct,
+            ...existingProduct,
             name,
             description,
             vision,
             mission,
-            problemStatement: problem,
-            projectIds: [20, 21],
+            problemStatement,
             ownerId: null,
-            teamIds: [1, 2],
-            type: 'PRODUCT',
-            tagIds: [4, 13, 2],
             childIds: [],
-            gitlabGroupId,
-            sourceControlId: 13
+            type: 'PRODUCT',
+            roadmapType: 'roadmaptype',
+            gitlabGroupId: 50,
+            tagIds: [10],
+            teamIds: [20],
+            projectIds: [30],
+            sourceControlId: 40,
+        })
+    })
+
+    test('should handle owner', async() => {
+        useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
+        selectProductByIdMock.mockReturnValue({ ...existingProduct, ownerId: 99 })
+
+        render(<ProductPopup id = {4} />)
+
+        const owner = await screen.findByTitle('Product Owner')
+        userEvent.clear(owner)
+        userEvent.type(owner, 'foo')
+
+        fireEvent.click(screen.getByText('Submit'))
+
+        expect(submitUpdateProductMock).toHaveBeenCalledWith({
+            ...existingProduct,
+            vision: undefined,
+            mission: undefined,
+            problemStatement: undefined,
+            tags: [],
+            tagIds: [],
+            projects: [],
+            projectIds: [],
+            teamIds: [],
+            type: 'PRODUCT',
+            childIds: [],
+            gitlabGroupId: null,
+            sourceControlId: null,
+            roadmapType: 'MANUAL',
+            ownerId: 24,
         })
     })
 })

@@ -10,7 +10,7 @@ describe('<SelectCapabilities />', () => {
         selectAllCapabilityIdsMock.mockReturnValue([])
         render(<CapabilitiesList />)
 
-        expect(screen.getByText('There are no Capability Needs Statements to display.')).toBeInTheDocument()
+        expect(screen.getByText('There are no Capability Needs Statements.')).toBeInTheDocument()
     })
 
     test('should render new capability', () => {

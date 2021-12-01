@@ -4,36 +4,44 @@ import { requestFetchInit } from 'Redux/Init/actions'
 const appSettingsSlice = createSlice({
     name: 'app',
     initialState: {
-        assertionCommentsOpen: null,
+        assertionCommentId: null,
+        assertionCommentType: null,
         assertionStatus: {},
         classification: {},
         navBarOpen: true,
         projectJourneyMap: {},
         roadmapStatus: {},
+        roadmapTypes: {},
+        completionType: {},
+        feedbackRating: {},
         roles: {},
         sonarqubeMaintainability: {},
         sonarqubeReliability: {},
         sonarqubeSecurity: {},
         tagTypes: [],
-        pageScrollY: 0
+        pageScrollY: 0,
+        initialized: false
     },
     reducers: {
         toggleNavBar: (state) => {
             state.navBarOpen = !state.navBarOpen
         },
         setAssertionComment: (state, action) => {
-            const currentId = state.assertionCommentsOpen
-            const { assertionId, deletedAssertionId } = action.payload
-            if (deletedAssertionId !== null && deletedAssertionId === currentId) {
-                state.assertionCommentsOpen = null
-            } else if (currentId === assertionId) {
-                state.assertionCommentsOpen = null
-            } else {
-                state.assertionCommentsOpen = assertionId
-            }
+            const currentId = state.assertionCommentId
+            const { assertionId, deletedAssertionId, type } = action.payload
+            const newId = deletedAssertionId ?? assertionId
+
+            state.assertionCommentId = currentId === newId
+                ? null
+                : assertionId
+
+            state.assertionCommentType = type
         },
         setPageScrollY: (state, action) => {
             state.pageScrollY = action.payload
+        },
+        setInitialized: (state, action) => {
+            state.initialized = action.payload
         }
     },
     extraReducers: {
@@ -61,10 +69,19 @@ const appSettingsSlice = createSlice({
             action.payload.roadmapStatus.map(status => {
                 state.roadmapStatus[status.name] = status
             })
+            action.payload.roadmapType.map(type => {
+                state.roadmapTypes[type.name] = type
+            })
+            action.payload.completionType.map(type => {
+                state.completionType[type.name] = type
+            })
+            action.payload.feedbackRating.map(rating => {
+                state.feedbackRating[rating.name] = rating
+            })
         }
     }
 })
 
-export const { toggleNavBar, setAssertionComment, setPageScrollY } = appSettingsSlice.actions
+export const { toggleNavBar, setAssertionComment, setPageScrollY, setInitialized } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer

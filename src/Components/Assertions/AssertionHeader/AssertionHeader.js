@@ -20,12 +20,18 @@ const generateCircle = (color) => (
     />
 )
 
-const defaultData = (type, pId) => ({
+
+const defaultAssertionData = (type, pId) => ({
     text: `Enter new ${type} here...`,
-    type: type.toUpperCase(),
     productId: pId,
-    parentId: undefined,
     status: 'NOT_STARTED',
+})
+
+const defaultMeasureData = (type) => ({
+    value: 0,
+    target: 1,
+    text: `Enter new ${type} here...`,
+    completionType: 'BINARY'
 })
 
 function AssertionHeader({ productId, hasEdit, onCreate }) {
@@ -38,24 +44,21 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
     const handleAddNewOGSM = () => {
         setAdding(true)
 
-        const blankMeasure = {
-            ...defaultData('measure', productId),
-            children: []
-        }
-        const blankStrategy = {
-            ...defaultData('strategy', productId),
-            children: [blankMeasure]
-        }
-        const blankGoal = {
-            ...defaultData('goal', productId),
-            children: [blankStrategy]
-        }
-        const blankObjective = {
-            ...defaultData('objective', productId),
-            children: [blankGoal]
+        const newOGSM = {
+            ...defaultAssertionData('objective', productId),
+            children: [{
+                ...defaultAssertionData('strategy', productId),
+                children: [],
+                measures: [{
+                    ...defaultMeasureData('measures')
+                }]
+            }],
+            measures: [{
+                ...defaultMeasureData('goal')
+            }]
         }
 
-        dispatch(requestCreateAssertion(blankObjective)).then(unwrapResult).then(() => {
+        dispatch(requestCreateAssertion(newOGSM)).then(unwrapResult).then(() => {
             setAdding(false)
             onCreate()
         })

@@ -16,18 +16,21 @@ describe('<ProductUserPersonas>', () => {
             id: 1,
             productId: 3,
             title: 'persona 1',
+            description: 'description 1',
             isSupported: true,
             index: 0
         }, {
             id: 2,
             productId: 3,
             title: 'persona 2',
+            description: 'description 2',
             isSupported: true,
             index: 1
         }, {
             id: 4,
             productId: 3,
             title: 'persona 3',
+            description: 'description 3',
             isSupported: false,
             index: 2
         }
@@ -64,7 +67,7 @@ describe('<ProductUserPersonas>', () => {
         expect(requestCreatePersonaMock).toHaveBeenCalled()
     })
 
-    test('should call updatePersona', () => {
+    test('should call updatePersona for title', () => {
         selectPersonasByProductId.mockReturnValue([personas[0]])
 
         render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
@@ -75,6 +78,37 @@ describe('<ProductUserPersonas>', () => {
             ...personas[0],
             title: '!'
         })
+    })
+
+    test('should call updatePersona for description', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
+
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
+
+        fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
+        fireEvent.click(screen.getByTestId('PersonaEntry__button-info'))
+
+        userEvent.type(screen.getByTestId('SingleFieldPopup__input'), 'new description')
+        fireEvent.click(screen.getByTestId('Popup__button-submit'))
+
+        expect(requestUpdatePersonaMock).toHaveBeenCalledWith({
+            ...personas[0],
+            description: 'description 1'
+        })
+        expect(screen.queryByTestId('SingleFieldPopup__input')).not.toBeInTheDocument()
+    })
+
+    test('should cancel tooltip update', () => {
+        selectPersonasByProductId.mockReturnValue([personas[0]])
+
+        render(<ProductUserPersonas productId = {3} hasEdit = {true}/>)
+
+        fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
+        fireEvent.click(screen.getByTestId('PersonaEntry__button-info'))
+
+        fireEvent.click(screen.getByTestId('Popup__button-cancel'))
+
+        expect(screen.queryByText('Update Persona Tooltip')).not.toBeInTheDocument()
     })
 
     test('should call toggleIsSupported', () => {

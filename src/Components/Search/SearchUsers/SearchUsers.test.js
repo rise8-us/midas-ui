@@ -24,7 +24,8 @@ describe('<SearchUsers />', () => {
 
     test('should dispatch to onDataReturn', async() => {
         const onDataReturnMock = jest.fn()
-        render(<SearchUsers onChange = {() => {}} onDataReturn = { onDataReturnMock }/>)
+
+        render(<SearchUsers onChange = {jest.fn} onDataReturn = { onDataReturnMock }/>)
 
         act(() => {
             userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
@@ -36,7 +37,7 @@ describe('<SearchUsers />', () => {
     })
 
     test('should display users in dropdown', async() => {
-        render(<SearchUsers onChange = {() => {}} />)
+        render(<SearchUsers onChange = {jest.fn} />)
 
         act(() => {
             userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'o')

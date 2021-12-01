@@ -1,10 +1,14 @@
-import { Delete } from '@mui/icons-material'
-import { Box, Button, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Clear, Delete } from '@mui/icons-material'
+import { MobileDatePicker } from '@mui/lab'
+import DateAdapter from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import { Autocomplete, Button, IconButton, Stack, TextField } from '@mui/material'
 import { Popup } from 'Components/Popup'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'
 import { requestCreateRoadmap, requestDeleteRoadmap, requestUpdateRoadmap } from 'Redux/Roadmaps/actions'
@@ -12,6 +16,7 @@ import RoadmapConstants from 'Redux/Roadmaps/constants'
 import { selectRoadmapById } from 'Redux/Roadmaps/selectors'
 import FormatErrors from 'Utilities/FormatErrors'
 import { ConfirmationPopup } from '../ConfirmationPopup'
+
 
 const initDetails = (create) => {
     return {
@@ -22,23 +27,49 @@ const initDetails = (create) => {
     }
 }
 
-function RoadmapEntryPopup({ id, index, productId }) {
+const GetValidDate = (date) => {
+    if (date !== null && date?.toString() !== 'Invalid Date') {
+        const newDate = new Date(date).toISOString().split('T')[0]
+        if (newDate.split('-')[0] < 2000) {
+            return 'invalid'
+        } else {
+            return newDate
+        }
+    } else if (date === null) {
+        return null
+    } else {
+        return 'invalid'
+    }
+}
+
+const GetDateInOrder = (date) => {
+    if (date !== null && typeof date === 'string') {
+        const splitDate = date.split('-')
+        return splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]
+    } else {
+        return null
+    }
+}
+
+function RoadmapEntryPopup({ id, productId }) {
     const dispatch = useDispatch()
 
     const roadmapEntry = useSelector(state => selectRoadmapById(state, id))
     const context = initDetails(roadmapEntry.id === undefined)
 
+    const allRoadmapStatuses = useSelector(selectRoadmapStatuses)
+
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleErrors = useMemo(() => errors.filter(error => error.includes('title')), [errors])
-    const targetDateErrors = useMemo(() => errors.filter(error => error.includes('targeted')), [errors])
 
     const [open, setOpen] = useState(false)
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         title: roadmapEntry.title,
         description: roadmapEntry.description,
-        targetDate: roadmapEntry.targetDate?.substring(0, 7) ?? '',
-        status: roadmapEntry.status
+        status: null,
+        startDate: roadmapEntry.startDate ?? null,
+        dueDate: roadmapEntry.dueDate ?? null
     })
 
     const handleChange = (name, value) => {
@@ -48,6 +79,11 @@ function RoadmapEntryPopup({ id, index, productId }) {
         })
     }
 
+    const handleDateChange = (key, newValue) => {
+        const validDate = GetValidDate(newValue)
+        validDate !== 'invalid' && handleChange(key, validDate)
+    }
+
     const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
@@ -55,9 +91,9 @@ function RoadmapEntryPopup({ id, index, productId }) {
             ...roadmapEntry,
             title: formValues.title,
             description: formValues.description,
-            status: formValues.status,
-            targetDate: formValues.targetDate,
-            index,
+            status: formValues.status?.name ?? 'FUTURE',
+            startDate: formValues.startDate,
+            dueDate: formValues.dueDate,
             productId
         }))
     }
@@ -78,19 +114,22 @@ function RoadmapEntryPopup({ id, index, productId }) {
         dispatch(requestDeleteRoadmap(id))
     }
 
+    useEffect(() => {
+        handleChange('status', allRoadmapStatuses[roadmapEntry.status] ?? null)
+    }, [allRoadmapStatuses])
+
     return (
         <Popup
             title = {context.title}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' flexDirection = 'column'>
+            <Stack spacing = {1}>
                 <TextField
                     label = 'Title'
                     data-testid = 'RoadmapEntryPopup__input-title'
                     value = {formValues.title}
                     onChange = {(e) => handleChange('title', e.target.value)}
-                    margin = 'dense'
                     error = {titleErrors.length > 0}
                     helperText = {<FormatErrors errors = {titleErrors}/>}
                     required
@@ -100,33 +139,73 @@ function RoadmapEntryPopup({ id, index, productId }) {
                     data-testid = 'RoadmapEntryPopup__input-description'
                     value = {formValues.description}
                     onChange = {(e) => handleChange('description', e.target.value)}
-                    margin = 'dense'
                     multiline
                 />
-                <InputLabel id = 'status' style = {{ marginTop: '8px' }} shrink required>Status</InputLabel>
-                <Select
-                    labelId = 'status'
+                <Autocomplete
                     value = {formValues.status}
-                    data-testid = 'RoadmapEntryPopup__select-status'
-                    onChange = {(e) => handleChange('status', e.target.value)}
-                >
-                    <MenuItem value = {'FUTURE'}>FUTURE</MenuItem>
-                    <MenuItem value = {'IN_PROGRESS'}>IN PROGRESS</MenuItem>
-                    <MenuItem value = {'COMPLETE'}>COMPLETE</MenuItem>
-                </Select>
-                {/* TODO: Replace with material-ui 5 when available */}
-                <TextField
-                    label = 'Target Date'
-                    type = 'month'
-                    InputLabelProps = {{ shrink: true }}
-                    data-testid = 'RoadmapEntryPopup__input-target-date'
-                    value = {formValues.targetDate}
-                    onChange = {(e) => handleChange('targetDate', e.target.value)}
-                    error = {targetDateErrors.length > 0}
-                    helperText = {<FormatErrors errors = {targetDateErrors}/>}
-                    margin = 'dense'
-                    required
+                    onChange = {(_e, values) => handleChange('status', values)}
+                    options = {Object.values(allRoadmapStatuses)}
+                    getOptionLabel = {(option) => option.label}
+                    renderInput = {(params) => (
+                        <TextField
+                            {...params}
+                            label = 'Status'
+                            margin = 'dense'
+                            InputProps = {{ ...params.InputProps, readOnly: true }}
+                        />
+                    )}
                 />
+                <LocalizationProvider dateAdapter = {DateAdapter}>
+                    <MobileDatePicker
+                        clearable
+                        label = 'Start Date'
+                        inputFormat = 'MM/dd/yyyy'
+                        value = {GetDateInOrder(formValues.startDate)}
+                        onChange = {(value) => handleDateChange('startDate', value)}
+                        renderInput = {(params) =>
+                            <TextField {...params}
+                                style = {{
+                                    width: '-webkit-fill-available'
+                                }}
+                                InputProps = {{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <IconButton
+                                            onClick = {() => handleDateChange('startDate', null)}
+                                            size = 'small'
+                                        >
+                                            <Clear title = 'clear' fontSize = '18px'/>
+                                        </IconButton>
+                                    )
+                                }}
+                            />
+                        }
+                    />
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter = {DateAdapter}>
+                    <MobileDatePicker
+                        clearable
+                        label = 'Due Date'
+                        inputFormat = 'MM/dd/yyyy'
+                        value = {GetDateInOrder(formValues.dueDate)}
+                        onChange = {(value) => handleDateChange('dueDate', value)}
+                        renderInput = {(params) =>
+                            <TextField {...params}
+                                InputProps = {{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <IconButton
+                                            onClick = {() => handleDateChange('dueDate', null)}
+                                            size = 'small'
+                                        >
+                                            <Clear title = 'clear' fontSize = '18px'/>
+                                        </IconButton>
+                                    )
+                                }}
+                            />
+                        }
+                    />
+                </LocalizationProvider>
                 {!context.isCreate &&
                     <Button
                         variant = 'outlined'
@@ -151,14 +230,13 @@ function RoadmapEntryPopup({ id, index, productId }) {
                         detail = {`You are about to delete '${formValues.title}'`}
                     />
                 }
-            </Box>
+            </Stack>
         </Popup>
     )
 }
 
 RoadmapEntryPopup.propTypes = {
     id: PropTypes.number,
-    index: PropTypes.number.isRequired,
     productId: PropTypes.number.isRequired,
 }
 

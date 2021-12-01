@@ -3,9 +3,10 @@ import { Chip, Grid, IconButton, Typography, useTheme } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggablePersonaList } from 'Components/Draggable/DraggablePersonaList'
 import { LabelTooltip } from 'Components/LabelTooltip'
+import { SingleFieldPopup } from 'Components/Popups/SingleFieldPopup'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import * as personaActions from 'Redux/Personas/actions'
@@ -18,7 +19,17 @@ function ProductUserPersonas({ productId, hasEdit }) {
 
     const personas = useSelector(state => selectPersonasByProductId(state, productId))
 
+    const [popupOpen, setPopupOpen] = useState(false)
+    const [selectedPersona, setSelectedPersona] = useState({})
+
     let newPersonaInput = React.useRef(null)
+
+    const singleFieldUpdate = (key, value, persona) => {
+        value.trim().length > 0 && dispatch(personaActions.requestUpdatePersona({
+            ...persona,
+            [key]: value.trim()
+        }))
+    }
 
     const createPersona = (value) => {
         dispatch(personaActions.requestCreatePersona({
@@ -30,18 +41,21 @@ function ProductUserPersonas({ productId, hasEdit }) {
         }))
     }
 
-    const updatePersona = (newTitle, selectedPersona) => {
-        newTitle.trim().length > 0 && dispatch(personaActions.requestUpdatePersona({
-            ...selectedPersona,
-            title: newTitle.trim()
-        }))
-    }
-
     const toggleIsSupported = (persona) => {
         dispatch(personaActions.requestUpdatePersona({
             ...persona,
             isSupported: !persona.isSupported
         }))
+    }
+
+    const handleInfoClick = (persona) => {
+        setSelectedPersona(persona)
+        setPopupOpen(prev => !prev)
+    }
+
+    const onTooltipUpdate = (newDescription) => {
+        singleFieldUpdate('description', newDescription, selectedPersona)
+        setPopupOpen(false)
     }
 
     const deletePersona = (id) => {
@@ -97,9 +111,10 @@ function ProductUserPersonas({ productId, hasEdit }) {
                             <DraggablePersonaList
                                 personas = {personas}
                                 hasEdit = {hasEdit}
-                                onUpdate = {updatePersona}
+                                onUpdate = {(newTitle, persona) => singleFieldUpdate('title', newTitle, persona)}
                                 onDelete = {deletePersona}
                                 onToggleIsSupported = {toggleIsSupported}
+                                onInfoClick = {handleInfoClick}
                             />
                             {provided.placeholder}
                         </div>
@@ -108,14 +123,20 @@ function ProductUserPersonas({ productId, hasEdit }) {
             </DragDropContext>
             {hasEdit ?
                 <Grid container alignItems = 'center' style = {{ height: '34px' }}>
-                    <Grid item style = {{ minWidth: '24px', marginRight: '8px' }}>
+                    <Grid item minWidth = '28px'>
                         <IconButton title = 'Add Persona'
                             size = 'small'
                             onClick = {()=>
                                 newPersonaInput.current.focus()
                             }
                         >
-                            <PersonAddOutlined color = 'secondary'/>
+                            <PersonAddOutlined
+                                color = 'secondary'
+                                style = {{
+                                    transform: 'scale(-1, 1)',
+                                    marginLeft: '-2px'
+                                }}
+                            />
                         </IconButton>
                     </Grid>
                     <Grid item flexGrow = {1}>
@@ -132,6 +153,16 @@ function ProductUserPersonas({ productId, hasEdit }) {
                 </Grid>
                 :
                 <div style = {{ height: '34px' }} />
+            }
+            {popupOpen &&
+                <SingleFieldPopup
+                    isOpen = {popupOpen}
+                    title = 'Update Persona Tooltip'
+                    subtitle = {selectedPersona?.title}
+                    initialValue = {selectedPersona?.description}
+                    onClose = {setPopupOpen}
+                    onSubmit = {onTooltipUpdate}
+                />
             }
         </Grid>
     )

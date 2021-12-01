@@ -7,10 +7,10 @@ function LabelTooltip({ text, iconFontSize, typographyProps, tooltipProps }) {
 
     return (
         <Grid container flexWrap = 'nowrap'>
-            <Grid item>
+            <Grid item zeroMinWidth>
                 <Typography {...typographyProps}>{text}</Typography>
             </Grid>
-            <Grid item style = {{ display: 'flex', alignItems: 'center' }}>
+            <Grid item zeroMinWidth style = {{ display: 'flex', alignItems: 'center' }}>
                 {tooltipProps.title ?
                     <Tooltip {...tooltipProps} >
                         <Icon

@@ -8,6 +8,7 @@ import epicReducer from './Epics/reducer'
 import errorReducer from './Errors/reducer'
 import featureReducer from './Features/reducer'
 import filterReducer from './Filters/reducer'
+import measureReducer from './Measures/reducer'
 import missionThreadReducer from './MissionThreads/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
 import performanceMeasureReducer from './PerformanceMeasures/reducer'
@@ -33,6 +34,7 @@ export const rootReducer = combineReducers({
     errors: errorReducer,
     features: featureReducer,
     filters: filterReducer,
+    measures: measureReducer,
     missionThreads: missionThreadReducer,
     modifiedAssertions: modifiedAssertionsReducer,
     performanceMeasures: performanceMeasureReducer,

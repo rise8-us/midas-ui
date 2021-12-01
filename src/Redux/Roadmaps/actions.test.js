@@ -95,4 +95,25 @@ describe('Roadmap action thunks', () => {
         expect(store.getActions()[0].type).toEqual(actions.requestDeleteRoadmap.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestDeleteRoadmap.rejected.toString())
     })
+
+    test('requestHideRoadmap : fulfilled', async() => {
+        const requestBody = { id: 1, isHidden: false }
+
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestHideRoadmap(requestBody))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/roadmaps/1/hide')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ isHidden: false })
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
+        expect(store.getActions()[0].type).toEqual(actions.requestHideRoadmap.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestHideRoadmap.fulfilled.toString())
+    })
+
+    test('requestHideEpic : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestHideRoadmap())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestHideRoadmap.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestHideRoadmap.rejected.toString())
+    })
 })

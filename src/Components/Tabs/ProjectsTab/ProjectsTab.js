@@ -38,8 +38,8 @@ function ProjectsTab({ id, hasEdit }) {
         )
     }
 
-    const noProjectsString = 'There does not seem to be any projects associated with' +
-        `${product.name !== undefined ? product.name : ' this product'} •`
+    const noProjectsString = 'There does not seem to be any projects associated with ' +
+        `${product.name !== undefined ? product.name : ' this product'}`
 
     const typoProps = {
         variant: 'caption',
@@ -67,10 +67,11 @@ function ProjectsTab({ id, hasEdit }) {
             ) : (
                 <div style = {{ display: 'inline-flex', padding: '12px 36px' }}>
                     <Typography {...typoProps} color = 'text.secondary'>
-                        {noProjectsString}
+                        {noProjectsString} •
                     </Typography>
                     {hasEdit && (
                         <>
+                            <Typography {...typoProps} color = 'text.secondary'>•</Typography>
                             <TypographyClickable
                                 {...typoProps}
                                 color = 'primary'

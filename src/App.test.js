@@ -1,36 +1,30 @@
 import React from 'react'
 import App from './App'
-import { renderWithRouter, screen, useDispatchMock } from './Utilities/test-utils'
+import { renderWithRouter, useModuleMock, waitFor } from './Utilities/test-utils'
 
 jest.mock('./Components/PopupManager/PopupManager', () => function testing() { return (<div/>) })
 jest.mock('./Components/WebsocketProvider/WebsocketProvider', () => function testing() {  return (<div/>) })
 
 describe('<App />', () => {
 
-    const consoleSpy = jest.spyOn(console, 'error').mockReturnValue(() => { /* Empty */ })
+    const initializeAppMock = useModuleMock('Utilities/initializeApp', 'initializeApp')
+    const setInitializedMock = useModuleMock('Redux/AppSettings/reducer', 'setInitialized')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
 
-    test('Has correct text', async() => {
-        useDispatchMock().mockReturnValue({ meta: { requestStatus: 'fulfilled' }, payload: [{}] })
-
-        renderWithRouter(<App />, {
-            initialState: {
-                auth: {
-                    user: {
-                        roles: 0
-                    },
-                    isAdmin: true
-                }
-            }
-        })
-
-        expect(await screen.findAllByText(/not connected to server/i)).toHaveLength(2)
-    })
-
-    test('Init fetch fails throws error', async() => {
-        useDispatchMock().mockReturnValue({ meta: { requestStatus: 'failed' }, payload: [{}] })
+    test('Has correct text', () => {
+        initializeAppMock.mockResolvedValue()
+        selectUserLoggedInMock.mockReturnValue({ isAdmin: true })
 
         renderWithRouter(<App />)
 
-        expect(await consoleSpy).toHaveBeenCalledWith('INIT FAILED')
+        expect(setInitializedMock).not.toHaveBeenCalled()
+    })
+
+    test('Init fetch fails throws error', async() => {
+        initializeAppMock.mockImplementation(() => Promise.reject('failed'))
+        selectUserLoggedInMock.mockReturnValue({ isAdmin: false })
+
+        renderWithRouter(<App />)
+        waitFor(() => { expect(setInitializedMock).toHaveBeenCalledWith(false) })
     })
 })

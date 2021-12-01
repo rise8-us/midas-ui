@@ -1,110 +1,119 @@
-import { Paper, Typography } from '@mui/material'
-import { AssertionStatusDropdown } from 'Components/Assertions'
+import { Close, Feedback } from '@mui/icons-material'
+import { Card, CardHeader, IconButton } from '@mui/material'
 import { AddComment, CommentsList } from 'Components/Comments'
+import { useSnackbar } from 'Components/SnackbarProvider'
 import useWindowSize from 'Hooks/useWindowSize'
 import PropTypes from 'prop-types'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
-import { requestUpdateAssertion } from 'Redux/Assertions/actions'
-import { hasProductOrTeamAccess } from 'Redux/Auth/selectors'
 import { requestCreateComment } from 'Redux/Comments/actions'
 
-function AssertionComments({ assertionId }) {
+export const generateIdBasedOnType = (type, id) => ({
+    assertionId: type === 'assertions' ? id : null,
+    measureId: type === 'measures' ? id : null
+})
+
+export default function AssertionComments({ offsetTop }) {
+    const { enqueueSnackbar } = useSnackbar()
     const ref = useRef()
-    const browserSize = useWindowSize()
-    const scroll = useSelector(state => state.app.pageScrollY)
     const dispatch = useDispatch()
+    const browserSize = useWindowSize()
 
-    const assertion = useSelector(state => state.assertions[assertionId])
-    const hasAccess = useSelector(state => hasProductOrTeamAccess(state, assertion?.productId))
+    const scroll = useSelector(state => state.app.pageScrollY)
+    const assertionCommentId = useSelector(state => state.app.assertionCommentId)
+    const assertionCommentType = useSelector(state => state.app.assertionCommentType)
 
-    const selectedStatus = useSelector(state => state.app.assertionStatus[assertion?.status ?? 'NOT_STARTED'])
-    const [status, setStatus] = useState(selectedStatus?.name ?? 'NOT_STARTED')
+    const selectedEntity = useSelector(state =>
+        (assertionCommentType && assertionCommentId) ? state[assertionCommentType][assertionCommentId] : {})
 
     const [maxHeight, setMaxHeight] = useState((browserSize?.height ?? 0) - 88 - 33)
     const [height, setHeight] = useState(0)
 
-    const conditionalAssertionUpdate = () => {
-        if (hasAccess) {
-            dispatch(requestUpdateAssertion({
-                id: assertionId,
-                text: assertion.text,
-                children: [],
-                status: status
-            }))
-        }
-    }
-
     const handleSubmit = (value) => {
         dispatch(requestCreateComment({
-            assertionId,
-            text: `${value}###${status}`
-        })).then(() => conditionalAssertionUpdate())
+            ...generateIdBasedOnType(assertionCommentType, assertionCommentId),
+            text: value
+        }))
+        enqueueSnackbar({
+            message: 'Give us feedback on the new improved OGSM UI!',
+            severity: 'info',
+            action:
+                <IconButton
+                    onClick = {
+                        () => window.open(
+                            'https://chat.il2.dso.mil/midas/channels/feedback-ogsm-refactor',
+                            '_blank',
+                            'noopener, noreferrer'
+                        )
+                    }
+                >
+                    <Feedback />
+                </IconButton>
+        })
     }
 
-    if (assertion === undefined) {
-        dispatch(setAssertionComment({ assertionId: null, deletedAssertionId: null }))
+    const handleClose = () => {
+        dispatch(setAssertionComment({
+            assertionId: null,
+            deletedAssertionId: null,
+            type: null
+        }))
     }
+
+    useEffect(() => {
+        selectedEntity.id === undefined && handleClose()
+    }, [selectedEntity])
 
     useLayoutEffect(() => {
-        const offsetTop = ref.current?.offsetTop
         if (offsetTop > scroll) setHeight(maxHeight - offsetTop + scroll)
         else setHeight(maxHeight)
     }, [scroll, maxHeight])
-
-    useEffect(() => {
-        selectedStatus && setStatus(selectedStatus.name)
-    }, [selectedStatus])
 
     useEffect(() => {
         setMaxHeight((browserSize?.height ?? 0) - 88 - 33)
     }, [browserSize])
 
     return (
-        <Paper
+        <Card
             ref = {ref}
             style = {{
-                top: '2px',
-                position: 'sticky',
                 height: `${height}px`,
                 maxHeight: `${maxHeight}px`,
                 display: 'flex',
                 flexDirection: 'column',
+                borderRadius: '8px',
                 justifyContent: 'space-between'
             }}
             data-testid = 'AssertionComment__paper'
         >
-            <Typography
-                variant = 'h5'
-                style = {{
-                    padding: '6px 10px',
-                    overflowWrap: 'anywhere',
+            <CardHeader
+                title = {selectedEntity?.text}
+                titleTypographyProps = {{
+                    variant: 'h6',
+                    color: 'secondary',
+                    style: { overflowWrap: 'anywhere' },
                 }}
-            >
-                {assertion?.text}
-            </Typography>
+                action = {
+                    <IconButton onClick = {handleClose} data-testid = 'AssertionComments__icon-close'>
+                        <Close size = 'small' color = 'secondary'/>
+                    </IconButton>
+                }
+            />
             <CommentsList
                 commentProps = {{ handleStatusUpdates: true }}
-                commentIds = {assertion?.commentIds ?? []}
+                commentIds = {selectedEntity?.commentIds ?? []}
             />
             <div style = {{ flexGrow: 1 }}/>
-            <AddComment
-                assertionId = {assertionId}
-                additionalNode = { hasAccess
-                    ? <AssertionStatusDropdown
-                        option = {selectedStatus}
-                        onChange = {setStatus}
-                    /> : null
-                }
-                onSubmit = {handleSubmit}
-            />
-        </Paper>
+            <AddComment onSubmit = {handleSubmit} handleEnterKey />
+        </Card>
     )
 }
 
 AssertionComments.propTypes = {
-    assertionId: PropTypes.number.isRequired,
+    offsetTop: PropTypes.number
 }
 
-export default AssertionComments
+AssertionComments.defaultProps = {
+    offsetTop: 0,
+}

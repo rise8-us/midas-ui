@@ -32,6 +32,12 @@ describe('<ProductHeader>', () => {
         expect(screen.getByText(/Some tags/i)).toBeInTheDocument()
     })
 
+    test('should display empty quotes if hasEdit === false and no content', () => {
+        render(<ProductHeader id = {0} />)
+
+        expect(screen.getByTestId('ProductHeader__input-description')).toBeInTheDocument()
+    })
+
     test('should call onSubmit for name change', () => {
         useDispatchMock().mockReturnValue({})
         render(<ProductHeader id = {0} hasEdit/>)

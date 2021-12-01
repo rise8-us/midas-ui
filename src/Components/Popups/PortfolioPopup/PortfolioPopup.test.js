@@ -107,7 +107,8 @@ describe('<PortfolioPopup />', () => {
 
     test('should call onSubmit for updatePortfolio', async() => {
         useDispatchMock().mockResolvedValue({ type: '/', payload: { id: 42, username: 'pm' } })
-        selectPortfolioByIdMock.mockReturnValue(returnedFoundPortfolio)
+        const newFoundPorfolio = { ...returnedFoundPortfolio, products: [] }
+        selectPortfolioByIdMock.mockReturnValue(newFoundPorfolio)
 
         render(<PortfolioPopup id = {4} />)
 
@@ -132,12 +133,12 @@ describe('<PortfolioPopup />', () => {
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
-            ...returnedFoundPortfolio,
+            ...newFoundPorfolio,
             name,
             description,
             projectIds: [],
             teamIds: [],
-            childIds: [20, 21],
+            childIds: [21],
             tagIds: [4, 13, 2],
             ownerId: null,
             type: 'PORTFOLIO'

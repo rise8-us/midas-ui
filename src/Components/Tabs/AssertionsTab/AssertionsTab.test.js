@@ -1,64 +1,55 @@
 import React from 'react'
-import { fireEvent, renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
+import { renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
+import { commentSidebarOpen } from './AssertionsTab'
 import { AssertionsTab } from './index'
 
-jest.mock('Components/Assertions/AssertionHeader/AssertionHeader',
-    () => (function testing(props) { return (<div onClick = {props.onCreate}>Header</div>) }))
+jest.mock('Components/Cards/OGSM/StrategyCard/StrategyCard',
+    () => (function testing() { return (<div>StrategyCard</div>) }))
 
-jest.mock('Components/Assertions/Assertion/Assertion',
-    () => (function testing() { return (<div>Assertion</div>) }))
+jest.mock('Components/Cards/OGSM/MeasureContainer/MeasureContainer',
+    () => (function testing() { return (<div>GoalCard</div>) }))
 
 jest.mock('Components/Assertions/AssertionComments/AssertionComments',
     () => (function testing() { return (<div>AssertionCommentsComponent</div>) }))
 
 describe('<AssertionsTab>', () => {
+    const selectAssertionCommentInfoMock = useModuleMock('Redux/AppSettings/selectors', 'selectAssertionCommentInfo')
     const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
     const requestSearchAssertionsMock = useModuleMock('Redux/Assertions/actions', 'requestSearchAssertions')
-    const selectRootAssertionIdMock = useModuleMock('Redux/Assertions/selectors', 'selectRootAssertionId')
-    const selectAssertionsByTypeAndProductIdMock =
-        useModuleMock('Redux/Assertions/selectors', 'selectAssertionsByTypeAndProductId')
+    const selectAssertionsByProductIdMock = useModuleMock('Redux/Assertions/selectors', 'selectAssertionsByProductId')
+
+    const allAssertions = [
+        { id: 1, text: '', commentIds: [], parentId: null },
+        { id: 2, text: '', commentIds: [], parentId: 1 }
+    ]
 
     beforeEach(() => {
-        selectAssertionsByTypeAndProductIdMock.mockReturnValue([{ id: 1, text: '', commentIds: [] }])
+        selectAssertionsByProductIdMock.mockReturnValue(allAssertions)
         requestSearchAssertionsMock.mockReturnValue({ type: '/', payload: {} })
         setAssertionCommentMock.mockReturnValue({ type: '' })
+        selectAssertionCommentInfoMock.mockReturnValue({ id: null, type: null })
     })
 
-    test('should render selected OGSM', () => {
-        selectRootAssertionIdMock.mockReturnValue(42)
-
+    test('should render', () => {
         renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>)
 
-        fireEvent.click(screen.getByText('Header'))
-        fireEvent.click(screen.getByText('1'))
-
-        expect(screen.getByText('1')).toHaveStyle('font-weight: 900')
-        expect(screen.getAllByText('Assertion')).toHaveLength(1)
-        expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: null, deletedAssertionId: null })
-    })
-
-    test('should render selected objective id through params', () => {
-        selectAssertionsByTypeAndProductIdMock.mockReturnValue([{ id: 1, text: '', commentIds: [] }])
-        selectRootAssertionIdMock.mockReturnValue(1)
-
-        renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>)
-
-        expect(screen.getByText('1')).toHaveStyle('font-weight: 900')
+        expect(screen.getByText('Objectives, Goals, Strategies, and Measures')).toBeInTheDocument()
+        expect(screen.getByText('GoalCard')).toBeInTheDocument()
+        expect(screen.getByText('StrategyCard')).toBeInTheDocument()
     })
 
     test('should show comments', () => {
-        renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>, {
-            initialState: {
-                app: {
-                    assertionCommentsOpen: 1,
-                    assertionStatus: {
-                        COMPLETED: { name: 'COMPLETED', label: 'Completed', color: '#000000' }
-                    }
-                }
-            }
-        })
+        selectAssertionCommentInfoMock.mockReturnValue({ id: 1, type: 'assertions' })
+
+        renderWithRouter(<AssertionsTab productId = {0} hasEdit = {false}/>)
 
         expect(screen.getByText('AssertionCommentsComponent')).toBeInTheDocument()
     })
 
+    test('commentSidebarOpen', () => {
+        expect(commentSidebarOpen(1, null)).toEqual(false)
+        expect(commentSidebarOpen(null, 'foo')).toEqual(false)
+        expect(commentSidebarOpen(null, null)).toEqual(false)
+        expect(commentSidebarOpen(2, 'foo')).toEqual(true)
+    })
 })

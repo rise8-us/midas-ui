@@ -1,5 +1,5 @@
-import { Edit, LockOpenOutlined, LockOutlined } from '@mui/icons-material'
-import { Divider, Grid, IconButton, Tab, Tabs } from '@mui/material'
+import { LockOpenOutlined, LockOutlined, Settings } from '@mui/icons-material'
+import { Divider, Grid, Grow, IconButton, Tab, Tabs } from '@mui/material'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { ProductPageOverview } from 'Components/ProductPageOverview'
@@ -39,7 +39,7 @@ function Product() {
     }
 
     const openUpdateProductPopup = () =>
-        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductPopup', { id }))
+        dispatch(openPopup(ProductConstants.UPDATE_PRODUCT, 'ProductConfigurationPopup', { id }))
 
     useEffect(() => {
         (productTab !== null && validTab(productTab)) && setValue(productTab)
@@ -60,8 +60,39 @@ function Product() {
         <Page>
             <Grid container style = {{ padding: '0px 4px 0px 24px' }} spacing = {3}>
                 <Grid container item direction = 'column' xl = {3} lg = {4} md = {4} spacing = {2}>
-                    <Grid item>
-                        <ProductHeader id = {id} hasEdit = {hasEdit}/>
+                    <Grid item container wrap = 'nowrap' >
+                        <Grid item>
+                            <ProductHeader id = {id} hasEdit = {hasEdit}/>
+                        </Grid>
+                        <Grid container item direction = 'column' xs = 'auto'>
+                            <Grid item>
+                                {hasPermission &&
+                                    <IconButton
+                                        data-testid = 'ProductPage__icon-inline-edit'
+                                        onClick = {() => setPageLock(prev => !prev)}
+                                        color = 'secondary'
+                                        size = 'large'>
+                                        {pageLock ?
+                                            <LockOutlined
+                                                title = 'locked'/> :
+                                            <LockOpenOutlined title = 'unlocked'/>
+                                        }
+                                    </IconButton>
+                                }
+                                <Grow in = {hasEdit} >
+                                    <Grid item>
+                                        <IconButton
+                                            data-testid = 'ProductPage__icon-popup-edit'
+                                            onClick = {openUpdateProductPopup}
+                                            color = 'secondary'
+                                            size = 'large'
+                                        >
+                                            <Settings />
+                                        </IconButton>
+                                    </Grid>
+                                </Grow>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
                         <ProductTeam productId = {id} hasEdit = {hasEdit}/>
@@ -75,33 +106,6 @@ function Product() {
                 </Grid>
                 <Grid container item direction = 'column' xl = {9} lg = {8} md = {8}>
                     <Grid container item direction = 'column'>
-                        <Grid container item style = {{ height: '48px' }} direction = 'row-reverse'>
-                            <Grid item>
-                                {hasPermission &&
-                                    <IconButton
-                                        data-testid = 'ProductPage__icon-inline-edit'
-                                        onClick = {() => setPageLock(prev => !prev)}
-                                        color = 'secondary'
-                                        size = 'large'>
-                                        {pageLock ?
-                                            <LockOutlined title = 'locked'/> : <LockOpenOutlined title = 'unlocked'/>
-                                        }
-                                    </IconButton>
-                                }
-                            </Grid>
-                            <Grid item>
-                                {hasEdit &&
-                                    <IconButton
-                                        data-testid = 'ProductPage__icon-popup-edit'
-                                        onClick = {openUpdateProductPopup}
-                                        color = 'secondary'
-                                        size = 'large'
-                                    >
-                                        <Edit />
-                                    </IconButton>
-                                }
-                            </Grid>
-                        </Grid>
                         <Grid item>
                             <Tabs value = {value} onChange = {handleChange}>
                                 <Tab
@@ -126,26 +130,17 @@ function Product() {
                             <div style = {{ padding: '24px 0' }}>
                                 { value === 'overview' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <ProductPageOverview
-                                            id = {id}
-                                            hasEdit = {hasEdit}
-                                        />
+                                        <ProductPageOverview id = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
                                 }
                                 { value === 'ogsms' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <AssertionsTab
-                                            productId = {id}
-                                            hasEdit = {hasEdit}
-                                        />
+                                        <AssertionsTab productId = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
                                 }
                                 { value === 'projects' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <ProjectsTab
-                                            id = {id}
-                                            hasEdit = {hasEdit}
-                                        />
+                                        <ProjectsTab id = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
                                 }
                             </div>

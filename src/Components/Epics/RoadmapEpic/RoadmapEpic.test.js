@@ -49,7 +49,7 @@ describe('<RoadmapEpic />', () => {
             dueDate: '2021-10-01T00:00.000000'
         })
 
-        render(<RoadmapEpic id = {3} dateDisplayed = 'dueDate' hasEdit/>)
+        render(<RoadmapEpic id = {3} hasEdit/>)
 
         expect(screen.getByText('title')).toBeInTheDocument()
         expect(screen.getByText('No description present on GitLab Epic.')).toBeInTheDocument()

@@ -96,6 +96,27 @@ describe('Assertion action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestDeleteAssertion.rejected.toString())
     })
 
+    test('requestArchiveAssertion : fulfilled', async() => {
+        const requestBody = {  id: 1, isArchived: false }
+
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestArchiveAssertion(requestBody))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/assertions/1/archive')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ isArchived: false })
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
+        expect(store.getActions()[0].type).toEqual(actions.requestArchiveAssertion.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestArchiveAssertion.fulfilled.toString())
+    })
+
+    test('requestArchiveAssertion : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestArchiveAssertion())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestArchiveAssertion.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestArchiveAssertion.rejected.toString())
+    })
+
     test('requestFetchAllBlockedAssertions : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchAllBlockedAssertions())

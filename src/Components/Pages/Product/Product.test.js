@@ -11,9 +11,6 @@ jest.mock('Components/Tabs/AssertionsTab/AssertionsTab',
 jest.mock('Components/ProductOnePager/ProductRoadmap/ProductRoadmap',
     () => function testing() { return (<div>ProductRoadmap</div>) })
 
-jest.mock('Components/ProductOnePager/ProductEpicsRoadmap/ProductEpicsRoadmap',
-    () => function testing() { return (<div>ProductEpicsRoadmap</div>) })
-
 jest.mock('Components/ProductOnePager/ProductUserPersonas/ProductUserPersonas',
     () => function testing() { return (<div>ProductUserPersonas</div>) })
 
@@ -33,6 +30,7 @@ describe('<Product>', () => {
         id: 0,
         name: 'Product 1',
         description: '',
+        roadmapType: 'MANUAL',
         tagIds: [4],
         tags: [
             {   id: 4,
@@ -67,7 +65,7 @@ describe('<Product>', () => {
         renderWithRouter(<Product />)
 
         fireEvent.click(screen.getByText(/overview/i))
-        expect(screen.getByText('ProductEpicsRoadmap')).toBeInTheDocument()
+        expect(screen.getByText('ProductRoadmap')).toBeInTheDocument()
         expect(screen.getByText('ProductUserPersonas')).toBeInTheDocument()
     })
 
