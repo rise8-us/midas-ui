@@ -1,16 +1,15 @@
+import { SnackbarProvider } from 'Components/SnackbarProvider'
 import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { generateIdBasedOnType } from './AssertionComments'
 import { AssertionComments } from './index'
 
-jest.mock('Components/Comments/Comment/Comment', () => (function testing() {
-    return (<div>Comment</div>)
-}))
+jest.mock('Components/Comments/Comment/Comment', () => (function testing() { return (<div>Comment</div>) }))
 
 describe('<AssertionComments>', () => {
 
     const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
     const requestCreateCommentMock = useModuleMock('Redux/Comments/actions', 'requestCreateComment')
-    const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
 
     const mockState = {
         app: {
@@ -35,10 +34,55 @@ describe('<AssertionComments>', () => {
         }
     }
 
-    test('should set height', () => {
-        hasProductOrTeamAccessMock.mockReturnValue(false)
+    beforeEach(() => {
+        useDispatchMock().mockReturnValue({})
+    })
 
-        render(<AssertionComments assertionId = {3}/>, { initialState: {
+    afterEach(() => {
+        useDispatchMock().mockReset()
+    })
+
+    test('should render', () => {
+        render(<AssertionComments />, { initialState: mockState })
+
+        expect(screen.getByPlaceholderText(/enter comment here.../i)).toBeInTheDocument()
+    })
+
+    test('should handle submit', () => {
+        useDispatchMock().mockResolvedValue({ data: {} })
+
+        render(<SnackbarProvider><AssertionComments /></SnackbarProvider>, {
+            initialState: {
+                ...mockState,
+                app: {
+                    ...mockState.app,
+                    assertionCommentId: 1,
+                    assertionCommentType: 'assertions'
+                }
+            }
+        })
+
+        userEvent.type(screen.getByPlaceholderText(/enter comment here.../i), 'new comment{enter}')
+
+        expect(requestCreateCommentMock).toHaveBeenCalledWith({
+            assertionId: 1, measureId: null, text: 'new comment'
+        })
+    })
+
+    test('should handle onClose', () => {
+        render(<AssertionComments />, { initialState: mockState })
+
+        fireEvent.click(screen.getByTestId('AssertionComments__icon-close'))
+
+        expect(setAssertionCommentMock).toHaveBeenCalledWith({
+            assertionId: null,
+            deletedAssertionId: null,
+            type: null
+        })
+    })
+
+    test('should set height', () => {
+        render(<AssertionComments />, { initialState: {
             assertions: { ...mockState.assertions },
             app: {
                 assertionStatus: { },
@@ -49,44 +93,10 @@ describe('<AssertionComments>', () => {
         expect(screen.getByTestId('AssertionComment__paper')).toHaveStyle('height: 358px')
     })
 
-    test('should render', () => {
-        hasProductOrTeamAccessMock.mockReturnValue(false)
-
-        render(<AssertionComments assertionId = {1}/>, { initialState: mockState })
-
-        expect(screen.getByPlaceholderText(/enter comment here.../i)).toBeInTheDocument()
-    })
-
-    test('should dispatch setAssertionComment with access', () => {
-        useDispatchMock().mockReturnValue({})
-        hasProductOrTeamAccessMock.mockReturnValue(true)
-
-        render(<AssertionComments assertionId = {2}/>, { initialState: mockState })
-
-        expect(setAssertionCommentMock).toHaveBeenCalledWith({ assertionId: null, deletedAssertionId: null })
-    })
-
-    test('should not render status dropdown without access', () => {
-        useDispatchMock().mockReturnValue({})
-        hasProductOrTeamAccessMock.mockReturnValue(false)
-
-        render(<AssertionComments assertionId = {3}/>, { initialState: mockState })
-
-        expect(screen.queryByText(/status/)).not.toBeInTheDocument()
-        expect(requestCreateCommentMock).not.toHaveBeenCalled()
-    })
-
-    test('should handle submit', () => {
-        useDispatchMock().mockResolvedValue({ data: {} })
-        hasProductOrTeamAccessMock.mockReturnValue(true)
-
-        render(<AssertionComments assertionId = {1}/>, { initialState: mockState })
-
-        userEvent.type(screen.getByPlaceholderText(/enter comment here.../i), 'new comment')
-        fireEvent.click(screen.getByText(/submit/i))
-
-        expect(requestCreateCommentMock).toHaveBeenCalledWith({ assertionId: 1, text: 'new comment###STARTED' })
-
+    test('generateIdBasedOnType - should return correct ids', () => {
+        expect(generateIdBasedOnType('assertions', 1)).toEqual({ assertionId: 1, measureId: null })
+        expect(generateIdBasedOnType('measures', 2)).toEqual({ assertionId: null, measureId: 2 })
+        expect(generateIdBasedOnType('foobar', 2)).toEqual({ assertionId: null, measureId: null })
     })
 
 })

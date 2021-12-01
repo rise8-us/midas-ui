@@ -59,6 +59,11 @@ function ProductHeader({ id, hasEdit }) {
                     style = {{ height: '56px', marginBottom: '16px' }}
                     dataTestId = 'ProductHeader__input-name'
                     canEdit = {hasEdit}
+                    inputProps = {{
+                        style: {
+                            textOverflow: 'ellipsis'
+                        }
+                    }}
                 />
             </Grid>
             <Grid>

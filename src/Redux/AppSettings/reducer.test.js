@@ -1,46 +1,57 @@
 import { requestFetchInit } from '../Init/actions'
-import reducer, { setAssertionComment, setPageScrollY, toggleNavBar } from './reducer'
+import reducer, { setAssertionComment, setInitialized, setPageScrollY, toggleNavBar } from './reducer'
 
 const mockStore = {
-    assertionCommentsOpen: 2,
+    assertionCommentId: null,
+    assertionCommentType: null,
     assertionStatus: {},
     classification: {},
     navBarOpen: false,
     pageScrollY: 0,
     projectJourneyMap: {},
     roadmapStatus: {},
+    roadmapTypes: {},
+    completionType: {},
+    feedbackRating: {},
     roles: {},
     sonarqubeMaintainability: {},
     sonarqubeReliability: {},
     sonarqubeSecurity: {},
     tagTypes: [],
+    initialized: false
 }
 
 test('should handle initial state', () => {
     expect(reducer(undefined, {})).toEqual({
-        assertionCommentsOpen: null,
+        assertionCommentId: null,
+        assertionCommentType: null,
         assertionStatus: {},
         classification: {},
         navBarOpen: true,
         projectJourneyMap: {},
         roadmapStatus: {},
+        roadmapTypes: {},
+        completionType: {},
+        feedbackRating: {},
         roles: {},
         sonarqubeMaintainability: {},
         sonarqubeReliability: {},
         sonarqubeSecurity: {},
         tagTypes: [],
         pageScrollY: 0,
+        initialized: false
     })
 })
 
 test('should handle setAssertionComment', () => {
-    const payload = { assertionId: 1, deletedAssertionId: null }
+    const payload = { type: 'foo', assertionId: 1, deletedAssertionId: null }
 
     expect(
         reducer(mockStore, { type: setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
-        assertionCommentsOpen: 1
+        assertionCommentId: 1,
+        assertionCommentType: 'foo'
     })
 })
 
@@ -48,10 +59,11 @@ test('should set setAssertionComment to null', () => {
     const payload = { assertionId: 2, deletedAssertionId: null }
 
     expect(
-        reducer(mockStore, { type: setAssertionComment.type, payload: payload })
+        reducer({ ...mockStore, assertionCommentId: 2 }, { type: setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
-        assertionCommentsOpen: null
+        assertionCommentId: null,
+        assertionCommentType: undefined
     })
 })
 
@@ -62,7 +74,8 @@ test('should set setAssertionComment to null on deletedAssertionId', () => {
         reducer(mockStore, { type: setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
-        assertionCommentsOpen: null
+        assertionCommentId: null,
+        assertionCommentType: undefined
     })
 })
 
@@ -84,6 +97,16 @@ test('should handle pageScrollY', () => {
     })
 })
 
+test('should handle setInitialized', () => {
+    expect(
+        reducer(mockStore, { type: setInitialized.type, payload: true })
+    ).toEqual({
+        ...mockStore,
+        initialized: true
+    })
+})
+
+
 test('sets init info', () => {
     const initResponse = {
         roles: [{
@@ -103,7 +126,10 @@ test('sets init info', () => {
         sonarqubeMaintainability: [{ name: 'foo2' }],
         sonarqubeSecurity: [{ name: 'foo3' }],
         tagTypes: ['foo', 'bar'],
-        roadmapStatus: [{ name: 'food' }]
+        roadmapStatus: [{ name: 'food' }],
+        roadmapType: [{ name: 'bard' }],
+        completionType: [{ name: 'rogue' }],
+        feedbackRating: [{ name: 'monk' }]
     }
 
     const actions = [{ type: requestFetchInit.fulfilled, payload: initResponse }]
@@ -118,4 +144,7 @@ test('sets init info', () => {
     expect(state.sonarqubeSecurity.foo3).toEqual(initResponse.sonarqubeSecurity[0])
     expect(state.tagTypes).toEqual(['foo', 'bar'])
     expect(state.roadmapStatus.food).toEqual(initResponse.roadmapStatus[0])
+    expect(state.roadmapTypes.bard).toEqual(initResponse.roadmapType[0])
+    expect(state.completionType.rogue).toEqual(initResponse.completionType[0])
+    expect(state.feedbackRating.monk).toEqual(initResponse.feedbackRating[0])
 })

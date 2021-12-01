@@ -2,7 +2,7 @@ import { Box, Button, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useRef } from 'react'
 
-function AddComment({ additionalNode, onSubmit, handleEnterKey }) {
+function AddComment({ additionalNode, onSubmit, handleEnterKey, showSubmitButton }) {
 
     const ref = useRef()
 
@@ -32,12 +32,11 @@ function AddComment({ additionalNode, onSubmit, handleEnterKey }) {
                 onKeyDown = {handleEnter}
             />
             <Box display = 'flex' justifyContent = 'space-between' style = {{ direction: 'rtl' }}>
-                <Button
-                    variant = 'outlined'
-                    size = 'small'
-                    onClick = {handleSubmit}
-                    style = {{ margin: '4px 0' }}
-                >submit</Button>
+                {showSubmitButton &&
+                    <Button variant = 'outlined' size = 'small' onClick = {handleSubmit}>
+                        submit
+                    </Button>
+                }
                 {additionalNode}
             </Box>
         </Box>
@@ -47,12 +46,14 @@ function AddComment({ additionalNode, onSubmit, handleEnterKey }) {
 AddComment.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     additionalNode: PropTypes.node,
-    handleEnterKey: PropTypes.bool
+    handleEnterKey: PropTypes.bool,
+    showSubmitButton: PropTypes.bool
 }
 
 AddComment.defaultProps = {
     additionalNode: undefined,
-    handleEnterKey: false
+    handleEnterKey: false,
+    showSubmitButton: false
 }
 
 export default AddComment

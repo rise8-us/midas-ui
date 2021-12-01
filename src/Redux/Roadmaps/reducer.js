@@ -18,6 +18,9 @@ const roadmapSlice = createSlice({
         },
         [actions.requestDeleteRoadmap.fulfilled]: (state, action) => {
             delete state[action.payload.id]
+        },
+        [actions.requestHideRoadmap.fulfilled]: (state, action) => {
+            state[action.payload.id] = action.payload
         }
     }
 })

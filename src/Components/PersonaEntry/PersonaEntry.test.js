@@ -5,11 +5,13 @@ import { PersonaEntry } from './index'
 describe('<PersonaEntry>', () => {
     const props = {
         title: 'title',
+        description: 'description',
         hasEdit: true,
         isSupported: true,
         onUpdate: jest.fn,
         onDelete: jest.fn,
-        onToggleIsSupported: jest.fn
+        onToggleIsSupported: jest.fn,
+        onInfoClick: jest.fn
     }
 
     test('should show icons on edit', () => {
@@ -31,6 +33,18 @@ describe('<PersonaEntry>', () => {
         fireEvent.click(screen.getByTestId('PersonaEntry__button-supported'))
 
         expect(onToggleIsSupportedMock).toHaveBeenCalled()
+    })
+
+    test('should call onInfoClick', () => {
+        const onInfoClickMock = jest.fn()
+        const newProps = { ...props, onInfoClick: onInfoClickMock }
+
+        render(<PersonaEntry {...newProps}/>)
+
+        fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
+        fireEvent.click(screen.getByTestId('PersonaEntry__button-info'))
+
+        expect(onInfoClickMock).toHaveBeenCalled()
     })
 
 })

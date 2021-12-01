@@ -1,93 +1,62 @@
 import { AddLocationOutlined } from '@mui/icons-material'
-import Timeline from '@mui/lab/Timeline'
-import { Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { Grid, IconButton, Tooltip } from '@mui/material'
+import { ProductRoadmapHeader } from 'Components/ProductOnePager'
 import { RoadmapEntry } from 'Components/RoadmapEntry'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import RoadmapConstants from 'Redux/Roadmaps/constants'
 import { selectRoadmapsByProductId } from 'Redux/Roadmaps/selectors'
 
-const generateCircle = (color) => (
-    <div
-        style = {{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            marginLeft: '5px',
-            backgroundColor: color
-        }}
-    />
-)
+export const sortProductRoadmapEntries = (entries) => {
+    const completedEntries = entries.filter(e => e.status === 'COMPLETE')
+        .sort((a, b) => (new Date(a.completedAt)).getTime() < (new Date(b.completedAt)).getTime() ? -1 : 1)
+    const inProgressEntries = entries.filter(e => e.status === 'IN_PROGRESS')
+        .sort((a, b) => (new Date(a.dueDate)) < (new Date(b.dueDate)) ? -1 : 1)
+    const futureEntries = entries.filter(e => e.status === 'FUTURE')
 
-const performActionIfAllowed = (canDo, action) => canDo ? action : null
+    return futureEntries.concat(inProgressEntries).concat(completedEntries)
+}
 
 function ProductRoadmap({ productId, hasEdit }) {
-
     const dispatch = useDispatch()
 
-    const roadmapStatuses = useSelector(selectRoadmapStatuses)
     const roadmapEntries = useSelector(state => selectRoadmapsByProductId(state, productId))
 
-    const openCreatePopup = (id, index) => {
+    const openCreatePopup = () => {
         dispatch(openPopup(RoadmapConstants.CREATE_ROADMAP,
             'RoadmapEntryPopup',
-            { id, index, productId }
+            { id: null, index: roadmapEntries.length, productId }
         ))
     }
 
     return (
         <Grid container spacing = {2} wrap = 'wrap'>
-            <Grid container item alignItems = 'center' style = {{ paddingBottom: 0 }}>
-                {performActionIfAllowed(hasEdit,
-                    <Grid item style = {{ paddingBottom: 0 }}>
+            <Grid item>
+                <ProductRoadmapHeader
+                    hasEdit = {hasEdit}
+                    action = {
                         <Tooltip title = {Tooltips.ROADMAP_NEW_ENTRY} placement = 'top' arrow>
                             <IconButton
                                 color = 'secondary'
                                 size = 'small'
                                 data-testid = 'ProductRoadmap__button-add'
-                                style = {{ right: '6px' }}
-                                onClick = {() => openCreatePopup(null, roadmapEntries.length)}
+                                onClick = {openCreatePopup}
                             >
                                 <AddLocationOutlined />
                             </IconButton>
                         </Tooltip>
-                    </Grid>
-                )}
-                <Grid item style = {{ paddingBottom: 0 }}>
-                    <Typography variant = 'h6' color = 'text.primary'>ROADMAP</Typography>
-                </Grid>
+                    }
+                />
             </Grid>
-            <Grid container item style = {{ paddingBottom: 0, paddingTop: 0 }}>
-                {Object.values(roadmapStatuses).map((status, index) =>
+            <Grid container item direction = 'column'>
+                {sortProductRoadmapEntries(roadmapEntries).map((entry, index) =>
                     <Grid item key = {index}>
-                        <Chip
-                            label = {status.label.toUpperCase()}
-                            icon = {generateCircle(status.color)}
-                            variant = 'outlined'
-                            color = 'secondary'
-                            style = {{
-                                border: 0,
-                                fontSize: '10px',
-                                height: '16px'
-                            }}
-                        />
+                        <RoadmapEntry id = {entry.id} hasEdit = {hasEdit}/>
                     </Grid>
                 )}
-            </Grid>
-            <Grid item style = {{ flexGrow: 1, paddingTop: 0 }}>
-                <Timeline align = 'left' style = {{ padding: '0px 4px' }}>
-                    {roadmapEntries.map((entry, index) =>
-                        <RoadmapEntry
-                            key = {index}
-                            id = {entry.id}
-                            hasEdit = {hasEdit}
-                        />
-                    )}
-                </Timeline>
             </Grid>
         </Grid>
     )

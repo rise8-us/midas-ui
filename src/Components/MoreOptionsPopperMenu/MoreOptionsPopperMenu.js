@@ -21,7 +21,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     border: '1px solid',
     borderColor: alpha(theme.palette.text.primary, .04),
-    boxShadow: '0 0 12px 0 #000'
+    boxShadow: '0 0 24px 0 #00000088'
 }))
 
 function MoreOptionsPopperMenu({ options, icon }) {
@@ -41,14 +41,7 @@ function MoreOptionsPopperMenu({ options, icon }) {
 
     return (
         <div style = {{ cursor: 'pointer', margin: 'auto 0' }}>
-            <IconButton
-                size = 'small'
-                onClick = {togglePopper}
-                title = 'more'
-                color = 'secondary'
-            >
-                {icon}
-            </IconButton>
+            <div onClick = {togglePopper}>{icon}</div>
             <Popper
                 placement = 'top-start'
                 disablePortal = {true}
@@ -93,7 +86,7 @@ MoreOptionsPopperMenu.defaultProps = {
         onClick: undefined,
         color: 'inherit'
     }],
-    icon: <MoreVert />
+    icon: <IconButton color = 'secondary' size = 'small' title = 'more'><MoreVert /></IconButton>
 }
 
 export default MoreOptionsPopperMenu

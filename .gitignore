@@ -33,3 +33,6 @@ server/build
 
 # offline package cache
 npm-packages-offline-cache
+
+# inteliJ
+.idea

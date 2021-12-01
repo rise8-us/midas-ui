@@ -14,37 +14,28 @@ describe('<AssertionHeader>', () => {
 
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
 
-    const blankMeasure = {
-        text: 'Enter new measure here...',
-        type: 'MEASURE',
-        productId: 1,
-        parentId: undefined,
-        status: 'NOT_STARTED',
-        children: []
-    }
-    const blankStrategy = {
-        text: 'Enter new strategy here...',
-        type: 'STRATEGY',
-        productId: 1,
-        parentId: undefined,
-        status: 'NOT_STARTED',
-        children: [blankMeasure]
-    }
-    const blankGoal = {
-        text: 'Enter new goal here...',
-        type: 'GOAL',
-        productId: 1,
-        parentId: undefined,
-        status: 'NOT_STARTED',
-        children: [blankStrategy]
-    }
-    const blankObjective = {
+    const newOGSM = {
         text: 'Enter new objective here...',
-        type: 'OBJECTIVE',
         productId: 1,
-        parentId: undefined,
         status: 'NOT_STARTED',
-        children: [blankGoal]
+        children: [{
+            text: 'Enter new strategy here...',
+            productId: 1,
+            status: 'NOT_STARTED',
+            measures: [{
+                value: 0,
+                target: 1,
+                text: 'Enter new measures here...',
+                completionType: 'BINARY'
+            }],
+            children: []
+        }],
+        measures: [{
+            value: 0,
+            target: 1,
+            text: 'Enter new goal here...',
+            completionType: 'BINARY'
+        }]
     }
 
     test('should fire request to create new OGSM', async() => {
@@ -58,7 +49,7 @@ describe('<AssertionHeader>', () => {
 
         expect(await screen.findByTestId('AssertionHeader__icon-add')).toBeInTheDocument()
 
-        expect(requestCreateAssertionMock).toHaveBeenCalledWith(blankObjective)
+        expect(requestCreateAssertionMock).toHaveBeenCalledWith(newOGSM)
         waitFor(() => { expect(onCreateMock).toBeCalled() })
     })
 })

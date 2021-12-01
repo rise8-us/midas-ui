@@ -10,22 +10,29 @@ function CapabilitiesList({ hasEdit }) {
     const selectedCapabilityIds = useSelector(selectAllCapabilityIds)
 
     return (
-        <Grid container direction = 'column'>
+        <Grid container direction = 'column' rowSpacing = {1}>
             {selectedCapabilityIds.map((id, index) => (
-                <Grid item key = {index} style = {{ paddingBottom: 10 }}>
+                <Grid item key = {index}>
                     <Capability id = {id} hasEdit = {hasEdit}/>
                 </Grid>
             ))}
-            {!hasEdit && selectedCapabilityIds.length === 0 &&
-                <Typography color = 'text.secondary' variant = 'body2' style = {{ paddingTop: 10, paddingBottom: 13 }}>
-                    There are no Capability Needs Statements to display.
-                </Typography>
-            }
-            {hasEdit &&
-                <Grid item>
-                    <Capability hasEdit = {hasEdit}/>
-                </Grid>
-            }
+            <Grid item>
+                {hasEdit
+                    ? <Capability hasEdit = {hasEdit}/>
+                    : <>
+                        {selectedCapabilityIds.length === 0 &&
+                            <Typography
+                                color = 'text.secondary'
+                                height = '44px'
+                                display = 'flex'
+                                alignItems = 'center'
+                            >
+                                There are no Capability Needs Statements.
+                            </Typography>
+                        }
+                    </>
+                }
+            </Grid>
         </Grid>
     )
 }

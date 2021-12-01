@@ -1,5 +1,5 @@
 import {
-    CheckCircleOutlined, Person, PersonOutlined, RadioButtonUncheckedOutlined
+    CheckCircleOutlined, InfoOutlined, Person, PersonOutlined, RadioButtonUncheckedOutlined
 } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/material'
 import { DraggableRow } from 'Components/Draggable'
@@ -7,16 +7,26 @@ import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-function PersonaEntry({ title, isSupported, hasEdit, onUpdate, onDelete, onToggleIsSupported }) {
+export default function PersonaEntry({
+    title,
+    description,
+    isSupported,
+    hasEdit,
+    onUpdate,
+    onDelete,
+    onInfoClick,
+    onToggleIsSupported
+}) {
 
     const defaultIconProps = {
-        style: { height: '32px', marginLeft: '5px' },
         'data-testid': 'PersonaEntry__icon-person'
     }
 
     return (
         <DraggableRow
             title = {title}
+            tooltipText = {description}
+            placement = 'left'
             hasEdit = {hasEdit}
             onUpdate = {onUpdate}
             onDelete = {onDelete}
@@ -25,34 +35,43 @@ function PersonaEntry({ title, isSupported, hasEdit, onUpdate, onDelete, onToggl
                 : <PersonOutlined color = 'secondary' {...defaultIconProps}/>
             }
             additionalOptions = {
-                <Tooltip title = {Tooltips.PERSONA_SUPPORTED}>
+                <>
                     <IconButton
                         size = 'small'
-                        data-testid = 'PersonaEntry__button-supported'
-                        onClick = {onToggleIsSupported}
+                        data-testid = 'PersonaEntry__button-info'
+                        onClick = {onInfoClick}
                     >
-                        { isSupported
-                            ? <CheckCircleOutlined color = 'primary' />
-                            : <RadioButtonUncheckedOutlined color = 'secondary'/>
-                        }
+                        <InfoOutlined color = 'secondary'/>
                     </IconButton>
-                </Tooltip>
+                    <Tooltip title = {Tooltips.PERSONA_SUPPORTED}>
+                        <IconButton
+                            size = 'small'
+                            data-testid = 'PersonaEntry__button-supported'
+                            onClick = {onToggleIsSupported}
+                        >
+                            { isSupported
+                                ? <CheckCircleOutlined color = 'primary' />
+                                : <RadioButtonUncheckedOutlined color = 'secondary'/>
+                            }
+                        </IconButton>
+                    </Tooltip>
+                </>
             }
         />
     )
 }
 
 PersonaEntry.propTypes = {
-    title: PropTypes.string.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    onToggleIsSupported: PropTypes.func.isRequired,
-    isSupported: PropTypes.bool.isRequired,
+    description: PropTypes.string.isRequired,
     hasEdit: PropTypes.bool,
+    isSupported: PropTypes.bool.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onInfoClick: PropTypes.func.isRequired,
+    onToggleIsSupported: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
 }
 
 PersonaEntry.defaultProps = {
     hasEdit: false
 }
-
-export default PersonaEntry

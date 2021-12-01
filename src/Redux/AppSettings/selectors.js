@@ -11,6 +11,13 @@ export const selectTagTypes = (state) => {
     return Object.values(state.app.tagTypes).filter(t => t !== 'GITLAB')
 }
 
-export const selectRoadmapStatuses = (state) => {
-    return state.app.roadmapStatus
-}
+export const selectRoadmapStatuses = (state) => state.app.roadmapStatus
+
+export const selectRoadmapTypes = (state) => state.app.roadmapTypes
+
+export const selectAssertionStatuses = (state) => state.app.assertionStatus
+
+export const selectAssertionCommentInfo = (state) => ({
+    id: state.app.assertionCommentId,
+    type: state.app.assertionCommentType
+})

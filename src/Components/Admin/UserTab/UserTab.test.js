@@ -1,5 +1,5 @@
 import React from 'react'
-import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { act, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { UserTab } from './index'
 
 jest.mock('Components/UserRoles/UserRoles',
@@ -23,16 +23,6 @@ describe('<UserTab />', () => {
         displayName: 'baby yoda',
         email: 'yoda.2@mando.space'
     }
-
-    test('should render', async() => {
-        act(() => {
-            useDispatchMock().mockResolvedValue({ action: '/', payload: null })
-        })
-
-        render(<UserTab />)
-
-        expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument()
-    })
 
     test('should render search results', async() => {
         setupScenario()
@@ -59,4 +49,14 @@ describe('<UserTab />', () => {
         selectUserByIdMock.mockReturnValue(user)
         rerender(<UserTab />)
     }
+
+    test('should render', async() => {
+        act(() => {
+            useDispatchMock().mockResolvedValue({ action: '/', payload: null })
+        })
+
+        render(<UserTab />)
+
+        waitFor(() => { expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument() })
+    })
 })

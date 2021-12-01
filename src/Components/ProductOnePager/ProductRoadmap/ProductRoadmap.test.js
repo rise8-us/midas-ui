@@ -1,41 +1,34 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import {
+    fireEvent, render, screen, selectRoadmapStatusesMock, useDispatchMock, useModuleMock
+} from 'Utilities/test-utils'
 import { ProductRoadmap } from './index'
+import { sortProductRoadmapEntries } from './ProductRoadmap'
 
 jest.mock('Components/RoadmapEntry/RoadmapEntry',
     () => (function testing() { return (<div>RoadmapEntry</div>) }))
 
 describe('<ProductRoadmap />', () => {
 
-    const selectRoadmapStatusesMock = useModuleMock('Redux/AppSettings/selectors', 'selectRoadmapStatuses')
     const selectRoadmapsByProductIdMock = useModuleMock('Redux/Roadmaps/selectors', 'selectRoadmapsByProductId')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
-    const roadmapEntry = {
-        id: 3,
-        title: 'title',
-        description: 'description',
-        index: 0,
-        productId: 1,
-        status: 'FUTURE',
-        targetDate: '2021-08-01T00:00.000000'
-    }
+    const roadmapEntries = [
+        {
+            id: 3,
+            title: 'title',
+            description: 'description',
+            index: 0,
+            productId: 1,
+            status: 'FUTURE',
+            targetDate: '2021-08-01T00:00.000000'
+        }
+    ]
 
     beforeEach(() => {
-        selectRoadmapStatusesMock.mockReturnValue({
-            FUTURE: {
-                name: 'FUTURE',
-                label: 'Future',
-                color: '#000000'
-            },
-            COMPLETE: {
-                name: 'COMPLETE',
-                label: 'Complete',
-                color: '#000000'
-            }
-        })
-        selectRoadmapsByProductIdMock.mockReturnValue([roadmapEntry])
+        selectRoadmapStatusesMock()
         useDispatchMock().mockReturnValue({})
+        selectRoadmapsByProductIdMock.mockReturnValue(roadmapEntries)
         openPopupMock.mockReset()
     })
 
@@ -57,5 +50,33 @@ describe('<ProductRoadmap />', () => {
         render(<ProductRoadmap productId = {1} hasEdit = {false}/>)
 
         expect(screen.queryByTestId('ProductRoadmap__button-add')).not.toBeInTheDocument()
+    })
+
+    test('should handle sorting COMPLETE entries', () => {
+        const entries = [
+            { id: 1, status: 'COMPLETE', completedAt: '2021-01-02' },
+            { id: 2, status: 'COMPLETE', completedAt: '2021-01-01' },
+            { id: 3, status: 'COMPLETE', completedAt: '2021-01-03' }
+        ]
+
+        expect(sortProductRoadmapEntries(entries)).toEqual([
+            { 'completedAt': '2021-01-01', 'id': 2, 'status': 'COMPLETE' },
+            { 'completedAt': '2021-01-02', 'id': 1, 'status': 'COMPLETE' },
+            { 'completedAt': '2021-01-03', 'id': 3, 'status': 'COMPLETE' }
+        ])
+    })
+
+    test('should handle sorting IN_PROGRESS entries', () => {
+        const entries = [
+            { id: 4, status: 'IN_PROGRESS', dueDate: '2021-02-02' },
+            { id: 5, status: 'IN_PROGRESS', dueDate: '2021-02-01' },
+            { id: 6, status: 'IN_PROGRESS', dueDate: '2021-02-03' }
+        ]
+
+        expect(sortProductRoadmapEntries(entries)).toEqual([
+            { 'dueDate': '2021-02-01', 'id': 5, 'status': 'IN_PROGRESS' },
+            { 'dueDate': '2021-02-02', 'id': 4, 'status': 'IN_PROGRESS' },
+            { 'dueDate': '2021-02-03', 'id': 6, 'status': 'IN_PROGRESS' }
+        ])
     })
 })

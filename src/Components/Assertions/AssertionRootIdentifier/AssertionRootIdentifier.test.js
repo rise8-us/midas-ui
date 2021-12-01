@@ -1,22 +1,18 @@
 import React from 'react'
-import { fireEvent, render, screen } from 'Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { AssertionRootIdentifier } from './index'
 
 describe('<AssertionRootIdentifier>', () => {
 
     test('should render', () => {
-        render(<AssertionRootIdentifier id = {1} selected onClick = {jest.fn()} title = ''/>)
+        render(<AssertionRootIdentifier id = {1} selected title = '' indicator = {1}/>)
 
         expect(screen.getByText('1')).toBeInTheDocument()
     })
 
     test('should call onClick', () => {
-        const onClickMock = jest.fn()
+        render(<AssertionRootIdentifier indicator = {<span>1</span>} title = ''/>)
 
-        render(<AssertionRootIdentifier id = {1} onClick = {onClickMock} title = ''/>)
-
-        fireEvent.click(screen.getByText('1'))
-
-        expect(onClickMock).toBeCalled()
+        expect(screen.getByText('1')).toHaveStyle('font-weight: 400')
     })
 })

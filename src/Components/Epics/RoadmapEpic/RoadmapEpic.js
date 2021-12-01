@@ -3,16 +3,13 @@ import {
 } from '@mui/icons-material'
 import { alpha, Grid, IconButton, Link, SvgIcon, Typography, useTheme } from '@mui/material'
 import { ReactComponent as GitLabLogo } from 'Assets/gitlabLogo.svg'
+import MonthNames from 'Constants/MonthNames'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
 import { requestHideEpic } from 'Redux/Epics/actions'
 import { selectEpicById } from 'Redux/Epics/selectors'
-
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-]
 
 const getEpicDescription = (input) => {
     if (input === null)
@@ -49,7 +46,7 @@ const getRoadmapEpicStatus = (state, startDate) => {
         return 'IN_PROGRESS'
 }
 
-function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
+function RoadmapEpic({ id,  hasEdit }) {
     const theme = useTheme()
     const dispatch = useDispatch()
 
@@ -58,9 +55,8 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
     const roadmapStatuses = useSelector(selectRoadmapStatuses)
     const status = roadmapStatuses[getRoadmapEpicStatus(roadmapEpic.state, roadmapEpic.startDate)]
 
+    const dateDisplayed = roadmapEpic.state === 'closed' ? 'closedAt' : 'dueDate'
     const date = roadmapEpic[dateDisplayed] ? roadmapEpic[dateDisplayed].split('-') : null
-    const year = date ? date[0] : null
-    const month = date ? Number.parseInt(date[1]) - 1 : null
 
     const [showActions, setShowActions] = useState(false)
 
@@ -94,14 +90,10 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
         >
             <Grid container item direction = 'column' style = {{ width: '32px' }}>
                 <Grid item
-                    style = {roadmapEpic.isHidden ? {
+                    style = {{
                         height: '32px',
                         margin: 'auto',
-                        color: theme.palette.error.main
-                    } : {
-                        height: '32px',
-                        margin: 'auto',
-                        color: status?.color
+                        color: roadmapEpic.isHidden ? theme.palette.error.main : status?.color
                     }}
                 >
                     {roadmapEpic.isHidden && <VisibilityOffOutlined/>}
@@ -148,9 +140,9 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
                                 variant = 'h6'
                                 color = 'text.secondary'
                                 style = {{ lineHeight: 'normal', paddingLeft: '8px' }}
-                                title = {`${monthNames[month]} ${year}`}
+                                title = {`${MonthNames[date[1]]} ${date[0]}`}
                             >
-                                {`• ${monthNames[month]} ${year}`}
+                                {`• ${MonthNames[date[1]]} ${date[0]}`}
                             </Typography>
                         </Grid>
                     }
@@ -215,12 +207,10 @@ function RoadmapEpic({ id, dateDisplayed, hasEdit }) {
 
 RoadmapEpic.propTypes = {
     id: PropTypes.number.isRequired,
-    dateDisplayed: PropTypes.oneOf(['closedAt', 'dueDate']),
     hasEdit: PropTypes.bool,
 }
 
 RoadmapEpic.defaultProps = {
-    dateDisplayed: 'closedAt',
     hasEdit: false,
 }
 

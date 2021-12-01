@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { styled } from 'Styles/materialThemes'
 
-const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
+const StyledAutoSaveTextField = styled(AutoSaveTextField)(({ theme }) => ({
     color: theme.palette.text.secondary,
     height: '34px',
     marginLeft: theme.spacing(1)
@@ -21,12 +21,14 @@ const StyledEditableGrid = styled(Grid)(({ theme, selected })=> ({
 }))
 
 function DraggableRow({
-    title,
-    hasEdit,
-    onUpdate,
-    onDelete,
-    startIcon,
     additionalOptions,
+    hasEdit,
+    onDelete,
+    onUpdate,
+    placement,
+    startIcon,
+    title,
+    tooltipText,
 }) {
 
     const [hovered, setHovered] = useState(false)
@@ -40,25 +42,31 @@ function DraggableRow({
             selected = {hasEdit}
             data-testid = 'DraggableRow__container'
         >
-            <Grid item maxWidth = '28px' minWidth = '28' height = '34px'>
-                {hasEdit && hovered ? (
-                    <DragIndicator
-                        color = 'secondary'
-                        style = {{ height: '90%' }}
-                        data-testid = 'DraggableRow__icon-drag'
+            <Grid item height = '34px' display = 'flex' alignItems = 'center'>
+                {hasEdit && hovered
+                    ? <DragIndicator color = 'secondary' data-testid = 'DraggableRow__icon-drag'/>
+                    : <>{startIcon}</>
+                }
+            </Grid>
+            <Tooltip
+                arrow
+                title = {tooltipText}
+                placement = {placement}
+                PopperProps = {{
+                    style: {
+                        display: !hasEdit && tooltipText.length > 0 ? 'initial' : 'none'
+                    }
+                }}
+            >
+                <Grid item style = {{ flexGrow: 1 }}>
+                    <StyledAutoSaveTextField
+                        fullWidth
+                        initialValue = {title}
+                        canEdit = {hasEdit}
+                        onSave = {onUpdate}
                     />
-                ) : (
-                    <>{startIcon}</>
-                )}
-            </Grid>
-            <Grid item style = {{ flexGrow: 1 }}>
-                <AutoSaveTextFieldTitle
-                    fullWidth
-                    initialValue = {title}
-                    canEdit = {hasEdit}
-                    onSave = {onUpdate}
-                />
-            </Grid>
+                </Grid>
+            </Tooltip>
             <Grid item>
                 {hasEdit && hovered && (
                     <>
@@ -80,18 +88,22 @@ function DraggableRow({
 }
 
 DraggableRow.propTypes = {
-    title: PropTypes.string.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    startIcon: PropTypes.node,
     additionalOptions: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     hasEdit: PropTypes.bool,
+    onDelete: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    placement: PropTypes.string,
+    startIcon: PropTypes.node,
+    title: PropTypes.string.isRequired,
+    tooltipText: PropTypes.string,
 }
 
 DraggableRow.defaultProps = {
-    startIcon: null,
     additionalOptions: null,
-    hasEdit: false
+    hasEdit: false,
+    placement: 'bottom',
+    startIcon: null,
+    tooltipText: '',
 }
 
 export default DraggableRow

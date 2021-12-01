@@ -14,15 +14,11 @@ function Capabilities() {
 
     return (
         <Page>
-            <div style = {{ margin: '24px' }}>
-                <Grid container spacing = {3} >
-                    <Grid item xs = {12} sm = {12} md = {5} lg = {3} xl = {3}>
-                        <CapabilitiesSidebar />
-                    </Grid>
-                    <Grid item>
-                    </Grid>
+            <Grid container margin = {3}>
+                <Grid item xs = {12} md = {3} lg = {3}>
+                    <CapabilitiesSidebar />
                 </Grid>
-            </div>
+            </Grid>
         </Page>
     )
 }

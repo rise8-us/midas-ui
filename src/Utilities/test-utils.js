@@ -71,6 +71,46 @@ export function mockSearchUsersComponent({ onChange, ...everythingElse }) {
     )
 }
 
+export function mockProductConfigurationFields(props) {
+    return (
+        <>
+            <input onChange = {() => props.onTagsChange([{ id: 10, label: 'tag' }])} placeholder = 'tags' />
+            <input onChange = {() => props.onTeamsChange([{ id: 20, name: 'team' }])} placeholder = 'team' />
+            <input onChange = {() => props.onProjectsChange([{ id: 30, name: 'label' }])} placeholder = 'projects'/>
+            <input onChange = {() => props.onSourceControlChange({ id: 40, name: 'sc' })} placeholder = 'srcc' />
+            <input onChange = {() => props.onRoadmapTypeChange({ name: 'roadmaptype' })} placeholder = 'roadmaptype' />
+            <input onChange = {() => props.onGroupIdChange(50)} placeholder = 'group' />
+        </>
+    )
+}
+
+export function selectRoadmapStatusesMock() {
+    const enumSelectors = require('Redux/AppSettings/selectors')
+    jest.spyOn(enumSelectors, 'selectRoadmapStatuses').mockReturnValue({
+        FUTURE: {
+            name: 'FUTURE',
+            label: 'Future',
+            color: '#000000'
+        },
+        COMPLETE: {
+            name: 'COMPLETE',
+            label: 'Complete',
+            color: '#000000'
+        }
+    })
+}
+
+export function selectAssertionStatusesMock() {
+    const enumSelectors = require('Redux/AppSettings/selectors')
+    jest.spyOn(enumSelectors, 'selectAssertionStatuses').mockReturnValue({
+        COMPLETED: { name: 'COMPLETED', label: 'Complete', color: '#0fcf50' },
+        ON_TRACK: { name: 'ON_TRACK', label: 'On Track', color: '#5dade2' },
+        AT_RISK: { name: 'AT_RISK', label: 'At Risk', color: '#ff9800' },
+        BLOCKED: { name: 'BLOCKED', label: 'Blocked', color: '#e91e63' },
+        NOT_STARTED: { name: 'NOT_STARTED', label: 'Not Started', color: '#969696' }
+    })
+}
+
 // re-export everything
 export * from '@testing-library/react'
 export * from '@testing-library/user-event'

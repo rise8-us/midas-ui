@@ -14,6 +14,16 @@ describe('AppSettings selectors', () => {
                 stat1: {
                     name: 'stat1'
                 }
+            },
+            roadmapTypes: {
+                rType: {
+                    name: 'rType'
+                }
+            },
+            assertionStatus: {
+                aStatus: {
+                    name: 'aStatus'
+                }
             }
         }
     }
@@ -39,5 +49,17 @@ describe('AppSettings selectors', () => {
 
     test('should return roadmap status', () => {
         expect(selectors.selectRoadmapStatuses(mockState)).toEqual({ stat1: { name: 'stat1' } })
+    })
+
+    test('should return roadmap type', () => {
+        expect(selectors.selectRoadmapTypes(mockState)).toEqual({ rType: { name: 'rType' } })
+    })
+
+    test('should return assertionStatuses', () => {
+        expect(selectors.selectAssertionStatuses(mockState)).toEqual({ aStatus: { name: 'aStatus' } })
+    })
+
+    test('should return object with assertion comment info', () => {
+        expect(selectors.selectAssertionCommentInfo(mockState)).toEqual({ id: undefined, type: undefined })
     })
 })

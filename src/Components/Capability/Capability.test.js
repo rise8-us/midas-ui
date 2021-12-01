@@ -4,45 +4,63 @@ import { Capability } from './index'
 
 describe('<Capability />', () => {
     const selectCapabilityByIdMock = useModuleMock('Redux/Capabilities/selectors', 'selectCapabilityById')
+    const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
+    const requestUpdateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestUpdateCapability')
+
+    beforeEach(() => {
+        useDispatchMock().mockResolvedValue({})
+        selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'title', description: '' })
+    })
+
+    test('should render', () => {
+        selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'title', description: 'description' })
+
+        render(<Capability hasEdit = {false}/>)
+
+        expect(screen.getByDisplayValue('title')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('description')).toBeInTheDocument()
+    })
 
     test('should create new', () => {
-        useDispatchMock().mockResolvedValue({ payload: {} })
-
-        const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
-        selectCapabilityByIdMock.mockReturnValue({ id: undefined, title: '', description: '' })
+        selectCapabilityByIdMock.mockReturnValue({ title: '', description: '' })
 
         render(<Capability hasEdit = {true}/>)
 
         userEvent.type(screen.getByPlaceholderText('NEW CAPABILITY NEEDS STATEMENT'), 'foobar')
         userEvent.tab()
 
-        expect(requestCreateCapabilityMock).toHaveBeenCalledTimes(1)
+        expect(requestCreateCapabilityMock).toHaveBeenCalledWith({
+            title: 'foobar',
+            description: '',
+            referenceId: 0
+        })
     })
 
-    test('should render and update', () => {
-        useDispatchMock().mockResolvedValue({ payload: {} })
-
-        selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'test title', description: '' })
-
+    test('should update title', () => {
         render(<Capability hasEdit = {true}/>)
 
-        userEvent.click(screen.getByDisplayValue('test title'))
-        userEvent.tab()
+        userEvent.type(screen.getByDisplayValue('title'), 'new title')
         userEvent.tab()
 
-        expect(screen.getByPlaceholderText('NEW CAPABILITY NEEDS STATEMENT')).toHaveDisplayValue('')
-        expect(screen.getByPlaceholderText('Enter Operational Context')).toBeInTheDocument()
+        expect(requestUpdateCapabilityMock).toHaveBeenCalledWith({
+            id: 1,
+            title: 'new title',
+            description: '',
+            referenceId: 0
+        })
     })
 
-    test('should not save empty', () => {
-        selectCapabilityByIdMock.mockReturnValue({ id: undefined, title: '', description: '' })
-
+    test('should update description', () => {
         render(<Capability hasEdit = {true}/>)
 
-        userEvent.click(screen.getByPlaceholderText('NEW CAPABILITY NEEDS STATEMENT'))
+        userEvent.type(screen.getByPlaceholderText('Enter Operational Context'), 'description')
         userEvent.tab()
 
-        expect(screen.getByPlaceholderText('NEW CAPABILITY NEEDS STATEMENT')).toBeInTheDocument()
-        expect(screen.queryByPlaceholderText('Enter Operational Context')).not.toBeInTheDocument()
+        expect(requestUpdateCapabilityMock).toHaveBeenCalledWith({
+            id: 1,
+            title: 'title',
+            description: 'description',
+            referenceId: 0
+        })
     })
 })

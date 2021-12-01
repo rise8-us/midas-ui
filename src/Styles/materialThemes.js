@@ -108,7 +108,7 @@ const theme = createTheme({
                     color: '#24292E'
                 }
             }
-        }
+        },
     }
 })
 

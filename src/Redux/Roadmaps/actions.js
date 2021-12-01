@@ -35,3 +35,11 @@ export const requestDeleteRoadmap = createAsyncThunk(
         return { ...data, id }
     }
 )
+
+export const requestHideRoadmap = createAsyncThunk(
+    Constants.HIDE_ROADMAP,
+    async({ id, isHidden }, { rejectWithValue }) => {
+        const request = { endpoint: `/api/roadmaps/${id}/hide`, method: 'PUT', body: { isHidden } }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
