@@ -73,7 +73,6 @@ describe('<UpdateStatusPopup />', () => {
 
         expect(requestCreateCommentMock).toHaveBeenCalledWith({
             assertionId: 1,
-            measureId: null,
             text: 'an untitled note###ON_TRACK'
         })
 

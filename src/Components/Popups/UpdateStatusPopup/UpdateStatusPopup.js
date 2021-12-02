@@ -4,13 +4,17 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
+import { requestUpdateAssertion } from 'Redux/Assertions/actions'
+import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestCreateComment } from 'Redux/Comments/actions'
 import { closePopup } from 'Redux/Popups/actions'
 
-export default function UpdateStatusPopup({ assertionId, measureId }) {
+export default function UpdateStatusPopup({ assertionId }) {
     const dispatch = useDispatch()
 
     const assertionStatuses = useSelector(selectAssertionStatuses)
+
+    const assertion = useSelector((state) => selectAssertionById(state, assertionId))
 
     const [selectedStatus, setSelectedStatus] = useState(null)
     const [text, setText] = useState('')
@@ -18,11 +22,17 @@ export default function UpdateStatusPopup({ assertionId, measureId }) {
 
     const onSubmit = () => {
         if (selectedStatus && text.trim().length) {
+            const updatedAssertion = {
+                ...assertion,
+                status: selectedStatus.name,
+                children: []
+            }
             dispatch(requestCreateComment({
                 assertionId,
-                measureId,
                 text: `${text}###${selectedStatus.name}`
-            })).then(() => dispatch(closePopup('UpdateStatusPopup')))
+            }))
+                .then(() => dispatch(requestUpdateAssertion(updatedAssertion)))
+                .then(() => dispatch(closePopup('UpdateStatusPopup')))
         } else {
             const statusError = selectedStatus === null
             const textError = text.trim().length === 0
@@ -66,9 +76,8 @@ export default function UpdateStatusPopup({ assertionId, measureId }) {
                             error = {errors.status}
                             helperText = {errors.status && 'Status cannot be blank!'}
                             label = 'Status'
-                        />}
-
-
+                        />
+                    }
                 />
                 <TextField
                     multiline
@@ -85,11 +94,5 @@ export default function UpdateStatusPopup({ assertionId, measureId }) {
 }
 
 UpdateStatusPopup.propTypes = {
-    assertionId: PropTypes.number,
-    measureId: PropTypes.number,
-}
-
-UpdateStatusPopup.defaultProps = {
-    assertionId: null,
-    measureId: null
+    assertionId: PropTypes.number.isRequired
 }
