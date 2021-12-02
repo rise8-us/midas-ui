@@ -20,7 +20,7 @@ import {
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { styled } from 'Styles/materialThemes'
-import { DateInDisplayOrder } from 'Utilities/dateHelpers'
+import { dateInDisplayOrder } from 'Utilities/dateHelpers'
 import { MeasureContainer } from '../MeasureContainer'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
@@ -170,7 +170,7 @@ function StrategyCard({ id, hasEdit }) {
                         <Grid item padding = {2}>
                             <DateSelector
                                 label = 'Start Date'
-                                initialValue = {DateInDisplayOrder(strategy?.startDate ?? null)}
+                                initialValue = {dateInDisplayOrder(strategy?.startDate ?? null)}
                                 onAccept = {handleStartDateChange}
                                 hasEdit = {hasEdit}
                             />
@@ -178,7 +178,7 @@ function StrategyCard({ id, hasEdit }) {
                         <Grid item padding = {2}>
                             <DateSelector
                                 label = 'Due Date'
-                                initialValue = {DateInDisplayOrder(strategy?.dueDate ?? null)}
+                                initialValue = {dateInDisplayOrder(strategy?.dueDate ?? null)}
                                 onAccept = {handleDueDateChange}
                                 hasEdit = {hasEdit}
                             />

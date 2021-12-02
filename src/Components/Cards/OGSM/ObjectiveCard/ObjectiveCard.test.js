@@ -1,5 +1,7 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent
+} from 'Utilities/test-utils'
 import { ObjectiveCard } from './index'
 
 describe('<ObjectiveCard />', () => {
@@ -26,6 +28,7 @@ describe('<ObjectiveCard />', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectAssertionByIdMock.mockReturnValue(objective)
+        selectAssertionStatusesMock()
     })
 
     test('should render', () => {

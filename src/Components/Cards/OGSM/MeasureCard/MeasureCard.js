@@ -1,13 +1,12 @@
 import { Chat, Delete, TrackChangesOutlined } from '@mui/icons-material'
-import { DateTimePicker } from '@mui/lab'
-import DateAdapter from '@mui/lab/AdapterDateFns'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Badge, Grid, IconButton, LinearProgress, TextField, Typography } from '@mui/material'
+import { Badge, Grid, IconButton, Typography } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { Collapsable } from 'Components/Cards/Collapsable'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { ProgressBar } from 'Components/ProgressBar'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
+import { parseISO } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +16,7 @@ import { requestSearchComments } from 'Redux/Comments/actions'
 import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actions'
 import { selectMeasureById } from 'Redux/Measures/selectors'
 import { styled } from 'Styles/materialThemes'
-import { DateInDisplayOrder } from 'Utilities/dateHelpers'
+import { dateInDisplayOrder } from 'Utilities/dateHelpers'
 import { getMeasureStatus } from 'Utilities/getMeasureStatus'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
@@ -25,7 +24,7 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     fontSize: '18px',
 }))
 
-function MeasureCard({ id, hasEdit }) {
+export default function MeasureCard({ id, hasEdit }) {
     const dispatch = useDispatch()
     const allStatuses = useSelector(selectAssertionStatuses)
 
@@ -34,6 +33,7 @@ function MeasureCard({ id, hasEdit }) {
     const collapse = useRef(null)
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
+    const [expanded, setExpanded] = useState(false)
 
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
@@ -64,170 +64,128 @@ function MeasureCard({ id, hasEdit }) {
     }
 
     const updateMeasure = (key, value) => {
-        if (key === 'text' && value === measure.text) return
+        value !== measure[key] && dispatch(requestUpdateMeasure({ ...measure, [key]: value, children: [] }))
+    }
 
-        dispatch(requestUpdateMeasure({
-            ...measure,
-            [key]: value,
-            children: []
-        }))
+    const displayCompletedAt = (dateTime) => {
+        const date = parseISO(dateTime).toString().split(' ')
+
+        return (
+            <Typography textAlign = 'center' color = 'primary'>
+                Completed on: {date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] }
+            </Typography>
+        )
     }
 
     return (
-        <>
-            <Collapsable
-                ref = {collapse}
-                header = {
-                    <Grid container wrap = 'nowrap' columnGap = {1} padding = {1} flexGrow = {1}>
+        <Collapsable
+            ref = {collapse}
+            onExpanded = {setExpanded}
+            header = {
+                <Grid container wrap = 'nowrap' columnGap = {1} padding = {1} flexGrow = {1}>
+                    <Grid item>
+                        <TrackChangesOutlined
+                            fontSize = 'medium'
+                            style = {{
+                                color: status?.color ?? '#c3c3c3',
+                                marginTop: '5px'
+                            }}
+                        />
+                    </Grid>
+                    <Grid item flexGrow = {1}>
+                        <AutoSaveTextFieldTitle
+                            canEdit = {hasEdit}
+                            initialValue = {measure.text}
+                            onSave = {(v) => updateMeasure('text', v)}
+                            title = {measure.text}
+                            fullWidth
+                            multiline
+                        />
+                    </Grid>
+                    <Grid item>
+                        <StatusSelectorChip statusName = {status?.name}/>
+                    </Grid>
+                    <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>
                         <Grid item>
-                            <TrackChangesOutlined
-                                fontSize = 'medium'
-                                style = {{
-                                    color: status?.color ?? '#c3c3c3',
-                                    marginTop: '5px'
-                                }}
-                            />
+                            <Badge
+                                badgeContent = {measure.commentIds?.length}
+                                overlap = 'circular'
+                                color = 'primary'
+                                onClick = {onCommentsClick}
+                            >
+                                <IconButton color = 'secondary' title = 'comment' size = 'small'>
+                                    <Chat />
+                                </IconButton>
+                            </Badge>
                         </Grid>
-                        <Grid item flexGrow = {1}>
-                            <AutoSaveTextFieldTitle
-                                canEdit = {hasEdit}
-                                initialValue = {measure.text}
-                                onSave = {(v) => updateMeasure('text', v)}
-                                title = {measure.text}
-                                fullWidth
-                                multiline
-                            />
-                        </Grid>
-                        <Grid item>
-                            <StatusSelectorChip statusName = {status?.name}/>
-                        </Grid>
-                        <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>
+                        {hasEdit && (
                             <Grid item>
-                                <Badge
-                                    badgeContent = {measure.commentIds?.length}
-                                    overlap = 'circular'
-                                    color = 'primary'
-                                    onClick = {onCommentsClick}
+                                <IconButton
+                                    color = 'secondary'
+                                    title = 'delete'
+                                    size = 'small'
+                                    onClick = {onDeleteClick}
                                 >
-                                    <IconButton color = 'secondary' title = 'comment' size = 'small'>
-                                        <Chat />
-                                    </IconButton>
-                                </Badge>
+                                    <Delete />
+                                </IconButton>
                             </Grid>
-                            {hasEdit && (
-                                <Grid item>
-                                    <IconButton
-                                        color = 'secondary'
-                                        title = 'delete'
-                                        size = 'small'
-                                        onClick = {onDeleteClick}
-                                    >
-                                        <Delete />
-                                    </IconButton>
-                                </Grid>
-                            )}
-                        </Grid>
-                    </Grid>
-                }
-                footer = {
-                    <Grid
-                        container
-                        sx = {{
-                            display: 'flex',
-                            paddingBottom: '8px',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Grid item sx = {{ padding: '8px', width: '100%' }}>
-                            <LinearProgress
-                                variant = 'determinate'
-                                value = {measure.value / measure.target * 100 ?? null}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant = 'body2' color = 'primary' >{`${Math.round(
-                                measure.value / measure.target * 100,)}% Complete`}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                }
-            >
-                <Grid container >
-                    <Grid container
-                        direction = 'column'
-                        sx = {{ justifyContent: { xs: 'center', sm: 'space-between' } }}
-                    >
-                        <Grid item padding = {2}>
-                            <DateSelector
-                                label = 'Start Date'
-                                initialValue = {DateInDisplayOrder(measure?.startDate ?? null)}
-                                onAccept = {(v) => updateMeasure('startDate', v)}
-                                hasEdit = {hasEdit}
-                            />
-                        </Grid>
-                        <Grid item padding = {2}>
-                            <DateSelector
-                                label = 'Due Date'
-                                initialValue = {DateInDisplayOrder(measure?.dueDate ?? null)}
-                                onAccept = {(v) => updateMeasure('dueDate', v)}
-                                hasEdit = {hasEdit}
-                            />
-                        </Grid>
-                        <Grid item padding = {2}>
-                            <LocalizationProvider dateAdapter = {DateAdapter}>
-                                <DateTimePicker
-                                    label = {measure.completedAt ? 'Completed At' : 'Not Completed'}
-                                    value = {measure.completedAt ?? null}
-                                    disabled
-                                    disableOpenPicker
-                                    onChange = {() => { return }}
-                                    renderInput = {(params) => <TextField {...params}/>}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        {hasEdit &&
-                            <>
-                                <Grid item padding = '16px'>
-                                    <AutoSaveTextField
-                                        canEdit = {hasEdit}
-                                        disabled = {!hasEdit}
-                                        variant = 'outlined'
-                                        label = 'Current Value'
-                                        initialValue = {measure.value.toString()}
-                                        onSave = {(v) => updateMeasure('value', v)}
-                                        title = 'Current Value'
-                                        revertOnEmpty
-                                        fullWidth
-                                    />
-                                </Grid>
-                                <Grid item padding = '16px'>
-                                    <AutoSaveTextField
-                                        canEdit = {hasEdit}
-                                        disabled = {!hasEdit}
-                                        variant = 'outlined'
-                                        label = 'Target'
-                                        initialValue = {measure.target.toString()}
-                                        onSave = {(v) => updateMeasure('target', v)}
-                                        title = 'Target'
-                                        revertOnEmpty
-                                        fullWidth
-                                    />
-                                </Grid>
-                            </>
-                        }
+                        )}
                     </Grid>
                 </Grid>
-                {openConfirmation && (
-                    <ConfirmationPopup
-                        open = {openConfirmation}
-                        onConfirm = {handlePopupConfirm}
-                        onCancel = {handlePopupCancel}
-                        detail = {`You are about to delete measure: '${measure.text}'`}
-                    />
-                )}
-            </Collapsable>
-        </>
+            }
+            footer = {
+                <ProgressBar
+                    value = {measure.value}
+                    target = {measure.target}
+                    onSaveTarget = {(v) => updateMeasure('target', v)}
+                    onSaveValue = {(v) => updateMeasure('value', v)}
+                    hasEdit = {hasEdit}
+                    hasHover = {expanded}
+                    overlayDate = {{
+                        end: measure.dueDate,
+                        show: true,
+                        start: measure.startDate
+                    }}
+                    progressCompleteComponent = {measure.completedAt
+                        ? () => <span>{ displayCompletedAt(measure.completedAt) }</span>
+                        : undefined
+                    }
+                    showPercent = {expanded}
+                />
+            }
+        >
+            <Grid container >
+                <Grid container
+                    direction = 'column'
+                    sx = {{ justifyContent: { xs: 'center', sm: 'space-between' } }}
+                >
+                    <Grid item padding = {2}>
+                        <DateSelector
+                            label = 'Start Date'
+                            onAccept = {(v) => updateMeasure('startDate', v)}
+                            initialValue = {dateInDisplayOrder(measure?.startDate ?? null)}
+                            hasEdit = {hasEdit}
+                        />
+                    </Grid>
+                    <Grid item padding = {2}>
+                        <DateSelector
+                            label = 'Due Date'
+                            initialValue = {dateInDisplayOrder(measure?.dueDate ?? null)}
+                            onAccept = {(v) => updateMeasure('dueDate', v)}
+                            hasEdit = {hasEdit}
+                        />
+                    </Grid>
+                </Grid>
+            </Grid>
+            {openConfirmation && (
+                <ConfirmationPopup
+                    open = {openConfirmation}
+                    onConfirm = {handlePopupConfirm}
+                    onCancel = {handlePopupCancel}
+                    detail = {`You are about to delete measure: '${measure.text}'`}
+                />
+            )}
+        </Collapsable>
     )
 }
 
@@ -235,5 +193,3 @@ MeasureCard.propTypes = {
     id: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired
 }
-
-export default MeasureCard

@@ -10,7 +10,7 @@
     "test:debug": "DEBUG_PRINT_LIMIT=40000 react-scripts test --coverage",
     "test:all": "react-scripts test --coverage --watchAll=false",
     "test:summary": "react-scripts test --coverage --coverageReporters=\"text-summary\"",
-    "test:lite": "react-scripts test --bail",
+    "test:lite": "react-scripts test --no-coverage",
     "test:unit": "react-scripts test --coverage --watchAll=false --runInBand",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",

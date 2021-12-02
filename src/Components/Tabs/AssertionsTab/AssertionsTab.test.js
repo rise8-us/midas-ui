@@ -6,6 +6,9 @@ import { AssertionsTab } from './index'
 jest.mock('Components/Cards/OGSM/StrategyCard/StrategyCard',
     () => (function testing() { return (<div>StrategyCard</div>) }))
 
+jest.mock('Components/Cards/OGSM/ObjectiveCard/ObjectiveCard',
+    () => (function testing() { return (<div>ObjectiveCard</div>) }))
+
 jest.mock('Components/Cards/OGSM/MeasureContainer/MeasureContainer',
     () => (function testing() { return (<div>GoalCard</div>) }))
 
@@ -36,6 +39,7 @@ describe('<AssertionsTab>', () => {
         expect(screen.getByText('Objectives, Goals, Strategies, and Measures')).toBeInTheDocument()
         expect(screen.getByText('GoalCard')).toBeInTheDocument()
         expect(screen.getByText('StrategyCard')).toBeInTheDocument()
+        expect(screen.getByText('ObjectiveCard')).toBeInTheDocument()
     })
 
     test('should show comments', () => {

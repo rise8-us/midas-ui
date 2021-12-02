@@ -7,11 +7,11 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
-import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import {
     requestArchiveAssertion,
     requestDeleteAssertion,
@@ -20,7 +20,7 @@ import {
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { styled } from 'Styles/materialThemes'
-import { DateInDisplayOrder } from 'Utilities/dateHelpers'
+import { dateInDisplayOrder } from 'Utilities/dateHelpers'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.h5,
@@ -31,14 +31,11 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
 
 function ObjectiveCard({ id, hasEdit }) {
     const dispatch = useDispatch()
-    const statuses = useAssertionStatuses()
 
     const objective = useSelector((state) => selectAssertionById(state, id))
+    const statuses = useSelector(selectAssertionStatuses)
 
-    const defaultTag = statuses.filter((t) => t.name === objective.status)[0] ?? {
-        label: 'Not Started',
-        color: '#c3c3c3'
-    }
+    const defaultTag = statuses[objective.status] ?? { color: '#c3c3c3' }
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
 
@@ -142,7 +139,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                             </Grid>
                                             <Grid item>
                                                 <StatusSelectorChip
-                                                    statusName = {defaultTag.name}
+                                                    statusName = {objective.status}
                                                     onEditProps = {{ assertionId: id }}
                                                     hasEdit = {hasEdit}
                                                 />
@@ -167,7 +164,7 @@ function ObjectiveCard({ id, hasEdit }) {
                             <Grid item padding = {2}>
                                 <DateSelector
                                     label = 'Start Date'
-                                    initialValue = {DateInDisplayOrder(objective?.startDate ?? null)}
+                                    initialValue = {dateInDisplayOrder(objective?.startDate ?? null)}
                                     onAccept = {handleStartDateChange}
                                     hasEdit = {hasEdit}
                                 />
@@ -175,7 +172,7 @@ function ObjectiveCard({ id, hasEdit }) {
                             <Grid item padding = {2}>
                                 <DateSelector
                                     label = 'Due Date'
-                                    initialValue = {DateInDisplayOrder(objective?.dueDate ?? null)}
+                                    initialValue = {dateInDisplayOrder(objective?.dueDate ?? null)}
                                     onAccept = {handleDueDateChange}
                                     hasEdit = {hasEdit}
                                 />
