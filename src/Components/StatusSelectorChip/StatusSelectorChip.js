@@ -11,7 +11,7 @@ function StatusSelectorChip({ statusName, onEditProps, hasEdit, ...chipProps }) 
 
     const allStatuses = useSelector(selectAssertionStatuses)
 
-    const status = allStatuses[statusName]
+    const status = allStatuses[statusName] ?? { label: 'Not Started', color: '#c3c3c3' }
 
     const onClick = () => {
         dispatch(openPopup('UpdateStatusPopup', 'UpdateStatusPopup', onEditProps))

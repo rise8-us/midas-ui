@@ -1,5 +1,7 @@
 import React from 'react'
-import { fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent
+} from 'Utilities/test-utils'
 import { MeasureCard } from './index'
 
 describe('<MeasureCard />', () => {
@@ -10,8 +12,8 @@ describe('<MeasureCard />', () => {
         dueDate: null,
         completedAt: null,
         completionType: 'BINARY',
-        value: '0',
-        target: '1',
+        value: 0,
+        target: 1,
         assertionId: 2,
         comments: []
     }
@@ -23,8 +25,8 @@ describe('<MeasureCard />', () => {
         dueDate: '2020-03-03',
         completedAt: '2020-02-02T15:22:00',
         completionType: 'BINARY',
-        value: '1',
-        target: '1',
+        value: 1,
+        target: 1,
         assertionId: 2,
         comments: []
     }
@@ -47,7 +49,6 @@ describe('<MeasureCard />', () => {
         expect(screen.getByDisplayValue('Text')).toBeInTheDocument()
         expect(screen.getByDisplayValue('01/01/2020')).toBeInTheDocument()
         expect(screen.getByDisplayValue('03/03/2020')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('02/02/2020 03:22 pm')).toBeInTheDocument()
     })
 
     test('should update measure', () => {

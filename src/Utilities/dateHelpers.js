@@ -1,17 +1,34 @@
-export const DateInDisplayOrder = (date) => {
-    if (date !== null && typeof date === 'string') {
+export const dateInDisplayOrder = (date) => {
+    if (typeof date === 'string') {
         const splitDate = date.split('-')
         return splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]
-    } else {
-        return null
     }
+
+    return null
 }
 
-export const DateInDatabaseOrder = (date) => {
-    if (date !== null && typeof date === 'string') {
+export const dateInDatabaseOrder = (date) => {
+    if (typeof date === 'string') {
         const splitDate = date.split('-')
         return splitDate[2] + '-' + splitDate[0] + '-' + splitDate[1]
-    } else {
-        return null
     }
+
+    return null
+}
+
+export const getDifferenceInDays = (start, end) => {
+    if (!start || !end) return 0
+
+    const startDate = Date.parse(start)
+    const endDate = Date.parse(end)
+
+    return (endDate - startDate) / (1000 * 3600 * 24)
+}
+
+export const getTodayAsPercentageInRange = (start, end) => {
+
+    const total = Math.abs(getDifferenceInDays(start, end))
+    const soFar = Math.abs(getDifferenceInDays(start, (new Date())))
+
+    return total > 0 ? (soFar / total) * 100 : 0
 }

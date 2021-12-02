@@ -17,14 +17,14 @@ describe('<UpdateStatusPopup />', () => {
     })
 
     test('should render', () => {
-        render(<UpdateStatusPopup />)
+        render(<UpdateStatusPopup assertionId = {1} />)
 
         expect(screen.getByLabelText('Status')).toBeInTheDocument()
         expect(screen.getByPlaceholderText('Enter your status update here')).toBeInTheDocument()
     })
 
     test('should close popup onCancel', () => {
-        render(<UpdateStatusPopup />)
+        render(<UpdateStatusPopup assertionId = {1} />)
 
         fireEvent.click(screen.getByText('cancel'))
 
@@ -32,7 +32,7 @@ describe('<UpdateStatusPopup />', () => {
     })
 
     test('should show errors when inputs are empty on Submit', async() => {
-        render(<UpdateStatusPopup />)
+        render(<UpdateStatusPopup assertionId = {1} />)
 
         fireEvent.click(screen.getByText('Submit'))
 
@@ -41,7 +41,7 @@ describe('<UpdateStatusPopup />', () => {
     })
 
     test('should show detail error when input is empty', async() => {
-        render(<UpdateStatusPopup/>)
+        render(<UpdateStatusPopup assertionId = {1}/>)
 
         expect(screen.queryByText('Details cannot be blank!')).not.toBeInTheDocument()
 
@@ -51,7 +51,7 @@ describe('<UpdateStatusPopup />', () => {
     })
 
     test('should show status error when input is empty', async() => {
-        render(<UpdateStatusPopup/>)
+        render(<UpdateStatusPopup assertionId = {1}/>)
 
         fireEvent.click(screen.getByTitle('Open'))
         fireEvent.click(screen.getByText('On Track'))

@@ -4,14 +4,14 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import { DateInDatabaseOrder, DateInDisplayOrder } from 'Utilities/dateHelpers'
+import { dateInDatabaseOrder, dateInDisplayOrder } from 'Utilities/dateHelpers'
 
 export default function DateSelector({ initialValue, onAccept, clearable, hasEdit, variant, ...datePickerProps }) {
     const [value, setValue] = useState(initialValue)
 
     const onChange = (newValue) => {
         if (newValue !== null) {
-            setValue(DateInDisplayOrder(new Date(newValue).toISOString().split('T')[0]))
+            setValue(dateInDisplayOrder(new Date(newValue).toISOString().split('T')[0]))
         } else {
             clearable && setValue(null)
             onAccept(null)
@@ -29,7 +29,7 @@ export default function DateSelector({ initialValue, onAccept, clearable, hasEdi
                 clearable = {clearable}
                 disabled = {!hasEdit}
                 onChange = {onChange}
-                onAccept = {() => onAccept(DateInDatabaseOrder(value))}
+                onAccept = {() => onAccept(dateInDatabaseOrder(value))}
                 showToolbar = {false}
                 renderInput = {(params) =>
                     <TextField
