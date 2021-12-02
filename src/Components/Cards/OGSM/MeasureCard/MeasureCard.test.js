@@ -1,7 +1,6 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { MeasureCard } from './index'
-import { determineStatusColor } from './MeasureCard'
 
 describe('<MeasureCard />', () => {
     const measure = {
@@ -37,6 +36,7 @@ describe('<MeasureCard />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
+        selectAssertionStatusesMock()
         selectMeasureByIdMock.mockReturnValue(measure)
     })
 
@@ -103,12 +103,6 @@ describe('<MeasureCard />', () => {
 
         fireEvent.click(screen.getByTitle('comment'))
         expect(requestSearchCommentsMock).toHaveBeenCalledTimes(1)
-    })
-
-    test('should return proper color', () => {
-        expect(determineStatusColor({ completedAt: 'foo' })).toEqual('#0fcf50')
-        expect(determineStatusColor({ startDate: 'foo' })).toEqual('#5dade2')
-        expect(determineStatusColor({})).toEqual('#c3c3c3')
     })
 
 })

@@ -2,10 +2,11 @@ import { ArchiveOutlined, Chat, Delete, ExploreOutlined } from '@mui/icons-mater
 import { DateTimePicker } from '@mui/lab'
 import DateAdapter from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Badge, Card, CardHeader, Grid, IconButton, TextField } from '@mui/material'
+import { Badge, Card, CardHeader, Grid, IconButton, Stack, TextField } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { StatusSelectorChip } from 'Components/StatusSelectorChip'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
@@ -119,28 +120,42 @@ function ObjectiveCard({ id, hasEdit }) {
                                         <ExploreOutlined
                                             fontSize = 'large'
                                             style = {{
-                                                color: defaultTag?.color ?? '#797979'
+                                                color: defaultTag.color
                                             }}
                                         />
                                     }
                                     title = {
-                                        <AutoSaveTextFieldTitle
-                                            canEdit = {hasEdit}
-                                            initialValue = {objective.text}
-                                            onSave = {updateObjectiveText}
-                                            title = {objective.text}
-                                            fullWidth
-                                            inputProps = {{
-                                                style: {
-                                                    textOverflow: 'ellipsis'
-                                                }
-                                            }}
-                                        />
+                                        <Grid container wrap = 'nowrap'>
+                                            <Grid item flexGrow = {1}>
+                                                <AutoSaveTextFieldTitle
+                                                    canEdit = {hasEdit}
+                                                    initialValue = {objective.text}
+                                                    onSave = {updateObjectiveText}
+                                                    title = {objective.text}
+                                                    fullWidth
+                                                    inputProps = {{
+                                                        style: {
+                                                            textOverflow: 'ellipsis'
+                                                        }
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item>
+                                                <StatusSelectorChip
+                                                    statusName = {defaultTag.name}
+                                                    onEditProps = {{ assertionId: id }}
+                                                    hasEdit = {hasEdit}
+                                                />
+                                            </Grid>
+                                        </Grid>
                                     }
                                     titleTypographyProps = {{
                                         variant: 'h5',
                                         color: 'text.primary',
-                                        'data-testid': 'PortfolioCard__header-title',
+                                        'data-testid': 'ObjectiveCard__header-title'
+                                    }}
+                                    style = {{
+                                        paddingTop: '8px'
                                     }}
                                 />
                             </Grid>
@@ -179,13 +194,8 @@ function ObjectiveCard({ id, hasEdit }) {
                             </LocalizationProvider>
                         </Grid>
                     </Grid>
-                    <Grid container
-                        direction = 'column'
-                        width = '68px'
-                        alignItems = 'center'
-                        marginTop = '6px'
-                    >
-                        <Grid item width = '34px' height = '34px' paddingTop = '16px'>
+                    <Grid item margin = {1}>
+                        <Stack>
                             <Badge
                                 badgeContent = {objective.commentIds?.length}
                                 overlap = 'circular'
@@ -196,31 +206,27 @@ function ObjectiveCard({ id, hasEdit }) {
                                     <Chat />
                                 </IconButton>
                             </Badge>
-                        </Grid>
-                        <Grid item width = '34px' height = '34px' paddingTop = '16px'>
                             {hasEdit && (
-                                <IconButton
-                                    color = 'secondary'
-                                    title = 'archive'
-                                    size = 'small'
-                                    onClick = {onArchiveClick}
-                                >
-                                    <ArchiveOutlined />
-                                </IconButton>
+                                <>
+                                    <IconButton
+                                        color = 'secondary'
+                                        title = 'archive'
+                                        size = 'small'
+                                        onClick = {onArchiveClick}
+                                    >
+                                        <ArchiveOutlined />
+                                    </IconButton>
+                                    <IconButton
+                                        color = 'secondary'
+                                        title = 'delete'
+                                        size = 'small'
+                                        onClick = {onDeleteClick}
+                                    >
+                                        <Delete />
+                                    </IconButton>
+                                </>
                             )}
-                        </Grid>
-                        <Grid item width = '34px' height = '34px' paddingTop = '16px'>
-                            {hasEdit && (
-                                <IconButton
-                                    color = 'secondary'
-                                    title = 'delete'
-                                    size = 'small'
-                                    onClick = {onDeleteClick}
-                                >
-                                    <Delete />
-                                </IconButton>
-                            )}
-                        </Grid>
+                        </Stack>
                     </Grid>
                 </Grid>
             </Card>

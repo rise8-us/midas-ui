@@ -7,6 +7,7 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { Collapsable } from 'Components/Cards/Collapsable'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { StatusSelectorChip } from 'Components/StatusSelectorChip'
 import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
@@ -42,21 +43,21 @@ function StrategyCard({ id, hasEdit }) {
     const [openConfirmation, setOpenConfirmation] = useState(false)
 
     const handleStartDateChange = (newValue) => {
-        const updatedObjective = {
+        const updatedStrategy = {
             ...strategy,
             startDate: newValue,
             children: []
         }
-        dispatch(requestUpdateAssertion(updatedObjective))
+        dispatch(requestUpdateAssertion(updatedStrategy))
     }
 
     const handleDueDateChange = (newValue) => {
-        const updatedObjective = {
+        const updatedStrategy = {
             ...strategy,
             dueDate: newValue,
             children: []
         }
-        dispatch(requestUpdateAssertion(updatedObjective))
+        dispatch(requestUpdateAssertion(updatedStrategy))
     }
 
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
@@ -119,6 +120,13 @@ function StrategyCard({ id, hasEdit }) {
                                 canEdit = {hasEdit}
                                 onSave = {updateStrategyText}
                                 fullWidth
+                            />
+                        </Grid>
+                        <Grid item>
+                            <StatusSelectorChip
+                                statusName = {strategy.status}
+                                onEditProps = {{ assertionId: id }}
+                                hasEdit = {hasEdit}
                             />
                         </Grid>
                         <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>

@@ -7,52 +7,33 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { Collapsable } from 'Components/Cards/Collapsable'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { StatusSelectorChip } from 'Components/StatusSelectorChip'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actions'
 import { selectMeasureById } from 'Redux/Measures/selectors'
 import { styled } from 'Styles/materialThemes'
 import { DateInDisplayOrder } from 'Utilities/dateHelpers'
+import { getMeasureStatus } from 'Utilities/getMeasureStatus'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.h5,
     fontSize: '18px',
 }))
 
-export const determineStatusColor = (measure) => {
-    if (measure.completedAt) return '#0fcf50'
-    else if (!measure.completedAt && measure.startDate) return '#5dade2'
-    else return '#c3c3c3'
-}
-
 function MeasureCard({ id, hasEdit }) {
     const dispatch = useDispatch()
+    const allStatuses = useSelector(selectAssertionStatuses)
 
     const measure = useSelector((state) => selectMeasureById(state, id))
+    const status = allStatuses[getMeasureStatus(measure)]
     const collapse = useRef(null)
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
-
-    const handleStartDateChange = (newValue) => {
-        const updatedMeasure = {
-            ...measure,
-            startDate: newValue,
-            children: []
-        }
-        dispatch(requestUpdateMeasure(updatedMeasure))
-    }
-
-    const handleDueDateChange = (newValue) => {
-        const updatedMeasure = {
-            ...measure,
-            dueDate: newValue,
-            children: []
-        }
-        dispatch(requestUpdateMeasure(updatedMeasure))
-    }
 
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
@@ -82,37 +63,14 @@ function MeasureCard({ id, hasEdit }) {
         dispatch(requestDeleteMeasure(id))
     }
 
-    const updateMeasureText = (value) => {
-        if (measure.text !== value) {
-            const updatedMeasure = {
-                ...measure,
-                text: value,
-                children: []
-            }
-            dispatch(requestUpdateMeasure(updatedMeasure))
-        }
-    }
+    const updateMeasure = (key, value) => {
+        if (key === 'text' && value === measure.text) return
 
-    const updateMeasureCurrentValue = (value) => {
-        if (measure.value !== value) {
-            const updatedMeasure = {
-                ...measure,
-                value: value,
-                children: []
-            }
-            dispatch(requestUpdateMeasure(updatedMeasure))
-        }
-    }
-
-    const updateMeasureTarget = (value) => {
-        if (measure.target !== value) {
-            const updatedMeasure = {
-                ...measure,
-                target: value,
-                children: []
-            }
-            dispatch(requestUpdateMeasure(updatedMeasure))
-        }
+        dispatch(requestUpdateMeasure({
+            ...measure,
+            [key]: value,
+            children: []
+        }))
     }
 
     return (
@@ -125,7 +83,7 @@ function MeasureCard({ id, hasEdit }) {
                             <TrackChangesOutlined
                                 fontSize = 'medium'
                                 style = {{
-                                    color: determineStatusColor(measure),
+                                    color: status?.color ?? '#c3c3c3',
                                     marginTop: '5px'
                                 }}
                             />
@@ -134,11 +92,14 @@ function MeasureCard({ id, hasEdit }) {
                             <AutoSaveTextFieldTitle
                                 canEdit = {hasEdit}
                                 initialValue = {measure.text}
-                                onSave = {updateMeasureText}
+                                onSave = {(v) => updateMeasure('text', v)}
                                 title = {measure.text}
                                 fullWidth
                                 multiline
                             />
+                        </Grid>
+                        <Grid item>
+                            <StatusSelectorChip statusName = {status?.name}/>
                         </Grid>
                         <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>
                             <Grid item>
@@ -201,7 +162,7 @@ function MeasureCard({ id, hasEdit }) {
                             <DateSelector
                                 label = 'Start Date'
                                 initialValue = {DateInDisplayOrder(measure?.startDate ?? null)}
-                                onAccept = {handleStartDateChange}
+                                onAccept = {(v) => updateMeasure('startDate', v)}
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
@@ -209,7 +170,7 @@ function MeasureCard({ id, hasEdit }) {
                             <DateSelector
                                 label = 'Due Date'
                                 initialValue = {DateInDisplayOrder(measure?.dueDate ?? null)}
-                                onAccept = {handleDueDateChange}
+                                onAccept = {(v) => updateMeasure('dueDate', v)}
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
@@ -234,7 +195,7 @@ function MeasureCard({ id, hasEdit }) {
                                         variant = 'outlined'
                                         label = 'Current Value'
                                         initialValue = {measure.value.toString()}
-                                        onSave = {updateMeasureCurrentValue}
+                                        onSave = {(v) => updateMeasure('value', v)}
                                         title = 'Current Value'
                                         revertOnEmpty
                                         fullWidth
@@ -247,7 +208,7 @@ function MeasureCard({ id, hasEdit }) {
                                         variant = 'outlined'
                                         label = 'Target'
                                         initialValue = {measure.target.toString()}
-                                        onSave = {updateMeasureTarget}
+                                        onSave = {(v) => updateMeasure('target', v)}
                                         title = 'Target'
                                         revertOnEmpty
                                         fullWidth

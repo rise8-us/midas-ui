@@ -44,7 +44,7 @@ function AssertionsTab({ productId, hasEdit }) {
             <Grid item>
                 <ViewSettings
                     objectives = {ogsms.objectives}
-                    initialIndex = {0}
+                    initialIndex = {1}
                     onChange = {setSelectedObjectiveId}
                     productId = {productId}
                     hasEdit = {hasEdit}
