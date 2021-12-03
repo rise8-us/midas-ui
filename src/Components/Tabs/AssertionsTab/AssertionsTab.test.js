@@ -9,7 +9,7 @@ jest.mock('Components/Cards/OGSM/StrategyCard/StrategyCard',
 jest.mock('Components/Cards/OGSM/ObjectiveCard/ObjectiveCard',
     () => (function testing() { return (<div>ObjectiveCard</div>) }))
 
-jest.mock('Components/Cards/OGSM/MeasureContainer/MeasureContainer',
+jest.mock('Components/Cards/OGSM/GoalContainer/GoalContainer',
     () => (function testing() { return (<div>GoalCard</div>) }))
 
 jest.mock('Components/Assertions/AssertionComments/AssertionComments',

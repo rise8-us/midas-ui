@@ -24,12 +24,12 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     fontSize: '18px',
 }))
 
-export default function MeasureCard({ id, hasEdit }) {
+export default function MeasureCard({ id, hasEdit, icon }) {
     const dispatch = useDispatch()
     const allStatuses = useSelector(selectAssertionStatuses)
 
     const measure = useSelector((state) => selectMeasureById(state, id))
-    const status = allStatuses[getMeasureStatus(measure)]
+    const status = allStatuses[getMeasureStatus(measure)] ?? { label: 'Not Started', color: '#c3c3c3' }
     const collapse = useRef(null)
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
@@ -60,7 +60,7 @@ export default function MeasureCard({ id, hasEdit }) {
     }
 
     const onDelete = () => {
-        dispatch(requestDeleteMeasure(id))
+        dispatch(requestDeleteMeasure(measure.id))
     }
 
     const updateMeasure = (key, value) => {
@@ -83,14 +83,12 @@ export default function MeasureCard({ id, hasEdit }) {
             onExpanded = {setExpanded}
             header = {
                 <Grid container wrap = 'nowrap' columnGap = {1} padding = {1} flexGrow = {1}>
-                    <Grid item>
-                        <TrackChangesOutlined
-                            fontSize = 'medium'
-                            style = {{
-                                color: status?.color ?? '#c3c3c3',
-                                marginTop: '5px'
-                            }}
-                        />
+                    <Grid
+                        item
+                        sx = {{ display: { xs: 'none', sm: 'flex' } }}
+                        style = {{ marginTop: '4px', color: status.color }}
+                    >
+                        {icon}
                     </Grid>
                     <Grid item flexGrow = {1}>
                         <AutoSaveTextFieldTitle
@@ -102,7 +100,7 @@ export default function MeasureCard({ id, hasEdit }) {
                             multiline
                         />
                     </Grid>
-                    <Grid item>
+                    <Grid item marginTop = '3px'>
                         <StatusSelectorChip statusName = {status?.name}/>
                     </Grid>
                     <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>
@@ -191,5 +189,10 @@ export default function MeasureCard({ id, hasEdit }) {
 
 MeasureCard.propTypes = {
     id: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool.isRequired
+    hasEdit: PropTypes.bool.isRequired,
+    icon: PropTypes.node
+}
+
+MeasureCard.defaultProps = {
+    icon: <TrackChangesOutlined/>
 }
