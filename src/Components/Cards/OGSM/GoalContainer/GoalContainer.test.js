@@ -2,10 +2,10 @@ import React from 'react'
 import {
     act, fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
 } from 'Utilities/test-utils'
-import { MeasureContainer } from './index'
+import { GoalContainer } from './index'
 
 jest.mock('Components/Cards/OGSM/MeasureCard/MeasureCard',
-    () => (function testing() { return (<div>MeasureCard</div>) }))
+    () => (function testing() { return (<div>GoalCard</div>) }))
 
 describe('<MeasureContainer />', () => {
 
@@ -18,21 +18,21 @@ describe('<MeasureContainer />', () => {
     })
 
     test('should render', () => {
-        render(<MeasureContainer id = {1} hasEdit/>)
+        render(<GoalContainer id = {1} hasEdit/>)
 
-        expect(screen.getByText('MeasureCard')).toBeInTheDocument()
+        expect(screen.getByText('GoalCard')).toBeInTheDocument()
     })
 
-    test('should call dispatch to create measure', () => {
+    test('should call dispatch to create goal', () => {
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<MeasureContainer id = {1} hasEdit/>)
+        render(<GoalContainer id = {1} hasEdit/>)
 
         act(() => {
-            fireEvent.click(screen.getByTestId('MeasureContainer__icon-add'))
+            fireEvent.click(screen.getByTestId('GoalContainer__icon-add'))
         })
 
-        waitForElementToBeRemoved(screen.getByTestId('MeasureContainer__loading'))
+        waitForElementToBeRemoved(screen.getByTestId('GoalContainer__loading'))
 
         expect(requestCreateMeasureMock).toHaveBeenCalledTimes(1)
     })

@@ -1,6 +1,6 @@
 import { Grid, Slide, Stack } from '@mui/material'
 import { AssertionComments } from 'Components/Assertions'
-import { MeasureContainer } from 'Components/Cards/OGSM/MeasureContainer'
+import { GoalContainer } from 'Components/Cards/OGSM/GoalContainer'
 import { ObjectiveCard } from 'Components/Cards/OGSM/ObjectiveCard'
 import { StrategyCard } from 'Components/Cards/OGSM/StrategyCard'
 import { ViewSettings } from 'Components/OGSM/ViewSettings'
@@ -57,7 +57,7 @@ function AssertionsTab({ productId, hasEdit }) {
                             <ObjectiveCard id = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
                         <Grid item xs = {12} lg = {4}>
-                            <MeasureContainer id = {selectedObjectiveId} hasEdit = {hasEdit}/>
+                            <GoalContainer id = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
                         <Grid item xs = {12} lg = {8}>
                             <Stack spacing = {1}>

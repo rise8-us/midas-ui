@@ -11,6 +11,9 @@ export default {
     PERSONA_DESCRIPTION: 'User Personas that this product is targeting its features for.',
     ROADMAP_NEW_ENTRY: 'Add new Roadmap entry',
     OGSM_NEW_ENTRY: 'Add new OGSM',
+    MEASURE_NEW_ENTRY: 'Add new Measure',
+    GOAL_NEW_ENTRY: 'Add a new Goal',
+    STRATEGY_NEW_ENTRY: 'Add a new Strategy',
     PRODUCT_VISION: 'The end goal for this product.',
     PRODUCT_MISSION: 'The near-term goal that supports the vision.',
     PRODUCT_PROBLEM_STATEMENT: 'A single statement that describes what problem this product is aiming to ' +
