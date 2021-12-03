@@ -20,7 +20,6 @@ const generateCircle = (color) => (
     />
 )
 
-
 const defaultAssertionData = (type, pId) => ({
     text: `Enter new ${type} here...`,
     productId: pId,

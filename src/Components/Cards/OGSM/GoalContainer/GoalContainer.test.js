@@ -7,7 +7,7 @@ import { GoalContainer } from './index'
 jest.mock('Components/Cards/OGSM/MeasureCard/MeasureCard',
     () => (function testing() { return (<div>GoalCard</div>) }))
 
-describe('<MeasureContainer />', () => {
+describe('<GoalContainer />', () => {
 
     const selectMeasuresByAssertionIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasuresByAssertionId')
     const requestCreateMeasureMock = useModuleMock('Redux/Measures/actions', 'requestCreateMeasure')

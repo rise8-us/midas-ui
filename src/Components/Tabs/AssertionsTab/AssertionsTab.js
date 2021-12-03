@@ -1,8 +1,8 @@
-import { Grid, Slide, Stack } from '@mui/material'
+import { Grid, Slide } from '@mui/material'
 import { AssertionComments } from 'Components/Assertions'
 import { GoalContainer } from 'Components/Cards/OGSM/GoalContainer'
 import { ObjectiveCard } from 'Components/Cards/OGSM/ObjectiveCard'
-import { StrategyCard } from 'Components/Cards/OGSM/StrategyCard'
+import { StrategyContainer } from 'Components/Cards/OGSM/StrategyContainer'
 import { ViewSettings } from 'Components/OGSM/ViewSettings'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -60,15 +60,7 @@ function AssertionsTab({ productId, hasEdit }) {
                             <GoalContainer id = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
                         <Grid item xs = {12} lg = {8}>
-                            <Stack spacing = {1}>
-                                {ogsms.strategies.filter(s => s.parentId === selectedObjectiveId)
-                                    .map((strat, index) => (
-                                        <Grid item key = {index} width = '100%'>
-                                            <StrategyCard id = {strat.id} hasEdit = {hasEdit}/>
-                                        </Grid>
-                                    ))
-                                }
-                            </Stack>
+                            <StrategyContainer id = {selectedObjectiveId} productId = {productId} hasEdit = {hasEdit} />
                         </Grid>
                     </Grid>
                 }
