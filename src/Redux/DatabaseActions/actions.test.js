@@ -60,7 +60,7 @@ describe('Comment action thunks', () => {
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/dbActions/backup')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
-        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('POST')
         expect(store.getActions()[0].type).toEqual(actions.requestTakeBackup.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestTakeBackup.fulfilled.toString())
     })
