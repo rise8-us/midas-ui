@@ -101,7 +101,7 @@ function Comment({ id, handleStatusUpdates }) {
                     alignItems: 'baseline',
                 }}
             >
-                <Typography color = 'text.secondary' style = {{ fontWeight: 'bold' }}>
+                <Typography fontWeight = 'bold'>
                     {comment.author?.displayName || comment.author?.email || comment.author?.username}
                 </Typography>
                 <div style = {{ display: 'flex', alignItems: 'center' }}>
@@ -152,7 +152,7 @@ function Comment({ id, handleStatusUpdates }) {
                     </div>
                 </div>
             ) : (
-                <Typography color = 'text.secondary'>{content}</Typography>
+                <Typography color = 'text.secondary' style = {{ wordBreak: 'break-word' }} >{content}</Typography>
             )}
             {handleStatusUpdates && parseStatus(status)}
         </Box>
