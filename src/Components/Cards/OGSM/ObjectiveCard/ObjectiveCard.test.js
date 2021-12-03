@@ -44,6 +44,7 @@ describe('<ObjectiveCard />', () => {
         render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
 
         userEvent.type(screen.getByDisplayValue('Git er done'), 'Git er done Edit{Enter}')
+
         expect(requestUpdateAssertionMock).toHaveBeenCalledWith({
             ...objective,
             text: 'Git er done Edit',
@@ -55,6 +56,7 @@ describe('<ObjectiveCard />', () => {
         render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
 
         userEvent.type(screen.getByDisplayValue('Git er done'), 'Git er done{Enter}')
+
         expect(requestUpdateAssertionMock).not.toHaveBeenCalled()
     })
 
@@ -63,6 +65,7 @@ describe('<ObjectiveCard />', () => {
 
         fireEvent.click(screen.getByTitle('delete'))
         fireEvent.click(screen.getByText('confirm'))
+
         expect(requestDeleteAssertionMock).toHaveBeenCalledWith(1)
     })
 
@@ -71,6 +74,7 @@ describe('<ObjectiveCard />', () => {
 
         fireEvent.click(screen.getByTitle('delete'))
         fireEvent.click(screen.getByText('cancel'))
+
         expect(requestDeleteAssertionMock).not.toHaveBeenCalled()
     })
 
@@ -78,13 +82,29 @@ describe('<ObjectiveCard />', () => {
         render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
 
         fireEvent.click(screen.getByTitle('archive'))
-        expect(requestArchiveAssertionMock).toHaveBeenCalledTimes(1)
+
+        expect(requestArchiveAssertionMock).toHaveBeenCalledWith({
+            id: 1, isArchived: true
+        })
+    })
+
+    test('should call dispatch to request unarchive assertion', () => {
+        selectAssertionByIdMock.mockReturnValue({ ...objective, isArchived: true })
+
+        render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByTitle('unarchive'))
+
+        expect(requestArchiveAssertionMock).toHaveBeenCalledWith({
+            id: 1, isArchived: false
+        })
     })
 
     test('should open comments', () => {
         render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
 
         fireEvent.click(screen.getByTitle('comment'))
+
         expect(requestSearchCommentsMock).toHaveBeenCalledTimes(1)
     })
 
