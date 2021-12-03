@@ -1,4 +1,4 @@
-import { ArchiveOutlined, Chat, Delete, ExploreOutlined } from '@mui/icons-material'
+import { ArchiveOutlined, Chat, Delete, ExploreOutlined, UnarchiveOutlined } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/lab'
 import DateAdapter from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
@@ -36,6 +36,7 @@ function ObjectiveCard({ id, hasEdit }) {
     const statuses = useSelector(selectAssertionStatuses)
 
     const defaultTag = statuses[objective.status] ?? { color: '#c3c3c3' }
+    const archiveObjective = () => dispatch(requestArchiveAssertion({ id, isArchived: !objective.isArchived }))
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
 
@@ -78,11 +79,6 @@ function ObjectiveCard({ id, hasEdit }) {
             deletedAssertionId: null,
             type: 'assertions'
         }))
-    }
-
-    const onArchiveClick = (event) => {
-        event.stopPropagation()
-        dispatch(requestArchiveAssertion({ id: id, isArchived: true }))
     }
 
     const onDeleteClick = (event) => {
@@ -207,11 +203,11 @@ function ObjectiveCard({ id, hasEdit }) {
                                 <>
                                     <IconButton
                                         color = 'secondary'
-                                        title = 'archive'
+                                        title = {objective.isArchived ? 'unarchive' : 'archive' }
                                         size = 'small'
-                                        onClick = {onArchiveClick}
+                                        onClick = {archiveObjective}
                                     >
-                                        <ArchiveOutlined />
+                                        {objective.isArchived ? <UnarchiveOutlined /> : <ArchiveOutlined />}
                                     </IconButton>
                                     <IconButton
                                         color = 'secondary'
