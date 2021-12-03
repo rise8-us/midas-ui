@@ -1,18 +1,22 @@
 import { Box, Button, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useRef } from 'react'
+import React, { useState } from 'react'
 
 function AddComment({ additionalNode, onSubmit, handleEnterKey, showSubmitButton }) {
 
-    const ref = useRef()
+    const [inputValue, setInputValue] = useState('')
+    const [nextKeyIsEnter, setNextKeyIsEnter] = useState(false)
 
-    const handleEnter = (event) => {
-        if (handleEnterKey && !event.shiftKey && event.key === 'Enter') handleSubmit()
+    const handleKeyDown = (event) => {
+        if (handleEnterKey && !event.shiftKey && event.key === 'Enter') {
+            setNextKeyIsEnter(true)
+            handleSubmit()
+        }
     }
 
     const handleSubmit = () => {
-        onSubmit(ref.current.value)
-        ref.current.value = ''
+        onSubmit(inputValue)
+        setInputValue('')
     }
 
     return (
@@ -21,6 +25,7 @@ function AddComment({ additionalNode, onSubmit, handleEnterKey, showSubmitButton
                 multiline
                 fullWidth
                 variant = 'filled'
+                value = {inputValue}
                 placeholder = 'Enter comment here...'
                 InputProps = {{
                     style: {
@@ -28,8 +33,12 @@ function AddComment({ additionalNode, onSubmit, handleEnterKey, showSubmitButton
                     },
                     disableUnderline: true
                 }}
-                inputRef = {ref}
-                onKeyDown = {handleEnter}
+                onChange = {(e) => nextKeyIsEnter
+                    ? setInputValue(e.target.value.trimEnd())
+                    : setInputValue(e.target.value)
+                }
+                onKeyDown = {handleKeyDown}
+                onKeyUp = {() => setNextKeyIsEnter(false)}
             />
             <Box display = 'flex' justifyContent = 'space-between' style = {{ direction: 'rtl' }}>
                 {showSubmitButton &&
