@@ -54,21 +54,21 @@ describe('<MeasureCard />', () => {
     test('should update measure', () => {
         render(<MeasureCard id = {measure.id} hasEdit = {true} />)
 
-        userEvent.type(screen.getByDisplayValue('Text'), 'Text Edit{Enter}')
+        userEvent.type(screen.getByDisplayValue('Text'), 'Text Edit{enter}')
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
             ...measure,
             text: 'Text Edit',
             children: []
         })
 
-        userEvent.type(screen.getByDisplayValue('1'), '10{Enter}')
+        userEvent.type(screen.getByDisplayValue('1'), '10{enter}')
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
             ...measure,
             target: '10',
             children: []
         })
 
-        userEvent.type(screen.getByDisplayValue('0'), '5{Enter}')
+        userEvent.type(screen.getByDisplayValue('0'), '5{enter}')
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
             ...measure,
             value: '5',
@@ -79,7 +79,7 @@ describe('<MeasureCard />', () => {
     test('should not call dispatch to request update measure text if no change', () => {
         render(<MeasureCard id = {measure.id} hasEdit = {true} />)
 
-        userEvent.type(screen.getByDisplayValue('Text'), 'Text{Enter}')
+        userEvent.type(screen.getByDisplayValue('Text'), 'Text{enter}')
         expect(requestUpdateMeasureMock).not.toHaveBeenCalled()
     })
 

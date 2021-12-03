@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitForElementToBeRemoved
 } from 'Utilities/test-utils'
 import { DatabaseTab } from './index'
 
@@ -18,11 +18,21 @@ describe('<DatabaseTab />', () => {
     test('should take backup', () => {
         render(<DatabaseTab />)
 
-        fireEvent.click(screen.getByText('take backup'))
+        fireEvent.click(screen.getByTestId('DatabaseTab__backup-button'))
 
         waitForElementToBeRemoved(screen.getByTestId('DatabaseTab__waiting-icon'))
 
         expect(requestTakeBackupMock).toHaveBeenCalledTimes(1)
+    })
+
+    test('should take backup with filename provided', () => {
+        render(<DatabaseTab />)
+
+        userEvent.type(screen.getByTestId('DatabaseTab__take-backup-input'), 'Test{enter}')
+
+        waitForElementToBeRemoved(screen.getByTestId('DatabaseTab__waiting-icon'))
+
+        expect(requestTakeBackupMock).toHaveBeenCalledWith('Test')
     })
 
     test('should restore', async() => {

@@ -20,8 +20,8 @@ export const requestRestore = createAsyncThunk(
 
 export const requestTakeBackup = createAsyncThunk(
     Constants.BACKUP_DB,
-    async(_, { rejectWithValue }) => {
-        const request = { endpoint: '/api/dbActions/backup', method: 'GET', body: { } }
+    async(fileName, { rejectWithValue }) => {
+        const request = { endpoint: '/api/dbActions/backup', method: 'POST', body: { fileName: fileName } }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

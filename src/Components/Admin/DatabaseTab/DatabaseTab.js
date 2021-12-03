@@ -1,6 +1,9 @@
 import { Backup, CloudDownload, Restore, WarningAmberRounded } from '@mui/icons-material'
-import { Autocomplete, Button, CircularProgress, Grid, TextField, Tooltip } from '@mui/material'
+import {
+    Autocomplete, Button, CircularProgress, Grid, IconButton, InputAdornment, TextField, Tooltip
+} from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -10,7 +13,6 @@ import FormatErrors from 'Utilities/FormatErrors'
 const getIcon = (processing, icon) => processing
     ? <CircularProgress color = 'inherit' size = {20} data-testid = 'DatabaseTab__waiting-icon'/>
     : icon
-
 function WarningIcon({ errors }) {
     return (
         <Tooltip title = {<FormatErrors errors = {errors} />}>
@@ -37,6 +39,7 @@ export default function DatabaseTab() {
     const [backupsList, setBackupsList] = useState([])
     const [fetchErrors, setFetchErrors] = useState([])
     const [selectedBackupFile, setSelectedBackupFile] = useState(null)
+    const [inputValue, setInputValue] = useState('')
 
     const executeGetBackupsList = () => {
         setIsLoading(true)
@@ -60,8 +63,10 @@ export default function DatabaseTab() {
     const handleDownloadClick = () =>
         dispatchAction(setIsProcessingDownload, dbActions.requestDownloadBackupFile(selectedBackupFile))
 
-    const handleBackupClick = () =>
-        dispatchAction(setIsProcessingBackup, dbActions.requestTakeBackup())
+    const handleBackupClick = () => {
+        dispatchAction(setIsProcessingBackup, dbActions.requestTakeBackup(inputValue))
+        setInputValue('')
+    }
 
     const handleRestoreClick = () =>
         dispatchAction(setIsProcessingRestore, dbActions.requestRestore(selectedBackupFile))
@@ -72,15 +77,28 @@ export default function DatabaseTab() {
     return (
         <Grid container marginY = '48px' padding = {3} rowSpacing = {2} direction = 'column' alignItems = 'center'>
             <Grid item justifyContent = 'center' flexGrow = {1} width = '375px'>
-                <Button
-                    onClick = {handleBackupClick}
-                    variant = 'outlined'
-                    endIcon = {getIcon(isProcessingBackup, <Backup />)}
-                    disableRipple
+                <TextField
+                    label = 'Take Backup'
                     fullWidth
-                >
-                    take backup
-                </Button>
+                    value = {inputValue}
+                    onChange = {(e) => setInputValue(e.target.value)}
+                    variant = 'outlined'
+                    placeholder = {format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss.SSS')}
+                    onKeyDown = {(e) => { e.key === 'Enter' && handleBackupClick() }}
+                    InputProps = {{
+                        'data-testid': 'DatabaseTab__take-backup-input',
+                        endAdornment:
+                        <InputAdornment position = 'end'>
+                            <IconButton
+                                label = 'Create Backup'
+                                data-testid = 'DatabaseTab__backup-button'
+                                onClick = {handleBackupClick}
+                            >
+                                {getIcon(isProcessingBackup, <Backup />)}
+                            </IconButton>
+                        </InputAdornment>,
+                    }}
+                />
             </Grid>
             <Grid item flexGrow = {1} width = '375px'>
                 <Autocomplete
