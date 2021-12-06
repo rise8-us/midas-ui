@@ -11,34 +11,17 @@ jest.mock('Components/Cards/OGSM/StrategyCard/StrategyCard',
 describe('<StrategyContainer />', () => {
 
     const selectAssertionByIdMock = useModuleMock('Redux/Assertions/selectors', 'selectAssertionById')
-    const selectAssertionsByParentIdMock = useModuleMock('Redux/Assertions/selectors', 'selectAssertionsByParentId')
+    const selectChildIdsByParentIdMock = useModuleMock('Redux/Assertions/selectors', 'selectChildIdsByParentId')
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
-
-    const objective = {
-        id: 1,
-        productId: 23
-    }
-
-    const allStrategiesResponse = [
-        {
-            id: 10,
-            text: 'strategy 1',
-            parentId: 1
-        }, {
-            id: 20,
-            text: 'strategy 2',
-            parentId: 1
-        }
-    ]
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue()
-        selectAssertionByIdMock.mockReturnValue(objective)
-        selectAssertionsByParentIdMock.mockReturnValue(allStrategiesResponse)
+        selectAssertionByIdMock.mockReturnValue({ id: 1 })
+        selectChildIdsByParentIdMock.mockReturnValue([10, 20])
     })
 
     test('should render', () => {
-        render(<StrategyContainer id = {1} hasEdit/>)
+        render(<StrategyContainer productId = {23} parentId = {1} hasEdit = {false}/>)
 
         expect(screen.getAllByText('StrategyCard')).toHaveLength(2)
     })
@@ -46,7 +29,7 @@ describe('<StrategyContainer />', () => {
     test('should call dispatch to create strategy', () => {
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<StrategyContainer id = {1} hasEdit/>)
+        render(<StrategyContainer productId = {23} parentId = {1} hasEdit/>)
 
         act(() => {
             fireEvent.click(screen.getByTestId('StrategyContainer__icon-add'))
@@ -54,7 +37,19 @@ describe('<StrategyContainer />', () => {
 
         waitForElementToBeRemoved(screen.getByTestId('StrategyContainer__loading'))
 
-        expect(requestCreateAssertionMock).toHaveBeenCalledTimes(1)
+        expect(requestCreateAssertionMock).toHaveBeenCalledWith({
+            parentId: 1,
+            productId: 23,
+            text: 'Enter new strategy here...',
+            status: 'NOT_STARTED',
+            children: [],
+            measures: [{
+                value: 0,
+                target: 1,
+                text: 'Enter new measure here...',
+                completionType: 'BINARY'
+            }]
+        })
     })
 
 })

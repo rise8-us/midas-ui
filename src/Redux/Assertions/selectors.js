@@ -11,6 +11,12 @@ export const selectAssertionsByParentId = (state, parentId) => {
     return Object.values(allAssertions).filter(assertion => assertion.parentId === parentId)
 }
 
+export const selectChildIdsByParentId = (state, parentId) => {
+    const allAssertions = state.assertions
+
+    return allAssertions[parentId]?.children ?? []
+}
+
 export const selectAssertionsByProductId = (state, productId) => {
     const allAssertions = state.assertions
 

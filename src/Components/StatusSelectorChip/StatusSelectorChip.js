@@ -52,7 +52,7 @@ StatusSelectorChip.propTypes = {
         'COMPLETED',
         'AT_RISK',
         'BLOCKED'
-    ]).isRequired,
+    ]),
     onEditProps: PropTypes.shape({
         assertionId: PropTypes.number
     }),
@@ -61,6 +61,7 @@ StatusSelectorChip.propTypes = {
 
 StatusSelectorChip.defaultProps = {
     onEditProps: { assertionId: null },
+    statusName: null,
     hasEdit: false
 }
 

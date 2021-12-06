@@ -6,22 +6,22 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
-import { selectAssertionsByParentId } from 'Redux/Assertions/selectors'
+import { selectChildIdsByParentId } from 'Redux/Assertions/selectors'
 
-export default function StrategyContainer({ id, productId, hasEdit }) {
+export default function StrategyContainer({ parentId, productId, hasEdit }) {
 
     const dispatch = useDispatch()
 
-    const strategies = useSelector((state) => selectAssertionsByParentId(state, id))
+    const strategyIds = useSelector((state) => selectChildIdsByParentId(state, parentId))
 
     const [adding, setAdding] = useState(false)
 
     const handleAddNewStrategy = () => {
         setAdding(true)
         dispatch(requestCreateAssertion({
+            parentId,
+            productId,
             text: 'Enter new strategy here...',
-            parentId: id,
-            productId: productId,
             status: 'NOT_STARTED',
             children: [],
             measures: [{
@@ -38,27 +38,10 @@ export default function StrategyContainer({ id, productId, hasEdit }) {
             <Stack spacing = {1} padding = {1}>
                 <Grid container alignItems = 'center' spacing = {1}>
                     <Grid item>
-                        <Directions
-                            fontSize = 'large'
-                            color = 'secondary'
-                            style = {{
-                                marginTop: '4px',
-                                marginLeft: '8px'
-                            }}
-                        />
+                        <Directions color = 'secondary' style = {{ fontSize: '28px' }}/>
                     </Grid>
-                    <Grid item>
-                        <Typography
-                            variant = 'h6'
-                            color = 'secondary'
-                            style = {{
-                                marginLeft: '2px',
-                                marginRight: '8px',
-                                paddingBottom: '2px'
-                            }}
-                        >
-                            Strategies
-                        </Typography>
+                    <Grid item alignSelf = 'baseline'>
+                        <Typography variant = 'h6' color = 'secondary'>Strategies</Typography>
                     </Grid>
                     {hasEdit &&
                         <Grid item>
@@ -84,8 +67,8 @@ export default function StrategyContainer({ id, productId, hasEdit }) {
                         </Grid>
                     }
                 </Grid>
-                {strategies.map((strategy, index) => (
-                    <StrategyCard key = {index} id = {strategy.id} hasEdit = {hasEdit}/>
+                {strategyIds.map((id, index) => (
+                    <StrategyCard key = {index} id = {id} hasEdit = {hasEdit}/>
                 ))}
             </Stack>
         </Card>
@@ -93,7 +76,7 @@ export default function StrategyContainer({ id, productId, hasEdit }) {
 }
 
 StrategyContainer.propTypes = {
-    id: PropTypes.number.isRequired,
+    parentId: PropTypes.number.isRequired,
     productId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired
 }

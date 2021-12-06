@@ -72,7 +72,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
 
         return (
             <Typography textAlign = 'center' color = 'primary'>
-                Completed on: {date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] }
+                Completed on: {date[0]} {date[1]} {date[2]} {date[3]}
             </Typography>
         )
     }
@@ -116,7 +116,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                                 </IconButton>
                             </Badge>
                         </Grid>
-                        {hasEdit && (
+                        {hasEdit &&
                             <Grid item>
                                 <IconButton
                                     color = 'secondary'
@@ -127,7 +127,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                                     <Delete />
                                 </IconButton>
                             </Grid>
-                        )}
+                        }
                     </Grid>
                 </Grid>
             }
@@ -152,27 +152,22 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                 />
             }
         >
-            <Grid container >
-                <Grid container
-                    direction = 'column'
-                    sx = {{ justifyContent: { xs: 'center', sm: 'space-between' } }}
-                >
-                    <Grid item padding = {2}>
-                        <DateSelector
-                            label = 'Start Date'
-                            onAccept = {(v) => updateMeasure('startDate', v)}
-                            initialValue = {dateInDisplayOrder(measure?.startDate ?? null)}
-                            hasEdit = {hasEdit}
-                        />
-                    </Grid>
-                    <Grid item padding = {2}>
-                        <DateSelector
-                            label = 'Due Date'
-                            initialValue = {dateInDisplayOrder(measure?.dueDate ?? null)}
-                            onAccept = {(v) => updateMeasure('dueDate', v)}
-                            hasEdit = {hasEdit}
-                        />
-                    </Grid>
+            <Grid container justifyContent = 'space-between'>
+                <Grid item padding = {2} xs = {4}>
+                    <DateSelector
+                        label = 'Start Date'
+                        onAccept = {(v) => updateMeasure('startDate', v)}
+                        initialValue = {dateInDisplayOrder(measure?.startDate ?? null)}
+                        hasEdit = {hasEdit}
+                    />
+                </Grid>
+                <Grid item padding = {2} xs = {4}>
+                    <DateSelector
+                        label = 'Due Date'
+                        initialValue = {dateInDisplayOrder(measure?.dueDate ?? null)}
+                        onAccept = {(v) => updateMeasure('dueDate', v)}
+                        hasEdit = {hasEdit}
+                    />
                 </Grid>
             </Grid>
             {openConfirmation && (

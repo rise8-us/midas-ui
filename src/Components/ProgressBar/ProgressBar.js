@@ -35,7 +35,11 @@ export default function ProgressBar({
                         onSave = {onSaveValue}
                         revertOnEmpty
                         InputProps = {{
-                            startAdornment: (<FlagOutlined color = 'secondary' style = {{ marginLeft: '-5px' }}/>),
+                            startAdornment: (
+                                <Tooltip title = 'Current value towards completion' arrow>
+                                    <FlagOutlined color = 'secondary' style = {{ marginLeft: '-5px' }}/>
+                                </Tooltip>
+                            ),
                             disableUnderline: true
                         }}
                     />
@@ -49,7 +53,9 @@ export default function ProgressBar({
                         onSave = {onSaveTarget}
                         InputProps = {{
                             endAdornment: (
-                                <SportsScoreOutlined color = 'secondary' style = {{ marginRight: '-5px' }}/>
+                                <Tooltip title = 'Target value for completion' arrow>
+                                    <SportsScoreOutlined color = 'secondary' style = {{ marginRight: '-5px' }}/>
+                                </Tooltip>
                             ),
                             disableUnderline: true
                         }}

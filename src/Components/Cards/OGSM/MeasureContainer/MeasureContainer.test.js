@@ -9,16 +9,16 @@ jest.mock('Components/Cards/OGSM/MeasureCard/MeasureCard',
 
 describe('<MeasureContainer />', () => {
 
-    const selectMeasuresByAssertionIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasuresByAssertionId')
+    const selectMeasureIdsByAssertionIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasureIdsByAssertionId')
     const requestCreateMeasureMock = useModuleMock('Redux/Measures/actions', 'requestCreateMeasure')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue()
-        selectMeasuresByAssertionIdMock.mockReturnValue([{ id: 1 }])
+        selectMeasureIdsByAssertionIdMock.mockReturnValue([1])
     })
 
     test('should render', () => {
-        render(<MeasureContainer id = {1} hasEdit/>)
+        render(<MeasureContainer assertionId = {2} hasEdit = {false}/>)
 
         expect(screen.getByText('MeasureCard')).toBeInTheDocument()
     })
@@ -26,7 +26,7 @@ describe('<MeasureContainer />', () => {
     test('should call dispatch to create measure', () => {
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<MeasureContainer id = {1} hasEdit/>)
+        render(<MeasureContainer assertionId = {2} hasEdit/>)
 
         act(() => {
             fireEvent.click(screen.getByTestId('MeasureContainer__icon-add'))
