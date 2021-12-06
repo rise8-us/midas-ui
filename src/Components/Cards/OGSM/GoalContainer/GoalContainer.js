@@ -6,15 +6,15 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateMeasure, requestSearchMeasures } from 'Redux/Measures/actions'
-import { selectMeasuresByAssertionId } from 'Redux/Measures/selectors'
+import { selectMeasureIdsByAssertionId } from 'Redux/Measures/selectors'
 
-export default function GoalContainer({ id, hasEdit }) {
+export default function GoalContainer({ assertionId, hasEdit }) {
 
     const dispatch = useDispatch()
 
     const [adding, setAdding] = useState(false)
 
-    const goals = useSelector((state) => selectMeasuresByAssertionId(state, id))
+    const goalIds = useSelector((state) => selectMeasureIdsByAssertionId(state, assertionId))
 
     const handleAddNewGoal = () => {
         setAdding(true)
@@ -22,44 +22,27 @@ export default function GoalContainer({ id, hasEdit }) {
             value: 0,
             target: 1,
             text: 'Enter new goal here...',
-            assertionId: id,
+            assertionId,
             completionType: 'BINARY'
         })).then(() => setAdding(false))
     }
 
     useEffect(() => {
-        dispatch(requestSearchMeasures(`assertion.id:${id}`))
-    }, [id])
+        dispatch(requestSearchMeasures(`assertion.id:${assertionId}`))
+    }, [assertionId])
 
     return (
         <Card>
             <Stack spacing = {1} padding = {1}>
                 <Grid container alignItems = 'center' spacing = {1}>
                     <Grid item>
-                        <TrackChangesOutlined
-                            fontSize = 'large'
-                            color = 'secondary'
-                            style = {{
-                                marginTop: '5px',
-                                marginLeft: '8px'
-                            }}
-                        />
+                        <TrackChangesOutlined color = 'secondary' style = {{ fontSize: '28px' }}/>
+                    </Grid>
+                    <Grid item alignSelf = 'baseline'>
+                        <Typography variant = 'h6' color = 'secondary'>Goals</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography
-                            variant = 'h6'
-                            color = 'secondary'
-                            style = {{
-                                marginLeft: '2px',
-                                marginRight: '8px',
-                                paddingBottom: '2px'
-                            }}
-                        >
-                            Goals
-                        </Typography>
-                    </Grid>
-                    {hasEdit &&
-                        <Grid item>
+                        {hasEdit &&
                             <Tooltip arrow title = {Tooltips.GOAL_NEW_ENTRY}>
                                 <IconButton
                                     color = 'primary'
@@ -73,11 +56,11 @@ export default function GoalContainer({ id, hasEdit }) {
                                     }
                                 </IconButton>
                             </Tooltip>
-                        </Grid>
-                    }
+                        }
+                    </Grid>
                 </Grid>
-                {goals.map((goal, index) =>
-                    <MeasureCard key = {index} id = {goal.id} hasEdit = {hasEdit}/>
+                {goalIds.map((id, index) =>
+                    <MeasureCard key = {index} id = {id} hasEdit = {hasEdit}/>
                 )}
             </Stack>
         </Card>
@@ -85,6 +68,6 @@ export default function GoalContainer({ id, hasEdit }) {
 }
 
 GoalContainer.propTypes = {
-    id: PropTypes.number.isRequired,
+    assertionId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired
 }

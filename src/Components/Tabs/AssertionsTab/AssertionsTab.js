@@ -14,6 +14,10 @@ import { selectAssertionsByProductId } from 'Redux/Assertions/selectors'
 
 export const commentSidebarOpen = (id, type) => id && type ? true : false
 
+const defStyle = {
+    maxWidth: '100%',
+    flexGrow: 1
+}
 function AssertionsTab({ productId, hasEdit }) {
     const dispatch = useDispatch()
     const ref = useRef()
@@ -56,11 +60,15 @@ function AssertionsTab({ productId, hasEdit }) {
                         <Grid item xs = {12}>
                             <ObjectiveCard id = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
-                        <Grid item xs = {12} lg = {4}>
-                            <GoalContainer id = {selectedObjectiveId} hasEdit = {hasEdit}/>
+                        <Grid item xs = {12} lg = {4} minWidth = '350px' style = {defStyle}>
+                            <GoalContainer assertionId = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
-                        <Grid item xs = {12} lg = {8}>
-                            <StrategyContainer id = {selectedObjectiveId} productId = {productId} hasEdit = {hasEdit} />
+                        <Grid item xs = {12} lg = {8} style = {defStyle}>
+                            <StrategyContainer
+                                parentId = {selectedObjectiveId}
+                                productId = {productId}
+                                hasEdit = {hasEdit}
+                            />
                         </Grid>
                     </Grid>
                 }

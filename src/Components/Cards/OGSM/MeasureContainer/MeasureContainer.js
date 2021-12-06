@@ -6,15 +6,15 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateMeasure, requestSearchMeasures } from 'Redux/Measures/actions'
-import { selectMeasuresByAssertionId } from 'Redux/Measures/selectors'
+import { selectMeasureIdsByAssertionId } from 'Redux/Measures/selectors'
 
-export default function MeasureContainer({ id, hasEdit }) {
+export default function MeasureContainer({ assertionId, hasEdit }) {
 
     const dispatch = useDispatch()
 
     const [adding, setAdding] = useState(false)
 
-    const measures = useSelector((state) => selectMeasuresByAssertionId(state, id))
+    const measureIds = useSelector((state) => selectMeasureIdsByAssertionId(state, assertionId))
 
     const handleAddNewMeasure = () => {
         setAdding(true)
@@ -22,40 +22,23 @@ export default function MeasureContainer({ id, hasEdit }) {
             value: 0,
             target: 1,
             text: 'Enter new measure here...',
-            assertionId: id,
+            assertionId,
             completionType: 'BINARY'
         })).then(() => setAdding(false))
     }
 
     useEffect(() => {
-        dispatch(requestSearchMeasures(`assertion.id:${id}`))
-    }, [id])
+        dispatch(requestSearchMeasures(`assertion.id:${assertionId}`))
+    }, [assertionId])
 
     return (
         <Stack spacing = {1} paddingBottom = {1}>
             <Grid container alignItems = 'center' spacing = {1}>
                 <Grid item>
-                    <BarChart
-                        fontSize = 'large'
-                        color = 'secondary'
-                        style = {{
-                            marginTop: '5px',
-                            marginLeft: '8px'
-                        }}
-                    />
+                    <BarChart color = 'secondary' style = {{ fontSize: '28px' }}/>
                 </Grid>
-                <Grid item>
-                    <Typography
-                        variant = 'h6'
-                        color = 'secondary'
-                        style = {{
-                            marginLeft: '2px',
-                            marginRight: '8px',
-                            paddingBottom: '2px'
-                        }}
-                    >
-                        Measures
-                    </Typography>
+                <Grid item alignSelf = 'baseline'>
+                    <Typography variant = 'h6' color = 'secondary'>Measures</Typography>
                 </Grid>
                 {hasEdit &&
                     <Grid item>
@@ -78,14 +61,14 @@ export default function MeasureContainer({ id, hasEdit }) {
                     </Grid>
                 }
             </Grid>
-            {measures.map((measure, index) =>
-                <MeasureCard key = {index} id = {measure.id} hasEdit = {hasEdit} icon = {<BarChart/>}/>
+            {measureIds.map((id, index) =>
+                <MeasureCard key = {index} id = {id} hasEdit = {hasEdit} icon = {<BarChart/>}/>
             )}
         </Stack>
     )
 }
 
 MeasureContainer.propTypes = {
-    id: PropTypes.number.isRequired,
+    assertionId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired
 }

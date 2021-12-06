@@ -13,6 +13,7 @@ import FormatErrors from 'Utilities/FormatErrors'
 const getIcon = (processing, icon) => processing
     ? <CircularProgress color = 'inherit' size = {20} data-testid = 'DatabaseTab__waiting-icon'/>
     : icon
+
 function WarningIcon({ errors }) {
     return (
         <Tooltip title = {<FormatErrors errors = {errors} />}>
@@ -64,7 +65,11 @@ export default function DatabaseTab() {
         dispatchAction(setIsProcessingDownload, dbActions.requestDownloadBackupFile(selectedBackupFile))
 
     const handleBackupClick = () => {
-        dispatchAction(setIsProcessingBackup, dbActions.requestTakeBackup(inputValue))
+        dispatchAction(
+            setIsProcessingBackup,
+            dbActions.requestTakeBackup(inputValue?.trimEnd().length > 0 ? inputValue : null)
+        )
+
         setInputValue('')
     }
 

@@ -5,31 +5,29 @@ import {
 import { DatabaseTab } from './index'
 
 describe('<DatabaseTab />', () => {
+    jest.setTimeout(30000)
 
     const requestTakeBackupMock = useModuleMock('Redux/DatabaseActions/actions', 'requestTakeBackup')
     const requestRestoreMock = useModuleMock('Redux/DatabaseActions/actions', 'requestRestore')
     const requestDownloadBackupFileMock = useModuleMock('Redux/DatabaseActions/actions', 'requestDownloadBackupFile')
 
     beforeEach(() => {
-        useDispatchMock()
-            .mockResolvedValue({ type: '/', payload: ['backups/1738/file42.fun'] })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: ['backups/1738/file42.fun'] })
     })
 
-    test('should take backup', () => {
+    test('should take backup with no filename provided', () => {
         render(<DatabaseTab />)
 
         fireEvent.click(screen.getByTestId('DatabaseTab__backup-button'))
-
         waitForElementToBeRemoved(screen.getByTestId('DatabaseTab__waiting-icon'))
 
-        expect(requestTakeBackupMock).toHaveBeenCalledTimes(1)
+        expect(requestTakeBackupMock).toHaveBeenCalledWith(null)
     })
 
     test('should take backup with filename provided', () => {
         render(<DatabaseTab />)
 
         userEvent.type(screen.getByTestId('DatabaseTab__take-backup-input'), 'Test{enter}')
-
         waitForElementToBeRemoved(screen.getByTestId('DatabaseTab__waiting-icon'))
 
         expect(requestTakeBackupMock).toHaveBeenCalledWith('Test')

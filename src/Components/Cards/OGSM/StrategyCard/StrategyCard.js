@@ -2,7 +2,7 @@ import { Chat, Delete, OpenWith as Directions } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/lab'
 import DateAdapter from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Badge, Grid, IconButton, TextField } from '@mui/material'
+import { Badge, Grid, IconButton, Stack, TextField } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { Collapsable } from 'Components/Cards/Collapsable'
 import { DateSelector } from 'Components/DateSelector'
@@ -106,13 +106,13 @@ function StrategyCard({ id, hasEdit }) {
                 width = '100%'
                 header = {
                     <Grid container wrap = 'nowrap' columnGap = {1} padding = {1} flexGrow = {1}>
-                        <Grid item>
-                            <Directions
-                                style = {{
-                                    color: defaultStatus.color,
-                                    marginTop: '5px'
-                                }}
-                            />
+                        <Grid
+                            item
+                            sx = {{ display: { xs: 'none', sm: 'flex' } }}
+                            style = {{ height: '38px', color: defaultStatus.color }}
+                            alignItems = 'center'
+                        >
+                            <Directions />
                         </Grid>
                         <Grid item flexGrow = {1}>
                             <AutoSaveTextFieldTitle
@@ -122,15 +122,15 @@ function StrategyCard({ id, hasEdit }) {
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item marginTop = '6px'>
                             <StatusSelectorChip
                                 statusName = {strategy.status}
                                 onEditProps = {{ assertionId: id }}
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
-                        <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>
-                            <Grid item>
+                        <Grid item>
+                            <Stack marginTop = '3px'>
                                 <Badge
                                     badgeContent = {strategy.commentIds?.length}
                                     overlap = 'circular'
@@ -141,9 +141,7 @@ function StrategyCard({ id, hasEdit }) {
                                         <Chat />
                                     </IconButton>
                                 </Badge>
-                            </Grid>
-                            {hasEdit && (
-                                <Grid item>
+                                {hasEdit &&
                                     <IconButton
                                         color = 'secondary'
                                         title = 'delete'
@@ -152,21 +150,14 @@ function StrategyCard({ id, hasEdit }) {
                                     >
                                         <Delete />
                                     </IconButton>
-                                </Grid>
-                            )}
+                                }
+                            </Stack>
                         </Grid>
                     </Grid>
                 }
             >
-                <Grid container wrap = 'nowrap' columnGap = {2}>
-                    <Grid container
-                        item
-                        direction = 'column'
-                        xs = 'auto'
-                        rowGap = {2}
-                        marginLeft = {2}
-                        marginBottom = {2}
-                    >
+                <Stack spacing = {2}>
+                    <Grid container justifyContent = 'space-between'>
                         <Grid item padding = {2}>
                             <DateSelector
                                 label = 'Start Date'
@@ -174,6 +165,18 @@ function StrategyCard({ id, hasEdit }) {
                                 onAccept = {handleStartDateChange}
                                 hasEdit = {hasEdit}
                             />
+                        </Grid>
+                        <Grid item padding = {2} display = {strategy.completedAt ? 'flex' : 'none'}>
+                            <LocalizationProvider dateAdapter = {DateAdapter}>
+                                <DateTimePicker
+                                    label = 'Completed At'
+                                    value = {strategy.completedAt}
+                                    disabled
+                                    disableOpenPicker
+                                    onChange = {() => { return }}
+                                    renderInput = {(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
                         </Grid>
                         <Grid item padding = {2}>
                             <DateSelector
@@ -183,23 +186,11 @@ function StrategyCard({ id, hasEdit }) {
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
-                        <Grid item padding = {2}>
-                            <LocalizationProvider dateAdapter = {DateAdapter}>
-                                <DateTimePicker
-                                    label = {(strategy?.completedAt ?? null) ? 'Completed At' : 'Not Completed'}
-                                    value = {strategy?.completedAt ?? null}
-                                    disabled
-                                    disableOpenPicker
-                                    onChange = {() => { return }}
-                                    renderInput = {(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
                     </Grid>
-                    <Grid item flexGrow = {1} marginRight = {1}>
-                        <MeasureContainer id = {id} hasEdit = {hasEdit} />
+                    <Grid item flexGrow = {1} padding = {2}>
+                        <MeasureContainer assertionId = {id} hasEdit = {hasEdit} />
                     </Grid>
-                </Grid>
+                </Stack>
             </Collapsable>
             {openConfirmation && (
                 <ConfirmationPopup
