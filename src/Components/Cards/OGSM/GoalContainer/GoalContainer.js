@@ -1,4 +1,4 @@
-import { AddCircleOutline, TrackChangesOutlined } from '@mui/icons-material'
+import { AddCircleOutline } from '@mui/icons-material'
 import { Card, CircularProgress, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { MeasureCard } from 'Components/Cards/OGSM/MeasureCard'
 import Tooltips from 'Constants/Tooltips'
@@ -19,25 +19,22 @@ export default function GoalContainer({ assertionId, hasEdit }) {
     const handleAddNewGoal = () => {
         setAdding(true)
         dispatch(requestCreateMeasure({
+            assertionId,
             value: 0,
             target: 1,
             text: 'Enter new goal here...',
-            assertionId,
             completionType: 'BINARY'
         })).then(() => setAdding(false))
     }
 
     useEffect(() => {
-        dispatch(requestSearchMeasures(`assertion.id:${assertionId}`))
+        assertionId && dispatch(requestSearchMeasures(`assertion.id:${assertionId}`))
     }, [assertionId])
 
     return (
         <Card>
             <Stack spacing = {1} padding = {1}>
                 <Grid container alignItems = 'center' spacing = {1}>
-                    <Grid item>
-                        <TrackChangesOutlined color = 'secondary' style = {{ fontSize: '28px' }}/>
-                    </Grid>
                     <Grid item alignSelf = 'baseline'>
                         <Typography variant = 'h6' color = 'secondary'>Goals</Typography>
                     </Grid>

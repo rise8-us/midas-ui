@@ -30,7 +30,12 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     paddingLeft: theme.spacing(1)
 }))
 
+const StyledDiv = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 1, 1, 4),
+}))
+
 function StrategyCard({ id, hasEdit }) {
+
     const dispatch = useDispatch()
     const statuses = useAssertionStatuses()
 
@@ -155,6 +160,11 @@ function StrategyCard({ id, hasEdit }) {
                         </Grid>
                     </Grid>
                 }
+                footer = {
+                    <StyledDiv>
+                        <MeasureContainer assertionId = {id} hasEdit = {hasEdit} />
+                    </StyledDiv>
+                }
             >
                 <Stack spacing = {2}>
                     <Grid container justifyContent = 'space-between'>
@@ -186,9 +196,6 @@ function StrategyCard({ id, hasEdit }) {
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
-                    </Grid>
-                    <Grid item flexGrow = {1} padding = {2}>
-                        <MeasureContainer assertionId = {id} hasEdit = {hasEdit} />
                     </Grid>
                 </Stack>
             </Collapsable>

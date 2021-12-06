@@ -3,14 +3,6 @@ import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } fr
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
-    const mockState = {
-        app: {
-            assertionStatus: {
-                NOT_STARTED: { name: 'NOT_STARTED', label: 'Not Started', color: '#000000' },
-                COMPLETED: { name: 'COMPLETED', label: 'Completed', color: '#000000' }
-            }
-        }
-    }
 
     const requestCreateAssertionMock = useModuleMock('Redux/Assertions/actions', 'requestCreateAssertion')
 
@@ -43,7 +35,7 @@ describe('<AssertionHeader>', () => {
         useDispatchMock().mockResolvedValue({ data: {} })
         const onCreateMock = jest.fn()
 
-        render(<AssertionHeader productId = {1} onCreate = {onCreateMock} hasEdit/>, { initialState: mockState })
+        render(<AssertionHeader productId = {1} onCreate = {onCreateMock} hasEdit/>)
 
         fireEvent.click(screen.getByLabelText('Add new OGSM'))
 
