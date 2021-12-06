@@ -1,24 +1,11 @@
 import { AddCircleOutline } from '@mui/icons-material'
-import { Chip, CircularProgress, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { CircularProgress, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import Tooltips from 'Constants/Tooltips'
-import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
-
-const generateCircle = (color) => (
-    <div
-        style = {{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            marginLeft: '5px',
-            backgroundColor: color
-        }}
-    />
-)
 
 const defaultAssertionData = (type, pId) => ({
     text: `Enter new ${type} here...`,
@@ -35,8 +22,6 @@ const defaultMeasureData = (type) => ({
 
 function AssertionHeader({ productId, hasEdit, onCreate }) {
     const dispatch = useDispatch()
-
-    const allStatuses = useAssertionStatuses()
 
     const [adding, setAdding] = useState(false)
 
@@ -96,22 +81,6 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
                         </Tooltip>
                     }
                 </Grid>
-            </Grid>
-            <Grid container item style = {{ height: '22px', alignContent: 'center' }}>
-                {allStatuses.map((status, index) => (
-                    <Grid item key = {index}>
-                        <Chip
-                            label = {status.label.toUpperCase()}
-                            icon = {generateCircle(status.color)}
-                            variant = 'outlined'
-                            color = 'secondary'
-                            style = {{
-                                border: 0,
-                                fontSize: '10px'
-                            }}
-                        />
-                    </Grid>
-                ))}
             </Grid>
         </Grid>
     )

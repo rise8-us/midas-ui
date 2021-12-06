@@ -1,4 +1,4 @@
-import { AddCircleOutline, OpenWith as Directions } from '@mui/icons-material'
+import { AddCircleOutline } from '@mui/icons-material'
 import { Card, CircularProgress, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { StrategyCard } from 'Components/Cards/OGSM/StrategyCard'
 import Tooltips from 'Constants/Tooltips'
@@ -12,7 +12,7 @@ export default function StrategyContainer({ parentId, productId, hasEdit }) {
 
     const dispatch = useDispatch()
 
-    const strategyIds = useSelector((state) => selectChildIdsByParentId(state, parentId))
+    const strategies = useSelector((state) => selectChildIdsByParentId(state, parentId))
 
     const [adding, setAdding] = useState(false)
 
@@ -37,9 +37,6 @@ export default function StrategyContainer({ parentId, productId, hasEdit }) {
         <Card>
             <Stack spacing = {1} padding = {1}>
                 <Grid container alignItems = 'center' spacing = {1}>
-                    <Grid item>
-                        <Directions color = 'secondary' style = {{ fontSize: '28px' }}/>
-                    </Grid>
                     <Grid item alignSelf = 'baseline'>
                         <Typography variant = 'h6' color = 'secondary'>Strategies</Typography>
                     </Grid>
@@ -67,8 +64,8 @@ export default function StrategyContainer({ parentId, productId, hasEdit }) {
                         </Grid>
                     }
                 </Grid>
-                {strategyIds.map((id, index) => (
-                    <StrategyCard key = {index} id = {id} hasEdit = {hasEdit}/>
+                {strategies.map((strategy, index) => (
+                    <StrategyCard key = {index} id = {strategy.id} hasEdit = {hasEdit}/>
                 ))}
             </Stack>
         </Card>

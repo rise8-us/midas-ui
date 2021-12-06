@@ -28,15 +28,12 @@ export default function MeasureContainer({ assertionId, hasEdit }) {
     }
 
     useEffect(() => {
-        dispatch(requestSearchMeasures(`assertion.id:${assertionId}`))
+        assertionId && dispatch(requestSearchMeasures(`assertion.id:${assertionId}`))
     }, [assertionId])
 
     return (
-        <Stack spacing = {1} paddingBottom = {1}>
+        <Stack spacing = {1}>
             <Grid container alignItems = 'center' spacing = {1}>
-                <Grid item>
-                    <BarChart color = 'secondary' style = {{ fontSize: '28px' }}/>
-                </Grid>
                 <Grid item alignSelf = 'baseline'>
                     <Typography variant = 'h6' color = 'secondary'>Measures</Typography>
                 </Grid>
