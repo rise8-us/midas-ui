@@ -11,7 +11,7 @@ const allAssertionsResponse = [
     }, {
         id: 2,
         text: 'Assertion2',
-        children: [{ id: 3 }],
+        children: [{ id: 3, children: [] }],
         commentIds: []
     }
 ]
@@ -26,14 +26,14 @@ describe('Assertions Reducer', () => {
         expect(reducer(undefined, {})).toEqual({})
     })
 
-    test('should searches Assertions', () => {
+    test('should search Assertions', () => {
         const actions = [{ type: reduxActions.requestSearchAssertions.fulfilled, payload: allAssertionsResponse }]
 
         const state = actions.reduce(reducer, {})
 
         expect(state[1]).toEqual(allAssertionsResponse[0])
         expect(state[2]).toEqual({ ...allAssertionsResponse[1], children: [3] })
-        expect(Object.keys(state)).toHaveLength(2)
+        expect(Object.keys(state)).toHaveLength(3)
     })
 
     test('create assertions should walk children', () => {
@@ -72,7 +72,7 @@ describe('Assertions Reducer', () => {
 
         const state = actions.reduce(reducer, {})
 
-        expect(Object.keys(state)).toHaveLength(2)
+        expect(Object.keys(state)).toHaveLength(3)
     })
 
 })

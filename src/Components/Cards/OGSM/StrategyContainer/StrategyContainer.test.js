@@ -17,7 +17,7 @@ describe('<StrategyContainer />', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue()
         selectAssertionByIdMock.mockReturnValue({ id: 1 })
-        selectChildIdsByParentIdMock.mockReturnValue([{ id: 10 }, { id: 20 }])
+        selectChildIdsByParentIdMock.mockReturnValue([10, 20])
     })
 
     test('should render', () => {
