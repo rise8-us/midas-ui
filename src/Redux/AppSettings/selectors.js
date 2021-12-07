@@ -17,6 +17,8 @@ export const selectRoadmapTypes = (state) => state.app.roadmapTypes
 
 export const selectAssertionStatuses = (state) => state.app.assertionStatus
 
+export const selectCompletionTypes = (state) => state.app.completionType ?? {}
+
 export const selectAssertionCommentInfo = (state) => ({
     id: state.app.assertionCommentId,
     type: state.app.assertionCommentType

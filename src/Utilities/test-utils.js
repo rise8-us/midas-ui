@@ -87,16 +87,8 @@ export function mockProductConfigurationFields(props) {
 export function selectRoadmapStatusesMock() {
     const enumSelectors = require('Redux/AppSettings/selectors')
     jest.spyOn(enumSelectors, 'selectRoadmapStatuses').mockReturnValue({
-        FUTURE: {
-            name: 'FUTURE',
-            label: 'Future',
-            color: '#000000'
-        },
-        COMPLETE: {
-            name: 'COMPLETE',
-            label: 'Complete',
-            color: '#000000'
-        }
+        FUTURE: { name: 'FUTURE', label: 'Future', color: '#000000' },
+        COMPLETE: { name: 'COMPLETE', label: 'Complete', color: '#000000' }
     })
 }
 
@@ -108,6 +100,16 @@ export function selectAssertionStatusesMock() {
         AT_RISK: { name: 'AT_RISK', label: 'At Risk', color: '#ff9800' },
         BLOCKED: { name: 'BLOCKED', label: 'Blocked', color: '#e91e63' },
         NOT_STARTED: { name: 'NOT_STARTED', label: 'Not Started', color: '#969696' }
+    })
+}
+
+export function selectCompletionTypesMock() {
+    const enumSelectors = require('Redux/AppSettings/selectors')
+    jest.spyOn(enumSelectors, 'selectCompletionTypes').mockReturnValue({
+        BINARY: { name: 'BINARY', displayName: 'Binary', description: 'Complete? true or false' },
+        PERCENTAGE: { name: 'PERCENTAGE', displayName: 'Percentage', description: 'Percentage of completeness' },
+        NUMBER: { name: 'NUMBER', displayName: 'Number', description: 'Numerical representation of completeness' },
+        MONEY: { name: 'MONEY', displayName: 'Money', description: 'Monetary representation of completeness' },
     })
 }
 

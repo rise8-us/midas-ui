@@ -1,8 +1,9 @@
 import { Chat, Delete, TrackChangesOutlined } from '@mui/icons-material'
-import { Badge, Grid, IconButton, Typography } from '@mui/material'
+import { Badge, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { Collapsable } from 'Components/Cards/Collapsable'
 import { DateSelector } from 'Components/DateSelector'
+import { CompletionType } from 'Components/OGSM/CompletionType'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { ProgressBar } from 'Components/ProgressBar'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
@@ -24,13 +25,23 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     fontSize: '18px',
 }))
 
+const displayCompletedAt = (dateTime) => {
+    const date = parseISO(dateTime).toString().split(' ')
+
+    return (
+        <Typography textAlign = 'center' color = 'primary'>
+            Completed on: {date[0]} {date[1]} {date[2]} {date[3]}
+        </Typography>
+    )
+}
 export default function MeasureCard({ id, hasEdit, icon }) {
     const dispatch = useDispatch()
-    const allStatuses = useSelector(selectAssertionStatuses)
-
-    const measure = useSelector((state) => selectMeasureById(state, id))
-    const status = allStatuses[getMeasureStatus(measure)] ?? { label: 'Not Started', color: '#c3c3c3' }
     const collapse = useRef(null)
+
+    const allStatuses = useSelector(selectAssertionStatuses)
+    const measure = useSelector((state) => selectMeasureById(state, id))
+
+    const status = allStatuses[getMeasureStatus(measure)] ?? { label: 'Not Started', color: '#c3c3c3' }
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [expanded, setExpanded] = useState(false)
@@ -59,23 +70,13 @@ export default function MeasureCard({ id, hasEdit, icon }) {
         setOpenConfirmation(true)
     }
 
-    const onDelete = () => {
-        dispatch(requestDeleteMeasure(measure.id))
-    }
+    const onDelete = () => dispatch(requestDeleteMeasure(measure.id))
 
     const updateMeasure = (key, value) => {
-        value !== measure[key] && dispatch(requestUpdateMeasure({ ...measure, [key]: value, children: [] }))
+        value !== measure[key] && dispatch(requestUpdateMeasure({ ...measure, children: [], [key]: value }))
     }
 
-    const displayCompletedAt = (dateTime) => {
-        const date = parseISO(dateTime).toString().split(' ')
-
-        return (
-            <Typography textAlign = 'center' color = 'primary'>
-                Completed on: {date[0]} {date[1]} {date[2]} {date[3]}
-            </Typography>
-        )
-    }
+    const updateCompletionType = (data) => dispatch(requestUpdateMeasure({ ...measure, children: [], ...data }))
 
     return (
         <Collapsable
@@ -152,8 +153,8 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                 />
             }
         >
-            <Grid container justifyContent = 'space-between'>
-                <Grid item padding = {2} xs = {4}>
+            <Grid container justifyContent = 'space-between' spacing = {2} paddingX = {2}>
+                <Grid item xs = {4}>
                     <DateSelector
                         label = 'Start Date'
                         onAccept = {(v) => updateMeasure('startDate', v)}
@@ -161,13 +162,27 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                         hasEdit = {hasEdit}
                     />
                 </Grid>
-                <Grid item padding = {2} xs = {4}>
+                <Grid item xs = {4}>
                     <DateSelector
                         label = 'Due Date'
                         initialValue = {dateInDisplayOrder(measure?.dueDate ?? null)}
                         onAccept = {(v) => updateMeasure('dueDate', v)}
                         hasEdit = {hasEdit}
                     />
+                </Grid>
+                <Grid item xs = {12}>
+                    <Stack spacing = {2} paddingBottom = {2}>
+                        <Divider />
+                        <CompletionType
+                            hasEdit = {hasEdit}
+                            value = {measure.value}
+                            target = {measure.target}
+                            completionType = {measure.completionType}
+                            onSaveValue = {(v) => updateMeasure('value', v)}
+                            onSaveTarget = {(v) => updateMeasure('target', v)}
+                            onChangeType = {updateCompletionType}
+                        />
+                    </Stack>
                 </Grid>
             </Grid>
             {openConfirmation && (
