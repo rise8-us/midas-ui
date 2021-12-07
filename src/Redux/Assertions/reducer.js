@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
-import { setStateFromArray } from 'Utilities/reduxHelpers'
 import * as actions from './actions'
 
 const addChildren = (state, assertion) => {
@@ -17,12 +16,7 @@ const assertionSlice = createSlice({
     reducers: { },
     extraReducers: {
         [actions.requestSearchAssertions.fulfilled]: (state, action) => {
-            action.payload.forEach(assertion =>
-                state[assertion.id] = {
-                    ...assertion,
-                    children: Object.values(assertion.children).map(child => child.id)
-                }
-            )
+            action.payload.forEach(assertion => addChildren(state, assertion))
         },
         [actions.requestCreateAssertion.fulfilled]: (state, action) => addChildren(state, action.payload),
         [actions.requestUpdateAssertion.fulfilled]: (state, action) => addChildren(state, action.payload),
@@ -30,8 +24,9 @@ const assertionSlice = createSlice({
             setAssertionComment({ assertionId: null, deletedAssertionId: action.payload.id })
             delete state[action.payload.id]
         },
-        [actions.requestFetchAllBlockedAssertions.fulfilled]: (state, action) =>
-            setStateFromArray(state, action.payload)
+        [actions.requestFetchAllBlockedAssertions.fulfilled]: (state, action) => {
+            action.payload.forEach(assertion => addChildren(state, assertion))
+        }
     }
 })
 

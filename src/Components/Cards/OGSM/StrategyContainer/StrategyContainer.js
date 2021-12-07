@@ -64,8 +64,8 @@ export default function StrategyContainer({ parentId, productId, hasEdit }) {
                         </Grid>
                     }
                 </Grid>
-                {strategies.map((strategy, index) => (
-                    <StrategyCard key = {index} id = {strategy.id} hasEdit = {hasEdit}/>
+                {strategies.map((id, index) => (
+                    <StrategyCard key = {index} id = {id} hasEdit = {hasEdit}/>
                 ))}
             </Stack>
         </Card>
