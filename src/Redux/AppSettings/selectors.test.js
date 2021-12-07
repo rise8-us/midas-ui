@@ -1,6 +1,7 @@
 import * as selectors from './selectors'
 
 describe('AppSettings selectors', () => {
+    const emptyState = { app: {} }
     const mockState = {
         app: {
             roles: {
@@ -23,6 +24,11 @@ describe('AppSettings selectors', () => {
             assertionStatus: {
                 aStatus: {
                     name: 'aStatus'
+                }
+            },
+            completionType: {
+                cType: {
+                    name: 'cType'
                 }
             }
         }
@@ -61,5 +67,13 @@ describe('AppSettings selectors', () => {
 
     test('should return object with assertion comment info', () => {
         expect(selectors.selectAssertionCommentInfo(mockState)).toEqual({ id: undefined, type: undefined })
+    })
+
+    test('should return empty object', () => {
+        expect(selectors.selectCompletionTypes(emptyState)).toEqual({})
+    })
+
+    test('should return object', () => {
+        expect(selectors.selectCompletionTypes(mockState)).toEqual({ cType: { name: 'cType' } })
     })
 })

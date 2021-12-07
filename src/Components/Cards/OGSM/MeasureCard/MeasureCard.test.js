@@ -4,6 +4,16 @@ import {
 } from 'Utilities/test-utils'
 import { MeasureCard } from './index'
 
+jest.mock('Components/OGSM/CompletionType/CompletionType', () => function testing(props) {
+    return (
+        <>
+            <div onClick = {() => props.onSaveValue(51)}>onSaveValue</div>
+            <div onClick = {() => props.onSaveTarget(101)}>onSaveTarget</div>
+            <div onClick = {() => props.onChangeType({ completionType: 'BINARY' })}>onChangeType</div>
+        </>
+    )
+})
+
 describe('<MeasureCard />', () => {
     const measure = {
         id: 1,
@@ -40,6 +50,7 @@ describe('<MeasureCard />', () => {
         useDispatchMock().mockReturnValue({})
         selectAssertionStatusesMock()
         selectMeasureByIdMock.mockReturnValue(measure)
+        requestUpdateMeasureMock.mockClear()
     })
 
     test('should render', () => {
@@ -51,7 +62,7 @@ describe('<MeasureCard />', () => {
         expect(screen.getByDisplayValue('03/03/2020')).toBeInTheDocument()
     })
 
-    test('should update measure', () => {
+    test('should update measure text', () => {
         render(<MeasureCard id = {measure.id} hasEdit = {true} />)
 
         userEvent.type(screen.getByDisplayValue('Text'), 'Text Edit{enter}')
@@ -60,18 +71,37 @@ describe('<MeasureCard />', () => {
             text: 'Text Edit',
             children: []
         })
+    })
 
-        userEvent.type(screen.getByDisplayValue('1'), '10{enter}')
+    test('should update measure value', () => {
+        render(<MeasureCard id = {measure.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByText('onSaveValue'))
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
             ...measure,
-            target: '10',
+            value: 51,
             children: []
         })
+    })
 
-        userEvent.type(screen.getByDisplayValue('0'), '5{enter}')
+    test('should update measure target', () => {
+        render(<MeasureCard id = {measure.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByText('onSaveTarget'))
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
             ...measure,
-            value: '5',
+            target: 101,
+            children: []
+        })
+    })
+
+    test('should update measure completionType', () => {
+        render(<MeasureCard id = {measure.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByText('onChangeType'))
+        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
+            ...measure,
+            completionType: 'BINARY',
             children: []
         })
     })
