@@ -17,9 +17,11 @@ export const determineCompletionTypeData = (completionType, onChangeType, value,
         break
     }
     case 'PERCENTAGE': {
+        const newValue = value < target ? (value / target * 100) : 100
+
         onChangeType({
             completionType,
-            value: value < target ? (value / target * 100) : 100,
+            value: Number.parseFloat(newValue.toFixed(2)),
             target: 100
         })
         break
@@ -36,15 +38,23 @@ export const determineCompletionTypeData = (completionType, onChangeType, value,
     }
 }
 
-function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornment, title }) {
+const isValid = (value) => RegExp(/^\d{0,}([.]{0,1})\d{0,2}$/).test(value)
+
+function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornment, title, max }) {
     const [value, setValue] = useState(inputValue)
 
-    const valueToReturn = useDebounce(value, 500)
+    const valueToReturn = useDebounce(Math.min(value, max), 500)
 
-    const onValueChange = (e) => setValue(e.target.value)
+    const onValueChange = ({ target }) => {
+        const { value } = target
+
+        value.length === 0
+            ? setValue('')
+            : isValid(value) && setValue(value, max)
+    }
 
     useEffect(() => {
-        valueToReturn && onChange(valueToReturn)
+        onChange(valueToReturn ? valueToReturn : 0)
     }, [valueToReturn])
 
     useEffect(() => {
@@ -53,15 +63,14 @@ function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornme
 
     return (
         <TextField
+            fullWidth
             variant = 'outlined'
+            size = 'small'
             label = {label}
             value = {value}
             disabled = {disabled}
             onChange = {onValueChange}
-            style = {{ marginLeft: '16px', minWidth: '100px', width: '0px' }}
-            inputProps = {{ inputMode: 'numeric', pattern: '[0-9]*' }}
             InputProps = {{
-                style: { height: '40px' },
                 startAdornment: showMoneyAdornment && (
                     <AttachMoney fontSize = 'small' color = 'secondary' style = {{ marginLeft: '-10px' }}/>
                 ),
@@ -81,21 +90,23 @@ function TargetType({ type, inputValue, onChange, disabled }) {
 
     if (['NUMBER', 'MONEY'].includes(type)) {
         return (
-            <TypeTextField
-                disabled = {disabled}
-                inputValue = {inputValue}
-                label = 'Target'
-                onChange = {onChange}
-                showMoneyAdornment = {type === 'MONEY'}
-                title = 'Target value required for completion'
-            />
+            <div style = {{ marginLeft: '8px' }}>
+                <TypeTextField
+                    disabled = {disabled}
+                    inputValue = {inputValue}
+                    label = 'Target'
+                    onChange = {onChange}
+                    showMoneyAdornment = {type === 'MONEY'}
+                    title = 'Target value required for completion'
+                />
+            </div>
         )
     }
 
     return null
 }
 
-function ValueType({ type, inputValue, onChange, disabled }) {
+function ValueType({ type, inputValue, onChange, disabled, max }) {
 
     if (['NUMBER', 'MONEY', 'PERCENTAGE'].includes(type)) {
         return (
@@ -106,6 +117,7 @@ function ValueType({ type, inputValue, onChange, disabled }) {
                 onChange = {onChange}
                 showMoneyAdornment = {type === 'MONEY'}
                 title = 'Current progress towards completion'
+                max = {max}
             />
         )
     }
@@ -117,9 +129,10 @@ function ValueType({ type, inputValue, onChange, disabled }) {
                     <Typography variant = 'caption' color = 'secondary'>Complete</Typography>
                 </label>
             </Grid>
-            <Grid item height = '40px'>
+            <Grid item>
                 <Checkbox
                     id = 'toggle'
+                    disabled = {disabled}
                     checked = {inputValue === 1 ? true : false}
                     size = 'small'
                     onChange = {(e) => onChange(e.target.checked ? 1 : 0)}
@@ -154,15 +167,13 @@ export default function CompletionType({
     }
 
     return (
-        <Grid container flexWrap = 'nowrap' justifyContent = 'space-between'>
-            <Grid item xs = {6}>
+        <Grid container flexWrap = 'nowrap'>
+            <Grid item minWidth = '165px' marginRight = {1} style = {{ flexGrow: 1 }}>
                 <Autocomplete
-                    style = {{ minWidth: '100px', marginTop: '-4px' }}
                     freeSolo
-                    size = 'small'
+                    autoComplete
                     forcePopupIcon = {hasEdit}
                     disabled = {!hasEdit}
-                    autoComplete
                     getOptionLabel = {(option) => option.displayName}
                     options = {Object.values(completionTypes).filter(cType => cType.name !== 'STRING')}
                     value = {renderedOption}
@@ -170,22 +181,26 @@ export default function CompletionType({
                     renderInput = {(params) =>
                         <TextField
                             {...params}
+                            fullWidth
                             label = 'Completion Type'
                             error = {error?.length > 0}
                             helperText = {error}
+                            variant = 'outlined'
+                            size = 'small'
                         />
                     }
                 />
             </Grid>
-            <Grid item xs = 'auto' marginLeft = 'auto'>
+            <Grid item marginLeft = 'auto'>
                 <ValueType
                     type = {renderedOption?.name}
                     onChange = {(values) => onSaveValue(values)}
                     inputValue = {value}
+                    max = {target}
                     disabled = {!hasEdit}
                 />
             </Grid>
-            <Grid item xs = 'auto' zeroMinWidth>
+            <Grid item zeroMinWidth>
                 <TargetType
                     type = {renderedOption?.name}
                     onChange = {(values) => onSaveTarget(values)}
@@ -228,8 +243,14 @@ const defaultProps = {
 }
 TargetType.propTypes = defaultPropTypes
 TargetType.defaultProps = defaultProps
-ValueType.propTypes = defaultPropTypes
-ValueType.defaultProps = defaultProps
+ValueType.propTypes = {
+    ...defaultPropTypes,
+    max: PropTypes.number
+}
+ValueType.defaultProps = {
+    ...defaultProps,
+    max: Number.MAX_SAFE_INTEGER
+}
 
 TypeTextField.propTypes = {
     disabled: PropTypes.bool.isRequired,
@@ -238,4 +259,9 @@ TypeTextField.propTypes = {
     onChange: PropTypes.func.isRequired,
     showMoneyAdornment: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
+    max: PropTypes.number
+}
+
+TypeTextField.defaultProps = {
+    max: Number.MAX_SAFE_INTEGER
 }

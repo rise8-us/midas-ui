@@ -6,6 +6,8 @@ import { CompletionType } from './index'
 describe('<CompletionType />', () => {
     jest.setTimeout(40000)
 
+    const testMock = jest.fn()
+
     const requiredProps = {
         onChangeType: jest.fn,
         onSaveTarget: jest.fn,
@@ -16,6 +18,7 @@ describe('<CompletionType />', () => {
 
     beforeEach(() => {
         selectCompletionTypesMock()
+        testMock.mockReset()
     })
 
     test('should render with unknown completionType', () => {
@@ -48,50 +51,72 @@ describe('<CompletionType />', () => {
         expect(screen.getAllByTestId('AttachMoneyIcon')).toHaveLength(2)
     })
 
-    test('should call onSaveValue onChange', () => {
-        const onSaveValueMock = jest.fn()
+    test('should handle empty values onChange', () => {
         jest.useFakeTimers()
 
         render(
             <CompletionType
                 {...requiredProps}
+                target = {13}
                 completionType = 'NUMBER'
-                onSaveValue = {onSaveValueMock}
+                onSaveValue = {testMock}
                 hasEdit
             />
         )
 
-        userEvent.type(screen.getByDisplayValue(0), '1')
+        userEvent.clear(screen.getByLabelText('Value'))
 
         act(() => {
             jest.runAllTimers()
         })
 
-        expect(screen.getByDisplayValue('01')).toBeInTheDocument()
-        expect(onSaveValueMock).toHaveBeenCalledWith('01')
+        expect(screen.getByDisplayValue('')).toBeInTheDocument()
+        expect(testMock).toHaveBeenCalledWith(0)
     })
 
-    test('should call onSaveTarget onChange', () => {
-        const onSaveTargetMock = jest.fn()
+    test('should call onSaveValue onChange', () => {
         jest.useFakeTimers()
 
         render(
             <CompletionType
                 {...requiredProps}
+                target = {13}
                 completionType = 'NUMBER'
-                onSaveTarget = {onSaveTargetMock}
+                onSaveValue = {testMock}
                 hasEdit
             />
         )
 
-        userEvent.type(screen.getByDisplayValue(1), '2')
+        userEvent.type(screen.getByLabelText('Value'), '{backspace}12')
 
         act(() => {
             jest.runAllTimers()
         })
 
         expect(screen.getByDisplayValue('12')).toBeInTheDocument()
-        expect(onSaveTargetMock).toHaveBeenCalledWith('12')
+        expect(testMock).toHaveBeenCalledWith(12)
+    })
+
+    test('should call onSaveTarget onChange', () => {
+        jest.useFakeTimers()
+
+        render(
+            <CompletionType
+                {...requiredProps}
+                completionType = 'NUMBER'
+                onSaveTarget = {testMock}
+                hasEdit
+            />
+        )
+
+        userEvent.type(screen.getByLabelText('Target'), '2')
+
+        act(() => {
+            jest.runAllTimers()
+        })
+
+        expect(screen.getByDisplayValue('12')).toBeInTheDocument()
+        expect(testMock).toHaveBeenCalledWith(12)
     })
 
     test('should handle onchange for binary completion type', () => {
@@ -113,20 +138,18 @@ describe('<CompletionType />', () => {
     })
 
     test('should handle onchange for binary completion type', () => {
-        const onSaveValueMock = jest.fn()
-
         render(
             <CompletionType
                 {...requiredProps}
                 completionType = 'BINARY'
-                onSaveValue = {onSaveValueMock}
+                onSaveValue = {testMock}
                 hasEdit
             />
         )
 
         userEvent.click(screen.getByText('Complete'))
 
-        expect(onSaveValueMock).toHaveBeenCalledWith(1)
+        expect(testMock).toHaveBeenCalledWith(1)
     })
 
     test('should throw error when type change isnt selected', () => {
@@ -138,14 +161,12 @@ describe('<CompletionType />', () => {
     })
 
     test('should handle onChangeType', () => {
-        const onSaveTypeMock = jest.fn()
-
-        render(<CompletionType {...requiredProps} completionType = 'NUMBER' onChangeType = {onSaveTypeMock} hasEdit/>)
+        render(<CompletionType {...requiredProps} completionType = 'NUMBER' onChangeType = {testMock} hasEdit/>)
 
         userEvent.click(screen.getByTestId('ArrowDropDownIcon'))
         userEvent.click(screen.getByText('Binary'))
 
-        expect(onSaveTypeMock).toHaveBeenCalledWith({ 'completionType': 'BINARY', 'target': 1, 'value': 0 })
+        expect(testMock).toHaveBeenCalledWith({ 'completionType': 'BINARY', 'target': 1, 'value': 0 })
     })
 
     describe('determineCompletionTypeData', () => {
