@@ -1,5 +1,7 @@
 import React from 'react'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent
+} from 'Utilities/test-utils'
 import { StrategyCard } from './index'
 
 describe('<StrategyCard />', () => {
@@ -25,9 +27,12 @@ describe('<StrategyCard />', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectAssertionByIdMock.mockReturnValue(strategy)
+        selectAssertionStatusesMock()
     })
 
     test('should render', () => {
+        selectAssertionByIdMock.mockReturnValue({ ...strategy, status: null })
+
         render(<StrategyCard id = {strategy.id} hasEdit = {false} />)
 
         expect(screen.getByDisplayValue('Text')).toBeInTheDocument()

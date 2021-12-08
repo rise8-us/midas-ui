@@ -1,9 +1,9 @@
 import { Chat, Delete, TrackChangesOutlined } from '@mui/icons-material'
 import { Badge, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
-import { Collapsable } from 'Components/Cards/Collapsable'
+import { CollapsableCard } from 'Components/Cards/CollapsableCard'
+import { CompletionType } from 'Components/CompletionType'
 import { DateSelector } from 'Components/DateSelector'
-import { CompletionType } from 'Components/OGSM/CompletionType'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { ProgressBar } from 'Components/ProgressBar'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
@@ -79,7 +79,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     const updateCompletionType = (data) => dispatch(requestUpdateMeasure({ ...measure, children: [], ...data }))
 
     return (
-        <Collapsable
+        <CollapsableCard
             ref = {collapse}
             onExpanded = {setExpanded}
             header = {
@@ -195,7 +195,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                     detail = {`You are about to delete measure: '${measure.text}'`}
                 />
             )}
-        </Collapsable>
+        </CollapsableCard>
     )
 }
 

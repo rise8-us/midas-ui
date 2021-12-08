@@ -2,13 +2,13 @@ import React from 'react'
 import {
     act, fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
 } from 'Utilities/test-utils'
-import { StrategyContainer } from './index'
+import { StrategiesContainer } from './index'
 
 jest.mock('Components/Cards/OGSM/StrategyCard/StrategyCard',
     () => (function testing() { return (<div>StrategyCard</div>) }))
 
 
-describe('<StrategyContainer />', () => {
+describe('<StrategiesContainer />', () => {
 
     const selectAssertionByIdMock = useModuleMock('Redux/Assertions/selectors', 'selectAssertionById')
     const selectChildIdsByParentIdMock = useModuleMock('Redux/Assertions/selectors', 'selectChildIdsByParentId')
@@ -21,7 +21,7 @@ describe('<StrategyContainer />', () => {
     })
 
     test('should render', () => {
-        render(<StrategyContainer productId = {23} parentId = {1} hasEdit = {false}/>)
+        render(<StrategiesContainer productId = {23} parentId = {1} hasEdit = {false}/>)
 
         expect(screen.getAllByText('StrategyCard')).toHaveLength(2)
     })
@@ -29,13 +29,13 @@ describe('<StrategyContainer />', () => {
     test('should call dispatch to create strategy', () => {
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<StrategyContainer productId = {23} parentId = {1} hasEdit/>)
+        render(<StrategiesContainer productId = {23} parentId = {1} hasEdit/>)
 
         act(() => {
-            fireEvent.click(screen.getByTestId('StrategyContainer__icon-add'))
+            fireEvent.click(screen.getByTestId('StrategiesContainer__icon-add'))
         })
 
-        waitForElementToBeRemoved(screen.getByTestId('StrategyContainer__loading'))
+        waitForElementToBeRemoved(screen.getByTestId('StrategiesContainer__loading'))
 
         expect(requestCreateAssertionMock).toHaveBeenCalledWith({
             parentId: 1,

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateMeasure, requestSearchMeasures } from 'Redux/Measures/actions'
 import { selectMeasureIdsByAssertionId } from 'Redux/Measures/selectors'
 
-export default function GoalContainer({ assertionId, hasEdit }) {
+export default function GoalsContainer({ assertionId, hasEdit }) {
 
     const dispatch = useDispatch()
 
@@ -48,8 +48,11 @@ export default function GoalContainer({ assertionId, hasEdit }) {
                                     onClick = {handleAddNewGoal}
                                 >
                                     {adding
-                                        ? <CircularProgress size = '1.25rem' data-testid = 'GoalContainer__loading'/>
-                                        : <AddCircleOutline fontSize = 'small' data-testid = 'GoalContainer__icon-add'/>
+                                        ? <CircularProgress size = '1.25rem' data-testid = 'GoalsContainer__loading'/>
+                                        : <AddCircleOutline
+                                            fontSize = 'small'
+                                            data-testid = 'GoalsContainer__icon-add'
+                                        />
                                     }
                                 </IconButton>
                             </Tooltip>
@@ -64,7 +67,7 @@ export default function GoalContainer({ assertionId, hasEdit }) {
     )
 }
 
-GoalContainer.propTypes = {
+GoalsContainer.propTypes = {
     assertionId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired
 }

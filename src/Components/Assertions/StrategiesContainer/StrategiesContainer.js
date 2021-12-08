@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
 import { selectChildIdsByParentId } from 'Redux/Assertions/selectors'
 
-export default function StrategyContainer({ parentId, productId, hasEdit }) {
+export default function StrategiesContainer({ parentId, productId, hasEdit }) {
 
     const dispatch = useDispatch()
 
@@ -52,11 +52,11 @@ export default function StrategyContainer({ parentId, productId, hasEdit }) {
                                     {adding ?
                                         <CircularProgress
                                             size = '1.25rem'
-                                            data-testid = 'StrategyContainer__loading'
+                                            data-testid = 'StrategiesContainer__loading'
                                         /> :
                                         <AddCircleOutline
                                             fontSize = 'small'
-                                            data-testid = 'StrategyContainer__icon-add'
+                                            data-testid = 'StrategiesContainer__icon-add'
                                         />
                                     }
                                 </IconButton>
@@ -72,7 +72,7 @@ export default function StrategyContainer({ parentId, productId, hasEdit }) {
     )
 }
 
-StrategyContainer.propTypes = {
+StrategiesContainer.propTypes = {
     parentId: PropTypes.number.isRequired,
     productId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired

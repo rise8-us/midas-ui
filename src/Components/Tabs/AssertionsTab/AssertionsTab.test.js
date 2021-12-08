@@ -6,11 +6,11 @@ import { AssertionsTab } from './index'
 jest.mock('Components/Cards/OGSM/ObjectiveCard/ObjectiveCard',
     () => (function testing() { return (<div>ObjectiveCard</div>) }))
 
-jest.mock('Components/Cards/OGSM/StrategyContainer/StrategyContainer',
-    () => (function testing() { return (<div>StrategyContainer</div>) }))
+jest.mock('Components/Assertions/StrategiesContainer/StrategiesContainer',
+    () => (function testing() { return (<div>StrategiesContainer</div>) }))
 
-jest.mock('Components/Cards/OGSM/GoalContainer/GoalContainer',
-    () => (function testing() { return (<div>GoalContainer</div>) }))
+jest.mock('Components/Assertions/GoalsContainer/GoalsContainer',
+    () => (function testing() { return (<div>GoalsContainer</div>) }))
 
 jest.mock('Components/Assertions/AssertionComments/AssertionComments',
     () => (function testing() { return (<div>AssertionCommentsComponent</div>) }))
@@ -38,8 +38,8 @@ describe('<AssertionsTab>', () => {
 
         expect(screen.getByText('Objectives, Goals, Strategies, and Measures')).toBeInTheDocument()
         expect(screen.getByText('ObjectiveCard')).toBeInTheDocument()
-        expect(screen.getByText('StrategyContainer')).toBeInTheDocument()
-        expect(screen.getByText('GoalContainer')).toBeInTheDocument()
+        expect(screen.getByText('StrategiesContainer')).toBeInTheDocument()
+        expect(screen.getByText('GoalsContainer')).toBeInTheDocument()
     })
 
     test('should show comments', () => {

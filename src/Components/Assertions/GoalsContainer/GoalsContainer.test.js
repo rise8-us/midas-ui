@@ -2,12 +2,12 @@ import React from 'react'
 import {
     act, fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
 } from 'Utilities/test-utils'
-import { MeasureContainer } from './index'
+import { GoalsContainer } from './index'
 
 jest.mock('Components/Cards/OGSM/MeasureCard/MeasureCard',
-    () => (function testing() { return (<div>MeasureCard</div>) }))
+    () => (function testing() { return (<div>GoalCard</div>) }))
 
-describe('<MeasureContainer />', () => {
+describe('<GoalsContainer />', () => {
 
     const selectMeasureIdsByAssertionIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasureIdsByAssertionId')
     const requestCreateMeasureMock = useModuleMock('Redux/Measures/actions', 'requestCreateMeasure')
@@ -18,21 +18,21 @@ describe('<MeasureContainer />', () => {
     })
 
     test('should render', () => {
-        render(<MeasureContainer assertionId = {2} hasEdit = {false}/>)
+        render(<GoalsContainer assertionId = {2} hasEdit = {false}/>)
 
-        expect(screen.getByText('MeasureCard')).toBeInTheDocument()
+        expect(screen.getByText('GoalCard')).toBeInTheDocument()
     })
 
-    test('should call dispatch to create measure', () => {
+    test('should call dispatch to create goal', () => {
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<MeasureContainer assertionId = {2} hasEdit/>)
+        render(<GoalsContainer assertionId = {2} hasEdit/>)
 
         act(() => {
-            fireEvent.click(screen.getByTestId('MeasureContainer__icon-add'))
+            fireEvent.click(screen.getByTestId('GoalsContainer__icon-add'))
         })
 
-        waitForElementToBeRemoved(screen.getByTestId('MeasureContainer__loading'))
+        waitForElementToBeRemoved(screen.getByTestId('GoalsContainer__loading'))
 
         expect(requestCreateMeasureMock).toHaveBeenCalledTimes(1)
     })
