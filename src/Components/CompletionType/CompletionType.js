@@ -41,16 +41,16 @@ export const determineCompletionTypeData = (completionType, onChangeType, value,
 const isValid = (value) => RegExp(/^\d{0,}([.]{0,1})\d{0,2}$/).test(value)
 
 function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornment, title, max }) {
-    const [value, setValue] = useState(inputValue)
+    const [textFieldValue, setTextFieldValue] = useState(inputValue)
 
-    const valueToReturn = useDebounce(Math.min(value, max), 500)
+    const valueToReturn = useDebounce(Math.min(textFieldValue, max), 500)
 
     const onValueChange = ({ target }) => {
         const { value } = target
 
         value.length === 0
-            ? setValue('')
-            : isValid(value) && setValue(value, max)
+            ? setTextFieldValue('')
+            : isValid(value) && setTextFieldValue(value, max)
     }
 
     useEffect(() => {
@@ -58,7 +58,7 @@ function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornme
     }, [valueToReturn])
 
     useEffect(() => {
-        setValue(inputValue)
+        setTextFieldValue(inputValue)
     }, [inputValue])
 
     return (
@@ -67,7 +67,7 @@ function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornme
             variant = 'outlined'
             size = 'small'
             label = {label}
-            value = {value}
+            value = {textFieldValue}
             disabled = {disabled}
             onChange = {onValueChange}
             InputProps = {{
