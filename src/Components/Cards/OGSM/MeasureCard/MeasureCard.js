@@ -171,18 +171,20 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                     />
                 </Grid>
                 <Grid item xs = {12}>
-                    <Stack spacing = {2} paddingBottom = {2}>
-                        <Divider />
-                        <CompletionType
-                            hasEdit = {hasEdit}
-                            value = {measure.value}
-                            target = {measure.target}
-                            completionType = {measure.completionType}
-                            onSaveValue = {(v) => updateMeasure('value', v)}
-                            onSaveTarget = {(v) => updateMeasure('target', v)}
-                            onChangeType = {updateCompletionType}
-                        />
-                    </Stack>
+                    {hasEdit &&
+                        <Stack spacing = {2} paddingBottom = {2}>
+                            <Divider />
+                            <CompletionType
+                                hasEdit = {hasEdit}
+                                value = {measure.value}
+                                target = {measure.target}
+                                completionType = {measure.completionType}
+                                onSaveValue = {(v) => updateMeasure('value', v)}
+                                onSaveTarget = {(v) => updateMeasure('target', v)}
+                                onChangeType = {updateCompletionType}
+                            />
+                        </Stack>
+                    }
                 </Grid>
             </Grid>
             {openConfirmation && (
