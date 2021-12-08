@@ -4,7 +4,7 @@ import {
 } from 'Utilities/test-utils'
 import { MeasureCard } from './index'
 
-jest.mock('Components/OGSM/CompletionType/CompletionType', () => function testing(props) {
+jest.mock('Components/CompletionType/CompletionType', () => function testing(props) {
     return (
         <>
             <div onClick = {() => props.onSaveValue(51)}>onSaveValue</div>

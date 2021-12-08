@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateMeasure, requestSearchMeasures } from 'Redux/Measures/actions'
 import { selectMeasureIdsByAssertionId } from 'Redux/Measures/selectors'
 
-export default function MeasureContainer({ assertionId, hasEdit }) {
+export default function MeasuresContainer({ assertionId, hasEdit }) {
 
     const dispatch = useDispatch()
 
@@ -50,8 +50,8 @@ export default function MeasureContainer({ assertionId, hasEdit }) {
                                 onClick = {handleAddNewMeasure}
                             >
                                 { adding
-                                    ? <CircularProgress size = '1.25rem' data-testid = 'MeasureContainer__loading'/>
-                                    : <AddCircleOutline fontSize = 'small' data-testid = 'MeasureContainer__icon-add'/>
+                                    ? <CircularProgress size = '1.25rem' data-testid = 'MeasuresContainer__loading'/>
+                                    : <AddCircleOutline fontSize = 'small' data-testid = 'MeasuresContainer__icon-add'/>
                                 }
                             </IconButton>
                         </Tooltip>
@@ -65,7 +65,7 @@ export default function MeasureContainer({ assertionId, hasEdit }) {
     )
 }
 
-MeasureContainer.propTypes = {
+MeasuresContainer.propTypes = {
     assertionId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired
 }

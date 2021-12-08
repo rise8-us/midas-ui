@@ -3,25 +3,22 @@ import { DateTimePicker } from '@mui/lab'
 import DateAdapter from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { Badge, Grid, IconButton, Stack, TextField } from '@mui/material'
+import { MeasuresContainer } from 'Components/Assertions/'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
-import { Collapsable } from 'Components/Cards/Collapsable'
+import { CollapsableCard } from 'Components/Cards/CollapsableCard'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
-import useAssertionStatuses from 'Hooks/useAssertionStatuses'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
-import {
-    requestDeleteAssertion,
-    requestUpdateAssertion
-} from 'Redux/Assertions/actions'
+import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
+import { requestDeleteAssertion, requestUpdateAssertion } from 'Redux/Assertions/actions'
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { styled } from 'Styles/materialThemes'
 import { dateInDisplayOrder } from 'Utilities/dateHelpers'
-import { MeasureContainer } from '../MeasureContainer'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.h6,
@@ -37,13 +34,13 @@ const StyledDiv = styled('div')(({ theme }) => ({
 function StrategyCard({ id, hasEdit }) {
 
     const dispatch = useDispatch()
-    const statuses = useAssertionStatuses()
 
     const collapse = useRef(null)
 
     const strategy = useSelector((state) => selectAssertionById(state, id))
+    const statuses = useSelector(selectAssertionStatuses)
 
-    const defaultStatus = statuses.filter((t) => t.name === strategy.status)[0] ?? { color: '#c3c3c3' }
+    const defaultStatus = statuses[strategy.status] ?? { color: '#c3c3c3' }
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
 
@@ -106,7 +103,7 @@ function StrategyCard({ id, hasEdit }) {
 
     return (
         <>
-            <Collapsable
+            <CollapsableCard
                 ref = {collapse}
                 width = '100%'
                 header = {
@@ -162,7 +159,7 @@ function StrategyCard({ id, hasEdit }) {
                 }
                 footer = {
                     <StyledDiv>
-                        <MeasureContainer assertionId = {id} hasEdit = {hasEdit} />
+                        <MeasuresContainer assertionId = {id} hasEdit = {hasEdit} />
                     </StyledDiv>
                 }
             >
@@ -198,7 +195,7 @@ function StrategyCard({ id, hasEdit }) {
                         </Grid>
                     </Grid>
                 </Stack>
-            </Collapsable>
+            </CollapsableCard>
             {openConfirmation && (
                 <ConfirmationPopup
                     open = {openConfirmation}

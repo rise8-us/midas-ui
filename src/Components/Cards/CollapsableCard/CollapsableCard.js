@@ -3,7 +3,7 @@ import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
-const Collapsable = React.forwardRef((props, ref) => {
+const CollapsableCard = React.forwardRef((props, ref) => {
     const { children, header, footer, collapsedSize, onExpanded, enterDelay, exitDelay, ...cardProps } = props
 
     const [expanded, setExpanded] = useState(false)
@@ -63,9 +63,9 @@ const Collapsable = React.forwardRef((props, ref) => {
     )
 })
 
-Collapsable.displayName = 'Collapsable'
+CollapsableCard.displayName = 'Collapsable'
 
-Collapsable.propTypes = {
+CollapsableCard.propTypes = {
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
     collapsedSize: PropTypes.string,
     enterDelay: PropTypes.number,
@@ -75,7 +75,7 @@ Collapsable.propTypes = {
     onExpanded: PropTypes.func
 }
 
-Collapsable.defaultProps = {
+CollapsableCard.defaultProps = {
     collapsedSize: '0px',
     enterDelay: 300,
     exitDelay: 100,
@@ -84,4 +84,4 @@ Collapsable.defaultProps = {
     onExpanded: (e) => e
 }
 
-export default Collapsable
+export default CollapsableCard

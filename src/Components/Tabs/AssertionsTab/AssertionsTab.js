@@ -1,9 +1,7 @@
 import { Grid, Slide } from '@mui/material'
-import { AssertionComments } from 'Components/Assertions'
-import { GoalContainer } from 'Components/Cards/OGSM/GoalContainer'
+import { AssertionComments, GoalsContainer, StrategiesContainer } from 'Components/Assertions'
 import { ObjectiveCard } from 'Components/Cards/OGSM/ObjectiveCard'
-import { StrategyContainer } from 'Components/Cards/OGSM/StrategyContainer'
-import { ViewSettings } from 'Components/OGSM/ViewSettings'
+import { ViewSettings } from 'Components/ViewSettings'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -61,10 +59,10 @@ function AssertionsTab({ productId, hasEdit }) {
                             <ObjectiveCard id = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
                         <Grid item xs = {12} lg = {4} minWidth = '350px' style = {defStyle}>
-                            <GoalContainer assertionId = {selectedObjectiveId} hasEdit = {hasEdit}/>
+                            <GoalsContainer assertionId = {selectedObjectiveId} hasEdit = {hasEdit}/>
                         </Grid>
                         <Grid item xs = {12} lg = {8} style = {defStyle}>
-                            <StrategyContainer
+                            <StrategiesContainer
                                 parentId = {selectedObjectiveId}
                                 productId = {productId}
                                 hasEdit = {hasEdit}
