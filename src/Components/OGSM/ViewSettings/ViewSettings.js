@@ -32,6 +32,7 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
     const [selectedIndex, setSelectedIndex] = useState(initialIndex)
     const [showCompleted, setShowCompleted] = useState(false)
     const [showArchived, setShowArchived] = useState(false)
+    const [isCreated, setIsCreated] = useState(false)
 
     const itemsToShow = useMemo(() => {
         const filtered = objectives.filter(objective => {
@@ -40,12 +41,13 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
             else return true
         })
 
-        filtered.filter(o => o.id === selectedIndex).length === 0 &&
-            filtered.length > 0 &&
-            setSelectedIndex(filtered[0].id)
+        if (!filtered.filter(o => o.id === selectedIndex).length && filtered.length) {
+            const selectedObjective = isCreated ? filtered[filtered.length - 1].id : filtered[0].id
+            setSelectedIndex(selectedObjective)
+        }
 
         return filtered
-    }, [objectives, showCompleted, showArchived, setSelectedIndex])
+    }, [objectives, showCompleted, showArchived, isCreated, setSelectedIndex])
 
     const handleOnChange = (i) => {
         setSelectedIndex(i)
@@ -61,7 +63,10 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
                 <AssertionHeader
                     productId = {productId}
                     hasEdit = {hasEdit}
-                    onCreate = {() => setSelectedIndex(itemsToShow.length + 1)}
+                    onCreate = {() => {
+                        setIsCreated(true)
+                        setSelectedIndex(itemsToShow.length + 1)
+                    }}
                 />
             </Grid>
             <Grid container item spacing = {2}>

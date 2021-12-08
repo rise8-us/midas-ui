@@ -3,7 +3,7 @@ import { fireEvent, render, screen, userEvent } from 'Utilities/test-utils'
 import { ViewSettings } from './index'
 
 jest.mock('Components/Assertions/AssertionHeader/AssertionHeader',
-    () => function testing(props) { return (<div onClick = {() => props.onCreate()}>AssertionHeader</div>) })
+    () => function testing(props) { return (<div onClick = {props.onCreate}>AssertionHeader</div>) })
 
 describe('<ViewSettings />', () => {
     jest.setTimeout(40000)
@@ -69,13 +69,15 @@ describe('<ViewSettings />', () => {
     })
 
     test('should handle creation', () => {
+
         render(<ViewSettings objectives = {objectives} {...requiredProps}/>)
 
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveAttribute('aria-label', '1')
 
         fireEvent.click(screen.getByText('AssertionHeader'))
 
-        expect(screen.queryByTestId('AssertionRootIdentifier-true')).not.toBeInTheDocument()
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveAttribute('aria-label', '2')
     })
 
 })
