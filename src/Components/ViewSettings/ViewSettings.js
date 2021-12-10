@@ -46,8 +46,10 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
             setSelectedIndex(selectedObjective)
         }
 
+        if (initialIndex) { setSelectedIndex(initialIndex) }
+
         return filtered
-    }, [objectives, showCompleted, showArchived, isCreated, setSelectedIndex])
+    }, [objectives, initialIndex, showCompleted, showArchived, isCreated, setSelectedIndex])
 
     const handleOnChange = (i) => {
         setSelectedIndex(i)
@@ -99,19 +101,19 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
 }
 
 ViewSettings.propTypes = {
+    hasEdit: PropTypes.bool.isRequired,
+    initialIndex: PropTypes.number,
     objectives: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number,
         text: PropTypes.string,
         isArchived: PropTypes.bool,
         status: PropTypes.string
     })),
-    initialIndex: PropTypes.number,
     onChange: PropTypes.func.isRequired,
     productId: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool.isRequired
 }
 
 ViewSettings.defaultProps = {
-    objectives: [],
-    initialIndex: 0
+    initialIndex: null,
+    objectives: []
 }

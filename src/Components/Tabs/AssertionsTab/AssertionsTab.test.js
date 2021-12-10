@@ -1,3 +1,4 @@
+import { createMemoryHistory } from 'history'
 import React from 'react'
 import { renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
 import { commentSidebarOpen } from './AssertionsTab'
@@ -16,6 +17,7 @@ jest.mock('Components/Assertions/AssertionComments/AssertionComments',
     () => (function testing() { return (<div>AssertionCommentsComponent</div>) }))
 
 describe('<AssertionsTab>', () => {
+    const history = createMemoryHistory()
     const selectAssertionCommentInfoMock = useModuleMock('Redux/AppSettings/selectors', 'selectAssertionCommentInfo')
     const setAssertionCommentMock = useModuleMock('Redux/AppSettings/reducer', 'setAssertionComment')
     const requestSearchAssertionsMock = useModuleMock('Redux/Assertions/actions', 'requestSearchAssertions')
@@ -55,5 +57,23 @@ describe('<AssertionsTab>', () => {
         expect(commentSidebarOpen(null, 'foo')).toEqual(false)
         expect(commentSidebarOpen(null, null)).toEqual(false)
         expect(commentSidebarOpen(2, 'foo')).toEqual(true)
+    })
+
+    test('should display objective blocker', () => {
+        renderWithRouter(<AssertionsTab productId = {2} hasEdit = {false} />,
+            { history, route: '/products/2/ogsms/1', path: '/products/2/ogsms/:assertionId' })
+
+        expect(history.location.pathname).toEqual('/products/2/ogsms/1')
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
+    })
+
+    test('should display strategy blocker', () => {
+        renderWithRouter(<AssertionsTab productId = {2} hasEdit = {false} />,
+            { history, route: '/products/2/ogsms/2', path: '/products/2/ogsms/:assertionId' })
+
+        expect(history.location.pathname).toEqual('/products/2/ogsms/2')
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
     })
 })

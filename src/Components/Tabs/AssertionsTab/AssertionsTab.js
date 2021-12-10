@@ -5,6 +5,7 @@ import { ViewSettings } from 'Components/ViewSettings'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
 import { selectAssertionCommentInfo } from 'Redux/AppSettings/selectors'
 import { requestSearchAssertions } from 'Redux/Assertions/actions'
@@ -22,31 +23,39 @@ function AssertionsTab({ productId, hasEdit }) {
 
     const commentSidebarInfo = useSelector(selectAssertionCommentInfo)
     const allAssertions = useSelector(state => selectAssertionsByProductId(state, productId))
+    const objectives = allAssertions.filter(assertion => assertion.parentId === null)
 
-    const ogsms = useMemo(() => {
-        const objectives = allAssertions.filter(assertion => assertion.parentId === null)
-        const strategies = allAssertions.filter(assertion => assertion.parentId !== null)
-        return { objectives, strategies }
-    }, [allAssertions])
+    const { assertionId } = useParams()
+    const [selectedObjectiveId, setSelectedObjectiveId] = useState(null)
 
     const showCommentSidebar = useMemo(() => {
         const { id, type } = commentSidebarInfo
         return commentSidebarOpen(id, type)
     }, [commentSidebarInfo])
 
-    const [selectedObjectiveId, setSelectedObjectiveId] = useState(null)
-
     useEffect(() => {
         dispatch(requestSearchAssertions(`product.id:${productId}`))
         dispatch(setAssertionComment({ assertionId: null, deletedAssertionId: null, type: null }))
     }, [])
 
+    useEffect(() => {
+        if (allAssertions.length && !selectedObjectiveId && assertionId) {
+            const id = parseInt(assertionId)
+            const found = allAssertions.find(a => a.id === id)
+            if (found.parentId) {
+                setSelectedObjectiveId(found.parentId)
+            } else {
+                setSelectedObjectiveId(id)
+            }
+        }
+    }, [assertionId, allAssertions])
+
     return (
         <Grid container>
             <Grid item>
                 <ViewSettings
-                    objectives = {ogsms.objectives}
-                    initialIndex = {1}
+                    objectives = {objectives}
+                    initialIndex = {selectedObjectiveId}
                     onChange = {setSelectedObjectiveId}
                     productId = {productId}
                     hasEdit = {hasEdit}
@@ -89,8 +98,8 @@ function AssertionsTab({ productId, hasEdit }) {
 }
 
 AssertionsTab.propTypes = {
-    productId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired,
+    productId: PropTypes.number.isRequired
 }
 
 export default AssertionsTab
