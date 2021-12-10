@@ -79,7 +79,7 @@ function ProductCard({ id }) {
             {hasProjects && (
                 <>
                     <CardContent>
-                        {product.projects.map((project, index) => (
+                        {product.projects.filter(p => !p.isArchived).map((project, index) => (
                             <Box key = {index} style = {{ paddingBottom: '30px' }}>
                                 <Typography
                                     variant = 'h6'

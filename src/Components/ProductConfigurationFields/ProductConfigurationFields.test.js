@@ -144,4 +144,21 @@ describe('<ProductConfigurationFields />', () => {
         expect(await screen.findByText('yolo')).toBeInTheDocument()
     })
 
+    test('should remove project', async() => {
+        render(<ProductConfigurationFields product = {product}/>)
+
+        fireEvent.click(await screen.findByTestId('CancelIcon'))
+
+        expect(screen.queryByText('Micky')).not.toBeInTheDocument()
+    })
+
+    test('should strikethrough archived projects', () => {
+        selectProjectsByProductIdMock.mockReturnValue([{ ...ProjectsByProductId[0], isArchived: true }])
+
+        render(<ProductConfigurationFields product = {product}/>)
+
+        expect(screen.getByTestId('ProductConfigurationFields__project-tag-0'))
+            .toHaveStyle('textDecorationLine: line-through')
+    })
+
 })

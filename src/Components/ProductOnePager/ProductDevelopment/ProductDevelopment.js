@@ -50,7 +50,7 @@ function ProductDevelopment({ id }) {
 
     return (
         <Grid container spacing = {2}>
-            {projects.map((project, key) => (
+            {projects.filter(p => !p.isArchived).map((project, key) => (
                 <Grid container item direction = 'column' spacing = {1} key = {key} style = {{ width: '225px' }}>
                     <Grid item>
                         <Typography

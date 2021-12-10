@@ -40,13 +40,6 @@ describe('<RoadmapEntry />', () => {
         expect(screen.getByDisplayValue(/Aug 2021/i)).toBeInTheDocument()
     })
 
-    test('should not render new when page is locked', () => {
-        selectRoadmapByIdMock.mockReturnValue({ ...roadmapEntry, title: 'Enter roadmap title...' })
-        render(<RoadmapEntry id = {3} hasEdit = {false}/>)
-
-        expect(screen.queryByDisplayValue('Enter roadmap title...')).not.toBeInTheDocument()
-    })
-
     test('should update roadmap title', () => {
         render(<RoadmapEntry id = {3} hasEdit/>)
 
@@ -86,14 +79,6 @@ describe('<RoadmapEntry />', () => {
         expect(requestHideRoadmapMock).toHaveBeenCalledWith({ id: 3, isHidden: !roadmapEntryHidden.isHidden })
 
         expect(screen.getByTestId('VisibilityOffOutlinedIcon')).toBeInTheDocument()
-    })
-
-    test('should return empty div', () => {
-        selectRoadmapByIdMock.mockReturnValue(roadmapEntryHidden)
-
-        const { container } = render(<RoadmapEntry id = {3} hasEdit = {false}/>)
-
-        expect(container).toBeEmptyDOMElement()
     })
 
     test('getDate: COMPLETE & populated', () => {

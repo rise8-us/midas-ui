@@ -1,4 +1,4 @@
-import { Stack, TextField } from '@mui/material'
+import { Chip, Stack, TextField } from '@mui/material'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { SearchTeams } from 'Components/Search/SearchTeams'
@@ -187,7 +187,24 @@ export default function ProductConfigurationFields({
                 isOptionEqualToValue = {(option, value) => option.id === value.id}
                 onChange = {onSelectProjects}
                 value = {projects}
-                ChipProps = {{ variant: 'outlined', size: 'small' }}
+                renderTags = {(params) => (
+                    <>
+                        {params.map((proj, index) =>
+                            <Chip
+                                key = {index}
+                                data-testid = {'ProductConfigurationFields__project-tag-' + index}
+                                label = {proj.name}
+                                variant = 'outlined'
+                                size = 'small'
+                                style = {{
+                                    textDecorationLine: proj.isArchived ? 'line-through' : 'none',
+                                    marginRight: '3px'
+                                }}
+                                onDelete = {e => onSelectProjects(e, params.filter(p => p.id !== proj.id))}
+                            />
+                        )}
+                    </>
+                )}
                 renderInput = {(params) => (
                     <TextField
                         {...params}
