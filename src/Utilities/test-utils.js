@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryHistory } from 'history'
 import { default as React } from 'react'
 import { Provider } from 'react-redux'
-import { Router } from 'react-router-dom'
+import { Route, Router } from 'react-router-dom'
 import { createStore } from 'redux'
 import { rootReducer } from 'Redux/reducers'
 import { theme } from 'Styles/materialThemes'
@@ -17,11 +17,9 @@ function render(ui, { initialState, store = createStore(rootReducer, initialStat
     }
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
 }
-
-// TODO: Get route with path working so that useParams hook can access a templete for the route
 function renderWithRouter(ui, {
-    route = '/',
-    // routePath = '/',
+    path = '/', // ie. "/project/:id"
+    route = '/', // ie. "/project/ABC123"
     history = createMemoryHistory(),
     ...renderOptions
 } = {}) {
@@ -30,9 +28,7 @@ function renderWithRouter(ui, {
 
     return render(
         <Router history = {history}>
-            {/* <Route path = {routePath}> */}
-            {ui}
-            {/* </Route> */}
+            <Route path = {path} render = {() => ui}/>
         </Router>, { ...renderOptions })
 }
 
