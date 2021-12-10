@@ -1,6 +1,8 @@
 import React from 'react'
-import { render, screen, userEvent } from 'Utilities/test-utils'
+import { render, screen, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AutoSaveTextField } from './index'
+
+const getTextWidthMock = useModuleMock('Utilities/textHelpers', 'getTextWidth')
 
 describe('<AutoSaveTextField>', () => {
 
@@ -81,5 +83,14 @@ describe('<AutoSaveTextField>', () => {
 
         userEvent.tab()
         expect(screen.getByDisplayValue('test')).toBeInTheDocument()
+    })
+
+    test('should autogrow', () => {
+        getTextWidthMock.mockReturnValue('100px')
+        render(<AutoSaveTextField autogrow onSave = {jest.fn()} initialValue = 'test' canEdit/>)
+
+        userEvent.type(screen.getByDisplayValue('test'), 'autogrow{enter}')
+
+        expect(screen.getByTestId('AutoSaveTextField__input')).toHaveStyle('width: 100px')
     })
 })

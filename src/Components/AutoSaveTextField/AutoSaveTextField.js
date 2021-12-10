@@ -1,18 +1,24 @@
 import { TextField } from '@mui/material'
 import { LabelTooltip } from 'Components/LabelTooltip'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import FormatErrors from 'Utilities/FormatErrors'
+import { getTextWidth } from 'Utilities/textHelpers'
 
 const performAction = (canDo, action, value) => canDo && action(value)
 
 const doubleValidate = (first, second) => first && second ? true : false
 
 function AutoSaveTextField({
-    canEdit, className, dataTestId, enableSpellCheck, errors,
-    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, ...textFieldProps }) {
+    autogrow, canEdit, className, dataTestId, enableSpellCheck, errors,
+    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, uniqueId, ...textFieldProps }) {
 
     const ref = useRef()
+    const divRef = useRef()
+
+    const customId = useMemo(() => {
+        return uniqueId ?? Math.random().toString()
+    }, [uniqueId])
 
     const [inEditMode, setInEditMode] = useState(false)
     const [value, setValue] = useState(initialValue)
@@ -75,10 +81,16 @@ function AutoSaveTextField({
         setValue(initialValue)
     }, [initialValue])
 
+    useEffect(() => {
+        autogrow && (divRef.current.style.width = getTextWidth(customId))
+    }, [value])
+
     return (
         <TextField
             {...textFieldProps}
+            id = {customId}
             InputProps = {{
+                ref: divRef,
                 spellCheck: enableSpellCheck,
                 disableUnderline: doubleValidate(!inEditMode, !hasHover),
                 'data-testid': dataTestId,
@@ -122,6 +134,7 @@ function AutoSaveTextField({
 }
 
 AutoSaveTextField.propTypes = {
+    autogrow: PropTypes.bool,
     canEdit: PropTypes.bool,
     className: PropTypes.string,
     dataTestId: PropTypes.string,
@@ -140,9 +153,11 @@ AutoSaveTextField.propTypes = {
     clearAfterSave: PropTypes.bool,
     revertOnEmpty: PropTypes.bool,
     tooltip: PropTypes.string,
+    uniqueId: PropTypes.string,
 }
 
 AutoSaveTextField.defaultProps = {
+    autogrow: false,
     canEdit: false,
     className: '',
     dataTestId: 'AutoSaveTextField__input',
@@ -158,6 +173,7 @@ AutoSaveTextField.defaultProps = {
     clearAfterSave: false,
     revertOnEmpty: false,
     tooltip: '',
+    uniqueId: null
 }
 
 export default AutoSaveTextField
