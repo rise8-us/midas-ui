@@ -45,23 +45,24 @@ function ProductRoadmap({ productId, hasEdit }) {
                 hasEdit = {hasEdit}
                 action = {
                     <Tooltip
-                        disableHoverListener = {newEntries.length < 1}
-                        title = 'You must update a new roadmap entry before adding another.'
-                        placement = 'top'
                         arrow
+                        placement = 'top'
+                        title = {
+                            newEntries.length > 0
+                                ? 'You must update a new roadmap entry before adding another.'
+                                : Tooltips.ROADMAP_NEW_ENTRY
+                        }
                     >
                         <div>
-                            <Tooltip title = {Tooltips.ROADMAP_NEW_ENTRY} placement = 'top' arrow>
-                                <IconButton
-                                    color = 'secondary'
-                                    size = 'small'
-                                    data-testid = 'ProductRoadmap__button-add'
-                                    onClick = {createNewRoadmapEntry}
-                                    disabled = {newEntries.length > 0}
-                                >
-                                    <AddLocationOutlined />
-                                </IconButton>
-                            </Tooltip>
+                            <IconButton
+                                color = 'secondary'
+                                size = 'small'
+                                data-testid = 'ProductRoadmap__button-add'
+                                onClick = {createNewRoadmapEntry}
+                                disabled = {newEntries.length > 0}
+                            >
+                                <AddLocationOutlined />
+                            </IconButton>
                         </div>
                     </Tooltip>
                 }

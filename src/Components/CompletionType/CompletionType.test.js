@@ -30,24 +30,24 @@ describe('<CompletionType />', () => {
     })
 
     test('should render completionTypes', () => {
-        const { rerender } = render(<CompletionType {...requiredProps} />)
+        const { rerender } = render(<CompletionType {...requiredProps}/>)
 
         expect(screen.getByText('Complete')).toBeInTheDocument()
         expect(screen.getByDisplayValue('Binary')).toBeInTheDocument()
 
         rerender(<CompletionType {...requiredProps} completionType = 'PERCENTAGE'/>)
         expect(screen.getByDisplayValue('Percentage')).toBeInTheDocument()
-        expect(screen.getByLabelText('Value (%)')).toBeInTheDocument()
+        expect(screen.getAllByText('Value (%)')).toHaveLength(2)
 
         rerender(<CompletionType {...requiredProps} completionType = 'NUMBER'/>)
         expect(screen.getByDisplayValue('Number')).toBeInTheDocument()
-        expect(screen.getByLabelText('Value')).toBeInTheDocument()
-        expect(screen.getByLabelText('Target')).toBeInTheDocument()
+        expect(screen.getAllByText('Value')).toHaveLength(2)
+        expect(screen.getAllByText('Target')).toHaveLength(2)
 
         rerender(<CompletionType {...requiredProps} completionType = 'MONEY'/>)
         expect(screen.getByDisplayValue('Money')).toBeInTheDocument()
-        expect(screen.getByLabelText('Value')).toBeInTheDocument()
-        expect(screen.getByLabelText('Target')).toBeInTheDocument()
+        expect(screen.getAllByText('Value')).toHaveLength(2)
+        expect(screen.getAllByText('Target')).toHaveLength(2)
         expect(screen.getAllByTestId('AttachMoneyIcon')).toHaveLength(2)
     })
 
@@ -64,7 +64,7 @@ describe('<CompletionType />', () => {
             />
         )
 
-        userEvent.clear(screen.getByLabelText('Value'))
+        userEvent.clear(screen.getByDisplayValue('0'))
 
         act(() => {
             jest.runAllTimers()
@@ -87,7 +87,7 @@ describe('<CompletionType />', () => {
             />
         )
 
-        userEvent.type(screen.getByLabelText('Value'), '{backspace}12')
+        userEvent.type(screen.getByDisplayValue('0'), '{backspace}12')
 
         act(() => {
             jest.runAllTimers()
@@ -109,7 +109,7 @@ describe('<CompletionType />', () => {
             />
         )
 
-        userEvent.type(screen.getByLabelText('Target'), '2')
+        userEvent.type(screen.getByDisplayValue('1'), '2')
 
         act(() => {
             jest.runAllTimers()
