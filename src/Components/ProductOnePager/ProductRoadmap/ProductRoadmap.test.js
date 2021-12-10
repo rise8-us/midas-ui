@@ -11,7 +11,7 @@ jest.mock('Components/RoadmapEntry/RoadmapEntry',
 describe('<ProductRoadmap />', () => {
 
     const selectRoadmapsByProductIdMock = useModuleMock('Redux/Roadmaps/selectors', 'selectRoadmapsByProductId')
-    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+    const requestCreateRoadmapMock = useModuleMock('Redux/Roadmaps/actions', 'requestCreateRoadmap')
 
     const roadmapEntries = [
         {
@@ -29,7 +29,6 @@ describe('<ProductRoadmap />', () => {
         selectRoadmapStatusesMock()
         useDispatchMock().mockReturnValue({})
         selectRoadmapsByProductIdMock.mockReturnValue(roadmapEntries)
-        openPopupMock.mockReset()
     })
 
     test('should render', () => {
@@ -38,18 +37,18 @@ describe('<ProductRoadmap />', () => {
         expect(screen.getByText('RoadmapEntry')).toBeInTheDocument()
     })
 
-    test('should call openPopup with access', () => {
-        render(<ProductRoadmap productId = {1} hasEdit = {true}/>)
-
-        fireEvent.click(screen.getByTestId('ProductRoadmap__button-add'))
-
-        expect(openPopupMock).toHaveBeenCalled()
-    })
-
     test('should not render add button without access', () => {
         render(<ProductRoadmap productId = {1} hasEdit = {false}/>)
 
         expect(screen.queryByTestId('ProductRoadmap__button-add')).not.toBeInTheDocument()
+    })
+
+    test('should create new RoadmapEntry', () => {
+        render(<ProductRoadmap productId = {1} hasEdit/>)
+
+        fireEvent.click(screen.getByTestId('ProductRoadmap__button-add'))
+
+        expect(requestCreateRoadmapMock).toHaveBeenCalledTimes(1)
     })
 
     test('should handle sorting COMPLETE entries', () => {
@@ -60,9 +59,9 @@ describe('<ProductRoadmap />', () => {
         ]
 
         expect(sortProductRoadmapEntries(entries)).toEqual([
-            { 'completedAt': '2021-01-01', 'id': 2, 'status': 'COMPLETE' },
+            { 'completedAt': '2021-01-03', 'id': 3, 'status': 'COMPLETE' },
             { 'completedAt': '2021-01-02', 'id': 1, 'status': 'COMPLETE' },
-            { 'completedAt': '2021-01-03', 'id': 3, 'status': 'COMPLETE' }
+            { 'completedAt': '2021-01-01', 'id': 2, 'status': 'COMPLETE' }
         ])
     })
 
@@ -77,6 +76,20 @@ describe('<ProductRoadmap />', () => {
             { 'dueDate': '2021-02-01', 'id': 5, 'status': 'IN_PROGRESS' },
             { 'dueDate': '2021-02-02', 'id': 4, 'status': 'IN_PROGRESS' },
             { 'dueDate': '2021-02-03', 'id': 6, 'status': 'IN_PROGRESS' }
+        ])
+    })
+
+    test('should handle sorting FUTURE entries', () => {
+        const entries = [
+            { id: 4, status: 'FUTURE', dueDate: '2021-02-02' },
+            { id: 5, status: 'FUTURE', dueDate: '2021-02-01' },
+            { id: 6, status: 'FUTURE', dueDate: '2021-02-03' }
+        ]
+
+        expect(sortProductRoadmapEntries(entries)).toEqual([
+            { 'dueDate': '2021-02-01', 'id': 5, 'status': 'FUTURE' },
+            { 'dueDate': '2021-02-02', 'id': 4, 'status': 'FUTURE' },
+            { 'dueDate': '2021-02-03', 'id': 6, 'status': 'FUTURE' }
         ])
     })
 })

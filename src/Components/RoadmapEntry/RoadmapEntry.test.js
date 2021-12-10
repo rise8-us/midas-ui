@@ -1,16 +1,16 @@
 import React from 'react'
-import RoadmapContants from 'Redux/Roadmaps/constants'
 import {
     fireEvent, render, screen, selectRoadmapStatusesMock, useDispatchMock, useModuleMock, userEvent
 } from 'Utilities/test-utils'
 import { RoadmapEntry } from './index'
-import { getDate, getStatusIcon, getVisibilityIcon } from './RoadmapEntry'
+import { getDate, getVisibilityIcon, StatusIcon } from './RoadmapEntry'
 
 describe('<RoadmapEntry />', () => {
 
     const selectRoadmapByIdMock = useModuleMock('Redux/Roadmaps/selectors', 'selectRoadmapById')
+    const requestUpdateRoadmapMock = useModuleMock('Redux/Roadmaps/actions', 'requestUpdateRoadmap')
     const requestHideRoadmapMock = useModuleMock('Redux/Roadmaps/actions', 'requestHideRoadmap')
-    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+    const getTextWidthMock = useModuleMock('Utilities/textHelpers', 'getTextWidth')
 
     const roadmapEntry = {
         id: 3,
@@ -19,7 +19,7 @@ describe('<RoadmapEntry />', () => {
         index: 0,
         productId: 1,
         status: 'FUTURE',
-        dueDate: '2021-08-01T00:00.000000',
+        dueDate: '2021-08-01',
         isHidden: false
     }
 
@@ -29,35 +29,51 @@ describe('<RoadmapEntry />', () => {
         selectRoadmapByIdMock.mockReturnValue(roadmapEntry)
         selectRoadmapStatusesMock()
         useDispatchMock().mockReturnValue({})
-        openPopupMock.mockReset()
+        getTextWidthMock.mockReturnValue('100px')
     })
 
     test('should render', () => {
         render(<RoadmapEntry id = {3} hasEdit = {false}/>)
 
-        expect(screen.getByText('title')).toBeInTheDocument()
-        expect(screen.getByText('description')).toBeInTheDocument()
-        expect(screen.getByText(/Aug 2021/i)).toBeInTheDocument()
+        expect(screen.getByDisplayValue('title')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('description')).toBeInTheDocument()
+        expect(screen.getByDisplayValue(/Aug 2021/i)).toBeInTheDocument()
     })
 
-    test('should not call openPopup with no access', () => {
+    test('should not render new when page is locked', () => {
+        selectRoadmapByIdMock.mockReturnValue({ ...roadmapEntry, title: 'Enter roadmap title...' })
         render(<RoadmapEntry id = {3} hasEdit = {false}/>)
 
-        fireEvent.click(screen.getByTestId('RoadmapEntry__grid-wrap'))
-
-        expect(openPopupMock).toHaveBeenCalledTimes(0)
-        expect(screen.queryByTestId('VisibilityOutlinedIcon')).not.toBeInTheDocument()
-        expect(screen.queryByTestId('VisibilityOffOutlinedIcon')).not.toBeInTheDocument()
+        expect(screen.queryByDisplayValue('Enter roadmap title...')).not.toBeInTheDocument()
     })
 
-    test('should call openPopup with access', () => {
-        render(<RoadmapEntry id = {3} hasEdit = {true}/>)
+    test('should update roadmap title', () => {
+        render(<RoadmapEntry id = {3} hasEdit/>)
 
-        fireEvent.click(screen.getByTestId('RoadmapEntry__grid-wrap'))
+        userEvent.type(screen.getByDisplayValue('title'), 'new title{enter}')
 
-        expect(openPopupMock).toHaveBeenCalledWith(
-            RoadmapContants.UPDATE_ROADMAP, 'RoadmapEntryPopup', { id: 3, productId: 1 }
-        )
+        expect(requestUpdateRoadmapMock).toBeCalledWith({ ...roadmapEntry, title: 'new title' })
+    })
+
+    test('should update roadmap date', () => {
+        render(<RoadmapEntry id = {3} hasEdit/>)
+
+        fireEvent.click(screen.getByDisplayValue(/Aug 2021/i))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Sep 1, 2021'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateRoadmapMock).toBeCalledWith({ ...roadmapEntry, dueDate: '2021-09-01' })
+    })
+
+    test('should update roadmap status', async() => {
+        render(<RoadmapEntry id = {3} hasEdit/>)
+
+        userEvent.hover(screen.getByTestId('RoadmapEntry__status-icon'))
+        fireEvent.click(await screen.findByText('Complete'))
+        userEvent.unhover(screen.getByTestId('RoadmapEntry__grid-wrap'))
+
+        expect(requestUpdateRoadmapMock).toBeCalledWith({ ...roadmapEntry, status: 'COMPLETE' })
     })
 
     test('should call requestHideRoadmap with access', () => {
@@ -83,13 +99,13 @@ describe('<RoadmapEntry />', () => {
     test('getDate: COMPLETE & populated', () => {
         const entry = { status: 'COMPLETE', completedAt: '2021-08-01T00:00.000000' }
 
-        expect(getDate(entry)).toEqual(['2021', '08', '01'])
+        expect(getDate(entry)).toEqual('2021-08-01')
     })
 
     test('getDate: not COMPLETE & unpopulated', () => {
         const entry = { status: 'noop' }
 
-        expect(getDate(entry)).toBeNull()
+        expect(getDate(entry)).toBeUndefined()
     })
 
     describe('getVisibilityIcon', () => {
@@ -106,33 +122,41 @@ describe('<RoadmapEntry />', () => {
         })
     })
 
-    describe('getStatusIcon', () => {
+    describe('StatusIcon', () => {
+        test('newEntry === true', () => {
+            render(<StatusIcon newEntry = {true} hidden = {false} status = 'noop' color = '#fff000'/>)
+
+            expect(screen.getByTestId('WarningAmberRoundedIcon')).toBeInTheDocument()
+        })
+
         test('hidden === true', () => {
-            render(getStatusIcon(true, 'noop'))
+            render(<StatusIcon newEntry = {false} hidden = {true} status = 'noop' color = '#fff000'/>)
 
             expect(screen.getByTestId('VisibilityOffOutlinedIcon')).toBeInTheDocument()
         })
 
         test('status === COMPLETE', () => {
-            render(getStatusIcon(false, 'COMPLETE'))
+            render(<StatusIcon newEntry = {false} hidden = {false} status = 'COMPLETE' color = '#fff000'/>)
 
             expect(screen.getByTestId('EventAvailableOutlinedIcon')).toBeInTheDocument()
         })
 
         test('status === IN_PROGRESS', () => {
-            render(getStatusIcon(false, 'IN_PROGRESS'))
+            render(<StatusIcon newEntry = {false} hidden = {false} status = 'IN_PROGRESS' color = '#fff000'/>)
 
             expect(screen.getByTestId('EventOutlinedIcon')).toBeInTheDocument()
         })
 
         test('status === FUTURE', () => {
-            render(getStatusIcon(false, 'FUTURE'))
+            render(<StatusIcon newEntry = {false} hidden = {false} status = 'FUTURE' color = '#fff000'/>)
 
             expect(screen.getByTestId('EventBusyOutlinedIcon')).toBeInTheDocument()
         })
 
         test('status === unknown', () => {
-            const { container } = render(getStatusIcon(false, 'idk'))
+            const { container } = render(
+                <StatusIcon newEntry = {false} hidden = {false} status = 'idk' color = '#fff000'/>
+            )
 
             expect(container.firstChild).toBeNull()
         })

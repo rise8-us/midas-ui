@@ -3,10 +3,13 @@ import DateAdapter from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { TextField } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dateInDatabaseOrder, dateInDisplayOrder } from 'Utilities/dateHelpers'
 
-export default function DateSelector({ initialValue, onAccept, clearable, hasEdit, variant, ...datePickerProps }) {
+export default function DateSelector({
+    clearable, disableUnderline, hasEdit, initialValue, inputFormat, onAccept,
+    placeholder, variant, ...datePickerProps }) {
+
     const [value, setValue] = useState(initialValue)
 
     const onChange = (newValue) => {
@@ -18,25 +21,37 @@ export default function DateSelector({ initialValue, onAccept, clearable, hasEdi
         }
     }
 
+    useEffect(() => {
+        setValue(initialValue)
+    }, [initialValue])
+
     return (
         <LocalizationProvider dateAdapter = {DateAdapter}>
             <DatePicker
                 {...datePickerProps}
                 desktopModeMediaQuery = 'true'
-                inputFormat = 'MM/dd/yyyy'
+                inputFormat = {inputFormat}
                 allowSameDateSelection
-                value = {value}
+                value = {initialValue}
                 clearable = {clearable}
                 disabled = {!hasEdit}
                 onChange = {onChange}
                 onAccept = {() => onAccept(dateInDatabaseOrder(value))}
                 showToolbar = {false}
+                InputProps = {{
+                    disableUnderline: disableUnderline,
+                    ...datePickerProps.InputProps
+                }}
                 renderInput = {(params) =>
                     <TextField
                         {...params}
-                        placeholder = 'mm/dd/yyyy'
+                        placeholder = {placeholder}
                         InputLabelProps = {{ shrink: true }}
                         variant = {variant}
+                        inputProps = {{
+                            ...params.inputProps,
+                            style: { padding: 0 }
+                        }}
                     />
                 }
             />
@@ -46,17 +61,23 @@ export default function DateSelector({ initialValue, onAccept, clearable, hasEdi
 
 DateSelector.propTypes = {
     clearable: PropTypes.bool,
+    disableUnderline: PropTypes.bool,
     hasEdit: PropTypes.bool,
     initialValue: PropTypes.string,
+    inputFormat: PropTypes.string,
     onAccept: PropTypes.func.isRequired,
+    placeholder: PropTypes.string,
     revertOnEmpty: PropTypes.bool,
     variant: PropTypes.oneOf(['filled', 'outlined'])
 }
 
 DateSelector.defaultProps = {
     clearable: true,
+    disableUnderline: false,
     hasEdit: false,
     initialValue: null,
+    inputFormat: 'MM/dd/yyyy',
+    placeholder: 'mm/dd/yyyy',
     revertOnEmpty: false,
     variant: undefined
 }
