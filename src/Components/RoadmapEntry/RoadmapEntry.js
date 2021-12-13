@@ -1,16 +1,18 @@
 import {
+    Delete,
     EventAvailableOutlined, EventBusyOutlined, EventOutlined,
     VisibilityOffOutlined, VisibilityOutlined, WarningAmberRounded
 } from '@mui/icons-material'
 import { alpha, Grid, IconButton, Stack, Tooltip, Typography, useTheme } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DateSelector } from 'Components/DateSelector'
+import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
-import { requestHideRoadmap, requestUpdateRoadmap } from 'Redux/Roadmaps/actions'
+import { requestDeleteRoadmap, requestHideRoadmap, requestUpdateRoadmap } from 'Redux/Roadmaps/actions'
 import { selectRoadmapById } from 'Redux/Roadmaps/selectors'
 import { styled } from 'Styles/materialThemes'
 import { dateInDisplayOrder } from 'Utilities/dateHelpers'
@@ -56,6 +58,12 @@ const AutoSaveTitle = styled(AutoSaveTextField)(({ theme }) => ({
 const AutoSaveDescription = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.body2
 }))
+
+export const getStatusIconColor = (newEntry, hidden, statusColor, theme) => {
+    if (newEntry) return theme.palette.warning.main
+    if (hidden) return theme.palette.error.main
+    return statusColor ?? '#c3c3c3'
+}
 
 export function StatusIcon({ newEntry, hidden, status, color }) {
     if (newEntry)
@@ -119,6 +127,7 @@ function RoadmapEntry({ id, hasEdit }) {
 
     const [hover, setHover] = useState(false)
     const [maxTitleWidth, setMaxTitleWidth] = useState('20px')
+    const [openConfirmation, setOpenConfirmation] = useState(false)
 
     const { isHidden } = roadmapEntry
     const newEntry = roadmapEntry.title === 'Enter roadmap title...'
@@ -127,11 +136,7 @@ function RoadmapEntry({ id, hasEdit }) {
     const date = getDate(roadmapEntry)
     const dateOffset = date ? 80 : 0
 
-    const statusIconColor = useMemo(() => {
-        if (newEntry) return theme.palette.warning.main
-        if (isHidden) return theme.palette.error.main
-        return status?.color ?? '#c3c3c3'
-    }, [newEntry, isHidden, status])
+    const editable = hover && hasEdit
 
     const toggleIsHidden = (event) => {
         event.stopPropagation()
@@ -141,6 +146,26 @@ function RoadmapEntry({ id, hasEdit }) {
     const updateRoadmapEntry = (key, value) => {
         value !== roadmapEntry[key] && dispatch(requestUpdateRoadmap({ ...roadmapEntry, [key]: value }))
     }
+
+    const handlePopup = () => setOpenConfirmation((prev) => !prev)
+
+    const handlePopupCancel = (event) => {
+        event.stopPropagation()
+        handlePopup()
+    }
+
+    const handlePopupConfirm = (event) => {
+        event.stopPropagation()
+        handlePopup()
+        onDelete()
+    }
+
+    const onDeleteClick = (event) => {
+        event.stopPropagation()
+        setOpenConfirmation(true)
+    }
+
+    const onDelete = () => dispatch(requestDeleteRoadmap(roadmapEntry.id))
 
     useEffect(() => {
         setMaxTitleWidth(
@@ -161,7 +186,7 @@ function RoadmapEntry({ id, hasEdit }) {
             <Grid item width = '28px'>
                 <Stack>
                     <Tooltip
-                        disableHoverListener = {(!hasEdit && !newEntry) || isHidden}
+                        disableHoverListener = {!hasEdit || isHidden}
                         arrow
                         title = {newEntry ? 'You must update your title before changing your status.' :
                             <TooltipTitle
@@ -175,7 +200,7 @@ function RoadmapEntry({ id, hasEdit }) {
                                 newEntry = {newEntry}
                                 hidden = {isHidden}
                                 status = {status?.name}
-                                color = {statusIconColor}
+                                color = {getStatusIconColor(newEntry, isHidden, status?.color, theme)}
                             />
                         </StyledDiv>
                     </Tooltip>
@@ -225,7 +250,7 @@ function RoadmapEntry({ id, hasEdit }) {
                                     disableUnderline
                                     placeholder = 'Due Date'
                                     hasEdit = {hasEdit && (roadmapEntry.status !== 'COMPLETE')}
-                                    initialValue = {date ? dateInDisplayOrder(date) : null}
+                                    initialValue = {dateInDisplayOrder(date)}
                                     inputFormat = 'MMM yyyy'
                                     onAccept = {(v) => updateRoadmapEntry('dueDate', v)}
                                     InputProps = {{
@@ -238,7 +263,7 @@ function RoadmapEntry({ id, hasEdit }) {
                 </Grid>
                 <Grid item zeroMinWidth>
                     <AutoSaveDescription
-                        variant = {hover && hasEdit ? 'filled' : 'standard'}
+                        variant = {editable ? 'filled' : 'standard'}
                         canEdit = {hasEdit}
                         multiline
                         rows = {3}
@@ -263,18 +288,36 @@ function RoadmapEntry({ id, hasEdit }) {
                 </Grid>
             </Grid>
             <Grid item>
-                {hover && hasEdit &&
-                    <IconButton
-                        color = 'secondary'
-                        title = 'show/hide'
-                        size = 'small'
-                        style = {{ top: '-4px' }}
-                        onClick = {toggleIsHidden}
-                    >
-                        {getVisibilityIcon(isHidden)}
-                    </IconButton>
+                {editable &&
+                    <Stack>
+                        <IconButton
+                            color = 'secondary'
+                            title = 'show/hide'
+                            size = 'small'
+                            style = {{ top: '-4px' }}
+                            onClick = {toggleIsHidden}
+                        >
+                            {getVisibilityIcon(isHidden)}
+                        </IconButton>
+                        <IconButton
+                            color = 'secondary'
+                            title = 'delete'
+                            size = 'small'
+                            onClick = {onDeleteClick}
+                        >
+                            <Delete/>
+                        </IconButton>
+                    </Stack>
                 }
             </Grid>
+            {openConfirmation && (
+                <ConfirmationPopup
+                    open = {openConfirmation}
+                    onConfirm = {handlePopupConfirm}
+                    onCancel = {handlePopupCancel}
+                    detail = {`You are about to delete roadmap entry: '${roadmapEntry.title}'`}
+                />
+            )}
         </StyledGridWrap>
     )
 }

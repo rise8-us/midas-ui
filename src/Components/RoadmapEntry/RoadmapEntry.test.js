@@ -3,12 +3,13 @@ import {
     fireEvent, render, screen, selectRoadmapStatusesMock, useDispatchMock, useModuleMock, userEvent
 } from 'Utilities/test-utils'
 import { RoadmapEntry } from './index'
-import { getDate, getVisibilityIcon, StatusIcon } from './RoadmapEntry'
+import { getDate, getStatusIconColor, getVisibilityIcon, StatusIcon } from './RoadmapEntry'
 
 describe('<RoadmapEntry />', () => {
 
     const selectRoadmapByIdMock = useModuleMock('Redux/Roadmaps/selectors', 'selectRoadmapById')
     const requestUpdateRoadmapMock = useModuleMock('Redux/Roadmaps/actions', 'requestUpdateRoadmap')
+    const requestDeleteRoadmapMock = useModuleMock('Redux/Roadmaps/actions', 'requestDeleteRoadmap')
     const requestHideRoadmapMock = useModuleMock('Redux/Roadmaps/actions', 'requestHideRoadmap')
     const getTextWidthMock = useModuleMock('Utilities/textHelpers', 'getTextWidth')
 
@@ -69,6 +70,24 @@ describe('<RoadmapEntry />', () => {
         expect(requestUpdateRoadmapMock).toBeCalledWith({ ...roadmapEntry, status: 'COMPLETE' })
     })
 
+    test('should call dispatch to request delete roadmap', () => {
+        render(<RoadmapEntry id = {3} hasEdit/>)
+
+        userEvent.hover(screen.getByTestId('RoadmapEntry__grid-wrap'))
+        fireEvent.click(screen.getByTitle('delete'))
+        fireEvent.click(screen.getByText('confirm'))
+        expect(requestDeleteRoadmapMock).toHaveBeenCalledWith(3)
+    })
+
+    test('should cancel delete roadmap popup', () => {
+        render(<RoadmapEntry id = {3} hasEdit/>)
+
+        userEvent.hover(screen.getByTestId('RoadmapEntry__grid-wrap'))
+        fireEvent.click(screen.getByTitle('delete'))
+        fireEvent.click(screen.getByText('cancel'))
+        expect(requestDeleteRoadmapMock).not.toHaveBeenCalled()
+    })
+
     test('should call requestHideRoadmap with access', () => {
         selectRoadmapByIdMock.mockReturnValue(roadmapEntryHidden)
         render(<RoadmapEntry id = {3} hasEdit = {true}/>)
@@ -104,6 +123,32 @@ describe('<RoadmapEntry />', () => {
             render(getVisibilityIcon(false))
 
             expect(screen.getByTestId('VisibilityOffOutlinedIcon')).toBeInTheDocument()
+        })
+    })
+
+    describe('getStatusIconColor', () => {
+        test('newEntry === true', () => {
+            const color = getStatusIconColor(true, false, '#fff000', { palette: { warning: { main: 'foo' } } })
+
+            expect(color).toEqual('foo')
+        })
+
+        test('hidden === true', () => {
+            const color = getStatusIconColor(false, true, '#fff000', { palette: { error: { main: 'bar' } } })
+
+            expect(color).toEqual('bar')
+        })
+
+        test('newEntry === false && hidden === false', () => {
+            const color = getStatusIconColor(false, false, 'fizz', undefined)
+
+            expect(color).toEqual('fizz')
+        })
+
+        test('undefined status color', () => {
+            const color = getStatusIconColor(false, false, undefined, undefined)
+
+            expect(color).toEqual('#c3c3c3')
         })
     })
 
