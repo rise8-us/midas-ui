@@ -17,6 +17,7 @@ function render(ui, { initialState, store = createStore(rootReducer, initialStat
     }
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
 }
+
 function renderWithRouter(ui, {
     path = '/', // ie. "/project/:id"
     route = '/', // ie. "/project/ABC123"

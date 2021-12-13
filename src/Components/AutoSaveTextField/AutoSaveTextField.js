@@ -17,7 +17,7 @@ function AutoSaveTextField({
     const divRef = useRef()
 
     const customId = useMemo(() => {
-        return uniqueId ?? Math.random().toString()
+        return uniqueId ?? Date.now().valueOf().toString()
     }, [uniqueId])
 
     const [inEditMode, setInEditMode] = useState(false)
