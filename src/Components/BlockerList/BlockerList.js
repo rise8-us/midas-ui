@@ -17,7 +17,7 @@ function BlockerList({ portfolioId }) {
             container
             wrap = 'nowrap'
             direction = 'column'
-            style = {{ maxHeight: '165px' }}
+            style = {{ maxHeight: '100%' }}
             data-testid = 'BlockerList__grid-container'
         >
             {blockers.map((blocker, index) => (

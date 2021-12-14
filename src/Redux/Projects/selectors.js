@@ -6,6 +6,7 @@ export const selectProjectById = (state, id) => {
         name: '',
         description: '',
         gitlabProjectId: '',
+        projectJourneyMap: 0,
         tags: []
     }
 
