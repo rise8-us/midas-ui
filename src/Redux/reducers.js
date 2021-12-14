@@ -19,6 +19,7 @@ import productReducer from './Products/reducer'
 import projectReducer from './Projects/reducer'
 import releaseReducer from './Releases/reducer'
 import roadmapReducer from './Roadmaps/reducer'
+import snackbarReducer from './Snackbar/reducer'
 import sourceControlReducer from './SourceControls/reducer'
 import tagReducer from './Tags/reducer'
 import teamReducer from './Teams/reducer'
@@ -45,6 +46,7 @@ export const rootReducer = combineReducers({
     projects: projectReducer,
     releases: releaseReducer,
     roadmaps: roadmapReducer,
+    snackbar: snackbarReducer,
     sourceControls: sourceControlReducer,
     tags: tagReducer,
     teams: teamReducer,

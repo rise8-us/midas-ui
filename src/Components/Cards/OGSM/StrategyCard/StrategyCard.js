@@ -9,6 +9,7 @@ import { CollapsableCard } from 'Components/Cards/CollapsableCard'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
+import { ogsmRefactor } from 'Constants/FeatureMessages'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +18,7 @@ import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { requestDeleteAssertion, requestUpdateAssertion } from 'Redux/Assertions/actions'
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
+import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
 import { dateInDisplayOrder } from 'Utilities/dateHelpers'
 
@@ -34,7 +36,6 @@ const StyledDiv = styled('div')(({ theme }) => ({
 function StrategyCard({ id, hasEdit }) {
 
     const dispatch = useDispatch()
-
     const collapse = useRef(null)
 
     const strategy = useSelector((state) => selectAssertionById(state, id))
@@ -43,24 +44,6 @@ function StrategyCard({ id, hasEdit }) {
     const defaultStatus = statuses[strategy.status] ?? { color: '#c3c3c3' }
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
-
-    const handleStartDateChange = (newValue) => {
-        const updatedStrategy = {
-            ...strategy,
-            startDate: newValue,
-            children: []
-        }
-        dispatch(requestUpdateAssertion(updatedStrategy))
-    }
-
-    const handleDueDateChange = (newValue) => {
-        const updatedStrategy = {
-            ...strategy,
-            dueDate: newValue,
-            children: []
-        }
-        dispatch(requestUpdateAssertion(updatedStrategy))
-    }
 
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
@@ -90,15 +73,10 @@ function StrategyCard({ id, hasEdit }) {
         dispatch(requestDeleteAssertion(id))
     }
 
-    const updateStrategyText = (value) => {
-        if (strategy.text !== value) {
-            const updatedObjective = {
-                ...strategy,
-                text: value,
-                children: []
-            }
-            dispatch(requestUpdateAssertion(updatedObjective))
-        }
+    const updateStrategy = (key, value) => {
+        value !== strategy[key] &&
+            dispatch(requestUpdateAssertion({ ...strategy, children: [], [key]: value }))
+                .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
     return (
@@ -120,7 +98,7 @@ function StrategyCard({ id, hasEdit }) {
                             <AutoSaveTextFieldTitle
                                 initialValue = {strategy.text}
                                 canEdit = {hasEdit}
-                                onSave = {updateStrategyText}
+                                onSave = {(v) => updateStrategy('text', v)}
                                 fullWidth
                             />
                         </Grid>
@@ -169,7 +147,7 @@ function StrategyCard({ id, hasEdit }) {
                             <DateSelector
                                 label = 'Start Date'
                                 initialValue = {dateInDisplayOrder(strategy?.startDate ?? null)}
-                                onAccept = {handleStartDateChange}
+                                onAccept = {(v) => updateStrategy('startDate', v)}
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
@@ -189,7 +167,7 @@ function StrategyCard({ id, hasEdit }) {
                             <DateSelector
                                 label = 'Due Date'
                                 initialValue = {dateInDisplayOrder(strategy?.dueDate ?? null)}
-                                onAccept = {handleDueDateChange}
+                                onAccept = {(v) => updateStrategy('dueDate', v)}
                                 hasEdit = {hasEdit}
                             />
                         </Grid>

@@ -47,7 +47,7 @@ describe('<MeasureCard />', () => {
     const requestSearchCommentsMock = useModuleMock('Redux/Comments/actions', 'requestSearchComments')
 
     beforeEach(() => {
-        useDispatchMock().mockReturnValue({})
+        useDispatchMock().mockResolvedValue({})
         selectAssertionStatusesMock()
         selectMeasureByIdMock.mockReturnValue(measure)
         requestUpdateMeasureMock.mockClear()

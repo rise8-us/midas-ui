@@ -7,6 +7,7 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
+import { ogsmRefactor } from 'Constants/FeatureMessages'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,6 +20,7 @@ import {
 } from 'Redux/Assertions/actions'
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
+import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
 import { dateInDisplayOrder } from 'Utilities/dateHelpers'
 
@@ -36,27 +38,8 @@ function ObjectiveCard({ id, hasEdit }) {
     const statuses = useSelector(selectAssertionStatuses)
 
     const defaultTag = statuses[objective.status] ?? { color: '#c3c3c3' }
-    const archiveObjective = () => dispatch(requestArchiveAssertion({ id, isArchived: !objective.isArchived }))
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
-
-    const handleStartDateChange = (newValue) => {
-        const updatedObjective = {
-            ...objective,
-            startDate: newValue,
-            children: []
-        }
-        dispatch(requestUpdateAssertion(updatedObjective))
-    }
-
-    const handleDueDateChange = (newValue) => {
-        const updatedObjective = {
-            ...objective,
-            dueDate: newValue,
-            children: []
-        }
-        dispatch(requestUpdateAssertion(updatedObjective))
-    }
 
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
@@ -90,16 +73,13 @@ function ObjectiveCard({ id, hasEdit }) {
         dispatch(requestDeleteAssertion(id))
     }
 
-    const updateObjectiveText = (value) => {
-        if (objective.text !== value) {
-            const updatedObjective = {
-                ...objective,
-                text: value,
-                children: []
-            }
-            dispatch(requestUpdateAssertion(updatedObjective))
-        }
+    const updateObjective = (key, value) => {
+        value !== objective[key] &&
+            dispatch(requestUpdateAssertion({ ...objective, children: [], [key]: value }))
+                .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
+
+    const archiveObjective = () => dispatch(requestArchiveAssertion({ id, isArchived: !objective.isArchived }))
 
     return (
         <>
@@ -123,7 +103,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                                 <AutoSaveTextFieldTitle
                                                     canEdit = {hasEdit}
                                                     initialValue = {objective.text}
-                                                    onSave = {updateObjectiveText}
+                                                    onSave = {(v) => updateObjective('text', v)}
                                                     title = {objective.text}
                                                     fullWidth
                                                     inputProps = {{
@@ -161,7 +141,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                 <DateSelector
                                     label = 'Start Date'
                                     initialValue = {dateInDisplayOrder(objective?.startDate ?? null)}
-                                    onAccept = {handleStartDateChange}
+                                    onAccept = {(v) => updateObjective('startDate', v)}
                                     hasEdit = {hasEdit}
                                 />
                             </Grid>
@@ -169,7 +149,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                 <DateSelector
                                     label = 'Due Date'
                                     initialValue = {dateInDisplayOrder(objective?.dueDate ?? null)}
-                                    onAccept = {handleDueDateChange}
+                                    onAccept = {(v) => updateObjective('dueDate', v)}
                                     hasEdit = {hasEdit}
                                 />
                             </Grid>

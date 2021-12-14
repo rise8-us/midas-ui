@@ -7,6 +7,7 @@ import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { ProgressBar } from 'Components/ProgressBar'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
+import { ogsmRefactor } from 'Constants/FeatureMessages'
 import { parseISO } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
@@ -16,6 +17,7 @@ import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actions'
 import { selectMeasureById } from 'Redux/Measures/selectors'
+import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
 import { dateInDisplayOrder } from 'Utilities/dateHelpers'
 import { getMeasureStatus } from 'Utilities/getMeasureStatus'
@@ -73,10 +75,14 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     const onDelete = () => dispatch(requestDeleteMeasure(measure.id))
 
     const updateMeasure = (key, value) => {
-        value !== measure[key] && dispatch(requestUpdateMeasure({ ...measure, children: [], [key]: value }))
+        value !== measure[key] &&
+            dispatch(requestUpdateMeasure({ ...measure, children: [], [key]: value }))
+                .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
-    const updateCompletionType = (data) => dispatch(requestUpdateMeasure({ ...measure, children: [], ...data }))
+    const updateCompletionType = (data) =>
+        dispatch(requestUpdateMeasure({ ...measure, children: [], ...data }))
+            .then(() => dispatch(enqueueMessage(ogsmRefactor)))
 
     return (
         <CollapsableCard

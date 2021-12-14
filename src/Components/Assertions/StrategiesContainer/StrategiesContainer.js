@@ -1,12 +1,14 @@
 import { AddCircleOutline } from '@mui/icons-material'
 import { Card, CircularProgress, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { StrategyCard } from 'Components/Cards/OGSM/StrategyCard'
+import { ogsmRefactor } from 'Constants/FeatureMessages'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
 import { selectChildIdsByParentId } from 'Redux/Assertions/selectors'
+import { enqueueMessage } from 'Redux/Snackbar/reducer'
 
 export default function StrategiesContainer({ parentId, productId, hasEdit }) {
 
@@ -31,6 +33,7 @@ export default function StrategiesContainer({ parentId, productId, hasEdit }) {
                 completionType: 'BINARY'
             }]
         })).then(() => setAdding(false))
+            .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
     return (
