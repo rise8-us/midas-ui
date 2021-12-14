@@ -44,7 +44,7 @@ export default function AssertionComments({ offsetTop }) {
     }
 
     useEffect(() => {
-        selectedEntity.id === undefined && handleClose()
+        selectedEntity?.id === undefined && handleClose()
     }, [selectedEntity])
 
     useLayoutEffect(() => {
