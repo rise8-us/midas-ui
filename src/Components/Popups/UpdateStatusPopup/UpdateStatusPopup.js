@@ -7,31 +7,46 @@ import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { requestUpdateAssertion } from 'Redux/Assertions/actions'
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestCreateComment } from 'Redux/Comments/actions'
+import { requestUpdateMeasure } from 'Redux/Measures/actions'
+import { selectMeasureById } from 'Redux/Measures/selectors'
 import { closePopup } from 'Redux/Popups/actions'
 
-export default function UpdateStatusPopup({ assertionId }) {
+const statusHelper = (type) => {
+    return {
+        idProp: type === 'assertion' ? 'assertionId' : 'measureId',
+        requestUpdate(data) {
+            return this.idProp === 'assertionId' ?
+                requestUpdateAssertion(data) :
+                requestUpdateMeasure(data)
+        }
+    }
+}
+
+export default function UpdateStatusPopup({ id, type }) {
     const dispatch = useDispatch()
 
-    const assertionStatuses = useSelector(selectAssertionStatuses)
-
-    const assertion = useSelector((state) => selectAssertionById(state, assertionId))
-
+    const statuses = useSelector(selectAssertionStatuses)
+    const entity = type === 'assertion' ?
+        useSelector((state) => selectAssertionById(state, id)) :
+        useSelector((state) => selectMeasureById(state, id))
     const [selectedStatus, setSelectedStatus] = useState(null)
     const [text, setText] = useState('')
     const [errors, setErrors] = useState({ text: false, status: false })
 
     const onSubmit = () => {
+        const entityObj = statusHelper(type)
+
         if (selectedStatus && text.trim().length) {
-            const updatedAssertion = {
-                ...assertion,
+            const updatedOGSM = {
+                ...entity,
                 status: selectedStatus.name,
                 children: []
             }
             dispatch(requestCreateComment({
-                assertionId,
+                [entityObj.idProp]: entity.id,
                 text: `${text}###${selectedStatus.name}`
             }))
-                .then(() => dispatch(requestUpdateAssertion(updatedAssertion)))
+                .then(() => (dispatch(entityObj.requestUpdate(updatedOGSM))))
                 .then(() => dispatch(closePopup('UpdateStatusPopup')))
         } else {
             const statusError = selectedStatus === null
@@ -69,7 +84,7 @@ export default function UpdateStatusPopup({ assertionId }) {
                 <Autocomplete
                     value = {selectedStatus}
                     onChange = {handleStatusChange}
-                    options = {Object.values(assertionStatuses)}
+                    options = {Object.values(statuses)}
                     renderInput = {(params) =>
                         <TextField
                             {...params}
@@ -94,5 +109,10 @@ export default function UpdateStatusPopup({ assertionId }) {
 }
 
 UpdateStatusPopup.propTypes = {
-    assertionId: PropTypes.number.isRequired
+    id: PropTypes.number.isRequired,
+    type: PropTypes.oneOf([
+        'assertion',
+        'measure'
+    ]).isRequired
 }
+

@@ -20,7 +20,6 @@ import { selectMeasureById } from 'Redux/Measures/selectors'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
 import { dateInDisplayOrder } from 'Utilities/dateHelpers'
-import { getMeasureStatus } from 'Utilities/getMeasureStatus'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.h5,
@@ -42,12 +41,10 @@ export default function MeasureCard({ id, hasEdit, icon }) {
 
     const allStatuses = useSelector(selectAssertionStatuses)
     const measure = useSelector((state) => selectMeasureById(state, id))
-
-    const status = allStatuses[getMeasureStatus(measure)] ?? { label: 'Not Started', color: '#c3c3c3' }
-
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [expanded, setExpanded] = useState(false)
 
+    const status = allStatuses[measure.status] ?? { color: '#c3c3c3' }
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
     const handlePopupCancel = (event) => {
@@ -108,7 +105,10 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                         />
                     </Grid>
                     <Grid item marginTop = '3px'>
-                        <StatusSelectorChip statusName = {status?.name}/>
+                        <StatusSelectorChip
+                            statusName = {measure.status}
+                            onEditProps = {{ id: id, type: 'measure' }}
+                            hasEdit = {hasEdit} />
                     </Grid>
                     <Grid container item direction = 'column' marginRight = '3px' width = 'fit-content'>
                         <Grid item>

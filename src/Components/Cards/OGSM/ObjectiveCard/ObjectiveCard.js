@@ -116,7 +116,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                             <Grid item>
                                                 <StatusSelectorChip
                                                     statusName = {objective.status}
-                                                    onEditProps = {{ assertionId: id }}
+                                                    onEditProps = {{ id: id, type: 'assertion' }}
                                                     hasEdit = {hasEdit}
                                                 />
                                             </Grid>
