@@ -25,7 +25,7 @@ describe('<StrategyCard />', () => {
     const requestSearchCommentsMock = useModuleMock('Redux/Comments/actions', 'requestSearchComments')
 
     beforeEach(() => {
-        useDispatchMock().mockReturnValue({})
+        useDispatchMock().mockResolvedValue({})
         selectAssertionByIdMock.mockReturnValue(strategy)
         selectAssertionStatusesMock()
     })

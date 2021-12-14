@@ -1,5 +1,4 @@
 import { Stomp } from '@stomp/stompjs'
-import { useSnackbar } from 'Components/SnackbarProvider'
 import PropTypes from 'prop-types'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,6 +17,7 @@ import portfolioSubscriptions from 'Redux/Portfolios/subscriptions'
 import productSubscriptions from 'Redux/Products/subscriptions'
 import projectSubscriptions from 'Redux/Projects/subscriptions'
 import releaseSubscriptions from 'Redux/Releases/subscriptions'
+import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import sourceControlSubscriptions from 'Redux/SourceControls/subscriptions'
 import tagSubscriptions from 'Redux/Tags/subscriptions'
 import teamSubscriptions from 'Redux/Teams/subscriptions'
@@ -33,7 +33,6 @@ let stompClient = Stomp.client(`${getAPIURL()}/midas-websocket`)
 
 function WebsocketProvider({ children }) {
 
-    const { enqueueSnackbar } = useSnackbar()
     const dispatch = useDispatch()
 
     const isInitialized = useSelector((state) => state.app.initialized)
@@ -49,13 +48,13 @@ function WebsocketProvider({ children }) {
         dispatch(setInitialized(false))
         if (error.code !== 1002) {
             console.error(`WebSocket error code: ${error.code}`)
-            enqueueSnackbar({ message: 'Lost connection to server!', severity: 'error', persist: true })
+            dispatch(enqueueMessage({ message: 'Lost connection to server!', severity: 'error', persist: true }))
         }
     }
 
     const onConnectSuccess = () => {
         setConnected(true)
-        enqueueSnackbar({ message: 'Connected to server!', severity: 'success' })
+        dispatch(enqueueMessage({ message: 'Connected to server!', severity: 'success' }))
 
         assertionSubscriptions({ stompClient })
         measureSubscriptions({ stompClient })

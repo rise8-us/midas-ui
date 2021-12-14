@@ -1,7 +1,6 @@
-import { Close, Feedback } from '@mui/icons-material'
+import { Close } from '@mui/icons-material'
 import { Card, CardHeader, IconButton } from '@mui/material'
 import { AddComment, CommentsList } from 'Components/Comments'
-import { useSnackbar } from 'Components/SnackbarProvider'
 import useWindowSize from 'Hooks/useWindowSize'
 import PropTypes from 'prop-types'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -15,7 +14,6 @@ export const generateIdBasedOnType = (type, id) => ({
 })
 
 export default function AssertionComments({ offsetTop }) {
-    const { enqueueSnackbar } = useSnackbar()
     const ref = useRef()
     const dispatch = useDispatch()
     const browserSize = useWindowSize()
@@ -35,22 +33,6 @@ export default function AssertionComments({ offsetTop }) {
             ...generateIdBasedOnType(assertionCommentType, assertionCommentId),
             text: value
         }))
-        enqueueSnackbar({
-            message: 'Give us feedback on the new improved OGSM UI!',
-            severity: 'info',
-            action:
-                <IconButton
-                    onClick = {
-                        () => window.open(
-                            'https://chat.il2.dso.mil/midas/channels/feedback-ogsm-refactor',
-                            '_blank',
-                            'noopener, noreferrer'
-                        )
-                    }
-                >
-                    <Feedback />
-                </IconButton>
-        })
     }
 
     const handleClose = () => {

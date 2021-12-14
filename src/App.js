@@ -1,7 +1,7 @@
 import { Banner } from 'Components/Banner'
 import * as Pages from 'Components/Pages'
 import { PopupManager } from 'Components/PopupManager'
-import { SnackbarProvider } from 'Components/SnackbarProvider'
+import { SnackbarManager } from 'Components/Snackbar'
 import { WebsocketProvider } from 'Components/WebsocketProvider'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -19,31 +19,30 @@ function App() {
 
     return (
         <Banner>
-            <SnackbarProvider>
-                <WebsocketProvider>
-                    <PopupManager />
-                    <Switch>
-                        <Route exact path = '/'><Redirect to = '/dashboard'/></Route>
-                        <Route exact path = '/account' component = {Pages.Account} />
-                        <Route exact path = '/dashboard' component = {Pages.Dashboard} />
-                        <Route exact path = '/home'><Redirect to = '/dashboard'/></Route>
-                        <Route exact path = '/portfolios' component = {Pages.Portfolios} />
-                        <Route exact path = '/products' component = {Pages.Products} />
-                        <Route exact path = '/products/:productId' component = {Pages.Product} />
-                        <Route exact path = '/products/:productId/:productTab' component = {Pages.Product} />
-                        <Route
-                            exact
-                            path = '/products/:productId/:productTab/:assertionId'
-                            component = {Pages.Product}
-                        />
-                        <Route exact path = '/projects' component = {Pages.Projects} />
-                        <Route exact path = '/tags' component = {Pages.Tags} />
-                        <Route exact path = '/capabilities' component = {Pages.Capabilities} />
-                        {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}
-                        <Route component = {Pages.PageNotFound} />
-                    </Switch>
-                </WebsocketProvider>
-            </SnackbarProvider>
+            <WebsocketProvider>
+                <PopupManager />
+                <SnackbarManager />
+                <Switch>
+                    <Route exact path = '/'><Redirect to = '/dashboard'/></Route>
+                    <Route exact path = '/account' component = {Pages.Account} />
+                    <Route exact path = '/dashboard' component = {Pages.Dashboard} />
+                    <Route exact path = '/home'><Redirect to = '/dashboard'/></Route>
+                    <Route exact path = '/portfolios' component = {Pages.Portfolios} />
+                    <Route exact path = '/products' component = {Pages.Products} />
+                    <Route exact path = '/products/:productId' component = {Pages.Product} />
+                    <Route exact path = '/products/:productId/:productTab' component = {Pages.Product} />
+                    <Route
+                        exact
+                        path = '/products/:productId/:productTab/:assertionId'
+                        component = {Pages.Product}
+                    />
+                    <Route exact path = '/projects' component = {Pages.Projects} />
+                    <Route exact path = '/tags' component = {Pages.Tags} />
+                    <Route exact path = '/capabilities' component = {Pages.Capabilities} />
+                    {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}
+                    <Route component = {Pages.PageNotFound} />
+                </Switch>
+            </WebsocketProvider>
         </Banner>
     )
 }

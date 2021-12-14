@@ -1,0 +1,1 @@
+export const selectAllMessages = (state) => state.snackbar.messages ?? []

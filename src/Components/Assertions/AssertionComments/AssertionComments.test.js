@@ -1,4 +1,3 @@
-import { SnackbarProvider } from 'Components/SnackbarProvider'
 import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { generateIdBasedOnType } from './AssertionComments'
@@ -51,7 +50,7 @@ describe('<AssertionComments>', () => {
     test('should handle submit', () => {
         useDispatchMock().mockResolvedValue({ data: {} })
 
-        render(<SnackbarProvider><AssertionComments /></SnackbarProvider>, {
+        render(<AssertionComments />, {
             initialState: {
                 ...mockState,
                 app: {
