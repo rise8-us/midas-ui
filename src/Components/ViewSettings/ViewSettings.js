@@ -46,7 +46,7 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
             setSelectedIndex(selectedObjective)
         }
 
-        if (initialIndex) { setSelectedIndex(initialIndex) }
+        if (initialIndex && !isCreated) { setSelectedIndex(initialIndex) }
 
         return filtered
     }, [objectives, initialIndex, showCompleted, showArchived, isCreated, setSelectedIndex])
