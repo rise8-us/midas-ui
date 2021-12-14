@@ -59,6 +59,28 @@ describe('<StrategyCard />', () => {
         expect(requestUpdateAssertionMock).not.toHaveBeenCalled()
     })
 
+    test('should update strategy start date', () => {
+        render(<StrategyCard id = {strategy.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByDisplayValue('01/01/2020'))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateAssertionMock).toBeCalledWith({ ...strategy, startDate: '2020-02-01' })
+    })
+
+    test('should update strategy due date', () => {
+        render(<StrategyCard id = {strategy.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByDisplayValue('03/03/2020'))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Apr 1, 2020'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateAssertionMock).toBeCalledWith({ ...strategy, dueDate: '2020-04-01' })
+    })
+
     test('should call dispatch to request delete assertion', () => {
         render(<StrategyCard id = {strategy.id} hasEdit = {true} />)
 

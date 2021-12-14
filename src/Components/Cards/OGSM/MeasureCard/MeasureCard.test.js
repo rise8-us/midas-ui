@@ -25,7 +25,8 @@ describe('<MeasureCard />', () => {
         value: 0,
         target: 1,
         assertionId: 2,
-        comments: []
+        comments: [],
+        children: []
     }
 
     const completedMeasure = {
@@ -38,7 +39,8 @@ describe('<MeasureCard />', () => {
         value: 1,
         target: 1,
         assertionId: 2,
-        comments: []
+        comments: [],
+        children: []
     }
 
     const selectMeasureByIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasureById')
@@ -57,9 +59,12 @@ describe('<MeasureCard />', () => {
         selectMeasureByIdMock.mockReturnValue(completedMeasure)
         render(<MeasureCard id = {completedMeasure.id} hasEdit = {false} />)
 
+        userEvent.hover(screen.getByTestId('Collapsable__card'))
+
         expect(screen.getByDisplayValue('Text')).toBeInTheDocument()
         expect(screen.getByDisplayValue('01/01/2020')).toBeInTheDocument()
         expect(screen.getByDisplayValue('03/03/2020')).toBeInTheDocument()
+        expect(screen.getByText('Completed on: Sun Feb 02 2020')).toBeInTheDocument()
     })
 
     test('should update measure text', () => {
@@ -71,6 +76,30 @@ describe('<MeasureCard />', () => {
             text: 'Text Edit',
             children: []
         })
+    })
+
+    test('should update measure start date', () => {
+        selectMeasureByIdMock.mockReturnValue(completedMeasure)
+        render(<MeasureCard id = {completedMeasure.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByDisplayValue('01/01/2020'))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, startDate: '2020-02-01' })
+    })
+
+    test('should update measure due date', () => {
+        selectMeasureByIdMock.mockReturnValue(completedMeasure)
+        render(<MeasureCard id = {completedMeasure.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByDisplayValue('03/03/2020'))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Apr 1, 2020'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, dueDate: '2020-04-01' })
     })
 
     test('should update measure value', () => {
