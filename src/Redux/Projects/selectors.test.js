@@ -53,7 +53,8 @@ test('selectProjectById - null id returns object with keys', () => {
         name: '',
         description: '',
         tags: [],
-        gitlabProjectId: ''
+        gitlabProjectId: '',
+        projectJourneyMap: 0
     })
 })
 

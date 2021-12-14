@@ -9,7 +9,7 @@ import { Page } from 'Components/Page'
 import { PieChart } from 'Components/PieChart'
 import { ProductList } from 'Components/ProductList'
 import Statics from 'Constants/Statics'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { hasProductAccess } from 'Redux/Auth/selectors'
 import { requestUpdatePortfolio } from 'Redux/Portfolios/actions'
@@ -106,6 +106,8 @@ export const buildScopedData = (products, scopedTags) => {
 function Dashboard() {
     const dispatch = useDispatch()
 
+    const ref = useRef()
+
     const portfolios = useSelector(selectAllActivePortfoliosNameAndIds)
     const scopedTags = useSelector((state) => selectTagsByScope(state, 'Ownership'))
     const ctfSteps = useSelector((state) => state.app.projectJourneyMap) ?? {}
@@ -149,88 +151,113 @@ function Dashboard() {
 
     return (
         <Page>
-            <Grid container spacing = {3} style = {{ padding: '24px' }}>
-                <Grid container item flexGrow = {1} flexBasis = {1}>
-                    <DashboardCard
-                        title = 'Portfolio'
-                        options = {options}
-                        defaultOptionId = {selectedPortfolioId}
-                        onChange = {setSelectedPortfolioId}
-                        maxWidth = '100%'
-                        minWidth = '375px'
-                        width = '965px'
-                        flexGrow = {1}
-                    >
-                        <CardContent style = {{ paddingTop: 0 }}>
-                            <Grid container rowSpacing = {2} columnSpacing = {3} style = {{ paddingTop: 0 }}>
-                                <Grid container item columnSpacing = {2} zeroMinWidth xs = {12} md wrap = 'nowrap'>
-                                    <Grid item alignSelf = 'center'>
-                                        <PieChart
-                                            data = {scopedData}
-                                            label = {<img src = {AbmsLogo} style = {{ width: '100px' }} />}
-                                        />
-                                    </Grid>
-                                    <Grid container item direction = 'column' paddingY = '12px'>
-                                        <Grid item marginY = 'auto'>
-                                            <AutoSaveTextFieldStyled
-                                                initialValue = {getPortfolioDescription(
-                                                    selectedPortfolio?.description
-                                                )}
-                                                canEdit = {hasEdit}
-                                                multiline
-                                                fullWidth
-                                                onSave = {updatePortfolioDescription}
+            <Grid container
+                ref = {ref}
+                spacing = {3}
+                style = {{ padding: '24px' }}
+                height = 'calc(100% + 24px)'
+                alignContent = 'start'
+            >
+                <Grid container
+                    item
+                    direction = 'column'
+                    flexGrow = {1}
+                    spacing = {3}
+                    xl = {7}
+                    height = 'fit-content'
+                >
+                    <Grid item>
+                        <DashboardCard
+                            title = 'Portfolio'
+                            options = {options}
+                            defaultOptionId = {selectedPortfolioId}
+                            onChange = {setSelectedPortfolioId}
+                            maxWidth = '100%'
+                            minWidth = '100%'
+                            flexGrow = {1}
+                        >
+                            <CardContent style = {{ paddingTop: 0 }}>
+                                <Grid container rowSpacing = {2} columnSpacing = {3} style = {{ paddingTop: 0 }}>
+                                    <Grid
+                                        container
+                                        item
+                                        zeroMinWidth
+                                        columnSpacing = {2}
+                                        xs = {12}
+                                        md
+                                        wrap = 'nowrap'
+                                    >
+                                        <Grid item alignSelf = 'center'>
+                                            <PieChart
+                                                data = {scopedData}
+                                                label = {<img src = {AbmsLogo} style = {{ width: '100px' }} />}
                                             />
                                         </Grid>
-                                        <Grid container item columnSpacing = {2} rowSpacing = {1}>
-                                            {scopedTags.map((tag) => (
-                                                <Grid item key = {tag.id}>
-                                                    <LegendItem
-                                                        color = {tag.color}
-                                                        text = {tag.label.split('::')[1]}
-                                                    />
-                                                </Grid>
-                                            ))}
+                                        <Grid container item direction = 'column' paddingY = '12px'>
+                                            <Grid item marginY = 'auto'>
+                                                <AutoSaveTextFieldStyled
+                                                    initialValue = {getPortfolioDescription(
+                                                        selectedPortfolio?.description
+                                                    )}
+                                                    canEdit = {hasEdit}
+                                                    multiline
+                                                    fullWidth
+                                                    onSave = {updatePortfolioDescription}
+                                                />
+                                            </Grid>
+                                            <Grid container item columnSpacing = {2} rowSpacing = {1}>
+                                                {scopedTags.map((tag) => (
+                                                    <Grid item key = {tag.id}>
+                                                        <LegendItem
+                                                            color = {tag.color}
+                                                            text = {tag.label.split('::')[1]}
+                                                        />
+                                                    </Grid>
+                                                ))}
+                                            </Grid>
                                         </Grid>
                                     </Grid>
+                                    <Grid
+                                        item
+                                        zeroMinWidth
+                                        marginRight = '-8px'
+                                        sx = {{
+                                            display: { xs: 'none', sm: 'none', md: 'flex' }
+                                        }}
+                                    >
+                                        <Divider orientation = 'vertical' />
+                                    </Grid>
+                                    <Grid item xs alignSelf = 'center'>
+                                        <CtfStatistics data = {ctfData} />
+                                    </Grid>
                                 </Grid>
-                                <Grid
-                                    item
-                                    zeroMinWidth
-                                    marginRight = '-8px'
-                                    sx = {{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
-                                >
-                                    <Divider orientation = 'vertical' />
-                                </Grid>
-                                <Grid item xs alignSelf = 'center'>
-                                    <CtfStatistics data = {ctfData} />
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </DashboardCard>
+                            </CardContent>
+                        </DashboardCard>
+                    </Grid>
+                    <Grid item>
+                        <DashboardCard
+                            title = 'Products'
+                            minWidth = '375px'
+                        >
+                            <CardContentStyled>
+                                <ProductList products = {selectedPortfolio.products} tagScope = 'Ownership' />
+                            </CardContentStyled>
+                        </DashboardCard>
+                    </Grid>
                 </Grid>
-                <Grid container item flexGrow = {1} flexBasis = {1}>
+                <Grid container item flexGrow = {1} flexBasis = {1} height = 'fit-content'>
                     <DashboardCard
                         title = 'Blockers'
                         maxWidth = '100%'
                         minWidth = '375px'
                         width = '600px'
+                        height = 'fit-content'
+                        maxHeight = {ref.current?.offsetHeight - 48 + 'px' ?? '175px'}
+                        overflow = 'auto'
                         flexGrow = {1}
                     >
                         <CardContentStyled>
                             <BlockerList portfolioId = {selectedPortfolioId} />
-                        </CardContentStyled>
-                    </DashboardCard>
-                </Grid>
-                <Grid container item flexGrow = {1} flexBasis = {1}>
-                    <DashboardCard
-                        title = 'Products'
-                        maxWidth = '100%'
-                        minWidth = '375px'
-                        flexGrow = {1}
-                    >
-                        <CardContentStyled>
-                            <ProductList products = {selectedPortfolio.products} tagScope = 'Ownership' />
                         </CardContentStyled>
                     </DashboardCard>
                 </Grid>
