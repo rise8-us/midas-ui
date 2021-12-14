@@ -105,7 +105,7 @@ function StrategyCard({ id, hasEdit }) {
                         <Grid item marginTop = '6px'>
                             <StatusSelectorChip
                                 statusName = {strategy.status}
-                                onEditProps = {{ assertionId: id }}
+                                onEditProps = {{ id: id, type: 'assertion' }}
                                 hasEdit = {hasEdit}
                             />
                         </Grid>

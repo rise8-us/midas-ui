@@ -54,13 +54,20 @@ StatusSelectorChip.propTypes = {
         'BLOCKED'
     ]),
     onEditProps: PropTypes.shape({
-        assertionId: PropTypes.number
+        id: PropTypes.number,
+        type: PropTypes.oneOf([
+            'assertion',
+            'measure'
+        ])
     }),
     hasEdit: PropTypes.bool
 }
 
 StatusSelectorChip.defaultProps = {
-    onEditProps: { assertionId: null },
+    onEditProps: {
+        id: null,
+        type: null
+    },
     statusName: null,
     hasEdit: false
 }
