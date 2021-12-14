@@ -60,6 +60,28 @@ describe('<ObjectiveCard />', () => {
         expect(requestUpdateAssertionMock).not.toHaveBeenCalled()
     })
 
+    test('should update objective start date', () => {
+        render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByDisplayValue('01/01/2020'))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateAssertionMock).toBeCalledWith({ ...objective, startDate: '2020-02-01' })
+    })
+
+    test('should update objective due date', () => {
+        render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByDisplayValue('03/03/2020'))
+        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByLabelText('Apr 1, 2020'))
+        fireEvent.click(screen.getByText('OK'))
+
+        expect(requestUpdateAssertionMock).toBeCalledWith({ ...objective, dueDate: '2020-04-01' })
+    })
+
     test('should call dispatch to request assertion deletion', () => {
         render(<ObjectiveCard id = {objective.id} hasEdit = {true} />)
 
