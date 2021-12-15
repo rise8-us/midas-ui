@@ -27,14 +27,13 @@ const isValidUser = (userId) => {
 }
 
 function UserTab() {
-
     const [results, setResults] = useState([])
     const [userId, setUserId] = useState()
     const [show, setShow] = useState(false)
 
     const user = useSelector((state) => selectUserById(state, userId))
     const buildRows = useCallback(() => {
-        if (results === null) return []
+        if (!results) return []
         return results.map((r) => ({
             data: [r.id, r.username, r.email, r.displayName],
             properties: {
@@ -53,8 +52,8 @@ function UserTab() {
         setShow(isValidUser(userId))
     }, [userId])
 
-    const handleChange = (_e, values) => {
-        setResults(values)
+    const handleChange = (e) => {
+        setResults(e.target.value)
     }
 
     return (
