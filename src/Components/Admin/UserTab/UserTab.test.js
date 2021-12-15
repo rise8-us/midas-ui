@@ -33,6 +33,11 @@ describe('<UserTab />', () => {
 
         expect(screen.getByText('UserRoles test')).toBeInTheDocument()
         expect(screen.getByText('UserSettings test')).toBeInTheDocument()
+
+        userEvent.click(screen.queryByDisplayValue('yoda'))
+        userEvent.clear(screen.queryByDisplayValue('yoda'))
+        expect(screen.queryByDisplayValue('yoda')).not.toBeInTheDocument()
+
     })
 
     const setupScenario = () => {
