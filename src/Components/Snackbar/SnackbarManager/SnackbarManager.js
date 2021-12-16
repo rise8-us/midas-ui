@@ -43,7 +43,7 @@ export default function SnackbarManager() {
             currentQueue.map(msg =>
                 ({
                     ...msg,
-                    open: message.key === msg.key ? false : msg.open
+                    open: message.id === msg.id ? false : msg.open
                 })
             )
         )
@@ -51,7 +51,7 @@ export default function SnackbarManager() {
     }
 
     const removeMessageFromQueue = (message) => {
-        setQueue(currentQueue => currentQueue.filter(msg => msg.key !== message.key))
+        setQueue(currentQueue => currentQueue.filter(msg => msg.id !== message.id))
     }
 
     useEffect(() => {

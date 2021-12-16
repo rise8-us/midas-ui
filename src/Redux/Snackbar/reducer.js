@@ -8,16 +8,19 @@ const snackbarSlice = createSlice({
     reducers: {
         enqueueMessage: (state, action) => {
             const { payload } = action
-            state.messages.push({
-                ...payload,
-                timeout: payload.timeout ?? 3000,
-                severity: payload.severity ?? 'info',
-                key: payload.key ?? Date.now(),
-            })
+            const duplicateMessages = state.messages.filter(v => v.id === payload.id).length
+            if (!duplicateMessages) {
+                state.messages.push({
+                    ...payload,
+                    timeout: payload.timeout ?? 3000,
+                    severity: payload.severity ?? 'info',
+                    id: payload.id ?? Date.now(),
+                })
+            }
         },
         removeMessage: (state, action) => {
             const { payload } = action
-            state.messages = state.messages.filter(message => message.key !== payload.key)
+            state.messages = state.messages.filter(message => message.id !== payload.id)
         },
         removeAllMessages: (state) => {
             state.messages = []

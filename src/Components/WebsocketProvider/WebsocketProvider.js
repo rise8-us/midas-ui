@@ -48,13 +48,22 @@ function WebsocketProvider({ children }) {
         dispatch(setInitialized(false))
         if (error.code !== 1002) {
             console.error(`WebSocket error code: ${error.code}`)
-            dispatch(enqueueMessage({ message: 'Lost connection to server!', severity: 'error', persist: true }))
+            dispatch(enqueueMessage({
+                id: 'webSocketFailure',
+                message: 'Lost connection to server!',
+                severity: 'error',
+                persist: true
+            }))
         }
     }
 
     const onConnectSuccess = () => {
         setConnected(true)
-        dispatch(enqueueMessage({ message: 'Connected to server!', severity: 'success' }))
+        dispatch(enqueueMessage({
+            id: 'webSocketSuccess',
+            message: 'Connected to server!',
+            severity: 'success'
+        }))
 
         assertionSubscriptions({ stompClient })
         measureSubscriptions({ stompClient })
