@@ -8,7 +8,7 @@ describe('<SnackbarManager />', () => {
     const removeMessageMock = useModuleMock('Redux/Snackbar/reducer', 'removeMessage')
 
     const basicMessage = {
-        key: '12345',
+        id: '12345',
         message: 'message text',
         severity: 'info',
         timeout: 2000

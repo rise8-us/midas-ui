@@ -7,12 +7,21 @@ const defaultState = {
 describe('snackbar reducer', () => {
 
     test('enqueueMessage with all props', () => {
-        const payload = { timeout: 10, key: 'test', severity: 'success' }
+        const payload = { timeout: 10, id: 'test', severity: 'success' }
 
         const actions = [{ type: reduxActions.enqueueMessage.type, payload }]
         const state = actions.reduce(reducer, defaultState)
 
         expect(state.messages[0]).toEqual(payload)
+    })
+
+    test('enqueueMessage does not add existing message with same id', () => {
+        const payload = { timeout: 10, id: 'test', severity: 'success' }
+
+        const actions = [{ type: reduxActions.enqueueMessage.type, payload }]
+        const state = actions.reduce(reducer, { messages: [payload] })
+
+        expect(state.messages.length).toEqual(1)
     })
 
     test('enqueueMessage with no props', () => {
@@ -22,18 +31,18 @@ describe('snackbar reducer', () => {
         const actions = [{ type: reduxActions.enqueueMessage.type, payload: {} }]
         const state = actions.reduce(reducer, defaultState)
 
-        expect(state.messages[0]).toEqual({ timeout: 3000, key: now, severity: 'info' })
+        expect(state.messages[0]).toEqual({ timeout: 3000, id: now, severity: 'info' })
     })
 
     test('removeMessage should remove message', () => {
-        const actions = [{ type: reduxActions.removeMessage.type, payload: { key: 'bogo' } }]
-        const state = actions.reduce(reducer, { messages: [{ test: 'yolo', key: 'bogo' }] })
+        const actions = [{ type: reduxActions.removeMessage.type, payload: { id: 'bogo' } }]
+        const state = actions.reduce(reducer, { messages: [{ test: 'yolo', id: 'bogo' }] })
 
         expect(state.messages).toEqual([])
     })
 
     test('removeMessage should not remove message', () => {
-        const message = { test: 'yolo', key: 'bogo' }
+        const message = { test: 'yolo', id: 'bogo' }
         const actions = [{ type: reduxActions.removeMessage.type, payload: { } }]
         const state = actions.reduce(reducer, { messages: [message] })
 
