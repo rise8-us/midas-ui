@@ -1,6 +1,13 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent
+    fireEvent,
+    mockDateSelector,
+    render,
+    screen,
+    selectAssertionStatusesMock,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
 } from 'Utilities/test-utils'
 import { MeasureCard } from './index'
 
@@ -14,33 +21,29 @@ jest.mock('Components/CompletionType/CompletionType', () => function testing(pro
     )
 })
 
+jest.mock('Components/DateSelector/DateSelector', () => function testing(props) { return mockDateSelector(props) })
+
 describe('<MeasureCard />', () => {
     const measure = {
         id: 1,
         text: 'Text',
+        completionType: 'BINARY',
+        assertionId: 2,
+        comments: [],
+        children: [],
+        target: 1,
+        value: 0,
         startDate: null,
         dueDate: null,
         completedAt: null,
-        completionType: 'BINARY',
-        value: 0,
-        target: 1,
-        assertionId: 2,
-        comments: [],
-        children: []
     }
 
     const completedMeasure = {
-        id: 2,
-        text: 'Text',
+        ...measure,
+        value: 1,
         startDate: '2020-01-01',
         dueDate: '2020-03-03',
         completedAt: '2020-02-02T15:22:00',
-        completionType: 'BINARY',
-        value: 1,
-        target: 1,
-        assertionId: 2,
-        comments: [],
-        children: []
     }
 
     const selectMeasureByIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasureById')
@@ -62,8 +65,8 @@ describe('<MeasureCard />', () => {
         userEvent.hover(screen.getByTestId('Collapsable__card'))
 
         expect(screen.getByDisplayValue('Text')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('01/01/2020')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('03/03/2020')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('01-01-2020')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('03-03-2020')).toBeInTheDocument()
         expect(screen.getByText('Completed on: Sun Feb 02 2020')).toBeInTheDocument()
     })
 
@@ -71,35 +74,27 @@ describe('<MeasureCard />', () => {
         render(<MeasureCard id = {measure.id} hasEdit = {true} />)
 
         userEvent.type(screen.getByDisplayValue('Text'), 'Text Edit{enter}')
-        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
-            ...measure,
-            text: 'Text Edit',
-            children: []
-        })
+        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({ ...measure, text: 'Text Edit' })
     })
 
     test('should update measure start date', () => {
         selectMeasureByIdMock.mockReturnValue(completedMeasure)
+
         render(<MeasureCard id = {completedMeasure.id} hasEdit = {true} />)
 
-        fireEvent.click(screen.getByDisplayValue('01/01/2020'))
-        fireEvent.click(screen.getByLabelText('Next month'))
-        fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
-        fireEvent.click(screen.getByText('OK'))
+        fireEvent.blur(screen.getByDisplayValue('01-01-2020'))
 
-        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, startDate: '2020-02-01' })
+        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, startDate: '2021-04-20' })
     })
 
     test('should update measure due date', () => {
         selectMeasureByIdMock.mockReturnValue(completedMeasure)
+
         render(<MeasureCard id = {completedMeasure.id} hasEdit = {true} />)
 
-        fireEvent.click(screen.getByDisplayValue('03/03/2020'))
-        fireEvent.click(screen.getByLabelText('Next month'))
-        fireEvent.click(screen.getByLabelText('Apr 1, 2020'))
-        fireEvent.click(screen.getByText('OK'))
+        fireEvent.blur(screen.getByDisplayValue('03-03-2020'))
 
-        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, dueDate: '2020-04-01' })
+        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, dueDate: '2021-04-20' })
     })
 
     test('should update measure value', () => {

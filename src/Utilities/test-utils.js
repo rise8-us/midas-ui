@@ -81,6 +81,23 @@ export function mockProductConfigurationFields(props) {
     )
 }
 
+export function mockDateSelector(props) {
+    return (
+        <>
+            <label htmlFor = 'mockDateSelector'>{props.label}</label>
+            <input
+                id = 'mockDateSelector'
+                placeholder = {props.placeholder}
+                defaultValue = {props.initialValue}
+                value = {props.value}
+                onBlur = {() => props.onAccept('2021-04-20')}
+                onChange = {(e) => props.onChange(e)}
+                data-testid = 'mockDateSelector__input'
+            />
+        </>
+    )
+}
+
 export function selectRoadmapStatusesMock() {
     const enumSelectors = require('Redux/AppSettings/selectors')
     jest.spyOn(enumSelectors, 'selectRoadmapStatuses').mockReturnValue({
