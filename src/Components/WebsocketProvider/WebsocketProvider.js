@@ -17,7 +17,7 @@ import portfolioSubscriptions from 'Redux/Portfolios/subscriptions'
 import productSubscriptions from 'Redux/Products/subscriptions'
 import projectSubscriptions from 'Redux/Projects/subscriptions'
 import releaseSubscriptions from 'Redux/Releases/subscriptions'
-import { enqueueMessage } from 'Redux/Snackbar/reducer'
+import { enqueueMessage, removeMessage } from 'Redux/Snackbar/reducer'
 import sourceControlSubscriptions from 'Redux/SourceControls/subscriptions'
 import tagSubscriptions from 'Redux/Tags/subscriptions'
 import teamSubscriptions from 'Redux/Teams/subscriptions'
@@ -59,6 +59,7 @@ function WebsocketProvider({ children }) {
 
     const onConnectSuccess = () => {
         setConnected(true)
+        dispatch(removeMessage({ id: 'webSocketFailure' }))
         dispatch(enqueueMessage({
             id: 'webSocketSuccess',
             message: 'Connected to server!',
