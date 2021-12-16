@@ -1,8 +1,17 @@
 import React from 'react'
 import {
-    fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock, userEvent
+    fireEvent,
+    mockDateSelector,
+    render,
+    screen,
+    selectAssertionStatusesMock,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
 } from 'Utilities/test-utils'
 import { StrategyCard } from './index'
+
+jest.mock('Components/DateSelector/DateSelector', () => function testing(props) { return mockDateSelector(props) })
 
 describe('<StrategyCard />', () => {
     const strategy = {
@@ -36,8 +45,8 @@ describe('<StrategyCard />', () => {
         render(<StrategyCard id = {strategy.id} hasEdit = {false} />)
 
         expect(screen.getByDisplayValue('Text')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('01/01/2020')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('03/03/2020')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('01-01-2020')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('03-03-2020')).toBeInTheDocument()
         expect(screen.getByDisplayValue('02/02/2020 03:22 pm')).toBeInTheDocument()
     })
 
@@ -62,23 +71,17 @@ describe('<StrategyCard />', () => {
     test('should update strategy start date', () => {
         render(<StrategyCard id = {strategy.id} hasEdit = {true} />)
 
-        fireEvent.click(screen.getByDisplayValue('01/01/2020'))
-        fireEvent.click(screen.getByLabelText('Next month'))
-        fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
-        fireEvent.click(screen.getByText('OK'))
+        fireEvent.blur(screen.getByDisplayValue('01-01-2020'))
 
-        expect(requestUpdateAssertionMock).toBeCalledWith({ ...strategy, startDate: '2020-02-01' })
+        expect(requestUpdateAssertionMock).toBeCalledWith({ ...strategy, startDate: '2021-04-20' })
     })
 
     test('should update strategy due date', () => {
         render(<StrategyCard id = {strategy.id} hasEdit = {true} />)
 
-        fireEvent.click(screen.getByDisplayValue('03/03/2020'))
-        fireEvent.click(screen.getByLabelText('Next month'))
-        fireEvent.click(screen.getByLabelText('Apr 1, 2020'))
-        fireEvent.click(screen.getByText('OK'))
+        fireEvent.blur(screen.getByDisplayValue('03-03-2020'))
 
-        expect(requestUpdateAssertionMock).toBeCalledWith({ ...strategy, dueDate: '2020-04-01' })
+        expect(requestUpdateAssertionMock).toBeCalledWith({ ...strategy, dueDate: '2021-04-20' })
     })
 
     test('should call dispatch to request delete assertion', () => {
