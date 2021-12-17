@@ -114,4 +114,17 @@ const theme = createTheme({
 
 const styled = createStyled({ defaultTheme: theme })
 
-export { styled, theme }
+const scrollbar = (initialTheme) => ({
+    '&::-webkit-scrollbar': {
+        width: '12px'
+    },
+    '&::-webkit-scrollbar-thumb': {
+        height: '15%',
+        border: '3px solid transparent',
+        backgroundClip: 'padding-box',
+        backgroundColor: initialTheme?.palette?.divider ?? '#3E4548',
+        WebkitBorderRadius: '12px'
+    }
+})
+
+export { styled, theme, scrollbar }

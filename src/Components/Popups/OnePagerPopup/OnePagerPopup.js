@@ -2,20 +2,11 @@ import { Dialog, DialogContent, useTheme } from '@mui/material'
 import { ProductOnePager } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { styled } from 'Styles/materialThemes'
+import { scrollbar, styled } from 'Styles/materialThemes'
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+    ...scrollbar(theme),
     overflowX: 'clip',
-    '&::-webkit-scrollbar': {
-        width: '12px',
-    },
-    '&::-webkit-scrollbar-thumb': {
-        height: '15%',
-        border: '3px solid transparent',
-        backgroundClip: 'padding-box',
-        backgroundColor: theme.palette.divider,
-        WebkitBorderRadius: '12px',
-    },
     padding: theme.spacing(2),
 }))
 

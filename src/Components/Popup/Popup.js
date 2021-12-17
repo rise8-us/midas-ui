@@ -3,6 +3,11 @@ import { Button, Dialog, DialogActions, DialogContent, Divider, IconButton, Typo
 import { Header } from 'Components/Header'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { scrollbar, styled } from 'Styles/materialThemes'
+
+const DialogContentStyled = styled(DialogContent)(({ theme }) => ({
+    ...scrollbar(theme)
+}))
 
 const Popup = ({
     children,
@@ -47,21 +52,9 @@ const Popup = ({
                 }
             />
             {!disableDefaultDivider && <Divider />}
-            <DialogContent sx = {{
-                '&::-webkit-scrollbar': {
-                    width: '12px'
-                },
-                '&::-webkit-scrollbar-thumb': {
-                    height: '15%',
-                    border: '3px solid transparent',
-                    backgroundClip: 'padding-box',
-                    backgroundColor: 'divider',
-                    WebkitBorderRadius: '12px'
-                },
-                p: disableDefaultPadding ? '20px 24px' : '16px 16px 50px 16px'
-            }}>
+            <DialogContentStyled sx = {{ p: disableDefaultPadding ? '20px 24px' : '16px 16px 50px 16px' }}>
                 {children}
-            </DialogContent>
+            </DialogContentStyled>
             <DialogActions sx = {{ m: 0, p: 1 }}>
                 <Button
                     data-testid = 'Popup__button-cancel'

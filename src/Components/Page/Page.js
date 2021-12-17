@@ -3,19 +3,10 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageScrollY } from 'Redux/AppSettings/reducer'
-import { styled } from 'Styles/materialThemes'
+import { scrollbar, styled } from 'Styles/materialThemes'
 
 const DivStyled = styled('div')(({ theme }) => ({
-    '&::-webkit-scrollbar': {
-        width: '12px'
-    },
-    '&::-webkit-scrollbar-thumb': {
-        height: '15%',
-        border: '3px solid transparent',
-        backgroundClip: 'padding-box',
-        backgroundColor: theme.palette.divider,
-        WebkitBorderRadius: '12px'
-    },
+    ...scrollbar(theme),
     position: 'fixed',
     top: '68px',
     paddingBottom: '24px',

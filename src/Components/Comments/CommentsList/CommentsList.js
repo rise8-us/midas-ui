@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { styled } from 'Styles/materialThemes'
+import { scrollbar, styled } from 'Styles/materialThemes'
 import { Comment } from '../'
 
 const BoxWrap = styled(Box)(({ theme }) => ({
@@ -9,18 +9,7 @@ const BoxWrap = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column-reverse',
     overflowY: 'auto',
-
-    '&::-webkit-scrollbar': {
-        width: '12px'
-    },
-
-    '&::-webkit-scrollbar-thumb': {
-        height: '15%',
-        border: '3px solid transparent',
-        backgroundClip: 'padding-box',
-        backgroundColor: theme.palette.divider,
-        WebkitBorderRadius: '12px'
-    }
+    ...scrollbar(theme)
 }))
 
 function CommentsList({ commentProps, commentIds }) {
