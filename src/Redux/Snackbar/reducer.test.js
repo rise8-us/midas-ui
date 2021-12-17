@@ -7,12 +7,12 @@ const defaultState = {
 describe('snackbar reducer', () => {
 
     test('enqueueMessage with all props', () => {
-        const payload = { timeout: 10, id: 'test', severity: 'success' }
+        const payload = { timeout: 10, id: 'test', severity: 'success', open: true }
 
         const actions = [{ type: reduxActions.enqueueMessage.type, payload }]
         const state = actions.reduce(reducer, defaultState)
 
-        expect(state.messages[0]).toEqual(payload)
+        expect(state.messages[0]).toEqual({ ...payload, open: undefined })
     })
 
     test('enqueueMessage does not add existing message with same id', () => {
@@ -32,6 +32,15 @@ describe('snackbar reducer', () => {
         const state = actions.reduce(reducer, defaultState)
 
         expect(state.messages[0]).toEqual({ timeout: 3000, id: now, severity: 'info' })
+    })
+
+    test('updateMessage updates a message', () => {
+        const payload = { timeout: 10, id: 'test', severity: 'success', open: false }
+
+        const actions = [{ type: reduxActions.updateMessage.type, payload }]
+        const state = actions.reduce(reducer, { messages: [{ ...payload, open: true }] })
+
+        expect(state.messages[0]).toEqual(payload)
     })
 
     test('removeMessage should remove message', () => {
