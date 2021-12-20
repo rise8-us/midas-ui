@@ -19,8 +19,8 @@ module.exports = {
     },
     'parserOptions': {
         'babelOptions': {
-            'presets': [ '@babel/preset-typescript','@babel/preset-react']
-         },
+            'presets': ['@babel/preset-typescript', '@babel/preset-react']
+        },
         'requireConfigFile': false,
         'ecmaFeatures': {
             'jsx': true
@@ -30,12 +30,12 @@ module.exports = {
     },
     'overrides': [
         {
-          'files': ['*.{ts,tsx}'],
-          'parser': '@typescript-eslint/parser',
-          'plugins': ['@typescript-eslint'],
-          'extends': ['plugin:@typescript-eslint/recommended']
+            'files': ['*.{ts,tsx}'],
+            'parser': '@typescript-eslint/parser',
+            'plugins': ['@typescript-eslint'],
+            'extends': ['plugin:@typescript-eslint/recommended']
         }
-      ],
+    ],
     'plugins': [
         'react',
         'security',
