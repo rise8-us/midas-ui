@@ -1,28 +1,39 @@
-import { Card, CardContent, rgbToHex, Typography, useTheme } from '@mui/material'
+import { alpha, Card, CardContent, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import { styled } from 'Styles/materialThemes'
+import { scrollbar, styled } from 'Styles/materialThemes'
 
 const TypographyTitleStyled = styled(Typography)(({ theme }) => ({
     paddingRight: theme.spacing(5)
 }))
 
-const CardStyled = styled(Card)(({ theme }) => ({
-    borderRadius: theme.spacing(2)
-}))
-
-const optionsStyle = {
-    borderRadius: 2,
+const TypographyOptionStyled = styled(Typography)(({ theme, selected }) => ({
+    borderRadius: theme.spacing(2),
     padding: '2px 10px',
     margin: '0 5px',
     fontWeight: 'bold',
     cursor: 'pointer',
     color: 'text.secondary',
-}
+    backgroundColor: selected ? alpha(theme.palette.grey[800], .44) : 'transparent',
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.grey[800], .63)
+    }
+}))
+
+const CardStyled = styled(Card)(({ theme }) => ({
+    borderRadius: theme.spacing(2),
+    width: '100%',
+    boxShadow: 'none'
+}))
+
+const CardContentStyled = styled(CardContent)(({ theme }) => ({
+    width: '100%',
+    overflowY: 'scroll',
+    ...scrollbar(theme)
+}))
 
 function DashboardCard(props) {
     const { title, options, defaultOptionId, onChange, children, ...cardStyle } = props
-    const theme = useTheme()
 
     const [selectedId, setSelectedId] = useState(defaultOptionId)
 
@@ -32,30 +43,30 @@ function DashboardCard(props) {
     }
 
     return (
-        <CardStyled style = {{ ...cardStyle }}>
-            <CardContent style = {{ display: 'flex', alignItems: 'center' }}>
-                <TypographyTitleStyled variant = 'h6' color = 'text.secondary'>
+        <CardStyled>
+            <Stack
+                direction = 'row'
+                height = 'inherit'
+                alignItems = 'center'
+                style = {{ height: '48px', width: 'inherit', padding: 0 }}
+            >
+                <TypographyTitleStyled variant = 'h6' color = 'text.secondary' marginLeft = {2}>
                     {title}
                 </TypographyTitleStyled>
-                {options.map((option) => (
-                    <Typography
-                        key = {option.id}
+                {options.map((option, index) => (
+                    <TypographyOptionStyled
+                        key = {index}
                         variant = 'caption'
-                        sx = {{
-                            ...optionsStyle,
-                            backgroundColor: selectedId === option.id ?
-                            `${rgbToHex(theme.palette.grey[800])}70` : 'transparent',
-                            '&:hover': {
-                                backgroundColor: `${rgbToHex(theme.palette.grey[800])}A0`
-                            }
-                        }}
+                        selected = {selectedId === option.id}
                         onClick = {() => onIdChange(option.id)}
                     >
                         {option.label}
-                    </Typography>
+                    </TypographyOptionStyled>
                 ))}
-            </CardContent>
-            {children}
+            </Stack>
+            <CardContentStyled height = 'fit-content' style = {{ ...cardStyle }}>
+                {children}
+            </CardContentStyled>
         </CardStyled>
     )
 }

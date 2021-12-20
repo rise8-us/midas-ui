@@ -1,4 +1,4 @@
-import { CardContent, Divider, Grid } from '@mui/material'
+import { Divider, Grid } from '@mui/material'
 import AbmsLogo from 'Assets/ABMSAppsLogo.svg'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { BlockerList } from 'Components/BlockerList'
@@ -24,22 +24,6 @@ import { getNumberOrZero } from 'Utilities/getNumberOrZero'
 
 const AutoSaveTextFieldStyled = styled(AutoSaveTextField)(() => ({
     fontWeight: 'bold'
-}))
-
-const CardContentStyled = styled(CardContent)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    height: 'calc(100% - 70px)',
-    overflowY: 'scroll',
-    '&::-webkit-scrollbar': {
-        width: '12px'
-    },
-    '&::-webkit-scrollbar-thumb': {
-        height: '15%',
-        border: '3px solid transparent',
-        backgroundClip: 'padding-box',
-        backgroundColor: theme.palette.divider,
-        WebkitBorderRadius: '12px'
-    }
 }))
 
 export const combinePortfolios = (portfolios) => {
@@ -107,6 +91,10 @@ function Dashboard() {
     const dispatch = useDispatch()
 
     const ref = useRef()
+
+    const blockerCardMaxHeight = ref.current?.offsetWidth < 1548
+        ? undefined
+        : ref.current?.offsetHeight - 108 + 'px'
 
     const portfolios = useSelector(selectAllActivePortfoliosNameAndIds)
     const scopedTags = useSelector((state) => selectTagsByScope(state, 'Ownership'))
@@ -176,89 +164,79 @@ function Dashboard() {
                             minWidth = '100%'
                             flexGrow = {1}
                         >
-                            <CardContent style = {{ paddingTop: 0 }}>
-                                <Grid container rowSpacing = {2} columnSpacing = {3} style = {{ paddingTop: 0 }}>
-                                    <Grid
-                                        container
-                                        item
-                                        zeroMinWidth
-                                        columnSpacing = {2}
-                                        xs = {12}
-                                        md
-                                        wrap = 'nowrap'
-                                    >
-                                        <Grid item alignSelf = 'center'>
-                                            <PieChart
-                                                data = {scopedData}
-                                                label = {<img src = {AbmsLogo} style = {{ width: '100px' }} />}
+                            <Grid container rowSpacing = {2} columnSpacing = {3} style = {{ paddingTop: 0 }}>
+                                <Grid
+                                    container
+                                    item
+                                    zeroMinWidth
+                                    columnSpacing = {2}
+                                    xs = {12}
+                                    md
+                                    wrap = 'nowrap'
+                                >
+                                    <Grid item alignSelf = 'center'>
+                                        <PieChart
+                                            data = {scopedData}
+                                            label = {<img src = {AbmsLogo} style = {{ width: '100px' }} />}
+                                        />
+                                    </Grid>
+                                    <Grid container item direction = 'column' paddingY = '12px'>
+                                        <Grid item marginY = 'auto'>
+                                            <AutoSaveTextFieldStyled
+                                                initialValue = {getPortfolioDescription(
+                                                    selectedPortfolio?.description
+                                                )}
+                                                canEdit = {hasEdit}
+                                                multiline
+                                                fullWidth
+                                                onSave = {updatePortfolioDescription}
                                             />
                                         </Grid>
-                                        <Grid container item direction = 'column' paddingY = '12px'>
-                                            <Grid item marginY = 'auto'>
-                                                <AutoSaveTextFieldStyled
-                                                    initialValue = {getPortfolioDescription(
-                                                        selectedPortfolio?.description
-                                                    )}
-                                                    canEdit = {hasEdit}
-                                                    multiline
-                                                    fullWidth
-                                                    onSave = {updatePortfolioDescription}
-                                                />
-                                            </Grid>
-                                            <Grid container item columnSpacing = {2} rowSpacing = {1}>
-                                                {scopedTags.map((tag) => (
-                                                    <Grid item key = {tag.id}>
-                                                        <LegendItem
-                                                            color = {tag.color}
-                                                            text = {tag.label.split('::')[1]}
-                                                        />
-                                                    </Grid>
-                                                ))}
-                                            </Grid>
+                                        <Grid container item columnSpacing = {2} rowSpacing = {1}>
+                                            {scopedTags.map((tag) => (
+                                                <Grid item key = {tag.id}>
+                                                    <LegendItem
+                                                        color = {tag.color}
+                                                        text = {tag.label.split('::')[1]}
+                                                    />
+                                                </Grid>
+                                            ))}
                                         </Grid>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        zeroMinWidth
-                                        marginRight = '-8px'
-                                        sx = {{
-                                            display: { xs: 'none', sm: 'none', md: 'flex' }
-                                        }}
-                                    >
-                                        <Divider orientation = 'vertical' />
-                                    </Grid>
-                                    <Grid item xs alignSelf = 'center'>
-                                        <CtfStatistics data = {ctfData} />
-                                    </Grid>
                                 </Grid>
-                            </CardContent>
+                                <Grid
+                                    item
+                                    zeroMinWidth
+                                    marginRight = '-8px'
+                                    sx = {{
+                                        display: { xs: 'none', sm: 'none', md: 'flex' }
+                                    }}
+                                >
+                                    <Divider orientation = 'vertical' />
+                                </Grid>
+                                <Grid item xs alignSelf = 'center'>
+                                    <CtfStatistics data = {ctfData} />
+                                </Grid>
+                            </Grid>
                         </DashboardCard>
                     </Grid>
                     <Grid item>
-                        <DashboardCard
-                            title = 'Products'
-                            minWidth = '375px'
-                        >
-                            <CardContentStyled>
-                                <ProductList products = {selectedPortfolio.products} tagScope = 'Ownership' />
-                            </CardContentStyled>
+                        <DashboardCard title = 'Products' minWidth = '375px' >
+                            <ProductList products = {selectedPortfolio.products} tagScope = 'Ownership' />
                         </DashboardCard>
                     </Grid>
                 </Grid>
-                <Grid container item flexGrow = {1} flexBasis = {1} height = 'fit-content'>
+                <Grid container item flexGrow = {1} flexBasis = {1} height = 'fit-content' paddingBottom = {3}>
                     <DashboardCard
                         title = 'Blockers'
                         maxWidth = '100%'
                         minWidth = '375px'
-                        width = '600px'
                         height = 'fit-content'
-                        maxHeight = {ref.current?.offsetHeight - 48 + 'px' ?? '175px'}
+                        maxHeight = {blockerCardMaxHeight}
                         overflow = 'auto'
                         flexGrow = {1}
                     >
-                        <CardContentStyled>
-                            <BlockerList portfolioId = {selectedPortfolioId} />
-                        </CardContentStyled>
+                        <BlockerList portfolioId = {selectedPortfolioId} />
                     </DashboardCard>
                 </Grid>
             </Grid>
