@@ -38,9 +38,8 @@ function Comment({ id, handleStatusUpdates }) {
     const comment = useSelector((state) => selectCommentById(state, id))
     const userLoggedIn = useSelector(selectUserLoggedIn)
 
-    const [body, status] = comment?.text?.split('###')
-    const canEdit =
-      comment.author?.id === userLoggedIn.id || userLoggedIn.isAdmin
+    const [body, status] = comment?.text?.split('###') ?? []
+    const canEdit = comment.author?.id === userLoggedIn.id || userLoggedIn.isAdmin
     const modified = comment.lastEdit ? true : false
     const lastEdit = comment.lastEdit ?? comment.creationDate
 

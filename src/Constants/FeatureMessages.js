@@ -1,4 +1,5 @@
 export const ogsmRefactor = {
+    id: 'ogsm-refactor',
     message: 'Give us feedback on the new improved OGSM UI!',
     customComponent: 'FeedbackMessage',
     customProps: {
