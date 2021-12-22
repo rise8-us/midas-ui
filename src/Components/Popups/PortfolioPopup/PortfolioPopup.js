@@ -68,6 +68,7 @@ function PortfolioPopup({ id }) {
             type: 'PORTFOLIO',
             projectIds: [],
             teamIds: [],
+            roadmapType: 'MANUAL'
         }))
     }
 

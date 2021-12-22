@@ -1,2 +1,2 @@
-INSERT INTO `product` (`id`, `name`, `creation_date`, `description`, `is_archived`, `product_manager_id`, `type`, `parent_id`, `gitlab_group_id`, `source_control_id`) VALUES
-(2, 'alpha product', NOW(), '', 0, 1, 'PRODUCT', NULL, NULL, NULL);
+INSERT INTO `product` (`id`, `name`, `creation_date`, `description`, `is_archived`, `owner_id`, `type`, `parent_id`, `gitlab_group_id`, `source_control_id`, `vision`, `mission`, `problem_statement`, `roadmap_type`) VALUES
+(2, 'alpha product', NOW(), '', 0, 1, 'PRODUCT', NULL, NULL, NULL, NULL, NULL, NULL, 'MANUAL');
