@@ -11,8 +11,9 @@ describe('Updates project', () => {
         cy.get('[data-testid=Product__projects]').click()
         cy.get('[data-testid=ProjectCard__header-title]').should('have.text', 'alpha')
 
+        cy.get('[data-testid=ProductPage__icon-inline-edit').click()
         cy.get('[data-testid=ProjectCard__button-edit]').click()
-        cy.get('[data-testid=CreateOrUpdateProjectPopup__input-name]').clear().type('bravado')
+        cy.get('[data-testid=ProjectPopup__input-name]').clear().type('bravado')
         cy.get('[data-testid=Popup__button-submit]').click()
 
         cy.get('[data-testid=ProjectCard__header-title]').should('have.text', 'bravado')

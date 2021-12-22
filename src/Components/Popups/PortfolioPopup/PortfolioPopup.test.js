@@ -40,14 +40,16 @@ describe('<PortfolioPopup />', () => {
         tagIds: [4, 13],
         ownerId: null,
         tags: [returnedTags[0], returnedTags[2]],
-        products: [returnedProducts[0]]
+        products: [returnedProducts[0]],
+        roadmapType: 'MANUAL'
     }
 
     const returnedNewPortfolio = {
         name: '',
         description: '',
         tags: [],
-        products: []
+        products: [],
+        roadmapType: 'MANUAL'
     }
 
     beforeEach(() => {
@@ -86,7 +88,8 @@ describe('<PortfolioPopup />', () => {
             projectIds: [],
             childIds: [],
             ownerId: null,
-            type: 'PORTFOLIO'
+            type: 'PORTFOLIO',
+            roadmapType: 'MANUAL'
         })
     })
 
@@ -141,7 +144,8 @@ describe('<PortfolioPopup />', () => {
             childIds: [21],
             tagIds: [4, 13, 2],
             ownerId: null,
-            type: 'PORTFOLIO'
+            type: 'PORTFOLIO',
+            roadmapType: 'MANUAL'
         })
     })
 
@@ -160,7 +164,8 @@ describe('<PortfolioPopup />', () => {
             childIds: [20],
             tagIds: [4, 13],
             ownerId: 24,
-            type: 'PORTFOLIO'
+            type: 'PORTFOLIO',
+            roadmapType: 'MANUAL'
         })
     })
 })

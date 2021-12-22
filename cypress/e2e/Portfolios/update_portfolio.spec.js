@@ -12,12 +12,12 @@ describe('Updates portfolio', () => {
         cy.get('[data-testid=PortfolioCard__text-productName]').should('have.text', 'alpha product')
 
         cy.get('[data-testid=PortfolioCard__button-edit]').click()
-        cy.get('[data-testid=CreateOrUpdatePortfolioPopup__input-name]').clear().type('updated portfolio')
+        cy.get('[data-testid=PortfolioPopup__input-name]').clear().type('updated portfolio')
 
-        cy.get('[data-testid=CreateOrUpdatePortfolioPopup__select-products]').click()
+        cy.get('[data-testid=PortfolioPopup__select-products]').click()
         cy.get('li').contains('alpha product').click()
 
-        cy.get('[data-testid=CreateOrUpdatePortfolioPopup__select-products]').click()
+        cy.get('[data-testid=PortfolioPopup__select-products]').click()
         cy.get('li').contains('bravo product').click()
 
 
