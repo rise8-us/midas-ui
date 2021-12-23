@@ -6,6 +6,7 @@ import { Badge, Card, CardHeader, Grid, IconButton, Stack, TextField } from '@mu
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { AssignedUser } from 'Components/Search'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
 import { ogsmRefactor } from 'Constants/FeatureMessages'
 import PropTypes from 'prop-types'
@@ -111,6 +112,17 @@ function ObjectiveCard({ id, hasEdit }) {
                                                             textOverflow: 'ellipsis'
                                                         }
                                                     }}
+                                                    style = {{
+                                                        paddingRight: '8px'
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item style = {{ marginRight: '8px' }}>
+                                                <AssignedUser
+                                                    id = {objective.assignedPersonId}
+                                                    hasEdit = {hasEdit}
+                                                    onUserChange = {v =>
+                                                        updateObjective('assignedPersonId', v.id ?? null)}
                                                 />
                                             </Grid>
                                             <Grid item>

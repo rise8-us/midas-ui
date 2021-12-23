@@ -11,7 +11,6 @@ function TeamMember({ id, title, noUserText }) {
 
     const user = useSelector(state => selectUserById(state, id))
     const userNotFound = user.id === undefined
-
     useEffect(() => {
         id && dispatch(requestFetchOneUser(id))
     }, [id])
