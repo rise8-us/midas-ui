@@ -50,6 +50,10 @@ function AssertionsTab({ productId, hasEdit }) {
         }
     }, [assertionId, allAssertions])
 
+    useEffect(() => {
+        dispatch(setAssertionComment({ assertionId: null, deletedAssertionId: null, type: null }))
+    }, [selectedObjectiveId])
+
     return (
         <Grid container>
             <Grid item>
