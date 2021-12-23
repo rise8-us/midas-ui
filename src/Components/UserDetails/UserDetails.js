@@ -39,7 +39,7 @@ function UserDetails({ id, role }) {
             </Grid>
             <Grid item container style = {{ marginTop: '18px' }} spacing = {1}>
                 <Grid item>
-                    <DataRow label = 'Product Role:' value = {role} />
+                    {role && <DataRow label = 'Product Role:' value = {role} />}
                     <DataRow label = 'Work Email:' value = {user.email ?? 'Not Set'} />
                     <DataRow label = 'Work Number:' value = {user.phone ?? 'Not Set'} />
                     <DataRow label = 'Company:' value = {user.company ?? 'Not Set'} />
@@ -51,11 +51,12 @@ function UserDetails({ id, role }) {
 
 UserDetails.propTypes = {
     id: PropTypes.number,
-    role: PropTypes.string.isRequired
+    role: PropTypes.string
 }
 
 UserDetails.defaultProps = {
-    id: null
+    id: null,
+    role: null
 }
 
 export default UserDetails

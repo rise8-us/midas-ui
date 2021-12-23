@@ -1,3 +1,4 @@
+import { Search } from '@mui/icons-material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { SearchBar } from 'Components/Search'
 import PropTypes from 'prop-types'
@@ -61,14 +62,16 @@ SearchUsers.propTypes = {
         })
     ]),
     placeholder: PropTypes.string,
-    onDataReturn: PropTypes.func
+    onDataReturn: PropTypes.func,
+    startAdornment: PropTypes.node
 }
 
 SearchUsers.defaultProps = {
     title: 'Search users',
     value: '',
     placeholder: 'username, display name, or email',
-    onDataReturn: undefined
+    onDataReturn: undefined,
+    startAdornment: <Search />,
 }
 
 export default SearchUsers

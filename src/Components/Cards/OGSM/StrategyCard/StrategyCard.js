@@ -8,6 +8,7 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { CollapsableCard } from 'Components/Cards/CollapsableCard'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
+import { AssignedUser } from 'Components/Search'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
 import { ogsmRefactor } from 'Constants/FeatureMessages'
 import PropTypes from 'prop-types'
@@ -34,7 +35,6 @@ const StyledDiv = styled('div')(({ theme }) => ({
 }))
 
 function StrategyCard({ id, hasEdit }) {
-
     const dispatch = useDispatch()
     const collapse = useRef(null)
 
@@ -100,6 +100,18 @@ function StrategyCard({ id, hasEdit }) {
                                 canEdit = {hasEdit}
                                 onSave = {(v) => updateStrategy('text', v)}
                                 fullWidth
+                                inputProps = {{
+                                    style: {
+                                        textOverflow: 'ellipsis'
+                                    }
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <AssignedUser
+                                hasEdit = {hasEdit}
+                                id = {strategy.assignedPersonId}
+                                onUserChange = {v => updateStrategy('assignedPersonId', v.id ?? null)}
                             />
                         </Grid>
                         <Grid item marginTop = '6px'>
