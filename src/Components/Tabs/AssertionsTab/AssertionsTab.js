@@ -1,4 +1,4 @@
-import { Grid, Slide } from '@mui/material'
+import { Grid, Slide, Typography } from '@mui/material'
 import { AssertionComments, GoalsContainer, StrategiesContainer } from 'Components/Assertions'
 import { ObjectiveCard } from 'Components/Cards/OGSM/ObjectiveCard'
 import { ViewSettings } from 'Components/ViewSettings'
@@ -60,9 +60,21 @@ function AssertionsTab({ productId, hasEdit }) {
                     productId = {productId}
                     hasEdit = {hasEdit}
                 />
+                {!allAssertions.length &&
+                    <Typography
+                        variant = 'h6'
+                        color = 'text.secondary'
+                        style = {{
+                            fontWeight: 300,
+                            fontStyle: 'italic'
+                        }}
+                    >
+                    The current product has no OGSM&apos;s to view.
+                    </Typography>
+                }
             </Grid>
             <Grid container item wrap = 'nowrap' spacing = {1} marginY = {1}>
-                {selectedObjectiveId &&
+                {selectedObjectiveId && allAssertions.length > 0 &&
                     <Grid container item spacing = {1}>
                         <Grid item xs = {12}>
                             <ObjectiveCard id = {selectedObjectiveId} hasEdit = {hasEdit}/>
