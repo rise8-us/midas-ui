@@ -8,4 +8,4 @@ else
     HOST="${RDS_HOSTNAME}"
 fi
 
-mysql -u localDBUser --password=localDBPassword  -h ${HOST} -D appDB  < ${DIR}/$1
+mysql -u localDBUser --password=localDBPassword  -h ${HOST} -D midas_db  < ${DIR}/$1
