@@ -163,26 +163,29 @@ function StrategyCard({ id, hasEdit }) {
                                 hasEdit = {hasEdit}
                             />
                         </Grid>
-                        <Grid item padding = {2} display = {strategy.completedAt ? 'flex' : 'none'}>
-                            <LocalizationProvider dateAdapter = {DateAdapter}>
-                                <DateTimePicker
-                                    label = 'Completed At'
-                                    value = {strategy.completedAt}
-                                    disabled
-                                    disableOpenPicker
-                                    onChange = {() => { return }}
-                                    renderInput = {(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
                         <Grid item padding = {2}>
                             <DateSelector
                                 label = 'Due Date'
                                 initialValue = {dateInDisplayOrder(strategy?.dueDate ?? null)}
+                                minDate = {strategy.startDate}
                                 onAccept = {(v) => updateStrategy('dueDate', v)}
-                                hasEdit = {hasEdit}
+                                hasEdit = {strategy.startDate && hasEdit}
                             />
                         </Grid>
+                        <LocalizationProvider dateAdapter = {DateAdapter}>
+                            <Grid item padding = {2} display = {'flex'}>
+                                {strategy.completedAt &&
+                                    <DateTimePicker
+                                        label = 'Completed At'
+                                        value = {strategy.completedAt}
+                                        disabled
+                                        disableOpenPicker
+                                        onChange = {() => { return }}
+                                        renderInput = {(params) => <TextField {...params} />}
+                                    />
+                                }
+                            </Grid>
+                        </LocalizationProvider>
                     </Grid>
                 </Stack>
             </CollapsableCard>
