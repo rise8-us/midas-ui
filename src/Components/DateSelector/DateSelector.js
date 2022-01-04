@@ -7,10 +7,11 @@ import React, { useEffect, useState } from 'react'
 import { dateInDatabaseOrder, dateInDisplayOrder } from 'Utilities/dateHelpers'
 
 export default function DateSelector({
-    clearable, disableUnderline, hasEdit, initialValue, inputFormat, onAccept,
+    clearable, disableUnderline, hasEdit, initialValue, inputFormat, minDate, onAccept,
     placeholder, variant, ...datePickerProps }) {
 
     const [value, setValue] = useState(initialValue)
+    const updatedDate = minDate?.replace('-', '/')
 
     const onChange = (newValue) => {
         if (newValue !== null) {
@@ -35,8 +36,11 @@ export default function DateSelector({
                 value = {initialValue}
                 clearable = {clearable}
                 disabled = {!hasEdit}
+                minDate = {new Date(updatedDate)}
                 onChange = {onChange}
-                onAccept = {() => onAccept(dateInDatabaseOrder(value))}
+                onAccept = {() => {
+                    onAccept(dateInDatabaseOrder(value))
+                }}
                 showToolbar = {false}
                 InputProps = {{
                     disableUnderline: disableUnderline,
@@ -65,6 +69,7 @@ DateSelector.propTypes = {
     hasEdit: PropTypes.bool,
     initialValue: PropTypes.string,
     inputFormat: PropTypes.string,
+    minDate: PropTypes.string,
     onAccept: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     revertOnEmpty: PropTypes.bool,
@@ -77,6 +82,7 @@ DateSelector.defaultProps = {
     hasEdit: false,
     initialValue: null,
     inputFormat: 'MM/dd/yyyy',
+    minDate: null,
     placeholder: 'mm/dd/yyyy',
     revertOnEmpty: false,
     variant: undefined

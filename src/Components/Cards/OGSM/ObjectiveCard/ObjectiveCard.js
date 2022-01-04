@@ -36,6 +36,7 @@ function ObjectiveCard({ id, hasEdit }) {
     const dispatch = useDispatch()
 
     const objective = useSelector((state) => selectAssertionById(state, id))
+
     const statuses = useSelector(selectAssertionStatuses)
 
     const defaultTag = statuses[objective.status] ?? { color: '#c3c3c3' }
@@ -161,20 +162,23 @@ function ObjectiveCard({ id, hasEdit }) {
                                 <DateSelector
                                     label = 'Due Date'
                                     initialValue = {dateInDisplayOrder(objective?.dueDate ?? null)}
+                                    minDate = {objective.startDate}
                                     onAccept = {(v) => updateObjective('dueDate', v)}
-                                    hasEdit = {hasEdit}
+                                    hasEdit = {objective.startDate && hasEdit}
                                 />
                             </Grid>
                             <LocalizationProvider dateAdapter = {DateAdapter}>
                                 <Grid item padding = {2}>
-                                    <DateTimePicker
-                                        label = {(objective?.completedAt ?? null) ? 'Completed At' : 'Not Completed'}
-                                        value = {objective?.completedAt ?? null}
-                                        disabled
-                                        disableOpenPicker
-                                        onChange = {() => { return }}
-                                        renderInput = {(params) => <TextField {...params}/>}
-                                    />
+                                    {objective.completedAt &&
+                                        <DateTimePicker
+                                            label = {'Completed At'}
+                                            value = {objective.completedAt}
+                                            disabled
+                                            disableOpenPicker
+                                            onChange = {() => { return }}
+                                            renderInput = {(params) => <TextField {...params}/>}
+                                        />
+                                    }
                                 </Grid>
                             </LocalizationProvider>
                         </Grid>

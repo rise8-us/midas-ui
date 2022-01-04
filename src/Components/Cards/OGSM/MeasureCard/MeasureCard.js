@@ -35,12 +35,14 @@ const displayCompletedAt = (dateTime) => {
         </Typography>
     )
 }
+
 export default function MeasureCard({ id, hasEdit, icon }) {
     const dispatch = useDispatch()
     const collapse = useRef(null)
 
     const allStatuses = useSelector(selectAssertionStatuses)
     const measure = useSelector((state) => selectMeasureById(state, id))
+
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [expanded, setExpanded] = useState(false)
 
@@ -163,8 +165,8 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                 <Grid item xs = {4}>
                     <DateSelector
                         label = 'Start Date'
-                        onAccept = {(v) => updateMeasure('startDate', v)}
                         initialValue = {dateInDisplayOrder(measure?.startDate ?? null)}
+                        onAccept = {(v) => updateMeasure('startDate', v)}
                         hasEdit = {hasEdit}
                     />
                 </Grid>
@@ -172,8 +174,9 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                     <DateSelector
                         label = 'Due Date'
                         initialValue = {dateInDisplayOrder(measure?.dueDate ?? null)}
+                        minDate = {measure.startDate}
                         onAccept = {(v) => updateMeasure('dueDate', v)}
-                        hasEdit = {hasEdit}
+                        hasEdit = {measure.startDate && hasEdit}
                     />
                 </Grid>
                 <Grid item xs = {12}>
