@@ -62,6 +62,13 @@ const theme = createTheme({
                 variant: 'standard'
             }
         },
+        MuiInputBase: {
+            styleOverrides: {
+                multiline: {
+                    paddingBottom: 0
+                }
+            }
+        },
         MuiChip: {
             defaultProps: {
                 variant: 'outlined'
