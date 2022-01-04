@@ -56,12 +56,13 @@ function ProductHeader({ id, hasEdit }) {
                     onSave = {onNameSave}
                     errors = {nameErrors}
                     fullWidth
-                    style = {{ height: '56px', marginBottom: '16px' }}
+                    style = {{ height: '56px' }}
                     dataTestId = 'ProductHeader__input-name'
                     canEdit = {hasEdit}
                     inputProps = {{
                         style: {
-                            textOverflow: 'ellipsis'
+                            textOverflow: 'ellipsis',
+                            height: '56px'
                         }
                     }}
                 />

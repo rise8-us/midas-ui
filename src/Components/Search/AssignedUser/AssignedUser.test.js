@@ -6,8 +6,6 @@ describe('<AssignedUser />', () => {
 
     const selectUserByIdMock = useModuleMock('Redux/Users/selectors', 'selectUserById')
 
-
-
     const user = {
         id: 42,
         username: 'grogu gugu',
@@ -20,6 +18,7 @@ describe('<AssignedUser />', () => {
     })
 
     test('should render avatar', async() => {
+        selectUserByIdMock.mockReturnValue({})
         waitFor(() => {
             useDispatchMock().mockResolvedValue({ payload: [], type: '/' })
         })
@@ -28,7 +27,6 @@ describe('<AssignedUser />', () => {
 
         expect(screen.getAllByTestId('AssignedUser__avatar-icon')).toHaveLength(1)
     })
-
 
     test('should render initials w/ id & hasEdit == false', () => {
         waitFor(() => {
@@ -49,6 +47,7 @@ describe('<AssignedUser />', () => {
         render(<AssignedUser hasEdit = {true} onUserChange = {jest.fn}/>)
 
         let input = screen.getByPlaceholderText('username, display name, or email')
+        userEvent.hover(screen.getByTestId('AssignedUser_grid-item'))
         userEvent.click(input)
         userEvent.type(input, 'yoda')
 
@@ -56,6 +55,7 @@ describe('<AssignedUser />', () => {
 
         userEvent.click(screen.getByText('grogu gugu (baby yoda)'))
         userEvent.click(screen.getByTestId('CloseIcon'))
+        userEvent.unhover(screen.getByTestId('AssignedUser_grid-item'))
 
         expect(input).toHaveValue('')
 
