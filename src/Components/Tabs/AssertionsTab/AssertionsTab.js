@@ -56,7 +56,7 @@ function AssertionsTab({ productId, hasEdit }) {
 
     return (
         <Grid container>
-            <Grid item>
+            <Grid item width = '100%'>
                 <ViewSettings
                     objectives = {objectives}
                     initialIndex = {selectedObjectiveId}
@@ -73,7 +73,7 @@ function AssertionsTab({ productId, hasEdit }) {
                             fontStyle: 'italic'
                         }}
                     >
-                    The current product has no OGSM&apos;s to view.
+                        The current product has no OGSM&apos;s to view.
                     </Typography>
                 }
             </Grid>

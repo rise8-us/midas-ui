@@ -1,19 +1,24 @@
-export const dateInDisplayOrder = (date) => {
-    if (typeof date === 'string') {
-        const splitDate = date.split('-')
-        return splitDate[1] + '-' + splitDate[2] + '-' + splitDate[0]
-    }
-
-    return null
+export const getDateIfValid = (dateString) => {
+    const date = new Date(dateString?.split('T')[0].replaceAll('-', '/'))
+    return date.toString() === 'Invalid Date' ? null : date
 }
 
-export const dateInDatabaseOrder = (date) => {
-    if (typeof date === 'string') {
-        const splitDate = date.split('-')
-        return splitDate[2] + '-' + splitDate[0] + '-' + splitDate[1]
-    }
+export const getDateInDisplayOrder = (dateString) => {
+    const date = getDateIfValid(dateString)
+    return date ? [
+        (date.getMonth() + 1).toString().padStart(2, 0),
+        date.getDate().toString().padStart(2, 0),
+        date.getFullYear()
+    ].join('-') : null
+}
 
-    return null
+export const getDateInDatabaseOrder = (dateString) => {
+    const date = getDateIfValid(dateString)
+    return date ? [
+        date.getFullYear(),
+        (date.getMonth() + 1).toString().padStart(2, 0),
+        date.getDate().toString().padStart(2, 0)
+    ].join('-') : null
 }
 
 export const getDifferenceInDays = (start, end) => {
@@ -32,3 +37,21 @@ export const getTodayAsPercentageInRange = (start, end) => {
 
     return total > 0 ? (soFar / total) * 100 : 0
 }
+
+export const getIsDateInRange = (date, range) => {
+    const nullCount = range.filter(entry => entry === null).length
+
+    if (date === null && nullCount === 2 || nullCount === 2) return true
+    if (range[0] === null) return Date.parse(date) < Date.parse(range[1])
+    if (range[1] === null) return Date.parse(date) > Date.parse(range[0])
+    return Date.parse(date) > Date.parse(range[0]) && Date.parse(date) < Date.parse(range[1])
+}
+
+export const DateConstants = {
+    Day: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    Month: ['January', 'Febuary', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December']
+}
+
+export const getMonthAbbreviated = (index, length) => DateConstants.Month[index].substring(0, length ?? 3)
+export const getDayAbbreviated = (index, length) => DateConstants.Day[index].substring(0, length ?? 3)

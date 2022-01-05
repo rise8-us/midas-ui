@@ -58,6 +58,5 @@ describe('<AssignedUser />', () => {
         userEvent.unhover(screen.getByTestId('AssignedUser_grid-item'))
 
         expect(input).toHaveValue('')
-
     })
 })

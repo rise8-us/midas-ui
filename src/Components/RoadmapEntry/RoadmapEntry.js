@@ -15,7 +15,7 @@ import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
 import { requestDeleteRoadmap, requestHideRoadmap, requestUpdateRoadmap } from 'Redux/Roadmaps/actions'
 import { selectRoadmapById } from 'Redux/Roadmaps/selectors'
 import { styled } from 'Styles/materialThemes'
-import { dateInDisplayOrder } from 'Utilities/dateHelpers'
+import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
 const StyledGridWrap = styled(Grid)(({ theme }) => ({
     minHeight: '92px',
@@ -250,7 +250,7 @@ function RoadmapEntry({ id, hasEdit }) {
                                     disableUnderline
                                     placeholder = 'Due Date'
                                     hasEdit = {hasEdit && (roadmapEntry.status !== 'COMPLETE')}
-                                    initialValue = {dateInDisplayOrder(date)}
+                                    initialValue = {getDateInDisplayOrder(date)}
                                     inputFormat = 'MMM yyyy'
                                     onAccept = {(v) => updateRoadmapEntry('dueDate', v)}
                                     InputProps = {{
