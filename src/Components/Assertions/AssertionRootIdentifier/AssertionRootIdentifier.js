@@ -1,6 +1,6 @@
-import { alpha, Tooltip } from '@mui/material'
+import { alpha, ClickAwayListener, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from 'Styles/materialThemes'
 
 const StyledDiv = styled('div')(({ theme, selected }) => ({
@@ -24,28 +24,47 @@ const StyledDiv = styled('div')(({ theme, selected }) => ({
     }
 }))
 
-export default function AssertionRootIdentifier({ title, selected, indicator, onClick }) {
+export default function AssertionRootIdentifier({ title, selected, children, onClick, utility }) {
+
+    const [tooltipOpen, setTooltipOpen] = useState(false)
+
+    const handleOnClick = (event) => {
+        utility && setTooltipOpen(!tooltipOpen)
+        onClick(event)
+    }
+
     return (
-        <Tooltip title = {title} arrow placement = 'top'>
+        <Tooltip
+            arrow
+            placement = 'top'
+            open = {utility ? tooltipOpen : undefined}
+            title = {
+                <ClickAwayListener onClickAway = {() => setTooltipOpen(false)}>
+                    <div>{title}</div>
+                </ClickAwayListener>
+            }
+        >
             <StyledDiv
-                selected = {selected}
-                onClick = {onClick}
+                selected = {selected || tooltipOpen}
+                onClick = {handleOnClick}
                 data-testid = {`AssertionRootIdentifier-${selected}`}
             >
-                {indicator}
+                {children}
             </StyledDiv>
         </Tooltip>
     )
 }
 
 AssertionRootIdentifier.propTypes = {
-    indicator: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired,
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
     selected: PropTypes.bool,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    utility: PropTypes.bool
 }
 
 AssertionRootIdentifier.defaultProps = {
     onClick: (e) => e,
-    selected: false
+    selected: false,
+    utility: false
 }

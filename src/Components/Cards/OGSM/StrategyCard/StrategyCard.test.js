@@ -2,6 +2,7 @@ import React from 'react'
 import {
     fireEvent,
     mockDateSelector,
+    mockSearchUsersComponent,
     render,
     screen,
     selectAssertionStatusesMock,
@@ -12,6 +13,9 @@ import {
 import { StrategyCard } from './index'
 
 jest.mock('Components/DateSelector/DateSelector', () => function testing(props) { return mockDateSelector(props) })
+jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange }) {
+    return mockSearchUsersComponent({ title, onChange })
+})
 
 describe('<StrategyCard />', () => {
     const strategy = {

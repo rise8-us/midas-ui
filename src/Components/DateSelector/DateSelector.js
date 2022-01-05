@@ -4,18 +4,17 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import { dateInDatabaseOrder, dateInDisplayOrder } from 'Utilities/dateHelpers'
+import { getDateIfValid, getDateInDatabaseOrder, getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
 export default function DateSelector({
     clearable, disableUnderline, hasEdit, initialValue, inputFormat, minDate, onAccept,
     placeholder, variant, ...datePickerProps }) {
 
     const [value, setValue] = useState(initialValue)
-    const updatedDate = minDate?.replace('-', '/')
 
     const onChange = (newValue) => {
-        if (newValue !== null) {
-            setValue(dateInDisplayOrder(new Date(newValue).toISOString().split('T')[0]))
+        if (newValue) {
+            setValue(getDateInDisplayOrder(newValue.toISOString()))
         } else {
             clearable && setValue(null)
             onAccept(null)
@@ -36,11 +35,10 @@ export default function DateSelector({
                 value = {initialValue}
                 clearable = {clearable}
                 disabled = {!hasEdit}
-                minDate = {new Date(updatedDate)}
+                views = {['year', 'month', 'day']}
+                minDate = {getDateIfValid(minDate)}
                 onChange = {onChange}
-                onAccept = {() => {
-                    onAccept(dateInDatabaseOrder(value))
-                }}
+                onAccept = {() => onAccept(getDateInDatabaseOrder(value))}
                 showToolbar = {false}
                 InputProps = {{
                     disableUnderline: disableUnderline,

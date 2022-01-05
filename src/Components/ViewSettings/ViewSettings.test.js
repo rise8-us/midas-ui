@@ -50,34 +50,36 @@ describe('<ViewSettings />', () => {
         render(<ViewSettings objectives = {objectives} {...requiredProps}/>)
 
         userEvent.click(screen.getByTestId('FilterListIcon'))
-        await screen.findByTestId('tooltipTitle')
+        await screen.findByTestId('TooltipOptions__wrap')
 
-        fireEvent.click(screen.getByTestId('ViewSettings__checkbox-completed'))
+        fireEvent.click(screen.getByText('Show Completed'))
         expect(screen.getByText('3')).toBeInTheDocument()
 
-        fireEvent.click(screen.getByTestId('ViewSettings__checkbox-archived'))
+        fireEvent.click(screen.getByText('Show Archived'))
         expect(screen.getByText('4')).toBeInTheDocument()
     })
 
     test('should handle selected change', () => {
         render(<ViewSettings objectives = {objectives} {...requiredProps}/>)
 
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveAttribute('aria-label', '1')
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toContainElement(screen.getByText('1'))
         fireEvent.click(screen.getByText('2'))
 
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveAttribute('aria-label', '2')
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toContainElement(screen.getByText('2'))
     })
 
     test('should handle creation', () => {
+        const { rerender } = render(<ViewSettings objectives = {objectives} {...requiredProps}/>)
+        const newObjectives = [...objectives, { id: 5, text: '5', isArchived: false, status: 'SANTY CLAWS' }]
 
-        render(<ViewSettings objectives = {objectives} {...requiredProps}/>)
-
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveAttribute('aria-label', '1')
-
+        expect(screen.getAllByTestId('ViewSettings__item')).toHaveLength(2)
         fireEvent.click(screen.getByText('AssertionHeader'))
 
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveAttribute('aria-label', '2')
+        rerender(<ViewSettings objectives = {newObjectives} {...requiredProps} selectedIndex = {5}/>)
+
+        expect(screen.getAllByTestId('ViewSettings__item')).toHaveLength(3)
+
+        expect(screen.getByTestId('AssertionRootIdentifier-true')).toContainElement(screen.getByText('3'))
     })
 
 })

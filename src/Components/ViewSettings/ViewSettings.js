@@ -1,55 +1,44 @@
 import { FilterList } from '@mui/icons-material'
-import { Box, Checkbox, Grid, Stack, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { AssertionHeader, AssertionRootIdentifier } from 'Components/Assertions'
+import { DateFilter } from 'Components/DateFilter'
+import { TooltipOptions } from 'Components/TooltipOptions'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
+import { getIsDateInRange } from 'Utilities/dateHelpers'
 
-const tooltipTitle = (showCompleted, completedOnChange, showArchived, archivedOnChange) => (
-    <Stack width = '160px' data-testid = 'tooltipTitle'>
-        <Box display = 'flex' alignItems = 'center' justifyContent = 'space-between'>
-            <Typography color = 'secondary' variant = 'caption'>Show Completed</Typography>
-            <Checkbox
-                color = 'secondary'
-                data-testid = 'ViewSettings__checkbox-completed'
-                checked = {showCompleted}
-                onClick = {completedOnChange}
-            />
-        </Box>
-        <Box display = 'flex' alignItems = 'center' justifyContent = 'space-between'>
-            <Typography color = 'secondary' variant = 'caption'>Show Archived</Typography>
-            <Checkbox
-                color = 'secondary'
-                data-testid = 'ViewSettings__checkbox-archived'
-                checked = {showArchived}
-                onClick = {archivedOnChange}
-            />
-        </Box>
-    </Stack>
-)
+const filters = [
+    { title: 'Show Completed', value: 'showCompleted' },
+    { title: 'Show Archived', value: 'showArchived' }
+]
+
+const getFilters = (currentState) => filters.map(option => ({ ...option, checked: currentState[option.value] }))
 
 export default function ViewSettings({ objectives, initialIndex, onChange, productId, hasEdit }) {
 
     const [selectedIndex, setSelectedIndex] = useState(initialIndex)
-    const [showCompleted, setShowCompleted] = useState(false)
-    const [showArchived, setShowArchived] = useState(false)
+    const [options, setOptions] = useState({ showCompleted: false, showArchived: false })
     const [isCreated, setIsCreated] = useState(false)
+    const [filterByDate, setFilterByDate] = useState(null)
+    const [dateFilterRange, setDateFilterRange] = useState([null, null])
 
     const itemsToShow = useMemo(() => {
         const filtered = objectives.filter(objective => {
-            if (!showCompleted && objective.status === 'COMPLETED') return false
-            else if (!showArchived && objective.isArchived) return false
-            else return true
+            if (!options.showCompleted && objective.status === 'COMPLETED') return false
+            if (!options.showArchived && objective.isArchived) return false
+            return getIsDateInRange(objective[filterByDate], dateFilterRange)
         })
 
-        if (!filtered.filter(o => o.id === selectedIndex).length && filtered.length) {
-            const selectedObjective = isCreated ? filtered[filtered.length - 1].id : filtered[0].id
-            setSelectedIndex(selectedObjective)
+        if (initialIndex && !isCreated) {
+            setSelectedIndex(initialIndex)
+        } else if (!filtered.map(o => o.id).includes(selectedIndex)) {
+            const selectedObjective = isCreated ? filtered[filtered.length - 1] : filtered[0]
+            setSelectedIndex(selectedObjective?.id)
+            isCreated && setIsCreated(false)
         }
 
-        if (initialIndex && !isCreated) { setSelectedIndex(initialIndex) }
-
         return filtered
-    }, [objectives, initialIndex, showCompleted, showArchived, isCreated, setSelectedIndex])
+    }, [objectives, initialIndex, options, filterByDate, dateFilterRange, setSelectedIndex])
 
     const handleOnChange = (i) => {
         setSelectedIndex(i)
@@ -60,8 +49,8 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
     }, [selectedIndex])
 
     return (
-        <Grid container item direction = 'column' spacing = {3}>
-            <Grid item>
+        <Grid container item direction = 'column'>
+            <Grid item flexGrow = {1} paddingBottom = {1}>
                 <AssertionHeader
                     productId = {productId}
                     hasEdit = {hasEdit}
@@ -71,30 +60,46 @@ export default function ViewSettings({ objectives, initialIndex, onChange, produ
                     }}
                 />
             </Grid>
-            <Grid container item spacing = {2}>
+            <Grid container item columnGap = {2} wrap = 'nowrap'>
                 {objectives.length > 0 &&
                     <Grid item>
                         <AssertionRootIdentifier
-                            indicator = {<FilterList color = 'secondary' fontSize = 'small'/>}
+                            utility
                             title = {
-                                tooltipTitle(
-                                    showCompleted, () => setShowCompleted(prev => !prev),
-                                    showArchived, () => setShowArchived(prev => !prev),
-                                )
+                                <TooltipOptions
+                                    multiple
+                                    options = {getFilters(options)}
+                                    onChange = {(key, checked) => setOptions(prev => ({ ...prev, [key]: checked }))}
+                                />
                             }
+                        >
+                            <FilterList color = 'secondary' fontSize = 'small'/>
+                        </AssertionRootIdentifier>
+                    </Grid>
+                }
+                <Grid container flexGrow = {1} spacing = {1}>
+                    {itemsToShow?.map((objective, index) => (
+                        <Grid item key = {index}>
+                            <AssertionRootIdentifier
+                                title = {objective.text}
+                                selected = {objective.id === selectedIndex}
+                                onClick = {() => handleOnChange(objective.id)}
+                            >
+                                <Typography data-testid = 'ViewSettings__item'>{index + 1}</Typography>
+                            </AssertionRootIdentifier>
+                        </Grid>
+                    ))}
+                </Grid>
+                {objectives.length > 0 &&
+                    <Grid item justifyContent = 'end' marginRight = {1} xs = 'auto'>
+                        <DateFilter
+                            filterByDate = {filterByDate}
+                            setFilterByDate = {setFilterByDate}
+                            dateFilterRange = {dateFilterRange}
+                            setDateFilterRange = {setDateFilterRange}
                         />
                     </Grid>
                 }
-                {itemsToShow.map((objective, index) => (
-                    <Grid item key = {index}>
-                        <AssertionRootIdentifier
-                            title = {objective.text}
-                            selected = {objective.id === selectedIndex}
-                            onClick = {() => handleOnChange(objective.id)}
-                            indicator = {<Typography>{index + 1}</Typography>}
-                        />
-                    </Grid>
-                ))}
             </Grid>
         </Grid>
     )

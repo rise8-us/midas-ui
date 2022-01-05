@@ -23,7 +23,7 @@ import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
-import { dateInDisplayOrder } from 'Utilities/dateHelpers'
+import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.h5,
@@ -153,7 +153,7 @@ function ObjectiveCard({ id, hasEdit }) {
                             <Grid item padding = {2}>
                                 <DateSelector
                                     label = 'Start Date'
-                                    initialValue = {dateInDisplayOrder(objective?.startDate ?? null)}
+                                    initialValue = {getDateInDisplayOrder(objective?.startDate)}
                                     onAccept = {(v) => updateObjective('startDate', v)}
                                     hasEdit = {hasEdit}
                                 />
@@ -161,7 +161,7 @@ function ObjectiveCard({ id, hasEdit }) {
                             <Grid item padding = {2}>
                                 <DateSelector
                                     label = 'Due Date'
-                                    initialValue = {dateInDisplayOrder(objective?.dueDate ?? null)}
+                                    initialValue = {getDateInDisplayOrder(objective?.dueDate)}
                                     minDate = {objective.startDate}
                                     onAccept = {(v) => updateObjective('dueDate', v)}
                                     hasEdit = {objective.startDate && hasEdit}
