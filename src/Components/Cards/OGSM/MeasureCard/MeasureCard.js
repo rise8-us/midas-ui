@@ -19,7 +19,7 @@ import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actio
 import { selectMeasureById } from 'Redux/Measures/selectors'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
-import { dateInDisplayOrder } from 'Utilities/dateHelpers'
+import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
 const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     ...theme.typography.h5,
@@ -165,7 +165,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                 <Grid item xs = {4}>
                     <DateSelector
                         label = 'Start Date'
-                        initialValue = {dateInDisplayOrder(measure?.startDate ?? null)}
+                        initialValue = {getDateInDisplayOrder(measure?.startDate)}
                         onAccept = {(v) => updateMeasure('startDate', v)}
                         hasEdit = {hasEdit}
                     />
@@ -173,8 +173,8 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                 <Grid item xs = {4}>
                     <DateSelector
                         label = 'Due Date'
-                        initialValue = {dateInDisplayOrder(measure?.dueDate ?? null)}
                         minDate = {measure.startDate}
+                        initialValue = {getDateInDisplayOrder(measure?.dueDate)}
                         onAccept = {(v) => updateMeasure('dueDate', v)}
                         hasEdit = {measure.startDate && hasEdit}
                     />

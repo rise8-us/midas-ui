@@ -76,4 +76,12 @@ describe('<AssertionsTab>', () => {
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
     })
+
+    test('should display no assertions text', () => {
+        selectAssertionsByProductIdMock.mockReturnValue([])
+
+        renderWithRouter(<AssertionsTab productId = {2} hasEdit = {false} />)
+
+        expect(screen.getByText('The current product has no OGSM\'s to view.')).toBeInTheDocument()
+    })
 })
