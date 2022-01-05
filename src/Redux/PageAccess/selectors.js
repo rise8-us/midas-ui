@@ -1,0 +1,1 @@
+export const selectCapabilitiesPagePermission = (state, permission) => state.pageAccess.capabilities[permission]

@@ -5,17 +5,22 @@ import { Capability } from './index'
 describe('<Capability />', () => {
     const selectCapabilityByIdMock = useModuleMock('Redux/Capabilities/selectors', 'selectCapabilityById')
     const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
+    const requestDeleteCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestDeleteCapability')
     const requestUpdateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestUpdateCapability')
+    const selectCapabilitiesPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
         selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'title', description: '' })
+        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
     })
 
     test('should render', () => {
         selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'title', description: 'description' })
+        selectCapabilitiesPagePermissionMock.mockReturnValue(false)
 
-        render(<Capability hasEdit = {false}/>)
+        render(<Capability id = {1}/>)
 
         expect(screen.getByDisplayValue('title')).toBeInTheDocument()
         expect(screen.getByDisplayValue('description')).toBeInTheDocument()
@@ -24,7 +29,7 @@ describe('<Capability />', () => {
     test('should create new', () => {
         selectCapabilityByIdMock.mockReturnValue({ title: '', description: '' })
 
-        render(<Capability hasEdit = {true}/>)
+        render(<Capability/>)
 
         userEvent.type(screen.getByPlaceholderText('NEW CAPABILITY NEEDS STATEMENT'), 'foobar')
         userEvent.tab()
@@ -37,7 +42,7 @@ describe('<Capability />', () => {
     })
 
     test('should update title', () => {
-        render(<Capability hasEdit = {true}/>)
+        render(<Capability id = {1}/>)
 
         userEvent.type(screen.getByDisplayValue('title'), 'new title')
         userEvent.tab()
@@ -51,7 +56,7 @@ describe('<Capability />', () => {
     })
 
     test('should update description', () => {
-        render(<Capability hasEdit = {true}/>)
+        render(<Capability id = {1}/>)
 
         userEvent.type(screen.getByPlaceholderText('Enter Operational Context'), 'description')
         userEvent.tab()
@@ -62,5 +67,14 @@ describe('<Capability />', () => {
             description: 'description',
             referenceId: 0
         })
+    })
+
+    test('should handle delete', () => {
+        render(<Capability id = {1}/>)
+
+        userEvent.hover(screen.getByDisplayValue('title'))
+        userEvent.click(screen.getByTestId('DeleteOutlineIcon'))
+
+        expect(requestDeleteCapabilityMock).toHaveBeenCalledWith(1)
     })
 })
