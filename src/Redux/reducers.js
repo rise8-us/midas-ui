@@ -11,6 +11,7 @@ import filterReducer from './Filters/reducer'
 import measureReducer from './Measures/reducer'
 import missionThreadReducer from './MissionThreads/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
+import pageAccessReducer from './PageAccess/reducer'
 import performanceMeasureReducer from './PerformanceMeasures/reducer'
 import personaReducer from './Personas/reducer'
 import popupReducer from './Popups/reducer'
@@ -38,6 +39,7 @@ export const rootReducer = combineReducers({
     measures: measureReducer,
     missionThreads: missionThreadReducer,
     modifiedAssertions: modifiedAssertionsReducer,
+    pageAccess: pageAccessReducer,
     performanceMeasures: performanceMeasureReducer,
     personas: personaReducer,
     popups: popupReducer,

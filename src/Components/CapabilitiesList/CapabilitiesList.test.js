@@ -5,9 +5,12 @@ import { CapabilitiesList } from './index'
 describe('<SelectCapabilities />', () => {
     const selectAllCapabilityIdsMock = useModuleMock('Redux/Capabilities/selectors', 'selectAllCapabilityIds')
     const selectCapabilityByIdMock = useModuleMock('Redux/Capabilities/selectors', 'selectCapabilityById')
+    const selectCapabilitiesPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
 
     test('should render no capabilities', () => {
         selectAllCapabilityIdsMock.mockReturnValue([])
+
         render(<CapabilitiesList />)
 
         expect(screen.getByText('There are no Capability Needs Statements.')).toBeInTheDocument()
@@ -15,8 +18,10 @@ describe('<SelectCapabilities />', () => {
 
     test('should render new capability', () => {
         selectAllCapabilityIdsMock.mockReturnValue([])
+        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
         selectCapabilityByIdMock.mockReturnValue({ title: '', description: '' })
-        render(<CapabilitiesList hasEdit = {true}/>)
+
+        render(<CapabilitiesList />)
 
         expect(screen.getByPlaceholderText('NEW CAPABILITY NEEDS STATEMENT')).toBeInTheDocument()
     })

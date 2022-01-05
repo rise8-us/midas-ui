@@ -11,7 +11,7 @@ const doubleValidate = (first, second) => first && second ? true : false
 
 function AutoSaveTextField({
     autogrow, canEdit, className, dataTestId, enableSpellCheck, errors,
-    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, uniqueId, ...textFieldProps }) {
+    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, uniqueId, onHoverChange, ...textFieldProps }) {
 
     const ref = useRef()
     const divRef = useRef()
@@ -85,6 +85,10 @@ function AutoSaveTextField({
         autogrow && (divRef.current.style.width = getTextWidth(customId))
     }, [value])
 
+    useEffect(() => {
+        onHoverChange(hasHover)
+    }, [hasHover])
+
     return (
         <TextField
             {...textFieldProps}
@@ -137,6 +141,7 @@ AutoSaveTextField.propTypes = {
     autogrow: PropTypes.bool,
     canEdit: PropTypes.bool,
     className: PropTypes.string,
+    clearAfterSave: PropTypes.bool,
     dataTestId: PropTypes.string,
     enableSpellCheck: PropTypes.bool,
     errors: PropTypes.arrayOf(PropTypes.string),
@@ -148,9 +153,9 @@ AutoSaveTextField.propTypes = {
     label: PropTypes.string,
     multiline: PropTypes.bool,
     name: PropTypes.string,
+    onHoverChange: PropTypes.func,
     onSave: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
-    clearAfterSave: PropTypes.bool,
     revertOnEmpty: PropTypes.bool,
     tooltip: PropTypes.string,
     uniqueId: PropTypes.string,
@@ -160,6 +165,7 @@ AutoSaveTextField.defaultProps = {
     autogrow: false,
     canEdit: false,
     className: '',
+    clearAfterSave: false,
     dataTestId: 'AutoSaveTextField__input',
     enableSpellCheck: false,
     errors: [],
@@ -169,8 +175,8 @@ AutoSaveTextField.defaultProps = {
     label: undefined,
     multiline: false,
     name: '',
+    onHoverChange: (e) => e,
     placeholder: '',
-    clearAfterSave: false,
     revertOnEmpty: false,
     tooltip: '',
     uniqueId: null
