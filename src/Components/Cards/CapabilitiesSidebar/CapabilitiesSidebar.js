@@ -1,9 +1,11 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import { Card, CardContent, CardHeader, IconButton } from '@mui/material'
 import CapabilitiesList from 'Components/CapabilitiesList/CapabilitiesList'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
+import { setCapabilityPagePermission } from 'Redux/PageAccess/reducer'
+import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { styled } from 'Styles/materialThemes'
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -11,18 +13,16 @@ const StyledCard = styled(Card)(({ theme }) => ({
     maxWidth: '450px',
     height: 'fit-content',
     backgroundColor: theme.palette.grey[1100],
-    borderRadius: 16,
+    borderRadius: theme.spacing(2),
 }))
 
-const LockOpenOutlinedUnlockedIcon = styled(LockOpenOutlined)(({ theme }) => ({
-    color: theme.palette.text.primary,
-}))
-
-function CapabilitiesSidebar() {
+export default function CapabilitiesSidebar() {
+    const dispatch = useDispatch()
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
+    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
 
-    const [hasEdit, setHasEdit] = useState(false)
+    const updatePageEdit = () => dispatch(setCapabilityPagePermission({ permission: 'edit', value: !hasEdit }))
 
     return (
         <StyledCard>
@@ -34,28 +34,21 @@ function CapabilitiesSidebar() {
                 action = {
                     userLoggedIn?.roles?.PORTFOLIO_LEAD && (
                         <IconButton
-                            onClick = {() => setHasEdit((prev) => !prev)}
-                            color = 'secondary'
+                            onClick = {updatePageEdit}
                             data-testid = 'CapabilitiesSidebar__button-edit'
                             size = 'large'
                         >
-                            {hasEdit ? (
-                                <LockOpenOutlinedUnlockedIcon
-                                    fontSize = 'small'
-                                    title = 'unlocked'
-                                />
-                            ) : (
-                                <LockOutlined fontSize = 'small' title = 'locked' />
-                            )}
+                            {hasEdit
+                                ? <LockOpenOutlined fontSize = 'small' title = 'unlocked'/>
+                                : <LockOutlined fontSize = 'small' title = 'locked' color = 'secondary'/>
+                            }
                         </IconButton>
                     )
                 }
             />
             <CardContent>
-                <CapabilitiesList hasEdit = {hasEdit} />
+                <CapabilitiesList />
             </CardContent>
         </StyledCard>
     )
 }
-
-export default CapabilitiesSidebar

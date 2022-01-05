@@ -1,13 +1,14 @@
-import { Article } from '@mui/icons-material'
-import { Box, Grid } from '@mui/material'
+import { Article, DeleteOutline } from '@mui/icons-material'
+import { Box, Grid, Grow, IconButton } from '@mui/material'
 import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestCreateCapability, requestUpdateCapability } from 'Redux/Capabilities/actions'
+import { requestCreateCapability, requestDeleteCapability, requestUpdateCapability } from 'Redux/Capabilities/actions'
 import CapabilityConstants from 'Redux/Capabilities/constants'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
+import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { styled } from 'Styles/materialThemes'
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
@@ -43,11 +44,15 @@ const initDetails = (create) => {
         request: (data) => create ? requestCreateCapability(data) : requestUpdateCapability(data)
     }
 }
-function Capability({ id, hasEdit }) {
+
+export default function Capability({ id }) {
     const dispatch = useDispatch()
 
+    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const capability = useSelector((state) => selectCapabilityById(state, id))
     const context = initDetails(capability.id === undefined)
+
+    const [hover, setHover] = useState(false)
 
     const updateCapability = (key, value) => {
         dispatch(context.request({
@@ -55,6 +60,10 @@ function Capability({ id, hasEdit }) {
             ...capability,
             [key]: value,
         }))
+    }
+
+    const deleteCapability = () => {
+        dispatch(requestDeleteCapability(capability.id))
     }
 
     return (
@@ -69,8 +78,18 @@ function Capability({ id, hasEdit }) {
                         onSave = {(value) => updateCapability('title', value)}
                         placeholder = 'NEW CAPABILITY NEEDS STATEMENT'
                         clearAfterSave = {context.isCreate}
+                        onHoverChange = {setHover}
                         revertOnEmpty
                         fullWidth
+                        InputProps = {{
+                            endAdornment: (
+                                <Grow in = {!context.isCreate && hasEdit && hover}>
+                                    <IconButton onClick = {deleteCapability}>
+                                        <DeleteOutline fontSize = 'small' color = 'secondary'/>
+                                    </IconButton>
+                                </Grow>
+                            )
+                        }}
                     />
                 </Box>
             </Grid>
@@ -91,13 +110,9 @@ function Capability({ id, hasEdit }) {
 }
 
 Capability.propTypes = {
-    id: PropTypes.number,
-    hasEdit: PropTypes.bool
+    id: PropTypes.number
 }
 
 Capability.defaultProps = {
-    id: undefined,
-    hasEdit: false
+    id: undefined
 }
-
-export default Capability

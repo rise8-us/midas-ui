@@ -1,48 +1,30 @@
-import { Grid, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import Capability from 'Components/Capability/Capability'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectAllCapabilityIds } from 'Redux/Capabilities/selectors'
+import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 
-function CapabilitiesList({ hasEdit }) {
+export default function CapabilitiesList() {
 
     const selectedCapabilityIds = useSelector(selectAllCapabilityIds)
+    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
 
     return (
-        <Grid container direction = 'column' rowSpacing = {1}>
+        <Stack spacing = {1}>
             {selectedCapabilityIds.map((id, index) => (
-                <Grid item key = {index}>
-                    <Capability id = {id} hasEdit = {hasEdit}/>
-                </Grid>
+                <Capability id = {id} key = {index}/>
             ))}
-            <Grid item>
-                {hasEdit
-                    ? <Capability hasEdit = {hasEdit}/>
-                    : <>
-                        {selectedCapabilityIds.length === 0 &&
-                            <Typography
-                                color = 'text.secondary'
-                                height = '44px'
-                                display = 'flex'
-                                alignItems = 'center'
-                            >
-                                There are no Capability Needs Statements.
-                            </Typography>
-                        }
-                    </>
-                }
-            </Grid>
-        </Grid>
+            {hasEdit
+                ? <Capability />
+                : <>
+                    {selectedCapabilityIds.length === 0 &&
+                        <Typography color = 'text.secondary' height = '44px' display = 'flex' alignItems = 'center'>
+                            There are no Capability Needs Statements.
+                        </Typography>
+                    }
+                </>
+            }
+        </Stack>
     )
 }
-
-CapabilitiesList.propTypes = {
-    hasEdit: PropTypes.bool
-}
-
-CapabilitiesList.defaultProps = {
-    hasEdit: false
-}
-
-export default CapabilitiesList
