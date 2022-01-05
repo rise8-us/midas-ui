@@ -28,7 +28,7 @@ import { getAPIURL } from 'Utilities/requests'
 const WebsocketContext = createContext({})
 
 export const useWebsocket = () => useContext(WebsocketContext)
-
+console.log('usewebscoket', useWebsocket)
 let stompClient = Stomp.client(`${getAPIURL()}/midas-websocket`)
 
 function WebsocketProvider({ children }) {
@@ -36,7 +36,7 @@ function WebsocketProvider({ children }) {
     const dispatch = useDispatch()
 
     const isInitialized = useSelector((state) => state.app.initialized)
-
+    console.log('isIniializedValue', isInitialized)
     const [connected, setConnected] = useState(false)
 
     const socketFactory = () => {
@@ -44,6 +44,7 @@ function WebsocketProvider({ children }) {
     }
 
     const onWebsocketClose = (error) => {
+        console.log("onWebSocketClose")
         setConnected(false)
         dispatch(setInitialized(false))
         if (error.code !== 1002) {
