@@ -19,12 +19,14 @@ describe('<DateRangeSelector />', () => {
 
     test('should trigger onSelect useEffect', () => {
         render(<DateRangeSelector {...defaultProps}/>)
+        mockOnSelect.mockReset()
 
         fireEvent.click(screen.getByDisplayValue('01/01/2020'))
         fireEvent.click(screen.getByLabelText('Next month'))
         fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
 
-        expect(mockOnSelect).toHaveBeenLastCalledWith('02-01-2020', '12-31-2020')
+        expect(mockOnSelect.mock.calls[0][0].toISOString()).toMatch(/2020-02-01/)
+        expect(mockOnSelect.mock.calls[0][1].toISOString()).toMatch(/2020-12-31/)
     })
 
     test('should clear both inputs', async() => {
@@ -39,7 +41,7 @@ describe('<DateRangeSelector />', () => {
         userEvent.hover(inputs[1])
         fireEvent.click(screen.getByTestId('ClearIcon'))
 
-        expect(mockOnSelect).toHaveBeenNthCalledWith(1, null, '12-31-2020')
+        expect(mockOnSelect).toHaveBeenNthCalledWith(1, null, '2020-12-31')
         expect(mockOnSelect).toHaveBeenLastCalledWith(null, null)
     })
 })

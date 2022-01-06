@@ -55,12 +55,12 @@ DateTextField.propTypes = {
 export default function DateRangeSelector(props) {
     const { disableUnderline, initialStart, initialEnd, onSelect, variant, ...dateRangePickerProps } = props
 
-    const [startDate, setStartDate] = useState(getDateInDisplayOrder(initialStart))
-    const [endDate, setEndDate] = useState(getDateInDisplayOrder(initialEnd))
+    const [startDate, setStartDate] = useState(initialStart)
+    const [endDate, setEndDate] = useState(initialEnd)
 
     const onChange = ([newStart, newEnd]) => {
-        setStartDate(getDateInDisplayOrder(newStart ? new Date(newStart).toISOString() : null))
-        setEndDate(getDateInDisplayOrder(newEnd ? new Date(newEnd).toISOString() : null))
+        setStartDate(newStart)
+        setEndDate(newEnd)
     }
 
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function DateRangeSelector(props) {
             <DateRangePicker
                 {...dateRangePickerProps}
                 calendars = {1}
-                value = {[startDate, endDate]}
+                value = {[getDateInDisplayOrder(initialStart), getDateInDisplayOrder(initialEnd)]}
                 onChange = {onChange}
                 InputProps = {{
                     disableUnderline: disableUnderline,

@@ -39,12 +39,14 @@ export const getTodayAsPercentageInRange = (start, end) => {
 }
 
 export const getIsDateInRange = (date, range) => {
-    const nullCount = range.filter(entry => entry === null).length
+    const start = getDateIfValid(range[0])
+    const end = getDateIfValid(range[1])
+    const nullCount = [start, end].filter(entry => entry === null).length
 
     if (date === null && nullCount === 2 || nullCount === 2) return true
-    if (range[0] === null) return Date.parse(date) < Date.parse(range[1])
-    if (range[1] === null) return Date.parse(date) > Date.parse(range[0])
-    return Date.parse(date) > Date.parse(range[0]) && Date.parse(date) < Date.parse(range[1])
+    if (start === null) return Date.parse(date) < Date.parse(end)
+    if (end === null) return Date.parse(date) > Date.parse(start)
+    return Date.parse(date) > Date.parse(start) && Date.parse(date) < Date.parse(end)
 }
 
 export const DateConstants = {
