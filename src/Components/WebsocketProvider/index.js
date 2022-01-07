@@ -1,2 +1,2 @@
-export { default as WebsocketProvider, useWebsocket } from './WebsocketProvider'
+export { default as WebsocketProvider } from './WebsocketProvider';
 

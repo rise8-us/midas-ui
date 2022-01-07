@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, useDispatchMock, useModuleMock, useSelectorMock } from 'Utilities/test-utils'
+import { render, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { WebsocketProvider } from './index'
 //import WebSocket from 'ws'
 //import { startServer, waitForSocketState } from './webSocketTestUtils'
@@ -17,9 +17,10 @@ describe('<WebsocketProvider />', () =>  {
     // })
     // afterAll(() => server.close())
 
-    const setInitializedMock = useModuleMock('Redux/AppSettings/reducer', 'setInitialized')
+    //const setInitializedMock = useModuleMock('Redux/AppSettings/reducer', 'setInitialized')
     const enqueueMessageMock = useModuleMock('Redux/Snackbar/reducer', 'enqueueMessage')
     const removeMessageMock = useModuleMock('Redux/Snackbar/reducer', 'removeMessage')
+    const selectinitializedStateMock = useModuleMock('Redux/AppSettings/selectors', 'selectInitializedState')
 
 
     beforeEach(() => {
@@ -27,8 +28,8 @@ describe('<WebsocketProvider />', () =>  {
     })
 
     test.only('should render', () => {
-        useSelectorMock().mockReturnValue(false)
-        setInitializedMock.mockReturnValue(true)
+        //useSelectorMock().mockReturnValue(false)
+        selectinitializedStateMock.mockReturnValue(true)
 
         render(<WebsocketProvider value = {{ connected: true }}> </WebsocketProvider>)
 

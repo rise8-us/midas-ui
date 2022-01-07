@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInitialized } from 'Redux/AppSettings/reducer'
+import { selectInitializedState } from 'Redux/AppSettings/selectors'
 import assertionSubscriptions from 'Redux/Assertions/subscriptions'
 import capabilitySubscriptions from 'Redux/Capabilities/subscriptions'
 import commentSubscriptions from 'Redux/Comments/subscriptions'
@@ -24,18 +25,17 @@ import teamSubscriptions from 'Redux/Teams/subscriptions'
 import SockJS from 'sockjs-client'
 import { initializeApp } from 'Utilities/initializeApp'
 import { getAPIURL } from 'Utilities/requests'
-
 const WebsocketContext = createContext({})
 
 export const useWebsocket = () => useContext(WebsocketContext)
-console.log('usewebscoket', useWebsocket)
+//console.log('usewebscoket', useWebsocket)
 let stompClient = Stomp.client(`${getAPIURL()}/midas-websocket`)
 
 function WebsocketProvider({ children }) {
 
     const dispatch = useDispatch()
 
-    const isInitialized = useSelector((state) => state.app.initialized)
+    const isInitialized = useSelector(selectInitializedState)
     console.log('isIniializedValue', isInitialized)
     const [connected, setConnected] = useState(false)
 

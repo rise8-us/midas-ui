@@ -23,3 +23,5 @@ export const selectAssertionCommentInfo = (state) => ({
     id: state.app.assertionCommentId,
     type: state.app.assertionCommentType
 })
+
+export const selectInitializedState = (state) => state.app.initialized
