@@ -16,7 +16,7 @@ function SonarqubeTooltip({ message, pipelineUrl, sonarqubeUrl }) {
                 </Link>
             </Grid>
             <Grid item>
-                <Typography>{message}</Typography>
+                {typeof message === 'string' ? <Typography>{message}</Typography> : <>{message}</>}
             </Grid>
             <Grid container item justifyContent = 'space-between'>
                 <Grid item>
@@ -43,7 +43,7 @@ function SonarqubeTooltip({ message, pipelineUrl, sonarqubeUrl }) {
 }
 
 SonarqubeTooltip.propTypes = {
-    message: PropTypes.string,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     pipelineUrl: PropTypes.string,
     sonarqubeUrl: PropTypes.string
 }

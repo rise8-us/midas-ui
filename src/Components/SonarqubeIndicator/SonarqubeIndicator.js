@@ -29,13 +29,15 @@ function SonarqubeIndicator({ title, value, adornment, tooltip }) {
 }
 
 SonarqubeIndicator.propTypes = {
-    title: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    title: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     adornment: PropTypes.node,
     tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 }
 
 SonarqubeIndicator.defaultProps = {
+    title: '?',
+    value: '?',
     adornment: null,
     tooltip: ''
 }

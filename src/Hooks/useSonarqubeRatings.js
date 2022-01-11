@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux'
 
 function useSonarqubeRatings() {
     const [sonarqubeRatings, setSonarqubeRatings] = useState({
-        maintainability: {},
-        security: {},
-        reliability: {},
+        maintainabilityRating: {},
+        securityRating: {},
+        reliabilityRating: {},
     })
 
     const maintainabilityRating = useSelector(state => state.app?.sonarqubeMaintainability,
@@ -18,9 +18,9 @@ function useSonarqubeRatings() {
 
     useEffect(() => {
         setSonarqubeRatings({
-            maintainability: maintainabilityRating,
-            security: securityRating,
-            reliability: reliabilityRating,
+            maintainabilityRating,
+            securityRating,
+            reliabilityRating,
         })
     }, [maintainabilityRating, securityRating, reliabilityRating])
 
