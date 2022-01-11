@@ -30,4 +30,10 @@ describe('<CircularStatus />', () => {
 
         expect(screen.getByLabelText('foobar')).toBeInTheDocument()
     })
+
+    test('should render when displayValue === isNaN', () => {
+        render(<CircularStatus displayValue = 'F'/>)
+
+        expect(screen.getByText('F')).toBeInTheDocument()
+    })
 })

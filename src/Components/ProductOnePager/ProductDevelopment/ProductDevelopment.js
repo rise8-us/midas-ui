@@ -44,7 +44,7 @@ const determineColor = (indicatorValue, theme) => {
 function ProductDevelopment({ id }) {
     const theme = useTheme()
 
-    const sonarqube = useSonarqubeRatings()
+    const { securityRating, reliabilityRating, maintainabilityRating } = useSonarqubeRatings()
 
     const projects = useSelector(state => selectProjectsByProductId(state, id))
 
@@ -84,19 +84,19 @@ function ProductDevelopment({ id }) {
                                     value: project.coverage.securityRating,
                                     color: determineColor(project.coverage.securityRating, theme),
                                     tooltipMessage:
-                                        sonarqube.security[project.coverage.securityRating]?.description
+                                        securityRating[project.coverage.securityRating]?.description
                                 }}
                                 reliability = {{
                                     value: project.coverage.reliabilityRating,
                                     color: determineColor(project.coverage.reliabilityRating, theme),
                                     tooltipMessage:
-                                        sonarqube.reliability[project.coverage.reliabilityRating]?.description
+                                        reliabilityRating[project.coverage.reliabilityRating]?.description
                                 }}
                                 maintainability = {{
                                     value: project.coverage.maintainabilityRating,
                                     color: determineColor(project.coverage.maintainabilityRating, theme),
                                     tooltipMessage:
-                                        sonarqube.maintainability[project.coverage.maintainabilityRating]?.description
+                                        maintainabilityRating[project.coverage.maintainabilityRating]?.description
                                 }}
                             />
                         </Grid>

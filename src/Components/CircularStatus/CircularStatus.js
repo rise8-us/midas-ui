@@ -35,6 +35,7 @@ function CircularStatus(props) {
                     />
                     <Tooltip
                         title = {tooltip}
+                        leaveDelay = {250}
                         PopperProps = {{
                             style: {
                                 display: tooltip ? 'unset' : 'none',
@@ -63,7 +64,7 @@ function CircularStatus(props) {
 }
 
 CircularStatus.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     valueColor: PropTypes.string,
     title: PropTypes.string,
     titleAdornment: PropTypes.node,
@@ -81,6 +82,7 @@ CircularStatus.defaultProps = {
     title: null,
     titleAdornment: null,
     titleColor: 'unset',
+    value: 0,
     variant: 'determinate',
     displayValue: null,
     valueColor: 'inherit',

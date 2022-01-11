@@ -19,4 +19,10 @@ describe('<SonarqubeTooltip />', () => {
         expect(screen.getByText('Gitlab Pipeline')).toBeInTheDocument()
         expect(screen.getByText('SonarQube Project')).toBeInTheDocument()
     })
+
+    test('should render with message!==string type', () => {
+        render(<SonarqubeTooltip message = {<div>Hello World</div>}/>)
+
+        expect(screen.getByText('Hello World')).toBeInTheDocument()
+    })
 })

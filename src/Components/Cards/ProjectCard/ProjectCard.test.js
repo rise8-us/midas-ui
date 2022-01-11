@@ -2,6 +2,7 @@ import React from 'react'
 import ProjectConstants from 'Redux/Projects/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProjectCard } from './index'
+import { tooltipDisplay } from './ProjectCard'
 
 const mockHistoryPush = jest.fn()
 jest.mock('react-router-dom', () => ({
@@ -99,5 +100,10 @@ describe('<ProjectCard />', () => {
         expect(screen.queryByTestId('ProjectCard__button-edit')).not.toBeInTheDocument()
         expect(screen.queryByTestId('ProjectCard__button-back')).not.toBeInTheDocument()
         expect(screen.queryByTestId('ProjectCard__button-forward')).not.toBeInTheDocument()
+    })
+
+    test('should return proper values for tooltipDisplay method', () => {
+        expect(tooltipDisplay(0, 1)).toEqual('unset')
+        expect(tooltipDisplay(0, 0)).toEqual('none')
     })
 })

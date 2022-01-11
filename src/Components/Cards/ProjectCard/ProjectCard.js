@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Edit, TrendingUp } from '@mui/icons-material'
 import { Box, Card, CardContent, CardHeader, IconButton, Tooltip, useTheme } from '@mui/material'
+import CodeCoverageTooltip from 'Components/CodeCoverageTooltip/CodeCoverageTooltip'
 import { PathToProdStepper } from 'Components/PathToProdStepper'
 import { SonarqubeIndicator } from 'Components/SonarqubeIndicator'
 import { SonarqubeTooltip } from 'Components/SonarqubeTooltip'
@@ -17,13 +18,15 @@ import ProjectConstants from 'Redux/Projects/constants'
 import { selectProjectById } from 'Redux/Projects/selectors'
 import { styled } from 'Styles/materialThemes'
 
+const ratings = ['securityRating', 'reliabilityRating', 'maintainabilityRating']
+
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '450px',
     height: '100%',
     backgroundColor: theme.palette.grey[1100]
 }))
 
-const tooltipDisplay = (actual, expected) => actual !== expected ? 'unset' : 'none'
+export const tooltipDisplay = (actual, expected) => actual !== expected ? 'unset' : 'none'
 
 function ProjectCard({ id, hasEdit }) {
     const dispatch = useDispatch()
@@ -71,7 +74,7 @@ function ProjectCard({ id, hasEdit }) {
                     onClick: project.productId !== null ? goToProductsPage : undefined,
                     sx: {
                         '&:hover': {
-                            color: theme.palette.primary.main,
+                            color: 'primary.main',
                             cursor: 'pointer'
                         },
                         width: 'fit-content',
@@ -147,8 +150,7 @@ function ProjectCard({ id, hasEdit }) {
                         title = 'Coverage'
                         value = {coverage.testCoverage ?? '?'}
                         adornment = {
-                            coverage.coverageChange !== 0 &&
-              coverage.coverageChange !== undefined && (
+                            coverage.coverageChange !== 0 && coverage.coverageChange !== undefined && (
                                 <TrendingUp
                                     fontSize = 'small'
                                     style = {{
@@ -162,45 +164,36 @@ function ProjectCard({ id, hasEdit }) {
                         }
                         tooltip = {
                             <SonarqubeTooltip
-                                message = {`Code coverage is currently at ${coverage.testCoverage}%`}
+                                message = {
+                                    <CodeCoverageTooltip
+                                        currentPercent = {coverage.testCoverage}
+                                        projectId = {project.id}
+                                    />
+                                }
                                 pipelineUrl = {coverage.pipelineUrl}
                                 sonarqubeUrl = {coverage.sonarqubeUrl}
                             />
                         }
                     />
-                    <SonarqubeIndicator
-                        title = 'Security'
-                        value = {coverage.securityRating ?? '?'}
-                        tooltip = {
-                            <SonarqubeTooltip
-                                message = {sonarqube.security[coverage.securityRating]?.description}
-                                pipelineUrl = {coverage.pipelineUrl}
-                                sonarqubeUrl = {coverage.sonarqubeUrl}
+                    {coverage && ratings.map((rating, index) => {
+                        const sonarqubeRating = sonarqube[rating]
+                        const coverageRating = coverage[rating]
+                        return (
+                            <SonarqubeIndicator
+                                key = {index}
+                                title = {sonarqubeRating[coverageRating]?.displayName}
+                                value = {coverageRating}
+                                tooltip = {
+                                    <SonarqubeTooltip
+                                        message = {sonarqubeRating[coverageRating]?.description}
+                                        pipelineUrl = {coverage.pipelineUrl}
+                                        sonarqubeUrl = {coverage.sonarqubeUrl}
+                                    />
+                                }
                             />
-                        }
-                    />
-                    <SonarqubeIndicator
-                        title = 'Reliability'
-                        value = {coverage.reliabilityRating ?? '?'}
-                        tooltip = {
-                            <SonarqubeTooltip
-                                message = {sonarqube.reliability[coverage.reliabilityRating]?.description}
-                                pipelineUrl = {coverage.pipelineUrl}
-                                sonarqubeUrl = {coverage.sonarqubeUrl}
-                            />
-                        }
-                    />
-                    <SonarqubeIndicator
-                        title = 'Maintainability'
-                        value = {coverage.maintainabilityRating ?? '?'}
-                        tooltip = {
-                            <SonarqubeTooltip
-                                message = {sonarqube.maintainability[coverage.maintainabilityRating]?.description}
-                                pipelineUrl = {coverage.pipelineUrl}
-                                sonarqubeUrl = {coverage.sonarqubeUrl}
-                            />
-                        }
-                    />
+                        )
+                    }
+                    )}
                 </Box>
                 {project.tags?.length > 0 && (
                     <Box display = 'flex' flexWrap = 'wrap' marginTop = {2}>

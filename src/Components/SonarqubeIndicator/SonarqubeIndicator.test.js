@@ -19,48 +19,48 @@ describe('<SonarqubeIndicator />', () => {
     })
 
     test('should handle between 55 & 80%', () => {
-        render(<SonarqubeIndicator title = 'test' value = {55}/>)
+        render(<SonarqubeIndicator value = {55}/>)
 
         checkLogic(55, 'rgb(255, 167, 38)')
     })
 
     test('should handle below 55%', () => {
-        render(<SonarqubeIndicator title = 'test' value = {54}/>)
+        render(<SonarqubeIndicator value = {54}/>)
 
         checkLogic(54, 'rgb(244, 67, 54)')
     })
 
     test('should handle A', () => {
-        render(<SonarqubeIndicator title = 'test' value = {'A'}/>)
+        render(<SonarqubeIndicator value = {'A'}/>)
 
         checkLogic('A', 'rgb(102, 187, 106)')
     })
 
     test('should handle B', () => {
-        render(<SonarqubeIndicator title = 'test' value = {'B'}/>)
+        render(<SonarqubeIndicator value = {'B'}/>)
 
         checkLogic('B', 'rgb(255, 167, 38)')
     })
 
     test('should handle C', () => {
-        render(<SonarqubeIndicator title = 'test' value = {'C'}/>)
+        render(<SonarqubeIndicator value = {'C'}/>)
 
         checkLogic('C', 'rgb(255, 167, 38)')
     })
     test('should handle D', () => {
-        render(<SonarqubeIndicator title = 'test' value = {'D'}/>)
+        render(<SonarqubeIndicator value = {'D'}/>)
 
         checkLogic('D', 'rgb(244, 67, 54)')
     })
 
     test('should handle E', () => {
-        render(<SonarqubeIndicator title = 'test' value = {'E'}/>)
+        render(<SonarqubeIndicator value = {'E'}/>)
 
         checkLogic('E', 'rgb(244, 67, 54)')
     })
 
     test('should handle U', () => {
-        render(<SonarqubeIndicator title = 'test' value = {'U'}/>)
+        render(<SonarqubeIndicator value = {'U'}/>)
 
         checkLogic('U', 'rgb(41, 182, 246)')
     })
