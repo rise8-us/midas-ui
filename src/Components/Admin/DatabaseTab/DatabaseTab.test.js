@@ -41,8 +41,22 @@ describe('<DatabaseTab />', () => {
 
         fireEvent.click(screen.getByText('file42.fun'))
         fireEvent.click(screen.getByText('restore'))
+        fireEvent.click(screen.getByTestId('Popup__button-submit'))
 
         expect(requestRestoreMock).toHaveBeenCalledTimes(1)
+    })
+
+    test('should cancel restore', async() => {
+        render(<DatabaseTab />)
+
+        fireEvent.click(screen.getByTitle('Open'))
+        await screen.findByText('Retrieving backups...')
+
+        fireEvent.click(screen.getByText('file42.fun'))
+        fireEvent.click(screen.getByText('restore'))
+        fireEvent.click(screen.getByTestId('Popup__button-cancel'))
+
+        expect(requestRestoreMock).toHaveBeenCalledTimes(0)
     })
 
     test('should download backup', async() => {
