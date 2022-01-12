@@ -12,8 +12,8 @@ export const requestGetBackupList = createAsyncThunk(
 
 export const requestRestore = createAsyncThunk(
     Constants.RESTORE_FILE,
-    async(fileName, { rejectWithValue }) => {
-        const request = { endpoint: '/api/dbActions/restore', method: 'POST', body: { fileName: fileName } }
+    async(body, { rejectWithValue }) => {
+        const request = { endpoint: '/api/dbActions/restore', method: 'POST', body }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

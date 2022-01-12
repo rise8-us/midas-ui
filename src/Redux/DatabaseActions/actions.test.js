@@ -37,7 +37,7 @@ describe('Comment action thunks', () => {
 
     test('requestRestore : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestRestore('fileName42'))
+        await store.dispatch(actions.requestRestore({ fileName: 'fileName42' }))
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/dbActions/restore')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ fileName: 'fileName42' })
