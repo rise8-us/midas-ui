@@ -1,4 +1,5 @@
 export default {
+    SEARCH_DELIVERABLES: 'deliverables/fetchAll',
     FETCH_DELIVERABLE_BY_PRODUCT: 'deliverables/fetchByProduct',
     CREATE_DELIVERABLE: 'deliverables/createOne',
     UPDATE_DELIVERABLE: 'deliverables/updateOne',

@@ -16,6 +16,25 @@ describe('Deliverable action thunks', () => {
         store.clearActions()
     })
 
+    test('requestSearchDeliverables : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestSearchDeliverables('foo'))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/deliverables?search=foo')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestSearchDeliverables.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSearchDeliverables.fulfilled.toString())
+    })
+
+    test('requestSearchDeliverables : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestSearchDeliverables('foo'))
+
+        expect(store.getActions()[0].type).toEqual(actions.requestSearchDeliverables.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSearchDeliverables.rejected.toString())
+    })
+
     test('requestFetchDeliverablesByProductId : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchDeliverablesByProductId(1))

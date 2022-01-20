@@ -19,6 +19,13 @@ describe('Deliverables Reducer', () => {
         expect(reducer(undefined, {})).toEqual({})
     })
 
+    test('fetches all Deliverables by Search', () => {
+        const actions = [{ type: reduxActions.requestSearchDeliverables.fulfilled, payload: allDeliverablesResponse }]
+        const state = actions.reduce(reducer, {})
+
+        expect(Object.keys(state)).toHaveLength(2)
+    })
+
     test('fetches all Deliverables by Product Id', () => {
         const actions = [{ type: reduxActions.requestFetchDeliverablesByProductId.fulfilled,
             payload: allDeliverablesResponse }]

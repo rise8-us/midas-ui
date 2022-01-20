@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, useModuleMock } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { CapabilitiesList } from './index'
 
 describe('<SelectCapabilities />', () => {
@@ -7,6 +7,11 @@ describe('<SelectCapabilities />', () => {
     const selectCapabilityByIdMock = useModuleMock('Redux/Capabilities/selectors', 'selectCapabilityById')
     const selectCapabilitiesPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
+
+    beforeEach(() => {
+        useDispatchMock().mockReturnValue({})
+        selectCapabilitiesPagePermissionMock.mockReturnValue(false)
+    })
 
     test('should render no capabilities', () => {
         selectAllCapabilityIdsMock.mockReturnValue([])

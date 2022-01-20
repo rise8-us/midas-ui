@@ -10,13 +10,13 @@ describe('<DraggableFeatureList />', () => {
         onDelete: jest.fn
     }
 
-    test('should render render no features text', () => {
+    test('should render no features text', () => {
         render(<DraggableFeatureList hasEdit = {false} {...commonProps}/>)
 
         expect(screen.getByText('No Features added yet.')).toBeInTheDocument()
     })
 
-    test('should not render render no features text', () => {
+    test('should not render no features text', () => {
         render(<DraggableFeatureList hasEdit = {true} {...commonProps}/>)
 
         expect(screen.queryByText('No Features added yet.')).not.toBeInTheDocument()
