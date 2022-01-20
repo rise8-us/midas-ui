@@ -1,4 +1,5 @@
 export { AppBarSearch } from './AppBarSearch'
 export { AssignedUser } from './AssignedUser'
 export { SearchBar } from './SearchBar'
+export { SearchEpics } from './SearchEpics'
 export { SearchUsers } from './SearchUsers'

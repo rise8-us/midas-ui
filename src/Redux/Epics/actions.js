@@ -2,6 +2,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkRequest } from 'Utilities/requests'
 import Constants from './constants'
 
+export const requestFetchSearchEpics = createAsyncThunk(
+    Constants.FETCH_BY_SEARCH,
+    async(search, { rejectWithValue }) => {
+        const request = { endpoint: `/api/epics?search=${search}`, method: 'GET', body: {} }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
+
 export const requestFetchEpicsByProductId = createAsyncThunk(
     Constants.FETCH_BY_PRODUCT,
     async(id, { rejectWithValue }) => {
