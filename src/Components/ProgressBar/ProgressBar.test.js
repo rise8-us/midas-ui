@@ -20,10 +20,11 @@ describe('<ProgressBar />', () => {
         getNumberOrZeroMock.mockReturnValue(10)
         getTodayAsPercentageInRangeMock(20)
 
-        render(<ProgressBar {...defaultProps} hasEdit = {false}/>)
+        render(<ProgressBar {...defaultProps} hasEdit = {false} target = {100} value = {10}/>)
 
         expect(screen.getByTestId('HikingOutlinedIcon')).toBeInTheDocument()
         expect(screen.getByText('10% Complete')).toBeInTheDocument()
+        expect(screen.getByText('(10 / 100)')).toBeInTheDocument()
     })
 
 })

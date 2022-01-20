@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
 const CollapsableCard = React.forwardRef((props, ref) => {
-    const { children, header, footer, collapsedSize, onExpanded, enterDelay, exitDelay, ...cardProps } = props
+    const { children, header, footer, collapsedSize, onExpanded, enterDelay, exitDelay, timeout, ...cardProps } = props
 
     const [expanded, setExpanded] = useState(false)
     const [hasFocus, setHasFocus] = useState(false)
@@ -40,7 +40,8 @@ const CollapsableCard = React.forwardRef((props, ref) => {
 
     return (
         <ClickAwayListener onClickAway = {onClickAway} mouseEvent = 'onMouseUp'>
-            <Card {...cardProps}
+            <Card
+                {...cardProps}
                 data-testid = 'Collapsable__card'
                 ref = {ref}
                 onMouseEnter = {onMouseEnter}
@@ -51,7 +52,7 @@ const CollapsableCard = React.forwardRef((props, ref) => {
                 {header}
                 <Collapse
                     in = {debouncedExpansion}
-                    timeout = {{ enter: 400, exit: 750 }}
+                    timeout = {timeout}
                     collapsedSize = {collapsedSize}
                     data-testid = 'Collapsable__collapse'
                 >
@@ -72,16 +73,21 @@ CollapsableCard.propTypes = {
     exitDelay: PropTypes.number,
     footer: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     header: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
-    onExpanded: PropTypes.func
+    onExpanded: PropTypes.func,
+    timeout: PropTypes.shape({
+        enter: PropTypes.number,
+        exit: PropTypes.number
+    })
 }
 
 CollapsableCard.defaultProps = {
     collapsedSize: '0px',
-    enterDelay: 300,
-    exitDelay: 100,
+    enterDelay: 500,
+    exitDelay: 200,
     footer: undefined,
     header: undefined,
-    onExpanded: (e) => e
+    onExpanded: (e) => e,
+    timeout: { enter: 1500, exit: 750 }
 }
 
 export default CollapsableCard
