@@ -25,6 +25,9 @@ const deliverableSlice = createSlice({
         [actions.requestFetchDeliverablesByProductId.fulfilled]: (state, action) => {
             setStateFromArray(state, action.payload)
         },
+        [actions.requestSearchDeliverables.fulfilled]: (state, action) => {
+            setStateFromArray(state, action.payload)
+        },
     }
 })
 

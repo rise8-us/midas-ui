@@ -13,7 +13,7 @@ describe('<DraggablePersonaList />', () => {
         onToggleIsSupported: jest.fn
     }
 
-    test('should render render no personas text', () => {
+    test('should render no personas text', () => {
         render(<DraggablePersonaList {...commonProps}/>)
 
         expect(screen.getByText('No Personas added yet.')).toBeInTheDocument()

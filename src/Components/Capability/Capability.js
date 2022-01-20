@@ -2,12 +2,14 @@ import { Article, DeleteOutline } from '@mui/icons-material'
 import { Box, Grid, Grow, IconButton } from '@mui/material'
 import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
+import { DeliverablesContainer } from 'Components/DeliverablesContainer'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateCapability, requestDeleteCapability, requestUpdateCapability } from 'Redux/Capabilities/actions'
 import CapabilityConstants from 'Redux/Capabilities/constants'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
+import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { styled } from 'Styles/materialThemes'
 
@@ -48,10 +50,13 @@ const initDetails = (create) => {
 export default function Capability({ id }) {
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        dispatch(requestSearchDeliverables('capability.id:' + id))
+    }, [id])
+
     const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const capability = useSelector((state) => selectCapabilityById(state, id))
     const context = initDetails(capability.id === undefined)
-
     const [hover, setHover] = useState(false)
 
     const updateCapability = (key, value) => {
@@ -103,6 +108,9 @@ export default function Capability({ id }) {
                         fullWidth
                         multiline
                     />
+                }
+                {!context.isCreate &&
+                    <DeliverablesContainer capabilityId = {id}/>
                 }
             </Grid>
         </StyledGrid>

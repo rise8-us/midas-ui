@@ -1,8 +1,8 @@
-import { Close, DragIndicator } from '@mui/icons-material'
+import { DragIndicator } from '@mui/icons-material'
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { Grid, IconButton, Tooltip } from '@mui/material'
 import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
-import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { styled } from 'Styles/materialThemes'
@@ -23,6 +23,7 @@ const StyledEditableGrid = styled(Grid)(({ theme, selected })=> ({
 function DraggableRow({
     additionalOptions,
     hasEdit,
+    multiLine,
     onDelete,
     onUpdate,
     placement,
@@ -36,6 +37,7 @@ function DraggableRow({
     return (
         <StyledEditableGrid
             container
+            flexWrap = 'nowrap'
             alignItems = 'center'
             onMouseEnter = {() => setHovered(true)}
             onMouseLeave = {() => setHovered(false)}
@@ -58,31 +60,30 @@ function DraggableRow({
                     }
                 }}
             >
-                <Grid item style = {{ flexGrow: 1 }}>
+                <Grid item style = {{ flexGrow: 1 }} paddingRight = {1}>
                     <StyledAutoSaveTextField
                         fullWidth
                         initialValue = {title}
                         canEdit = {hasEdit}
                         onSave = {onUpdate}
+                        multiline = {multiLine}
+                        InputProps = {{
+                            endAdornment: hasEdit && hovered && (
+                                <>
+                                    {additionalOptions}
+                                    <IconButton
+                                        size = 'small'
+                                        data-testid = 'DraggableRow__button-delete'
+                                        onClick = {onDelete}
+                                    >
+                                        <DeleteOutlineOutlinedIcon fontSize = 'small' color = 'secondary'/>
+                                    </IconButton>
+                                </>
+                            )
+                        }}
                     />
                 </Grid>
             </Tooltip>
-            <Grid item>
-                {hasEdit && hovered && (
-                    <>
-                        {additionalOptions}
-                        <Tooltip title = {Tooltips.DELETE}>
-                            <IconButton
-                                size = 'small'
-                                data-testid = 'DraggableRow__button-delete'
-                                onClick = {onDelete}
-                            >
-                                <Close color = 'secondary' />
-                            </IconButton>
-                        </Tooltip>
-                    </>
-                )}
-            </Grid>
         </StyledEditableGrid>
     )
 }
@@ -90,6 +91,7 @@ function DraggableRow({
 DraggableRow.propTypes = {
     additionalOptions: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     hasEdit: PropTypes.bool,
+    multiLine: PropTypes.bool,
     onDelete: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     placement: PropTypes.string,
@@ -101,6 +103,7 @@ DraggableRow.propTypes = {
 DraggableRow.defaultProps = {
     additionalOptions: null,
     hasEdit: false,
+    multiLine: false,
     placement: 'bottom',
     startIcon: null,
     tooltipText: '',

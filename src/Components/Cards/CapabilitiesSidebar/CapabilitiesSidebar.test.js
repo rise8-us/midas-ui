@@ -10,6 +10,7 @@ describe('<CapabilitiesSidebar />', () => {
     const setCapabilityPagePermissionMock = useModuleMock('Redux/PageAccess/reducer', 'setCapabilityPagePermission')
 
     beforeEach(() => {
+        useDispatchMock().mockReturnValue({})
         selectCapabilitiesPagePermissionMock.mockReturnValue(false)
         selectUserLoggedInMock.mockReturnValue({ id: 1, roles: { PORTFOLIO_LEAD: true } })
     })
