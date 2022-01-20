@@ -20,13 +20,13 @@ export default function CapabilitiesView() {
     const [open, setOpen] = useState(false)
 
     return (
-        <Stack marginX = {'16%'} spacing = {1}>
+        <Stack marginX = '16%' spacing = {1}>
             <Stack direction = 'row' justifyContent = 'space-between'>
                 <Typography variant = 'subtitle1'>Epics linked to the deliverable</Typography>
                 {hasEdit &&
                     <StyledButton
                         size = 'small'
-                        color = { open ? 'primary' : 'secondary'}
+                        color = {open ? 'primary' : 'secondary'}
                         style = {{
                             whiteSpace: 'nowrap',
                             borderRadius: '8px',
