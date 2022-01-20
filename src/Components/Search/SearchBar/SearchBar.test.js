@@ -20,8 +20,6 @@ describe('<SearchBar>', () => {
 
         render(<SearchBar
             placeholder = 'placeholder'
-            onChange = {jest.fn}
-            onTextFieldChange = {jest.fn}
             options = {[{ name: 'testString' }]}
             getOptionLabel = {getOptionalLabelMock}
         />)

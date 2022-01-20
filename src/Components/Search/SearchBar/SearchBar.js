@@ -33,25 +33,27 @@ const displayOnSearchAdornment = (displayOnSearch, onFocus, icon) => {
 }
 
 function SearchBar({
-    options,
-    onChange,
-    textFieldProps,
-    onTextFieldChange,
-    getOptionLabel,
     disableUnderline,
+    displayOnSearch,
+    getOptionLabel,
     growFrom,
     growTo,
-    displayOnSearch,
     inputDataTestId,
-    startAdornment,
-    showLoading,
     inputFontSize,
+    onChange,
+    onTextFieldChange,
+    options,
+    loading,
+    showLoading,
+    startAdornment,
+    textFieldProps,
     ...autoCompleteProps
 }) {
 
     const [searchTerm, setSearchTerm] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const [focus, setFocus] = React.useState(false)
+    const [focus, setFocus] = useState(false)
+
     const onFocus = () => setFocus(true)
     const onBlur = () => setFocus(false)
 
@@ -67,14 +69,18 @@ function SearchBar({
         setIsLoading(false)
     }, [debouncedSearchTerm])
 
+    const handleOnChange = (event, values, reason) => {
+        onChange(event, values, reason)
+    }
+
     return (
         <StyledAutocomplete
             {...autoCompleteProps}
             growfrom = {growFrom}
             growto = {growTo}
-            loading = {showLoading && isLoading}
+            loading = {(showLoading && isLoading) || loading}
             noOptionsText = 'No options available'
-            onChange = {onChange}
+            onChange = {handleOnChange}
             options = {options}
             getOptionLabel = {getOptionLabel}
             renderInput = {(params) => (
@@ -83,8 +89,8 @@ function SearchBar({
                     {...params}
                     {...textFieldProps}
                     onChange = {handleTextFieldOnChange}
-                    onFocus = { onFocus }
-                    onBlur = { onBlur }
+                    onFocus = {onFocus}
+                    onBlur = {onBlur}
                     InputProps = {{
                         ...params.InputProps,
                         endAdornment: (
@@ -105,47 +111,48 @@ function SearchBar({
 }
 
 SearchBar.propTypes = {
+    disableUnderline: PropTypes.bool,
+    displayOnSearch: PropTypes.bool,
+    getOptionLabel: PropTypes.func,
+    growFrom: PropTypes.string,
+    growTo: PropTypes.string,
+    inputDataTestId: PropTypes.string,
+    inputFontSize: PropTypes.string,
+    loading: PropTypes.bool,
     onChange: PropTypes.func,
     onTextFieldChange: PropTypes.func,
-    getOptionLabel: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.shape({
             id: PropTypes.number
         })
-    ])
-    ),
+    ])),
+    showLoading: PropTypes.bool,
+    startAdornment: PropTypes.node,
     textFieldProps: PropTypes.shape({
         label: PropTypes.string,
         placeholder: PropTypes.string
     }),
-    disableUnderline: PropTypes.bool,
-    growFrom: PropTypes.string,
-    growTo: PropTypes.string,
-    displayOnSearch: PropTypes.bool,
-    inputDataTestId: PropTypes.string,
-    showLoading: PropTypes.bool,
-    startAdornment: PropTypes.node,
-    inputFontSize: PropTypes.string,
 }
 
 SearchBar.defaultProps = {
-    options: [],
-    onChange: () => { /* Empty */ },
-    onTextFieldChange: () => { /* Empty */ },
+    disableUnderline: false,
+    displayOnSearch: true,
     getOptionLabel: (value) => value,
+    growFrom: '100%',
+    growTo: '100%',
+    inputDataTestId: 'SearchBar__input',
+    inputFontSize: 'inherit',
+    loading: false,
+    onChange: (e) => e,
+    onTextFieldChange: (e) => e,
+    options: [],
+    showLoading: true,
+    startAdornment: <Search />,
     textFieldProps: {
         label: undefined,
         placeholder: undefined
     },
-    disableUnderline: false,
-    growFrom: '100%',
-    growTo: '100%',
-    displayOnSearch: true,
-    inputDataTestId: 'SearchBar__input',
-    startAdornment: <Search />,
-    showLoading: true,
-    inputFontSize: 'inherit',
 }
 
 export default SearchBar

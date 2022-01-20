@@ -14,6 +14,25 @@ describe('Epic action thunks', () => {
         store.clearActions()
     })
 
+    test('requestFetchSearchEpics : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestFetchSearchEpics('foobar'))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/epics?search=foobar')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestFetchSearchEpics.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestFetchSearchEpics.fulfilled.toString())
+    })
+
+    test('requestFetchSearchEpics : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestFetchSearchEpics())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestFetchSearchEpics.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestFetchSearchEpics.rejected.toString())
+    })
+
     test('requestFetchEpicsByProductId : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchEpicsByProductId())
