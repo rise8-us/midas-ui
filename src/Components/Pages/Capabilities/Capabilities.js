@@ -10,7 +10,7 @@ function Capabilities() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(requestSearchCapabilities())
+        dispatch(requestSearchCapabilities(''))
     }, [])
 
     return (

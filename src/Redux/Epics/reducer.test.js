@@ -18,6 +18,13 @@ describe('Epics Reducer', () => {
         expect(reducer(undefined, {})).toEqual({})
     })
 
+    test('searches Epics', () => {
+        const actions = [{ type: reduxActions.requestFetchSearchEpics.fulfilled, payload: allEpicsResponse }]
+        const state = actions.reduce(reducer, {})
+
+        expect(Object.keys(state)).toHaveLength(2)
+    })
+
     test('fetches all Epics', () => {
         const actions = [{ type: reduxActions.requestFetchEpicsByProductId.fulfilled, payload: allEpicsResponse }]
         const state = actions.reduce(reducer, {})

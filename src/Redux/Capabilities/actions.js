@@ -5,7 +5,7 @@ import Constants from './constants'
 export const requestSearchCapabilities = createAsyncThunk(
     Constants.SEARCH_CAPABILITY,
     async(search, { rejectWithValue }) => {
-        const request = { endpoint: `/api/capabilities?search=${search ?? ''}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/capabilities?search=${search}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
