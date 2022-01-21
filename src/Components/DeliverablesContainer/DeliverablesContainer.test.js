@@ -1,13 +1,19 @@
 import React from 'react'
-import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { DeliverablesContainer } from './index'
 
 describe('<DeliverablesContainer />', () => {
 
-    const selectDeliverablesByCapabilityIdMock = useModuleMock(
-        'Redux/Deliverables/selectors',
-        'selectDeliverablesByCapabilityId'
-    )
+    const selectCapabilitiesPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
+    const selectDeliverablesByCapabilityIdMock =
+        useModuleMock('Redux/Deliverables/selectors', 'selectDeliverablesByCapabilityId')
+    const requestCreateDeliverableMock =
+        useModuleMock('Redux/Deliverables/actions', 'requestCreateDeliverable')
+    const requestUpdateDeliverableMock =
+        useModuleMock('Redux/Deliverables/actions', 'requestUpdateDeliverable')
+    const requestDeleteDeliverableMock =
+        useModuleMock('Redux/Deliverables/actions', 'requestDeleteDeliverable')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue()
@@ -37,18 +43,44 @@ describe('<DeliverablesContainer />', () => {
         expect(screen.getByText('Deliverable')).toBeInTheDocument()
     })
 
-    // test('should call dispatch to create deliverable', () => {
-    //     useDispatchMock().mockResolvedValue({ type: '' })
+    test('should call dispatch to create deliverable', () => {
+        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
+        useDispatchMock().mockResolvedValue({ type: '' })
 
-    //     render(<DeliverablesContainer capabilityId = {2}/>)
+        render(<DeliverablesContainer capabilityId = {2}/>)
 
-    //     act(() => {
-    //         userEvent.type(screen.getByText('Deliverable'), 'DeliverableUpdate{enter}')
-    //     })
+        act(() => {
+            userEvent.type(screen.getByPlaceholderText('Add new deliverable...'), 'DeliverableCreate{enter}')
+        })
 
-    //     // waitForElementToBeRemoved(screen.getByTestId('DeliverablesContainer__loading'))
+        expect(requestCreateDeliverableMock).toHaveBeenCalledTimes(1)
+    })
 
-    //     expect(requestUpdateDeliverableMock).toHaveBeenCalledTimes(0)
-    // })
+    test('should call dispatch to update deliverable', () => {
+        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
+        useDispatchMock().mockResolvedValue({ type: '' })
+
+        render(<DeliverablesContainer capabilityId = {2}/>)
+
+        act(() => {
+            userEvent.type(screen.getByText('Deliverable'), 'DeliverableCreate{enter}')
+        })
+
+        expect(requestUpdateDeliverableMock).toHaveBeenCalledTimes(1)
+    })
+
+    test('should call dispatch to delete deliverable', () => {
+        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
+        useDispatchMock().mockResolvedValue({ type: '' })
+
+        render(<DeliverablesContainer capabilityId = {2}/>)
+
+        act(() => {
+            userEvent.click(screen.getByText('Deliverable'))
+        })
+        userEvent.click(screen.getByTestId('DraggableRow__button-delete'))
+
+        expect(requestDeleteDeliverableMock).toHaveBeenCalledTimes(1)
+    })
 
 })

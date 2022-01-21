@@ -1,4 +1,6 @@
-import { Grid } from '@mui/material'
+import { Add } from '@mui/icons-material'
+import { Grid, IconButton } from '@mui/material'
+import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DraggableDeliverableList } from 'Components/Draggable'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -6,13 +8,28 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import * as deliverableActions from 'Redux/Deliverables/actions'
 import { selectDeliverablesByCapabilityId } from 'Redux/Deliverables/selectors'
+import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { onDragEnd } from 'Utilities/draggable'
 
 export default function DeliverablesContainer({ capabilityId }) {
 
     const dispatch = useDispatch()
 
+    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const deliverables = useSelector(state => selectDeliverablesByCapabilityId(state, capabilityId))
+
+    let newDeliverableInput = React.useRef(null)
+
+    const createDeliverable = (value) => {
+        dispatch(deliverableActions.requestCreateDeliverable({
+            title: value,
+            capabilityId: capabilityId,
+            referenceId: 0,
+            index: deliverables.length,
+            releaseIds: [],
+            children: []
+        }))
+    }
 
     const updateDeliverable = (newValue, selectedDeliverable) => {
         dispatch(deliverableActions.requestUpdateDeliverable({
@@ -47,6 +64,31 @@ export default function DeliverablesContainer({ capabilityId }) {
                     )}
                 </Droppable>
             </DragDropContext>
+            {hasEdit &&
+                <Grid container paddingLeft = '30px'>
+                    <Grid item minWidth = {3} marginRight = {1}>
+                        <IconButton title = 'Add Deliverable'
+                            style = {{ padding: 0 }}
+                            onClick = {()=>
+                                newDeliverableInput.current.focus()
+                            }
+                        >
+                            <Add style = {{ fontSize: '22px' }} color = 'secondary' />
+                        </IconButton>
+                    </Grid>
+                    <Grid item style = {{ flexGrow: 1 }}>
+                        <AutoSaveTextField
+                            placeholder = 'Add new deliverable...'
+                            inputRef = {newDeliverableInput}
+                            color = 'secondary'
+                            onSave = {createDeliverable}
+                            fullWidth
+                            clearAfterSave
+                            canEdit
+                        />
+                    </Grid>
+                </Grid>
+            }
         </Grid>
     )
 }
