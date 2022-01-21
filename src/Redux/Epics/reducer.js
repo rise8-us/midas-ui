@@ -7,6 +7,9 @@ const epicSlice = createSlice({
     initialState: { },
     reducers: { },
     extraReducers: {
+        [actions.requestFetchSearchEpics.fulfilled]: (state, action) => {
+            setStateFromArray(state, action.payload)
+        },
         [actions.requestFetchEpicsByProductId.fulfilled]: (state, action) => {
             setStateFromArray(state, action.payload)
         },

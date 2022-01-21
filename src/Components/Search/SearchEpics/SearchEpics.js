@@ -37,7 +37,6 @@ export default function SearchEpics({ onChange, ...autoCompleteProps }) {
             {...autoCompleteProps}
             autoComplete
             multiple
-            disableCloseOnSelect
             freeSolo
             handleHomeEndKeys
             showLoading

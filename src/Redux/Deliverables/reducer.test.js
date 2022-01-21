@@ -2,16 +2,17 @@ import * as reduxActions from './actions'
 import reducer from './reducer'
 
 const allDeliverablesResponse = [
-    { id: 1 },
+    { id: 1, children: [] },
     {
         id: 2,
         title: 'original',
-        isArchived: false
+        isArchived: false,
+        children: []
     }
 ]
 
-const updatedDeliverable = { id: 2, title: 'updated', isArchived: false }
-const archivedDeliverable = { id: 2, title: 'orginal', isArchived: true }
+const updatedDeliverable = { id: 2, title: 'updated', isArchived: false, children: [] }
+const archivedDeliverable = { id: 2, title: 'orginal', isArchived: true, children: [] }
 const deletedDeliverable = { id: 1 }
 
 describe('Deliverables Reducer', () => {

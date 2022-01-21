@@ -1,14 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
+import { addChildren } from 'Utilities/reduxHelpers'
 import * as actions from './actions'
-
-const addChildren = (state, assertion) => {
-    state[assertion.id] = {
-        ...assertion,
-        children: Object.values(assertion.children).map(child => child.id)
-    }
-    assertion.children.forEach(child => addChildren(state, child))
-}
 
 const assertionSlice = createSlice({
     name: 'assertions',
