@@ -51,7 +51,7 @@ export default function Capability({ id }) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(requestSearchDeliverables('capability.id:' + id))
+        id > 0 && dispatch(requestSearchDeliverables('capability.id:' + id))
     }, [id])
 
     const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
