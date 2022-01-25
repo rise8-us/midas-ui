@@ -6,6 +6,7 @@ import { DeliverablesContainer } from 'Components/DeliverablesContainer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectCapabilityPageSettings } from 'Redux/AppSettings/selectors'
 import { requestCreateCapability, requestDeleteCapability, requestUpdateCapability } from 'Redux/Capabilities/actions'
 import CapabilityConstants from 'Redux/Capabilities/constants'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
@@ -13,11 +14,11 @@ import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { styled } from 'Styles/materialThemes'
 
-const StyledGrid = styled(Grid)(({ theme }) => ({
+const StyledGrid = styled(Grid)(({ theme, selected }) => ({
     padding: theme.spacing(1),
     border: '1px solid',
     borderRadius: theme.spacing(1),
-    borderColor: alpha(theme.palette.secondary.main, .4),
+    borderColor: selected ? theme.palette.text.primary : alpha(theme.palette.secondary.main, .4),
     '&:hover': {
         borderColor: theme.palette.text.primary,
     },
@@ -55,6 +56,7 @@ export default function Capability({ id }) {
     }, [id])
 
     const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
+    const capabilityPageSettings = useSelector(selectCapabilityPageSettings)
     const capability = useSelector((state) => selectCapabilityById(state, id))
     const context = initDetails(capability.id === undefined)
     const [hover, setHover] = useState(false)
@@ -72,7 +74,11 @@ export default function Capability({ id }) {
     }
 
     return (
-        <StyledGrid container direction = 'column'>
+        <StyledGrid
+            container
+            direction = 'column'
+            selected = {capability.deliverableIds?.includes(capabilityPageSettings.selectedDeliverableId)}
+        >
             <Grid item>
                 <Box display = 'flex' alignItems = 'center'>
                     <StyledArticle fontSize = 'small' color = {context.isCreate ? 'secondary' : 'primary'}/>

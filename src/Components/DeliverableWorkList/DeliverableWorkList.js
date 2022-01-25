@@ -23,7 +23,12 @@ export default function DeliverableWorkList({ parentId }) {
                 </React.Fragment>
             ))}
             {children.length === 0 &&
-                <Typography style = {{ fontStyle: 'italic' }} variant = 'h6' color = 'secondary'>
+                <Typography
+                    fontStyle = 'italic'
+                    fontWeight = {300}
+                    variant = 'h6'
+                    color = 'secondary'
+                >
                     {staticConstants.NO_DELIVERABLES_ASSIGNED}
                 </Typography>
             }

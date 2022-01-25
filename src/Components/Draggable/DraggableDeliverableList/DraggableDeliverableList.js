@@ -33,6 +33,7 @@ const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
                             {...provider.dragHandleProps}
                         >
                             <DeliverableEntry
+                                id = {deliverable.id}
                                 title = {deliverable.title}
                                 onUpdate = {newValue => onUpdate(newValue, deliverable)}
                                 onDelete = {() => onDelete(deliverable.id)}

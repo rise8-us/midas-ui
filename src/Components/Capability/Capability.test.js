@@ -7,17 +7,27 @@ describe('<Capability />', () => {
     const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
     const requestDeleteCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestDeleteCapability')
     const requestUpdateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestUpdateCapability')
+
+    const selectCapabilityPageSettingsMock =
+        useModuleMock('Redux/AppSettings/selectors', 'selectCapabilityPageSettings')
     const selectCapabilitiesPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
 
+    const defaultProps = {
+        title: 'title',
+        id: 1,
+        deliverableIds: [2]
+    }
+
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
-        selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'title', description: '' })
+        selectCapabilityByIdMock.mockReturnValue({ ...defaultProps, description: '' })
+        selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: 2 })
         selectCapabilitiesPagePermissionMock.mockReturnValue(true)
     })
 
     test('should render', () => {
-        selectCapabilityByIdMock.mockReturnValue({ id: 1, title: 'title', description: 'description' })
+        selectCapabilityByIdMock.mockReturnValue({ ...defaultProps, description: 'description' })
         selectCapabilitiesPagePermissionMock.mockReturnValue(false)
 
         render(<Capability id = {1}/>)
@@ -27,7 +37,7 @@ describe('<Capability />', () => {
     })
 
     test('should create new', () => {
-        selectCapabilityByIdMock.mockReturnValue({ title: '', description: '' })
+        selectCapabilityByIdMock.mockReturnValue({ title: '', description: '', deliverableIds: [] })
 
         render(<Capability/>)
 
@@ -37,7 +47,8 @@ describe('<Capability />', () => {
         expect(requestCreateCapabilityMock).toHaveBeenCalledWith({
             title: 'foobar',
             description: '',
-            referenceId: 0
+            referenceId: 0,
+            deliverableIds: []
         })
     })
 
@@ -51,7 +62,8 @@ describe('<Capability />', () => {
             id: 1,
             title: 'new title',
             description: '',
-            referenceId: 0
+            referenceId: 0,
+            deliverableIds: [2]
         })
     })
 
@@ -65,7 +77,8 @@ describe('<Capability />', () => {
             id: 1,
             title: 'title',
             description: 'description',
-            referenceId: 0
+            referenceId: 0,
+            deliverableIds: [2]
         })
     })
 

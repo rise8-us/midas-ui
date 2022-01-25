@@ -4,6 +4,7 @@ import { DeliverableWorkList } from 'Components/DeliverableWorkList'
 import { SearchEpics } from 'Components/Search'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectCapabilityPageSettings } from 'Redux/AppSettings/selectors'
 import { requestCreateDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById } from 'Redux/Deliverables/selectors'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
@@ -18,7 +19,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 export default function CapabilitiesView() {
     const dispatch = useDispatch()
-    const selectedDeliverableId = 123456 // to be replaced with selector once selected deliverable logic put in
+
+    const capabilityPageSettings = useSelector(selectCapabilityPageSettings)
+    const { selectedDeliverableId } = capabilityPageSettings
 
     const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const deliverable = useSelector(state => selectDeliverableById(state, selectedDeliverableId))
@@ -37,6 +40,8 @@ export default function CapabilitiesView() {
             children: []
         }))
     }
+
+    if (!selectedDeliverableId) return null
 
     return (
         <Stack marginX = '16%' spacing = {1}>
@@ -59,13 +64,12 @@ export default function CapabilitiesView() {
                     </StyledButton>
                 }
             </Stack>
-            <Divider style = {{ marginBottom: '8px' }}/>
+            <Divider/>
             <Collapse in = {open} collapsedSize = {0}>
                 <div>
                     {hasEdit && <SearchEpics onChange = {onSelectEpic}/>}
                 </div>
             </Collapse>
-            <div style = {{ width: 1, height: 8 }} />
             <DeliverableWorkList parentId = {selectedDeliverableId}/>
         </Stack>
     )

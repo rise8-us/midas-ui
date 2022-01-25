@@ -1,12 +1,11 @@
 import { requestFetchInit } from '../Init/actions'
-import reducer, { setAssertionComment, setInitialized, setPageScrollY, toggleNavBar } from './reducer'
+import reducer, { setAssertionComment, setCapabilityPage, setInitialized, setPageScrollY } from './reducer'
 
 const mockStore = {
     assertionCommentId: null,
     assertionCommentType: null,
     assertionStatus: {},
     classification: {},
-    navBarOpen: false,
     pageScrollY: 0,
     projectJourneyMap: {},
     roadmapStatus: {},
@@ -18,29 +17,14 @@ const mockStore = {
     sonarqubeReliability: {},
     sonarqubeSecurity: {},
     tagTypes: [],
-    initialized: false
+    initialized: false,
+    capabilityPage: {
+        selectedDeliverableId: null
+    }
 }
 
 test('should handle initial state', () => {
-    expect(reducer(undefined, {})).toEqual({
-        assertionCommentId: null,
-        assertionCommentType: null,
-        assertionStatus: {},
-        classification: {},
-        navBarOpen: true,
-        projectJourneyMap: {},
-        roadmapStatus: {},
-        roadmapTypes: {},
-        completionType: {},
-        feedbackRating: {},
-        roles: {},
-        sonarqubeMaintainability: {},
-        sonarqubeReliability: {},
-        sonarqubeSecurity: {},
-        tagTypes: [],
-        pageScrollY: 0,
-        initialized: false
-    })
+    expect(reducer(undefined, {})).toEqual(mockStore)
 })
 
 test('should handle setAssertionComment', () => {
@@ -79,15 +63,6 @@ test('should set setAssertionComment to null on deletedAssertionId', () => {
     })
 })
 
-test('should handle toggleNavBar', () => {
-    expect(
-        reducer(mockStore, { type: toggleNavBar.type, payload: {} })
-    ).toEqual({
-        ...mockStore,
-        navBarOpen: true
-    })
-})
-
 test('should handle pageScrollY', () => {
     expect(
         reducer(mockStore, { type: setPageScrollY.type, payload: 42 })
@@ -106,6 +81,21 @@ test('should handle setInitialized', () => {
     })
 })
 
+describe('should handle setCapabilityPage', () => {
+    const payload = { selectedDeliverableId: 2 }
+
+    test('should set selectedDeliverableId to null', () => {
+        const mockState = { ...mockStore, capabilityPage: payload }
+
+        expect(reducer(mockState, { type: setCapabilityPage.type, payload: payload }))
+            .toEqual({ ...mockStore, capabilityPage: { selectedDeliverableId: null } })
+    })
+
+    test('should set selectedDeliverableId to 2', () => {
+        expect(reducer(mockStore, { type: setCapabilityPage.type, payload: payload }))
+            .toEqual({ ...mockStore, capabilityPage: payload })
+    })
+})
 
 test('sets init info', () => {
     const initResponse = {
