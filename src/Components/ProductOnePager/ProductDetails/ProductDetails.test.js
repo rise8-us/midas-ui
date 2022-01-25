@@ -36,7 +36,7 @@ describe('<ProductDetails>', () => {
         userEvent.type(screen.getByDisplayValue(product.problemStatement), '!')
         userEvent.tab()
 
-        expect(requestUpdateProductMock).toHaveBeenCalledWith({ ...product, problemStatement: '!' })
+        expect(requestUpdateProductMock).toHaveBeenCalledWith({ ...product, problemStatement: 'da bridge is out!' })
 
         requestUpdateProductMock.mockReset()
         userEvent.type(screen.getByDisplayValue(product.vision), '!')

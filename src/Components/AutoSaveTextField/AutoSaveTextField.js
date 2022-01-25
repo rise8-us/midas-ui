@@ -124,7 +124,7 @@ function AutoSaveTextField({
                 />
                 : textFieldProps.label
             }
-            onFocus = {onFocus}
+            onFocus = {inEditMode ? onFocus : undefined}
             onMouseEnter = {onMouseEnter}
             onMouseLeave = {onMouseLeave}
             onMouseDown = {onMouseDown}

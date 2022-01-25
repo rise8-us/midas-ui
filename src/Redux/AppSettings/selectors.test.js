@@ -1,7 +1,7 @@
 import * as selectors from './selectors'
 
 describe('AppSettings selectors', () => {
-    const emptyState = { app: {} }
+    const emptyState = { app: { capabilityPage: { selectedDeliverableId: null } } }
     const mockState = {
         app: {
             roles: {
@@ -30,6 +30,9 @@ describe('AppSettings selectors', () => {
                 cType: {
                     name: 'cType'
                 }
+            },
+            capabilityPage: {
+                selectedDeliverableId: 2
             }
         }
     }
@@ -75,5 +78,9 @@ describe('AppSettings selectors', () => {
 
     test('should return object', () => {
         expect(selectors.selectCompletionTypes(mockState)).toEqual({ cType: { name: 'cType' } })
+    })
+
+    test('should return capabiltyPage settings', () => {
+        expect(selectors.selectCapabilityPageSettings(mockState)).toEqual({ selectedDeliverableId: 2 })
     })
 })

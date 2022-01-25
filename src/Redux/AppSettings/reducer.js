@@ -8,7 +8,6 @@ const appSettingsSlice = createSlice({
         assertionCommentType: null,
         assertionStatus: {},
         classification: {},
-        navBarOpen: true,
         projectJourneyMap: {},
         roadmapStatus: {},
         roadmapTypes: {},
@@ -20,21 +19,18 @@ const appSettingsSlice = createSlice({
         sonarqubeSecurity: {},
         tagTypes: [],
         pageScrollY: 0,
-        initialized: false
+        initialized: false,
+        capabilityPage: {
+            selectedDeliverableId: null
+        }
     },
     reducers: {
-        toggleNavBar: (state) => {
-            state.navBarOpen = !state.navBarOpen
-        },
         setAssertionComment: (state, action) => {
             const currentId = state.assertionCommentId
             const { assertionId, deletedAssertionId, type } = action.payload
             const newId = deletedAssertionId ?? assertionId
 
-            state.assertionCommentId = currentId === newId
-                ? null
-                : assertionId
-
+            state.assertionCommentId = currentId === newId ? null : assertionId
             state.assertionCommentType = type
         },
         setPageScrollY: (state, action) => {
@@ -42,6 +38,13 @@ const appSettingsSlice = createSlice({
         },
         setInitialized: (state, action) => {
             state.initialized = action.payload
+        },
+        setCapabilityPage: (state, action) => {
+            const { selectedDeliverableId } = state.capabilityPage
+            const { payload } = action
+
+            state.capabilityPage.selectedDeliverableId =
+                selectedDeliverableId === payload.selectedDeliverableId ? null : payload.selectedDeliverableId
         }
     },
     extraReducers: {
@@ -82,6 +85,8 @@ const appSettingsSlice = createSlice({
     }
 })
 
-export const { toggleNavBar, setAssertionComment, setPageScrollY, setInitialized } = appSettingsSlice.actions
+export const {
+    toggleNavBar, setAssertionComment, setPageScrollY, setInitialized, setCapabilityPage
+} = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer
