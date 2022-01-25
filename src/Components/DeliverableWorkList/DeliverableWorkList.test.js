@@ -1,6 +1,6 @@
 import staticConstants from 'Constants/Statics'
 import React from 'react'
-import { render, screen, useModuleMock } from 'Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { DeliverableWorkList } from './index'
 
 jest.mock('Components/DeliverableWorkEntry/DeliverableWorkEntry',
@@ -8,22 +8,15 @@ jest.mock('Components/DeliverableWorkEntry/DeliverableWorkEntry',
 
 describe('<DeliverableWorkList />', () => {
 
-    const selectDeliverableByParentIdMock = useModuleMock('Redux/Deliverables/selectors', 'selectDeliverableByParentId')
-
-
     test('should render with entry', () => {
-        selectDeliverableByParentIdMock.mockReturnValue([{ id: 1, productId: 2, epicId: 3, title: 'yolo' }])
-
-        render(<DeliverableWorkList parentId = {0}/>)
+        render(<DeliverableWorkList workList = {[{ id: 1, productId: 2, epicId: 3, title: 'yolo' }]}/>)
 
         expect(screen.getByText('yolo')).toBeInTheDocument()
         expect(screen.queryByText(staticConstants.NO_DELIVERABLES_ASSIGNED)).not.toBeInTheDocument()
     })
 
     test('should render with  no entries', () => {
-        selectDeliverableByParentIdMock.mockReturnValue([])
-
-        render(<DeliverableWorkList parentId = {0}/>)
+        render(<DeliverableWorkList />)
 
         expect(screen.getByText(staticConstants.NO_DELIVERABLES_ASSIGNED)).toBeInTheDocument()
     })
