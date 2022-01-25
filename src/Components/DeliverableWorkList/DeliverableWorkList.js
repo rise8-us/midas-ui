@@ -3,26 +3,20 @@ import { DeliverableWorkEntry } from 'Components/DeliverableWorkEntry'
 import staticConstants from 'Constants/Statics'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 
-export default function DeliverableWorkList({ parentId }) {
-
-    const children = useSelector(state => selectDeliverableByParentId(state, parentId))
-
+export default function DeliverableWorkList({ workList }) {
     return (
         <>
-            {children.map((child, index) => (
-                <React.Fragment key = {index}>
-                    <DeliverableWorkEntry
-                        id = {child.id}
-                        title = {child.title}
-                        epicId = {child.epicId}
-                        productId = {child.productId}
-                    />
-                </React.Fragment>
+            {workList.map((child, index) => (
+                <DeliverableWorkEntry
+                    key = {index}
+                    id = {child.id}
+                    title = {child.title}
+                    epicId = {child.epicId}
+                    productId = {child.productId}
+                />
             ))}
-            {children.length === 0 &&
+            {workList.length === 0 &&
                 <Typography
                     fontStyle = 'italic'
                     fontWeight = {300}
@@ -37,9 +31,14 @@ export default function DeliverableWorkList({ parentId }) {
 }
 
 DeliverableWorkList.propTypes = {
-    parentId: PropTypes.number
+    workList: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        epicId: PropTypes.number,
+        productId: PropTypes.number
+    }))
 }
 
 DeliverableWorkList.defaultProps = {
-    parentId: null
+    workList: []
 }
