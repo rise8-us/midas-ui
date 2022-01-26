@@ -25,6 +25,9 @@ describe('<App />', () => {
         selectUserLoggedInMock.mockReturnValue({ isAdmin: false })
 
         renderWithRouter(<App />)
-        waitFor(() => { expect(setInitializedMock).toHaveBeenCalledWith(false) })
+
+        await waitFor(() => {
+            expect(setInitializedMock).toHaveBeenCalledWith(false)
+        })
     })
 })

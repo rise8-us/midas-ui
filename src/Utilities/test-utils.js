@@ -68,6 +68,22 @@ export function mockSearchUsersComponent({ onChange, ...everythingElse }) {
     )
 }
 
+export function mockSearchEpicsComponent({ onChange, ...everythingElse }) {
+    return (
+        <input
+            title = 'searchEpicsMock'
+            onChange = {e => onChange(e, [{
+                id: 20,
+                title: 'epic title',
+                epidId: 10,
+                productId: 11
+            }], 'selectOption')}
+            placeholder = 'Link epics by title or product name'
+            {...everythingElse}
+        />
+    )
+}
+
 export function mockProductConfigurationFields(props) {
     return (
         <>

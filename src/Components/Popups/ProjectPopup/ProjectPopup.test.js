@@ -5,6 +5,7 @@ import {
 import { ProjectPopup } from './index'
 
 describe('<ProjectPopup />', () => {
+    jest.setTimeout(15000)
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
     const submitCreateProjectMock = useModuleMock('Redux/Projects/actions', 'requestCreateProject')
@@ -91,7 +92,7 @@ describe('<ProjectPopup />', () => {
         })
     })
 
-    test('should call onSubmit for updateProject', () => {
+    test('should call onSubmit for updateProject', async() => {
         selectProjectByIdMock.mockReturnValue(returnedFoundProject)
         render(<ProjectPopup id = {4} parentId = {1}/>)
 
@@ -122,7 +123,7 @@ describe('<ProjectPopup />', () => {
             ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13], productId: 1,
             sourceControlId: 12
         })
-        waitFor(() => { expect(requestSearchProductMock).toHaveBeenCalledTimes(1) })
+        await waitFor(() => { expect(requestSearchProductMock).toHaveBeenCalledTimes(1) })
     })
 
     test('should close popup', () => {

@@ -30,7 +30,9 @@ export default function DeliverableWorkEntry({ id, productId, epicId, title }) {
     const product = useSelector(state => selectProductById(state, productId))
     const epic = useSelector(state => selectEpicById(state, epicId))
 
-    const onClickUnlink = () => { dispatch(requestDeleteDeliverable(id)) }
+    const onClickUnlink = () => {
+        dispatch(requestDeleteDeliverable(id))
+    }
 
     useEffect(() => {
         dispatch(requestFetchSearchEpics('id:' + epicId))

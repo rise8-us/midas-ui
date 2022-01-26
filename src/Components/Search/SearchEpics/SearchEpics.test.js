@@ -24,13 +24,11 @@ describe('<SearchEpics>', () => {
     }
 
     test('should render', async() => {
-        waitFor(() => {
-            useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
-        })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
 
         render(<SearchEpics onChange = {jest.fn}/>)
 
-        expect(screen.getByPlaceholderText('Search by title or product name')).toBeInTheDocument()
+        expect(await screen.findByPlaceholderText('Link epics by title or product name')).toBeInTheDocument()
     })
 
     test('should call onChange', async() => {
@@ -44,7 +42,7 @@ describe('<SearchEpics>', () => {
         render(<SearchEpics onChange = {onChangeMock}/>, { initialState: mockStore })
 
         act(() => {
-            userEvent.type(screen.getByPlaceholderText('Search by title or product name'), 'A')
+            userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
         })
 
         act(() => {
