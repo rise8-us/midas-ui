@@ -42,6 +42,6 @@ describe('<AssertionHeader>', () => {
         expect(await screen.findByTestId('AssertionHeader__icon-add')).toBeInTheDocument()
 
         expect(requestCreateAssertionMock).toHaveBeenCalledWith(newOGSM)
-        waitFor(() => { expect(onCreateMock).toBeCalled() })
+        await waitFor(() => { expect(onCreateMock).toBeCalled() })
     })
 })

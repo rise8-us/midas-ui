@@ -6,7 +6,7 @@ describe('<AppBarSearch />', () => {
 
     const setAppBarFilterStringMock = useModuleMock('Redux/Filters/reducer', 'setAppBarFilterString')
 
-    test('should dispatch searchValue', () => {
+    test('should dispatch searchValue', async() => {
         useDispatchMock().mockReturnValue({})
 
         render(<AppBarSearch />)
@@ -15,7 +15,7 @@ describe('<AppBarSearch />', () => {
 
         userEvent.type(screen.getByPlaceholderText('Search'), 'SearchString')
 
-        waitFor(()=> {
+        await waitFor(()=> {
             expect(setAppBarFilterStringMock).toHaveBeenCalledWith('SearchString')
         })
     })

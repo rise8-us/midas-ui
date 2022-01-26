@@ -67,7 +67,7 @@ describe('<AppBar />', () => {
         render(<AppBar/>)
         userEvent.type(screen.getByPlaceholderText('Search'), 'SearchString')
 
-        waitFor(() => expect(setAppBarFilterStringMock).toHaveBeenCalledWith('SearchString'))
+        await waitFor(() => expect(setAppBarFilterStringMock).toHaveBeenCalledWith('SearchString'))
     })
 
     test('should links navigate correctly', () => {

@@ -50,7 +50,7 @@ export default function SearchEpics({ onChange, ...autoCompleteProps }) {
             options = {options}
             textFieldProps = {{
                 label: '',
-                placeholder: 'Search by title or product name',
+                placeholder: 'Link epics by title or product name',
                 margin: 'dense'
             }}
             renderOption = {(props, option) => (

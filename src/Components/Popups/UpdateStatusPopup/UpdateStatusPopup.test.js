@@ -105,7 +105,7 @@ describe('<UpdateStatusPopup />', () => {
 
         requestUpdateMeasureMock.mockReturnValue(updatedMeasure)
 
-        waitFor(() => { expect(closePopupMock).toHaveBeenCalled() })
+        await waitFor(() => { expect(closePopupMock).toHaveBeenCalled() })
     })
 
     test('should handle onSubmit for Assertion', async() => {
@@ -128,6 +128,6 @@ describe('<UpdateStatusPopup />', () => {
 
         requestUpdateAssertionMock.mockReturnValue(updatedAssertion)
 
-        waitFor(() => { expect(closePopupMock).toHaveBeenCalled() })
+        await waitFor(() => { expect(closePopupMock).toHaveBeenCalled() })
     })
 })

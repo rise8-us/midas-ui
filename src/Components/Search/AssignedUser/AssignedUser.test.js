@@ -1,5 +1,5 @@
 import React from 'react'
-import { act, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
+import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AssignedUser } from './index'
 
 describe('<AssignedUser />', () => {
@@ -19,23 +19,19 @@ describe('<AssignedUser />', () => {
 
     test('should render avatar', async() => {
         selectUserByIdMock.mockReturnValue({})
-        waitFor(() => {
-            useDispatchMock().mockResolvedValue({ payload: [], type: '/' })
-        })
+        useDispatchMock().mockResolvedValue({ payload: [], type: '/' })
 
         render(<AssignedUser hasEdit = {false} onUserChange = {jest.fn}/>)
 
-        expect(screen.getAllByTestId('AssignedUser__avatar-icon')).toHaveLength(1)
+        expect(await screen.findAllByTestId('AssignedUser__avatar-icon')).toHaveLength(1)
     })
 
-    test('should render initials w/ id & hasEdit == false', () => {
-        waitFor(() => {
-            useDispatchMock().mockResolvedValue({ payload: [user], type: '/'  })
-        })
+    test('should render initials w/ id & hasEdit == false', async() => {
+        useDispatchMock().mockResolvedValue({ payload: [user], type: '/' })
 
         render(<AssignedUser hasEdit = {false} onUserChange = {jest.fn} id = {1} />)
 
-        expect(screen.getAllByTestId('AssignedUser__avatar-icon')).toHaveLength(1)
+        expect(await screen.findAllByTestId('AssignedUser__avatar-icon')).toHaveLength(1)
         expect(screen.getByText('gg')).toBeInTheDocument()
     })
 

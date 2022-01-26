@@ -1,35 +1,25 @@
-import { AddLinkOutlined } from '@mui/icons-material'
-import { Button, Collapse, Divider, Stack, Typography } from '@mui/material'
+import { Collapse, Divider, Stack, Typography } from '@mui/material'
 import { DeliverableWorkList } from 'Components/DeliverableWorkList'
 import { SearchEpics } from 'Components/Search'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilityPageSettings } from 'Redux/AppSettings/selectors'
 import { requestCreateDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById, selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
-import { styled } from 'Styles/materialThemes'
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    '&:hover': {
-        color: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main
-    }
-}))
+import { enqueueMessage } from 'Redux/Snackbar/reducer'
 
 export default function CapabilitiesView() {
     const dispatch = useDispatch()
 
+    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const capabilityPageSettings = useSelector(selectCapabilityPageSettings)
     const { selectedDeliverableId } = capabilityPageSettings
 
-    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const deliverable = useSelector(state => selectDeliverableById(state, selectedDeliverableId))
     const children = useSelector(state => selectDeliverableByParentId(state, selectedDeliverableId))
 
     const epicIds = useMemo(() => children.map(c => c.epicId), [children])
-
-    const [open, setOpen] = useState(false)
 
     const onSelectEpic = (_e, values, reason) => {
         reason === 'selectOption' && !epicIds.includes(values[0].id) && dispatch(requestCreateDeliverable({
@@ -41,6 +31,16 @@ export default function CapabilitiesView() {
             referenceId: 0,
             releaseIds: [],
             children: []
+        })).then(() => {
+            dispatch(enqueueMessage({
+                message: 'Linked ' + values[0].title + ' to deliverable: ' + deliverable.title,
+                severity: 'success'
+            }))
+        })
+
+        epicIds.includes(values[0].id) && dispatch(enqueueMessage({
+            message: values[0].title + ' is already tied to deliverable: ' + deliverable.title,
+            severity: 'warning'
         }))
     }
 
@@ -50,26 +50,10 @@ export default function CapabilitiesView() {
         <Stack marginX = '16%' spacing = {1}>
             <Stack direction = 'row' justifyContent = 'space-between'>
                 <Typography variant = 'subtitle1'>{deliverable?.title?.toUpperCase()}</Typography>
-                {hasEdit &&
-                    <StyledButton
-                        size = 'small'
-                        color = {open ? 'primary' : 'secondary'}
-                        style = {{
-                            whiteSpace: 'nowrap',
-                            borderRadius: '8px',
-                            padding: '0 16px'
-                        }}
-                        endIcon = {<AddLinkOutlined />}
-                        onClick = {() => setOpen(prev => !prev)}
-                        variant = 'outlined'
-                    >
-                        link epic
-                    </StyledButton>
-                }
             </Stack>
             <Divider/>
-            <Collapse in = {open} collapsedSize = {0}>
-                <div>
+            <Collapse in = {hasEdit} collapsedSize = {0}>
+                <div style = {{ height: '32px', width: '100%' }}>
                     {hasEdit && <SearchEpics onChange = {onSelectEpic}/>}
                 </div>
             </Collapse>

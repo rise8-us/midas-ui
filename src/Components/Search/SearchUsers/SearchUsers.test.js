@@ -31,7 +31,7 @@ describe('<SearchUsers />', () => {
             userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'jsmith')
         })
 
-        waitFor(() => {
+        await waitFor(() => {
             expect(onDataReturnMock).toHaveBeenCalledWith(allUsers)
         })
     })
