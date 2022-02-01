@@ -16,10 +16,10 @@ function Capabilities() {
     return (
         <Page>
             <Grid container margin = {1} spacing = {2}>
-                <Grid item xs = {12} md = {3}>
+                <Grid item xs = {12} md = {4}>
                     <CapabilitiesSidebar />
                 </Grid>
-                <Grid item width xs = {12} md = {9}>
+                <Grid item width xs = {12} md = {8}>
                     <CapabilitiesView />
                 </Grid>
             </Grid>

@@ -1,5 +1,4 @@
-import { DragIndicator } from '@mui/icons-material'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import { DeleteOutlineOutlined, DragIndicator } from '@mui/icons-material'
 import { Grid, IconButton, Tooltip } from '@mui/material'
 import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
@@ -9,7 +8,7 @@ import { styled } from 'Styles/materialThemes'
 
 const StyledAutoSaveTextField = styled(AutoSaveTextField)(({ theme }) => ({
     color: theme.palette.text.secondary,
-    height: '34px',
+    minHeight: '34px',
     marginLeft: theme.spacing(1)
 }))
 
@@ -46,7 +45,11 @@ function DraggableRow({
         >
             <Grid item height = '34px' display = 'flex' alignItems = 'center'>
                 {hasEdit && hovered
-                    ? <DragIndicator color = 'secondary' data-testid = 'DraggableRow__icon-drag'/>
+                    ? <DragIndicator
+                        style = {{ cursor: 'grab' }}
+                        color = 'secondary'
+                        data-testid = 'DraggableRow__icon-drag'
+                    />
                     : <>{startIcon}</>
                 }
             </Grid>
@@ -73,10 +76,15 @@ function DraggableRow({
                                     {additionalOptions}
                                     <IconButton
                                         size = 'small'
+                                        style = {{ cursor: 'pointer' }}
                                         data-testid = 'DraggableRow__button-delete'
                                         onClick = {onDelete}
                                     >
-                                        <DeleteOutlineOutlinedIcon fontSize = 'small' color = 'secondary'/>
+                                        <DeleteOutlineOutlined
+                                            style = {{ cursor: 'pointer' }}
+                                            fontSize = 'small'
+                                            color = 'secondary'
+                                        />
                                     </IconButton>
                                 </>
                             )
