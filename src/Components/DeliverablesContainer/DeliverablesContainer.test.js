@@ -49,9 +49,7 @@ describe('<DeliverablesContainer />', () => {
 
         render(<DeliverablesContainer capabilityId = {2}/>)
 
-        act(() => {
-            userEvent.type(screen.getByPlaceholderText('Add new deliverable...'), 'DeliverableCreate{enter}')
-        })
+        userEvent.type(screen.getByPlaceholderText('Add new deliverable...'), 'DeliverableCreate{enter}')
 
         expect(requestCreateDeliverableMock).toHaveBeenCalledTimes(1)
     })
