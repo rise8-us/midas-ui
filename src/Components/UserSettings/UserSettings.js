@@ -20,16 +20,18 @@ const BoxStyled = styled(Box)(() => ({
     width: '100%'
 }))
 
+export const returnValueOrEmptyString = (value) => { return value ?? '' }
+
 const UserSettings = ({ id }) => {
     const dispatch = useDispatch()
     const user = useSelector((state) => selectUserById(state, id))
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         username: user.username,
-        displayName: user.displayName,
-        email: user.email,
-        phone: user.phone,
-        company: user.company
+        displayName: returnValueOrEmptyString(user.displayName),
+        email: returnValueOrEmptyString(user.email),
+        phone: returnValueOrEmptyString(user.phone),
+        company: returnValueOrEmptyString(user.company)
     })
 
     const handleChange = (name, value) => {

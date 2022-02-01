@@ -33,7 +33,6 @@ function UserTab() {
 
     const user = useSelector((state) => selectUserById(state, userId))
     const buildRows = useCallback(() => {
-        if (!results) return []
         return results.map((r) => ({
             data: [r.id, r.username, r.email, r.displayName],
             properties: {
@@ -43,18 +42,13 @@ function UserTab() {
     }, [results])
 
     const showUser = (data) => {
-        setShow(false)
+        setShow(prev => !prev)
         setUserId(data[0])
-
     }
 
     useEffect(() => {
         setShow(isValidUser(userId))
     }, [userId])
-
-    const handleChange = (e) => {
-        setResults(e.target.value)
-    }
 
     return (
         <Box display = 'flex' flexDirection = 'column'>
@@ -68,7 +62,7 @@ function UserTab() {
                 disableUnderline
                 displayOnSearch = {false}
                 value = ''
-                onChange = {handleChange}
+                onChange = {(e) => e}
                 showLoading = {false}
                 startAdornment = {<Search
                     color = 'secondary'

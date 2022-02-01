@@ -24,8 +24,42 @@ describe('<UserTab />', () => {
         email: 'yoda.2@mando.space'
     }
 
+    test('should render', async() => {
+        act(() => {
+            useDispatchMock().mockResolvedValue({ action: '/', payload: null })
+        })
+
+        render(<UserTab />)
+
+        waitFor(() => { expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument() })
+    })
+
+    test('should render with zero results', async() => {
+        act(() => {
+            useDispatchMock().mockResolvedValue({ action: '/', payload: null })
+        })
+
+        render(<UserTab />)
+
+        const element = screen.getByTestId('UserTab__search-input')
+        userEvent.type(element, 'yoda{enter}')
+
+        await waitFor(() => { expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument() })
+    })
+
     test('should render search results', async() => {
-        setupScenario()
+        act(() => {
+            useDispatchMock().mockResolvedValue({ payload: [user] })
+        })
+
+        const { rerender } = render(<UserTab />)
+
+        expect(screen.queryByText('baby yoda')).not.toBeInTheDocument()
+        const element = screen.getByTestId('UserTab__search-input')
+        userEvent.type(element, 'yoda')
+
+        selectUserByIdMock.mockReturnValue(user)
+        rerender(<UserTab />)
 
         expect(await screen.findByText('baby yoda')).toBeInTheDocument()
 
@@ -40,28 +74,4 @@ describe('<UserTab />', () => {
 
     })
 
-    const setupScenario = () => {
-        act(() => {
-            useDispatchMock().mockResolvedValue({ payload: [user] })
-        })
-
-        const { rerender } = render(<UserTab />)
-
-        expect(screen.queryByText('baby yoda')).not.toBeInTheDocument()
-        const element = screen.getByTestId('UserTab__search-input')
-        userEvent.type(element, 'yoda')
-
-        selectUserByIdMock.mockReturnValue(user)
-        rerender(<UserTab />)
-    }
-
-    test('should render', async() => {
-        act(() => {
-            useDispatchMock().mockResolvedValue({ action: '/', payload: null })
-        })
-
-        render(<UserTab />)
-
-        waitFor(() => { expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument() })
-    })
 })
