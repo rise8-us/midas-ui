@@ -11,7 +11,7 @@ describe('<UserSettings />', () => {
         username: 'Jon Smith',
         displayName: 'me ditto',
         email: 'dsmith@aol.com',
-        company: 'yo diddy',
+        company: null,
         phone: '5558675309',
         roles: ['admin'],
         isAdmin: true
@@ -29,7 +29,7 @@ describe('<UserSettings />', () => {
         expect(screen.getByDisplayValue('me ditto')).toBeInTheDocument()
         expect(screen.getByDisplayValue('dsmith@aol.com')).toBeInTheDocument()
         expect(screen.getByDisplayValue('5558675309')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('yo diddy')).toBeInTheDocument()
+        expect(screen.getByLabelText('Company')).toBeInTheDocument()
     })
 
 
@@ -42,7 +42,7 @@ describe('<UserSettings />', () => {
         userEvent.type(screen.getByDisplayValue('me ditto'), '2')
         userEvent.type(screen.getByDisplayValue('dsmith@aol.com'), '2')
         userEvent.type(screen.getByDisplayValue('5558675309'), '2')
-        userEvent.type(screen.getByDisplayValue('yo diddy'), '2')
+        userEvent.type(screen.getByLabelText('Company'), '2')
 
         fireEvent.click(screen.getByTestId('UserSettings__button-save'))
 
@@ -52,7 +52,7 @@ describe('<UserSettings />', () => {
             displayName: user.displayName + '2',
             email: user.email + '2',
             phone: user.phone + '2',
-            company: user.company + '2',
+            company: '2',
         })
     })
 })

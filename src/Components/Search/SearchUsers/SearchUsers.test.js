@@ -37,7 +37,7 @@ describe('<SearchUsers />', () => {
     })
 
     test('should display users in dropdown', async() => {
-        render(<SearchUsers onChange = {jest.fn} />)
+        render(<SearchUsers/>)
 
         act(() => {
             userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'o')

@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestFindUserBy } from 'Redux/Users/actions'
 
-function SearchUsers({ onDataReturn, onChange, title, placeholder, value, ...autoCompleteProps }) {
+function SearchUsers({ onDataReturn, title, placeholder, value, ...autoCompleteProps }) {
     const dispatch = useDispatch()
 
     const [options, setOptions] = useState([])
@@ -35,7 +35,6 @@ function SearchUsers({ onDataReturn, onChange, title, placeholder, value, ...aut
         <SearchBar
             {...autoCompleteProps}
             value = {value}
-            onChange = {onChange}
             onTextFieldChange = {onTextFieldChange}
             getOptionLabel = {getOptionLabel}
             options = {options}
@@ -51,7 +50,9 @@ function SearchUsers({ onDataReturn, onChange, title, placeholder, value, ...aut
 }
 
 SearchUsers.propTypes = {
-    onChange: PropTypes.func.isRequired,
+    onDataReturn: PropTypes.func,
+    placeholder: PropTypes.string,
+    startAdornment: PropTypes.node,
     title: PropTypes.string,
     value: PropTypes.oneOfType([
         PropTypes.string,
@@ -60,18 +61,15 @@ SearchUsers.propTypes = {
             username: PropTypes.string,
             displayName: PropTypes.string
         })
-    ]),
-    placeholder: PropTypes.string,
-    onDataReturn: PropTypes.func,
-    startAdornment: PropTypes.node
+    ])
 }
 
 SearchUsers.defaultProps = {
+    onDataReturn: undefined,
+    placeholder: 'username, display name, or email',
+    startAdornment: <Search />,
     title: 'Search users',
     value: '',
-    placeholder: 'username, display name, or email',
-    onDataReturn: undefined,
-    startAdornment: <Search />,
 }
 
 export default SearchUsers
