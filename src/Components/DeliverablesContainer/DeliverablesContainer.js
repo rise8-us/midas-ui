@@ -21,6 +21,7 @@ export default function DeliverablesContainer({ capabilityId }) {
     let newDeliverableInput = React.useRef(null)
 
     const createDeliverable = (value) => {
+        value.trim().length > 0 &&
         dispatch(deliverableActions.requestCreateDeliverable({
             title: value,
             capabilityId: capabilityId,

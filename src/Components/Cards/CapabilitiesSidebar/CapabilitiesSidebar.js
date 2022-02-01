@@ -32,7 +32,7 @@ export default function CapabilitiesSidebar() {
                 titleTypographyProps = {{ variant: 'h6' }}
                 subheaderTypographyProps = {{ variant: 'body2' }}
                 action = {
-                    userLoggedIn?.roles?.PORTFOLIO_LEAD && (
+                    userLoggedIn?.roles?.PORTFOLIO_ADMIN && (
                         <IconButton
                             onClick = {updatePageEdit}
                             data-testid = 'CapabilitiesSidebar__button-edit'

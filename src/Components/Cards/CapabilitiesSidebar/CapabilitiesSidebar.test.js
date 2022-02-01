@@ -12,7 +12,7 @@ describe('<CapabilitiesSidebar />', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectCapabilitiesPagePermissionMock.mockReturnValue(false)
-        selectUserLoggedInMock.mockReturnValue({ id: 1, roles: { PORTFOLIO_LEAD: true } })
+        selectUserLoggedInMock.mockReturnValue({ id: 1, roles: { PORTFOLIO_ADMIN: true } })
     })
 
     test('should render', () => {

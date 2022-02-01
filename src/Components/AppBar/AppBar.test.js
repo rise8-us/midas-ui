@@ -1,15 +1,11 @@
+import { createMemoryHistory } from 'history'
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
+import {
+    fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
+} from 'Utilities/test-utils'
 import { AppBar } from './index'
 
-const mockHistoryPush = jest.fn()
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-        push: mockHistoryPush,
-    }),
-}))
+const history = createMemoryHistory()
 
 describe('<AppBar />', () => {
     jest.setTimeout(15000)
@@ -28,13 +24,15 @@ describe('<AppBar />', () => {
     test('should render no authd user', () => {
         selectUserLoggedInMock.mockReturnValue({})
 
-        render(<AppBar />)
+        renderWithRouter(<AppBar />,
+            { history })
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
         expect(screen.getByText('Dashboard')).toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
         expect(screen.getByText('Portfolios')).toBeInTheDocument()
+        expect(screen.getByText('Capabilities')).toBeInTheDocument()
 
         expect(screen.getByTitle('tags')).toBeInTheDocument()
         expect(screen.queryByTitle('account')).not.toBeInTheDocument()
@@ -74,33 +72,33 @@ describe('<AppBar />', () => {
     test('should links navigate correctly', () => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
 
-        render(<MemoryRouter><AppBar /></MemoryRouter>)
+        renderWithRouter(<AppBar />, { history })
 
         fireEvent.click(screen.getByTestId('AppBar__logo'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
+        expect(history.location.pathname).toEqual('/dashboard')
 
         fireEvent.click(screen.getByTitle('tags'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/tags')
+        expect(history.location.pathname).toEqual('/tags')
 
         fireEvent.click(screen.getByTitle('admin'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/admin')
+        expect(history.location.pathname).toEqual('/admin')
 
         fireEvent.click(screen.getByTitle('account'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/account')
+        expect(history.location.pathname).toEqual('/account')
 
         // Page links
 
         fireEvent.click(screen.getByText('Dashboard'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/dashboard')
+        expect(history.location.pathname).toEqual('/dashboard')
 
         fireEvent.click(screen.getByText('Projects'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/projects')
+        expect(history.location.pathname).toEqual('/projects')
 
         fireEvent.click(screen.getByText('Products'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/products')
+        expect(history.location.pathname).toEqual('/products')
 
         fireEvent.click(screen.getByText('Portfolios'))
-        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios')
+        expect(history.location.pathname).toEqual('/portfolios')
     })
 
 })
