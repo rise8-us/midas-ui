@@ -1,12 +1,15 @@
 import React from 'react'
-import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { Capability } from './index'
 
 describe('<Capability />', () => {
     const selectCapabilityByIdMock = useModuleMock('Redux/Capabilities/selectors', 'selectCapabilityById')
+    const selectDeliverablesByCapabilityIdMock =
+        useModuleMock('Redux/Deliverables/selectors', 'selectDeliverablesByCapabilityId')
     const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
     const requestDeleteCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestDeleteCapability')
     const requestUpdateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestUpdateCapability')
+    const requestDeleteDeliverableMock = useModuleMock('Redux/Deliverables/actions', 'requestDeleteDeliverable')
 
     const selectCapabilityPageSettingsMock =
         useModuleMock('Redux/AppSettings/selectors', 'selectCapabilityPageSettings')
@@ -19,9 +22,16 @@ describe('<Capability />', () => {
         deliverableIds: [2]
     }
 
+    const deliverable = {
+        title: 'deliverable',
+        id: 2,
+        capabilityId: 1
+    }
+
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
         selectCapabilityByIdMock.mockReturnValue({ ...defaultProps, description: '' })
+        selectDeliverablesByCapabilityIdMock.mockReturnValue([deliverable])
         selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: 2 })
         selectCapabilitiesPagePermissionMock.mockReturnValue(true)
     })
@@ -82,12 +92,13 @@ describe('<Capability />', () => {
         })
     })
 
-    test('should handle delete', () => {
+    test('should handle delete', async() => {
         render(<Capability id = {1}/>)
 
         userEvent.hover(screen.getByDisplayValue('title'))
         userEvent.click(screen.getByTestId('DeleteOutlineIcon'))
 
-        expect(requestDeleteCapabilityMock).toHaveBeenCalledWith(1)
+        expect(requestDeleteDeliverableMock).toHaveBeenCalledWith(2)
+        await waitFor(() => expect(requestDeleteCapabilityMock).toHaveBeenCalledWith(1))
     })
 })

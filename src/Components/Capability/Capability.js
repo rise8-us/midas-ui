@@ -6,11 +6,13 @@ import { DeliverablesContainer } from 'Components/DeliverablesContainer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { setCapabilityPage } from 'Redux/AppSettings/reducer'
 import { selectCapabilityPageSettings } from 'Redux/AppSettings/selectors'
 import { requestCreateCapability, requestDeleteCapability, requestUpdateCapability } from 'Redux/Capabilities/actions'
 import CapabilityConstants from 'Redux/Capabilities/constants'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
-import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
+import { requestDeleteDeliverable, requestSearchDeliverables } from 'Redux/Deliverables/actions'
+import { selectDeliverablesByCapabilityId } from 'Redux/Deliverables/selectors'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { styled } from 'Styles/materialThemes'
 
@@ -58,6 +60,7 @@ export default function Capability({ id }) {
     const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const capabilityPageSettings = useSelector(selectCapabilityPageSettings)
     const capability = useSelector((state) => selectCapabilityById(state, id))
+    const deliverables = useSelector(state => selectDeliverablesByCapabilityId(state, capability.id))
     const context = initDetails(capability.id === undefined)
     const [hover, setHover] = useState(false)
 
@@ -70,7 +73,18 @@ export default function Capability({ id }) {
     }
 
     const deleteCapability = () => {
-        dispatch(requestDeleteCapability(capability.id))
+        const deleteDeliverables = async() => {
+            const request = deliverables.map(d => {
+                return dispatch(requestDeleteDeliverable(d.id))
+            })
+            Promise.all(request).then(() => {
+                dispatch(requestDeleteCapability(capability.id))
+                dispatch(setCapabilityPage({
+                    selectedDeliverableId: null
+                }))
+            })
+        }
+        deleteDeliverables()
     }
 
     return (
