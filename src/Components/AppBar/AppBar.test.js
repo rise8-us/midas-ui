@@ -12,6 +12,7 @@ jest.mock('react-router-dom', () => ({
 }))
 
 describe('<AppBar />', () => {
+    jest.setTimeout(15000)
 
     const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
     const selectAppBarFilterMock = useModuleMock('Redux/Filters/selectors', 'selectAppBarFilter')
