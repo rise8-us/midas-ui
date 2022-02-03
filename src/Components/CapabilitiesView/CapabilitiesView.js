@@ -47,7 +47,7 @@ export default function CapabilitiesView() {
     if (!selectedDeliverableId) return null
 
     return (
-        <Stack marginX = '16%' spacing = {1}>
+        <Stack marginX = '8%' spacing = {1}>
             <Stack direction = 'row' justifyContent = 'space-between'>
                 <Typography variant = 'subtitle1'>{deliverable?.title?.toUpperCase()}</Typography>
             </Stack>

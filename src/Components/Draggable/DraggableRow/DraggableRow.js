@@ -14,8 +14,8 @@ const StyledAutoSaveTextField = styled(AutoSaveTextField)(({ theme }) => ({
 
 const StyledEditableGrid = styled(Grid)(({ theme, selected })=> ({
     '&:hover': {
-        backgroundColor: selected  ? alpha(theme.palette.text.primary, .04) : 'inherit',
-        borderRadius: selected  ? 3 : 'inherit'
+        backgroundColor: selected ? alpha(theme.palette.text.primary, .04) : 'inherit',
+        borderRadius: selected ? 3 : 'inherit'
     }
 }))
 
@@ -70,6 +70,11 @@ function DraggableRow({
                         canEdit = {hasEdit}
                         onSave = {onUpdate}
                         multiline = {multiLine}
+                        inputProps = {{
+                            style: {
+                                textOverflow: 'ellipsis'
+                            }
+                        }}
                         InputProps = {{
                             endAdornment: hasEdit && hovered && (
                                 <>

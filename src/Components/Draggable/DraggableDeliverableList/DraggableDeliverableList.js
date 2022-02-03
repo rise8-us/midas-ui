@@ -31,6 +31,7 @@ const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
                             ref = {provider.innerRef}
                             {...provider.draggableProps}
                             {...provider.dragHandleProps}
+                            style = {{ paddingBottom: '10px' }}
                         >
                             <DeliverableEntry
                                 id = {deliverable.id}

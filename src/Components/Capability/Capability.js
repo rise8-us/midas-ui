@@ -1,5 +1,5 @@
 import { Article, DeleteOutline } from '@mui/icons-material'
-import { Box, Grid, Grow, IconButton } from '@mui/material'
+import { Box, Divider, Grid, Grow, IconButton } from '@mui/material'
 import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { DeliverablesContainer } from 'Components/DeliverablesContainer'
@@ -31,13 +31,13 @@ const StyledArticle = styled(Article)(({ theme }) => ({
 }))
 
 const StyledAutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme, color }) => ({
-    ...theme.typography.body2,
+    ...theme.typography.subtitle1,
     color: theme.palette[color].main,
     '&> *': { textTransform: 'uppercase' }
 }))
 
 const StyledAutoSaveTextFieldDescription = styled(AutoSaveTextField)(({ theme }) => ({
-    ...theme.typography.caption,
+    ...theme.typography.subtitle2,
     color: theme.palette.text.secondary,
 }))
 
@@ -130,7 +130,10 @@ export default function Capability({ id }) {
                     />
                 }
                 {!context.isCreate &&
-                    <DeliverablesContainer capabilityId = {id}/>
+                    <>
+                        <Divider style = {{ padding: '4px 0' }}/>
+                        <DeliverablesContainer capabilityId = {id}/>
+                    </>
                 }
             </Grid>
         </StyledGrid>

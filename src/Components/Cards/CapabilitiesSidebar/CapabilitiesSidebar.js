@@ -6,14 +6,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { setCapabilityPagePermission } from 'Redux/PageAccess/reducer'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
-import { styled } from 'Styles/materialThemes'
+import { scrollbar, styled } from 'Styles/materialThemes'
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
-    maxWidth: '450px',
-    height: 'fit-content',
     backgroundColor: theme.palette.grey[1100],
     borderRadius: theme.spacing(2),
+}))
+
+const StyledCardContent = styled(CardContent)(({ theme }) => ({
+    ...scrollbar(theme),
+    overflowY: 'scroll',
+    paddingBottom: 0,
+    marginBottom: theme.spacing(2),
+    maxHeight: 'calc(100vh - 244px)'
 }))
 
 export default function CapabilitiesSidebar() {
@@ -30,7 +36,7 @@ export default function CapabilitiesSidebar() {
                 title = 'Mission Thread'
                 subheader = 'Integrated Air and Missile Defense'
                 titleTypographyProps = {{ variant: 'h6' }}
-                subheaderTypographyProps = {{ variant: 'body2' }}
+                subheaderTypographyProps = {{ variant: 'subtitle1' }}
                 action = {
                     userLoggedIn?.roles?.PORTFOLIO_ADMIN && (
                         <IconButton
@@ -46,9 +52,9 @@ export default function CapabilitiesSidebar() {
                     )
                 }
             />
-            <CardContent>
+            <StyledCardContent>
                 <CapabilitiesList />
-            </CardContent>
+            </StyledCardContent>
         </StyledCard>
     )
 }

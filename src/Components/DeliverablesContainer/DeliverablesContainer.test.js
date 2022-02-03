@@ -40,7 +40,7 @@ describe('<DeliverablesContainer />', () => {
 
     test('should render', () => {
         render(<DeliverablesContainer capabilityId = {2}/>)
-        expect(screen.getByText('Deliverable')).toBeInTheDocument()
+        expect(screen.getByDisplayValue('Deliverable')).toBeInTheDocument()
     })
 
     test('should call dispatch to create deliverable', () => {
