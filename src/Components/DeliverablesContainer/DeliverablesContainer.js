@@ -50,7 +50,7 @@ export default function DeliverablesContainer({ capabilityId }) {
     }
 
     return (
-        <Grid item marginLeft = '-34px' >
+        <Grid item marginLeft = '-34px' paddingTop = {2}>
             <DragDropContext onDragEnd = {(result) => onDragEnd(result, deliverables, onDragEndAction)}>
                 <Droppable droppableId = 'list'>
                     {provided => (
