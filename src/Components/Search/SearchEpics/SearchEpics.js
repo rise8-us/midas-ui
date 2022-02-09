@@ -5,7 +5,9 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchSearchEpics } from 'Redux/Epics/actions'
 
-export default function SearchEpics({ onChange, ...autoCompleteProps }) {
+export default function SearchEpics({
+    onChange, defaultSearchTerms, excludeClosed, textFieldProps, ...autoCompleteProps
+}) {
     const dispatch = useDispatch()
 
     const products = useSelector(state => state.products)
@@ -14,11 +16,12 @@ export default function SearchEpics({ onChange, ...autoCompleteProps }) {
     const [loading, setLoading] = useState(false)
 
     const onTextFieldChange = (input) => {
-        const searchValue = input.length > 0
-            ? `title:*${input}* OR product.name:*${input}* AND state!closed`
-            : 'state!closed'
+        const searchTerms = []
+        excludeClosed && searchTerms.push('state!closed')
+        input.length > 0 && searchTerms.push(`title:*${input}* OR product.name:*${input}*`)
+        defaultSearchTerms && searchTerms.push(defaultSearchTerms)
 
-        dispatch(requestFetchSearchEpics(searchValue))
+        dispatch(requestFetchSearchEpics(searchTerms.join(' AND ')))
             .then(unwrapResult)
             .then((data) => {
                 const newData = data.map(option => {
@@ -49,9 +52,8 @@ export default function SearchEpics({ onChange, ...autoCompleteProps }) {
             getOptionLabel = {(option) => option.title}
             options = {options}
             textFieldProps = {{
-                label: '',
-                placeholder: 'Link epics by title or product name',
-                margin: 'dense'
+                margin: 'dense',
+                ...textFieldProps
             }}
             renderOption = {(props, option) => (
                 <li {...props} key = {option.id}>
@@ -69,5 +71,24 @@ export default function SearchEpics({ onChange, ...autoCompleteProps }) {
 }
 
 SearchEpics.propTypes = {
+    defaultSearchTerms: PropTypes.string,
+    excludeClosed: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
+    textFieldProps: PropTypes.shape({
+        label: PropTypes.string,
+        placeholder: PropTypes.string,
+        size: PropTypes.string,
+        variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
+    })
+}
+
+SearchEpics.defaultProps = {
+    defaultSearchTerms: null,
+    excludeClosed: false,
+    textFieldProps: {
+        label: '',
+        placeholder: 'Link epics by title or product name',
+        size: undefined,
+        variant: undefined,
+    }
 }

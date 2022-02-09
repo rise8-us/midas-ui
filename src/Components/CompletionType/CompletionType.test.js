@@ -1,5 +1,5 @@
 import React from 'react'
-import { act, render, screen, selectCompletionTypesMock, userEvent } from 'Utilities/test-utils'
+import { act, renderWithRouter, screen, selectCompletionTypesMock, userEvent } from 'Utilities/test-utils'
 import { determineCompletionTypeData } from './CompletionType'
 import { CompletionType } from './index'
 
@@ -22,39 +22,50 @@ describe('<CompletionType />', () => {
     })
 
     test('should render with unknown completionType', () => {
-        render(<CompletionType {...requiredProps} completionType = 'undefined'/>)
+        renderWithRouter(<CompletionType {...requiredProps} completionType = 'undefined'/>)
 
         expect(screen.getByLabelText('Completion Type')).toBeInTheDocument()
         expect(screen.queryByLabelText('Value')).not.toBeInTheDocument()
         expect(screen.queryByLabelText('Target')).not.toBeInTheDocument()
     })
 
-    test('should render completionTypes', () => {
-        const { rerender } = render(<CompletionType {...requiredProps}/>)
+    describe('should render each completionType', () => {
+        test('default to binary', () => {
+            renderWithRouter(<CompletionType {...requiredProps}/>)
 
-        expect(screen.getByText('Complete')).toBeInTheDocument()
-        expect(screen.getByDisplayValue('Binary')).toBeInTheDocument()
+            expect(screen.getByText('Complete')).toBeInTheDocument()
+            expect(screen.getByDisplayValue('Binary')).toBeInTheDocument()
+        })
 
-        rerender(<CompletionType {...requiredProps} completionType = 'PERCENTAGE'/>)
-        expect(screen.getByDisplayValue('Percentage')).toBeInTheDocument()
-        expect(screen.getAllByText('Value (%)')).toHaveLength(2)
+        test('PERCENTAGE', () => {
+            renderWithRouter(<CompletionType {...requiredProps} completionType = 'PERCENTAGE'/>)
 
-        rerender(<CompletionType {...requiredProps} completionType = 'NUMBER'/>)
-        expect(screen.getByDisplayValue('Number')).toBeInTheDocument()
-        expect(screen.getAllByText('Value')).toHaveLength(2)
-        expect(screen.getAllByText('Target')).toHaveLength(2)
+            expect(screen.getByDisplayValue('Percentage')).toBeInTheDocument()
+            expect(screen.getAllByText('Value (%)')).toHaveLength(2)
+        })
 
-        rerender(<CompletionType {...requiredProps} completionType = 'MONEY'/>)
-        expect(screen.getByDisplayValue('Money')).toBeInTheDocument()
-        expect(screen.getAllByText('Value')).toHaveLength(2)
-        expect(screen.getAllByText('Target')).toHaveLength(2)
-        expect(screen.getAllByTestId('AttachMoneyIcon')).toHaveLength(2)
+        test('NUMBER', () => {
+            renderWithRouter(<CompletionType {...requiredProps} completionType = 'NUMBER'/>)
+
+            expect(screen.getByDisplayValue('Number')).toBeInTheDocument()
+            expect(screen.getAllByText('Value')).toHaveLength(2)
+            expect(screen.getAllByText('Target')).toHaveLength(2)
+        })
+
+        test('MONEY', () => {
+            renderWithRouter(<CompletionType {...requiredProps} completionType = 'MONEY'/>)
+
+            expect(screen.getByDisplayValue('Money')).toBeInTheDocument()
+            expect(screen.getAllByText('Value')).toHaveLength(2)
+            expect(screen.getAllByText('Target')).toHaveLength(2)
+            expect(screen.getAllByTestId('AttachMoneyIcon')).toHaveLength(2)
+        })
     })
 
     test('should handle empty values onChange', () => {
         jest.useFakeTimers()
 
-        render(
+        renderWithRouter(
             <CompletionType
                 {...requiredProps}
                 target = {13}
@@ -77,7 +88,7 @@ describe('<CompletionType />', () => {
     test('should call onSaveValue onChange', () => {
         jest.useFakeTimers()
 
-        render(
+        renderWithRouter(
             <CompletionType
                 {...requiredProps}
                 target = {13}
@@ -100,7 +111,7 @@ describe('<CompletionType />', () => {
     test('should call onSaveTarget onChange', () => {
         jest.useFakeTimers()
 
-        render(
+        renderWithRouter(
             <CompletionType
                 {...requiredProps}
                 completionType = 'NUMBER'
@@ -122,7 +133,7 @@ describe('<CompletionType />', () => {
     test('should handle onchange for binary completion type', () => {
         const onSaveValueMock = jest.fn()
 
-        render(
+        renderWithRouter(
             <CompletionType
                 {...requiredProps}
                 completionType = 'BINARY'
@@ -138,7 +149,7 @@ describe('<CompletionType />', () => {
     })
 
     test('should handle onchange for binary completion type', () => {
-        render(
+        renderWithRouter(
             <CompletionType
                 {...requiredProps}
                 completionType = 'BINARY'
@@ -153,7 +164,7 @@ describe('<CompletionType />', () => {
     })
 
     test('should throw error when type change isnt selected', () => {
-        render(<CompletionType {...requiredProps} completionType = 'NUMBER' hasEdit/>)
+        renderWithRouter(<CompletionType {...requiredProps} completionType = 'NUMBER' hasEdit/>)
 
         userEvent.click(screen.getByTestId('CloseIcon'))
 
@@ -161,7 +172,9 @@ describe('<CompletionType />', () => {
     })
 
     test('should handle onChangeType', () => {
-        render(<CompletionType {...requiredProps} completionType = 'NUMBER' onChangeType = {testMock} hasEdit/>)
+        renderWithRouter(
+            <CompletionType {...requiredProps} completionType = 'NUMBER' onChangeType = {testMock} hasEdit/>
+        )
 
         userEvent.click(screen.getByTestId('ArrowDropDownIcon'))
         userEvent.click(screen.getByText('Binary'))
