@@ -1,13 +1,16 @@
 import { AttachMoney, HelpOutline } from '@mui/icons-material'
 import { Autocomplete, Checkbox, Grid, TextField, Tooltip, Typography } from '@mui/material'
+import { SearchEpics } from 'Components/Search'
 import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router'
 import { selectCompletionTypes } from 'Redux/AppSettings/selectors'
 
 export const determineCompletionTypeData = (completionType, onChangeType, value, target) => {
     switch (completionType) {
+    case 'GITLAB_ISSUE':
     case 'BINARY': {
         onChangeType({
             completionType,
@@ -16,6 +19,7 @@ export const determineCompletionTypeData = (completionType, onChangeType, value,
         })
         break
     }
+    case 'GITLAB_EPIC':
     case 'PERCENTAGE': {
         const newValue = value < target ? (value / target * 100) : 100
 
@@ -63,7 +67,6 @@ function TypeTextField({ inputValue, onChange, disabled, label, showMoneyAdornme
 
     return (
         <TextField
-            fullWidth
             variant = 'outlined'
             size = 'small'
             label = {label}
@@ -90,7 +93,7 @@ function TargetType({ type, inputValue, onChange, disabled }) {
 
     if (['NUMBER', 'MONEY'].includes(type)) {
         return (
-            <div style = {{ marginLeft: '8px' }}>
+            <Grid item xs zeroMinWidth>
                 <TypeTextField
                     disabled = {disabled}
                     inputValue = {inputValue}
@@ -99,7 +102,7 @@ function TargetType({ type, inputValue, onChange, disabled }) {
                     showMoneyAdornment = {type === 'MONEY'}
                     title = 'Target value required for completion'
                 />
-            </div>
+            </Grid>
         )
     }
 
@@ -107,41 +110,62 @@ function TargetType({ type, inputValue, onChange, disabled }) {
 }
 
 function ValueType({ type, inputValue, onChange, disabled, max }) {
+    const { productId } = useParams()
 
-    if (['NUMBER', 'MONEY', 'PERCENTAGE'].includes(type)) {
+    switch (type) {
+    case 'NUMBER':
+    case 'MONEY':
+    case 'PERCENTAGE':
         return (
-            <TypeTextField
-                disabled = {disabled}
-                inputValue = {inputValue}
-                label = {`Value${type === 'PERCENTAGE' ? ' (%)' : ''}`}
-                onChange = {onChange}
-                showMoneyAdornment = {type === 'MONEY'}
-                title = 'Current progress towards completion'
-                max = {max}
-            />
-        )
-    }
-
-    if (type === 'BINARY') return (
-        <Grid container alignItems = 'baseline'>
-            <Grid item>
-                <label htmlFor = 'toggle'>
-                    <Typography variant = 'caption' color = 'secondary'>Complete</Typography>
-                </label>
-            </Grid>
-            <Grid item>
-                <Checkbox
-                    id = 'toggle'
+            <Grid item xs = 'auto'>
+                <TypeTextField
                     disabled = {disabled}
-                    checked = {inputValue === 1 ? true : false}
-                    size = 'small'
-                    onChange = {(e) => onChange(e.target.checked ? 1 : 0)}
+                    inputValue = {inputValue}
+                    label = {`Value${type === 'PERCENTAGE' ? ' (%)' : ''}`}
+                    onChange = {onChange}
+                    showMoneyAdornment = {type === 'MONEY'}
+                    title = 'Current progress towards completion'
+                    max = {max}
                 />
             </Grid>
-        </Grid>
-    )
-    return null
-
+        )
+    case 'BINARY':
+        return (
+            <Grid container alignItems = 'baseline' alignContent = 'center' paddingLeft = {2}>
+                <Grid item>
+                    <label htmlFor = 'toggle'>
+                        <Typography variant = 'caption' color = 'secondary'>Complete</Typography>
+                    </label>
+                </Grid>
+                <Grid item>
+                    <Checkbox
+                        id = 'toggle'
+                        disabled = {disabled}
+                        checked = {inputValue === 1 ? true : false}
+                        size = 'small'
+                        onChange = {(e) => onChange(e.target.checked ? 1 : 0)}
+                    />
+                </Grid>
+            </Grid>
+        )
+    case 'GITLAB_EPIC':
+        return (
+            <Grid item minWidth = {300} style = {{ flexGrow: 1 }}>
+                <SearchEpics
+                    defaultSearchTerms = {'product.id:' + productId}
+                    textFieldProps = {{
+                        variant: 'outlined',
+                        size: 'small',
+                        label: 'Select Epic',
+                        placeholder: 'Search product epics by title',
+                    }}
+                />
+            </Grid>
+        )
+    case 'GITLAB_ISSUE':
+    default:
+        return null
+    }
 }
 
 export default function CompletionType({
@@ -166,22 +190,23 @@ export default function CompletionType({
         determineCompletionTypeData(selectedOption?.name, onChangeType, value, target)
     }
 
+
     return (
-        <Grid container flexWrap = 'nowrap'>
-            <Grid item minWidth = '165px' marginRight = {1} style = {{ flexGrow: 1 }}>
+        <Grid container spacing = {1} style = {{ marginLeft: '-8px', marginBottom: 0 }}>
+            <Grid item xs marginBottom = {1} minWidth = '175px' maxWidth = '225px'>
                 <Autocomplete
                     freeSolo
                     autoComplete
                     forcePopupIcon = {hasEdit}
                     disabled = {!hasEdit}
                     getOptionLabel = {(option) => option.displayName}
-                    options = {Object.values(completionTypes).filter(cType => cType.name !== 'STRING')}
+                    options = {Object.values(completionTypes)
+                        .filter(cType => !['GITLAB_ISSUE', 'GITLAB_EPIC'].includes(cType.name))}
                     value = {renderedOption}
                     onChange = {onChangeDropdown}
                     renderInput = {(params) =>
                         <TextField
                             {...params}
-                            fullWidth
                             label = 'Completion Type'
                             error = {error?.length > 0}
                             helperText = {error}
@@ -191,7 +216,7 @@ export default function CompletionType({
                     }
                 />
             </Grid>
-            <Grid item marginLeft = 'auto'>
+            <Grid item container xs = 'auto' spacing = {1} style = {{ maxWidth: 'fit-content' }}>
                 <ValueType
                     type = {renderedOption?.name}
                     onChange = {(values) => onSaveValue(values)}
@@ -199,8 +224,6 @@ export default function CompletionType({
                     max = {target}
                     disabled = {!hasEdit}
                 />
-            </Grid>
-            <Grid item zeroMinWidth>
                 <TargetType
                     type = {renderedOption?.name}
                     onChange = {(values) => onSaveTarget(values)}

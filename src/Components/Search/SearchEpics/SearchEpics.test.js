@@ -31,7 +31,7 @@ describe('<SearchEpics>', () => {
         expect(await screen.findByPlaceholderText('Link epics by title or product name')).toBeInTheDocument()
     })
 
-    test('should call onChange', async() => {
+    test('should call onChange & searchEpics API', async() => {
         jest.useFakeTimers()
 
         await waitFor(() => {
@@ -43,12 +43,8 @@ describe('<SearchEpics>', () => {
 
         act(() => {
             userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
-        })
-
-        act(() => {
             jest.runAllTimers()
         })
-
 
         expect(await screen.findByText('titleA')).toBeInTheDocument()
         expect(screen.getByText('product1')).toBeInTheDocument()
@@ -58,7 +54,36 @@ describe('<SearchEpics>', () => {
 
         expect(onChangeMock.mock.calls[0][1]).toEqual([{ ...mockResponse[0], productName: 'product1' }])
         expect(requestFetchSearchEpicsMock)
-            .toHaveBeenLastCalledWith('title:*A* OR product.name:*A* AND state!closed')
+            .toHaveBeenLastCalledWith('title:*A* OR product.name:*A*')
+        jest.useRealTimers()
+    })
+
+    test('should handle search params', async() => {
+        jest.useFakeTimers()
+
+        await waitFor(() => {
+            useDispatchMock().mockResolvedValue({ type: '/', payload: mockResponse })
+        })
+
+        render(
+            <SearchEpics
+                onChange = {jest.fn()}
+                excludeClosed
+                defaultSearchTerms = 'foobar'
+            />, { initialState: mockStore }
+        )
+
+        act(() => {
+            userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
+        })
+        act(() => {
+            jest.runAllTimers()
+        })
+
+        expect(await screen.findByText('titleA')).toBeInTheDocument()
+
+        expect(requestFetchSearchEpicsMock)
+            .toHaveBeenLastCalledWith('state!closed AND title:*A* OR product.name:*A* AND foobar')
         jest.useRealTimers()
     })
 
