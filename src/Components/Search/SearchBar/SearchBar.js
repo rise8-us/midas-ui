@@ -54,6 +54,9 @@ function SearchBar({
     const [isLoading, setIsLoading] = useState(false)
     const [focus, setFocus] = useState(false)
 
+    const unsupportedOutlinedVariantProps = {}
+    textFieldProps.variant !== 'outlined' && (unsupportedOutlinedVariantProps.disableUnderline = disableUnderline)
+
     const onFocus = () => setFocus(true)
     const onBlur = () => setFocus(false)
 
@@ -101,8 +104,8 @@ function SearchBar({
                         ),
                         style: { fontSize: inputFontSize },
                         startAdornment: displayOnSearchAdornment(displayOnSearch, focus, startAdornment),
-                        disableUnderline,
                         'data-testid': inputDataTestId,
+                        ...unsupportedOutlinedVariantProps
                     }}
                 />
             )}
@@ -131,7 +134,8 @@ SearchBar.propTypes = {
     startAdornment: PropTypes.node,
     textFieldProps: PropTypes.shape({
         label: PropTypes.string,
-        placeholder: PropTypes.string
+        placeholder: PropTypes.string,
+        variant: PropTypes.oneOf(['filled', 'outlined', 'standard'])
     }),
 }
 
@@ -151,7 +155,8 @@ SearchBar.defaultProps = {
     startAdornment: <Search />,
     textFieldProps: {
         label: undefined,
-        placeholder: undefined
+        placeholder: undefined,
+        variant: 'standard'
     },
 }
 

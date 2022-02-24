@@ -140,6 +140,8 @@ export function selectCompletionTypesMock() {
         PERCENTAGE: { name: 'PERCENTAGE', displayName: 'Percentage', description: 'Percentage of completeness' },
         NUMBER: { name: 'NUMBER', displayName: 'Number', description: 'Numerical representation of completeness' },
         MONEY: { name: 'MONEY', displayName: 'Money', description: 'Monetary representation of completeness' },
+        GITLAB_EPIC: { name: 'GITLAB_EPIC', displayName: 'GitLab Epic', description: 'GitLab Epic' },
+        GITLAB_ISSUE: { name: 'GITLAB_ISSUE', displayName: 'GitLab Issue', description: 'GitLab Issue' },
     })
 }
 

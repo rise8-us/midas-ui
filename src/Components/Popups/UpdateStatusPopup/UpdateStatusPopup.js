@@ -46,7 +46,7 @@ export default function UpdateStatusPopup({ id, type }) {
                 [entityObj.idProp]: entity.id,
                 text: `${text}###${selectedStatus.name}`
             }))
-                .then(() => (dispatch(entityObj.requestUpdate(updatedOGSM))))
+                .then(() => dispatch(entityObj.requestUpdate(updatedOGSM)))
                 .then(() => dispatch(closePopup('UpdateStatusPopup')))
         } else {
             const statusError = selectedStatus === null

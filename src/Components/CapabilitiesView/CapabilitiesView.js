@@ -1,4 +1,4 @@
-import { Collapse, Divider, Stack, Typography } from '@mui/material'
+import { Box, Collapse, Divider, Stack, Typography } from '@mui/material'
 import { DeliverableWorkList } from 'Components/DeliverableWorkList'
 import { SearchEpics } from 'Components/Search'
 import React, { useMemo } from 'react'
@@ -19,18 +19,30 @@ export default function CapabilitiesView() {
     const deliverable = useSelector(state => selectDeliverableById(state, selectedDeliverableId))
     const children = useSelector(state => selectDeliverableByParentId(state, selectedDeliverableId))
 
-    const epicIds = useMemo(() => children.map(c => c.epicId), [children])
+    const epicIds = useMemo(() => children.map(c => c.completion.gitlabEpic?.id), [children])
+
+    const progress = useMemo(() => {
+        const accumulatedProgress = children.reduce((currentValues, child) => {
+            return {
+                value: currentValues.value + child.completion.value,
+                target: currentValues.target + child.completion.target,
+            }
+        }, { value: 0, target: 0 })
+        return accumulatedProgress.target > 0
+            ? Math.floor((accumulatedProgress.value / accumulatedProgress.target) * 100)
+            : 0
+    }, [children])
 
     const onSelectEpic = (_e, values, reason) => {
         reason === 'selectOption' && !epicIds.includes(values[0].id) && dispatch(requestCreateDeliverable({
             title: values[0].title,
             index: deliverable.children.length,
             productId: values[0].productId,
-            epicId: values[0].id,
             parentId: selectedDeliverableId,
             referenceId: 0,
-            releaseIds: [],
-            children: []
+            completion: {
+                gitlabEpicId: values[0].id
+            }
         })).then(() => {
             dispatch(enqueueMessage({
                 message: 'Linked ' + values[0].title + ' to deliverable: ' + deliverable.title,
@@ -49,9 +61,14 @@ export default function CapabilitiesView() {
     return (
         <Stack marginX = '8%' spacing = {1}>
             <Stack direction = 'row' justifyContent = 'space-between'>
-                <Typography variant = 'subtitle1'>{deliverable?.title?.toUpperCase()}</Typography>
+                <Typography variant = 'subtitle1' color = 'grey.400'>{deliverable?.title?.toUpperCase()}</Typography>
             </Stack>
             <Divider/>
+            <Box>
+                <Typography paddingY = {1}>
+                    Overall progress of currently scoped work is <b><u>{progress}</u>%</b> done.
+                </Typography>
+            </Box>
             <Collapse in = {hasEdit} collapsedSize = {0}>
                 <div style = {{ height: '32px', width: '100%' }}>
                     {hasEdit && <SearchEpics onChange = {onSelectEpic}/>}

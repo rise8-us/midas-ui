@@ -8,13 +8,7 @@ export default function DeliverableWorkList({ workList }) {
     return (
         <>
             {workList.map((child, index) => (
-                <DeliverableWorkEntry
-                    key = {index}
-                    id = {child.id}
-                    title = {child.title}
-                    epicId = {child.epicId}
-                    productId = {child.productId}
-                />
+                <DeliverableWorkEntry key = {index} id = {child.id}/>
             ))}
             {workList.length === 0 &&
                 <Typography
@@ -32,10 +26,7 @@ export default function DeliverableWorkList({ workList }) {
 
 DeliverableWorkList.propTypes = {
     workList: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number,
-        title: PropTypes.string,
-        epicId: PropTypes.number,
-        productId: PropTypes.number
+        id: PropTypes.number
     }))
 }
 

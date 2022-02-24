@@ -14,9 +14,7 @@ import { MeasureCard } from './index'
 jest.mock('Components/CompletionType/CompletionType', () => function testing(props) {
     return (
         <>
-            <div onClick = {() => props.onSaveValue(51)}>onSaveValue</div>
-            <div onClick = {() => props.onSaveTarget(101)}>onSaveTarget</div>
-            <div onClick = {() => props.onChangeType({ completionType: 'BINARY' })}>onChangeType</div>
+            <div onClick = {() => props.onChange({ foo: 'bar' })}>onChangeProp</div>
         </>
     )
 })
@@ -27,23 +25,28 @@ describe('<MeasureCard />', () => {
     const measure = {
         id: 1,
         text: 'Text',
-        completionType: 'BINARY',
         assertionId: 2,
         comments: [],
         children: [],
-        target: 1,
-        value: 0,
-        startDate: null,
-        dueDate: null,
-        completedAt: null,
+        completion: {
+            target: 1,
+            value: 0,
+            startDate: null,
+            dueDate: null,
+            completionType: 'BINARY',
+            completedAt: null,
+        }
     }
 
     const completedMeasure = {
         ...measure,
-        value: 1,
-        startDate: '2020-01-01',
-        dueDate: '2020-03-03',
-        completedAt: '2020-02-02T15:22:00',
+        completion: {
+            ...measure.completion,
+            value: 1,
+            startDate: '2020-01-01',
+            dueDate: '2020-03-03',
+            completedAt: '2020-02-02T15:22:00',
+        }
     }
 
     const selectMeasureByIdMock = useModuleMock('Redux/Measures/selectors', 'selectMeasureById')
@@ -77,56 +80,48 @@ describe('<MeasureCard />', () => {
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({ ...measure, text: 'Text Edit' })
     })
 
-    test('should update measure start date', () => {
+    test('should update start date', () => {
         selectMeasureByIdMock.mockReturnValue(completedMeasure)
 
         render(<MeasureCard id = {completedMeasure.id} hasEdit = {true} />)
 
         fireEvent.blur(screen.getByDisplayValue('01-01-2020'))
 
-        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, startDate: '2021-04-20' })
+        expect(requestUpdateMeasureMock).toBeCalledWith({
+            ...completedMeasure,
+            completion: {
+                ...completedMeasure.completion,
+                startDate: '2021-04-20'
+            }
+        })
     })
 
-    test('should update measure due date', () => {
+    test('should update due date', () => {
         selectMeasureByIdMock.mockReturnValue(completedMeasure)
 
         render(<MeasureCard id = {completedMeasure.id} hasEdit = {true} />)
 
         fireEvent.blur(screen.getByDisplayValue('03-03-2020'))
 
-        expect(requestUpdateMeasureMock).toBeCalledWith({ ...completedMeasure, dueDate: '2021-04-20' })
-    })
-
-    test('should update measure value', () => {
-        render(<MeasureCard id = {measure.id} hasEdit = {true} />)
-
-        fireEvent.click(screen.getByText('onSaveValue'))
-        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
-            ...measure,
-            value: 51,
-            children: []
+        expect(requestUpdateMeasureMock).toBeCalledWith({
+            ...completedMeasure,
+            completion: {
+                ...completedMeasure.completion,
+                dueDate: '2021-04-20'
+            }
         })
     })
 
-    test('should update measure target', () => {
+    test('should call Completion onChange()', () => {
         render(<MeasureCard id = {measure.id} hasEdit = {true} />)
 
-        fireEvent.click(screen.getByText('onSaveTarget'))
+        fireEvent.click(screen.getByText('onChangeProp'))
         expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
             ...measure,
-            target: 101,
-            children: []
-        })
-    })
-
-    test('should update measure completionType', () => {
-        render(<MeasureCard id = {measure.id} hasEdit = {true} />)
-
-        fireEvent.click(screen.getByText('onChangeType'))
-        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
-            ...measure,
-            completionType: 'BINARY',
-            children: []
+            completion: {
+                ...measure.completion,
+                foo: 'bar'
+            }
         })
     })
 

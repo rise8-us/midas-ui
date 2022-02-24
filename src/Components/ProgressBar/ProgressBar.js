@@ -36,7 +36,7 @@ export default function ProgressBar({
                         <HikingOutlined/>
                     </div>
                 }
-                {show &&
+                {show && progressValue < 100 &&
                     <Tooltip title = 'Today' placement = 'top' arrow>
                         <ArrowDropUp
                             style = {{

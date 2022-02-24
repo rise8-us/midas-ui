@@ -26,6 +26,8 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
     fontSize: '18px',
 }))
 
+const isManualOption = (option) => ['BINARY', 'PERCENTAGE', 'NUMBER', 'MONEY'].includes(option)
+
 const displayCompletedAt = (dateTime) => {
     const date = parseISO(dateTime).toString().split(' ')
 
@@ -75,13 +77,19 @@ export default function MeasureCard({ id, hasEdit, icon }) {
 
     const updateMeasure = (key, value) => {
         value !== measure[key] &&
-            dispatch(requestUpdateMeasure({ ...measure, children: [], [key]: value }))
+            dispatch(requestUpdateMeasure({ ...measure, [key]: value }))
                 .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
-    const updateCompletionType = (data) =>
-        dispatch(requestUpdateMeasure({ ...measure, children: [], ...data }))
-            .then(() => dispatch(enqueueMessage(ogsmRefactor)))
+    const updateMeasureCompletion = (data) => {
+        dispatch(requestUpdateMeasure({
+            ...measure,
+            completion: {
+                ...measure.completion,
+                ...data
+            }
+        }))
+    }
 
     return (
         <CollapsableCard
@@ -142,58 +150,57 @@ export default function MeasureCard({ id, hasEdit, icon }) {
             }
             footer = {
                 <ProgressBar
-                    value = {measure.value}
-                    target = {measure.target}
-                    onSaveTarget = {(v) => updateMeasure('target', v)}
-                    onSaveValue = {(v) => updateMeasure('value', v)}
+                    showPercent = {expanded}
+                    value = {measure.completion.value}
+                    target = {measure.completion.target}
                     hasEdit = {hasEdit}
-                    hasHover = {expanded}
                     overlayDate = {{
-                        end: measure.dueDate,
+                        end: measure.completion.dueDate,
                         show: true,
-                        start: measure.startDate
+                        start: measure.completion.startDate
                     }}
-                    progressCompleteComponent = {measure.completedAt
-                        ? () => <span>{ displayCompletedAt(measure.completedAt) }</span>
+                    progressCompleteComponent = {measure?.completion?.completedAt
+                        ? () => <span>{ displayCompletedAt(measure.completion.completedAt) }</span>
                         : undefined
                     }
-                    showPercent = {expanded}
                 />
             }
         >
-            <Grid container justifyContent = 'space-between' spacing = {2} paddingX = {2}>
-                <Grid item xs = {4}>
-                    <DateSelector
-                        label = 'Start Date'
-                        initialValue = {getDateInDisplayOrder(measure?.startDate)}
-                        onAccept = {(v) => updateMeasure('startDate', v)}
-                        hasEdit = {hasEdit}
-                    />
-                </Grid>
-                <Grid item xs = {4}>
-                    <DateSelector
-                        label = 'Due Date'
-                        minDate = {measure.startDate}
-                        initialValue = {getDateInDisplayOrder(measure?.dueDate)}
-                        onAccept = {(v) => updateMeasure('dueDate', v)}
-                        hasEdit = {measure.startDate && hasEdit}
-                    />
-                </Grid>
+            <Grid container justifyContent = 'space-between' marginBottom = {2} paddingX = {2}>
                 <Grid item xs = {12}>
                     {hasEdit &&
-                        <Stack spacing = {2} paddingBottom = {2}>
-                            <Divider />
+                        <Stack spacing = {1} paddingBottom = {1}>
                             <CompletionType
                                 hasEdit = {hasEdit}
-                                value = {measure.value}
-                                target = {measure.target}
-                                completionType = {measure.completionType}
-                                onSaveValue = {(v) => updateMeasure('value', v)}
-                                onSaveTarget = {(v) => updateMeasure('target', v)}
-                                onChangeType = {updateCompletionType}
+                                completion = {measure.completion}
+                                onChange = {updateMeasureCompletion}
                             />
+                            <Divider />
                         </Stack>
                     }
+                </Grid>
+                <Grid item container justifyContent = 'space-around'>
+                    <Grid item width = '96px'>
+                        <DateSelector
+                            label = 'Start Date'
+                            initialValue = {getDateInDisplayOrder(measure?.completion?.startDate)}
+                            onAccept = {startDate => updateMeasureCompletion({ startDate })}
+                            hasEdit = {isManualOption(measure.completion.completionType) && hasEdit}
+                        />
+                    </Grid>
+                    <Grid item width = '96px'>
+                        <DateSelector
+                            label = 'Due Date'
+                            minDate = {measure.completion.startDate}
+                            initialValue = {getDateInDisplayOrder(measure?.completion?.dueDate)}
+                            onAccept = {dueDate => updateMeasureCompletion({ dueDate })}
+                            hasEdit = {
+                                isManualOption(measure.completion.completionType) &&
+                                measure.completion.startDate &&
+                                hasEdit
+                            }
+                        />
+                    </Grid>
                 </Grid>
             </Grid>
             {openConfirmation && (
