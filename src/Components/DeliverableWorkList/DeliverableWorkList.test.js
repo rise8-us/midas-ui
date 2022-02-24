@@ -4,14 +4,14 @@ import { render, screen } from 'Utilities/test-utils'
 import { DeliverableWorkList } from './index'
 
 jest.mock('Components/DeliverableWorkEntry/DeliverableWorkEntry',
-    () => (function testing(props) { return (<div>{props.title}</div>) }))
+    () => (function testing(props) { return (<div>{props.id}</div>) }))
 
 describe('<DeliverableWorkList />', () => {
 
     test('should render with entry', () => {
-        render(<DeliverableWorkList workList = {[{ id: 1, productId: 2, epicId: 3, title: 'yolo' }]}/>)
+        render(<DeliverableWorkList workList = {[{ id: 1 }]}/>)
 
-        expect(screen.getByText('yolo')).toBeInTheDocument()
+        expect(screen.getByText('1')).toBeInTheDocument()
         expect(screen.queryByText(staticConstants.NO_DELIVERABLES_ASSIGNED)).not.toBeInTheDocument()
     })
 

@@ -21,7 +21,15 @@ describe('<CapabilitiesView>', () => {
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ data: { } })
-        selectDeliverableByIdMock.mockReturnValue({ title: 'deliverable parent title', epicId: 10, children: [] })
+        selectDeliverableByIdMock.mockReturnValue({
+            title: 'deliverable parent title',
+            children: [],
+            completion: {
+                gitlabEpic: {
+                    id: 20
+                }
+            }
+        })
         selectDeliverableByParentIdMock.mockReturnValue([])
         selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: 2 })
         selectCapabilitiesPagePermissionMock.mockReturnValue(false)
@@ -65,11 +73,11 @@ describe('<CapabilitiesView>', () => {
             title: 'epic title',
             index: 0,
             productId: 11,
-            epicId: 20,
+            completion: {
+                gitlabEpicId: 20
+            },
             parentId: 2,
-            referenceId: 0,
-            releaseIds: [],
-            children: []
+            referenceId: 0
         })
 
         await waitFor(() => {
@@ -82,7 +90,18 @@ describe('<CapabilitiesView>', () => {
 
     test('should handle input selection : already exists', () => {
         selectCapabilitiesPagePermissionMock.mockReturnValue(true)
-        selectDeliverableByParentIdMock.mockReturnValue([{ title: 'epic title', epicId: 20, productId: 1, id: 2 }])
+        selectDeliverableByParentIdMock.mockReturnValue([{
+            title: 'epic title',
+            productId: 1,
+            id: 2,
+            completion: {
+                value: 2,
+                target: 10,
+                gitlabEpic: {
+                    id: 20
+                }
+            }
+        }])
 
         renderWithRouter(<CapabilitiesView />)
 
