@@ -13,7 +13,7 @@ import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
-import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
+import { selectAssertionStatuses, selectCompletionTypes } from 'Redux/AppSettings/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actions'
 import { selectMeasureById } from 'Redux/Measures/selectors'
@@ -43,12 +43,15 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     const collapse = useRef(null)
 
     const allStatuses = useSelector(selectAssertionStatuses)
+    const allCompletionTypes = useSelector(selectCompletionTypes)
     const measure = useSelector((state) => selectMeasureById(state, id))
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [expanded, setExpanded] = useState(false)
 
     const status = allStatuses[measure.status] ?? { color: '#c3c3c3' }
+    const selectedCompletionType = allCompletionTypes[measure.completion.completionType]
+
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
     const handlePopupCancel = (event) => {
@@ -163,6 +166,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                         ? () => <span>{ displayCompletedAt(measure.completion.completedAt) }</span>
                         : undefined
                     }
+                    descriptor = {selectedCompletionType?.descriptor ? ` ${selectedCompletionType.descriptor}` : null}
                 />
             }
         >

@@ -1,5 +1,5 @@
 import { LinkOffOutlined } from '@mui/icons-material'
-import { Grid, IconButton, LinearProgress, Link, Stack, Tooltip, Typography } from '@mui/material'
+import { Box, Grid, IconButton, LinearProgress, Link, Stack, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +23,8 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }))
 
 const normalise = (value, target) => isNaN(value) && isNaN(target) ? 0 : (value / target) * 100
+
+const roundedPercent = (value, target) => (Math.round(normalise(value, target) * 100) / 100) + '% completed'
 
 const getTitle = (title, href) => {
     return href ? (
@@ -63,7 +65,7 @@ export default function DeliverableWorkEntry({ id }) {
                     <Tooltip
                         followCursor
                         disableInteractive
-                        title = {normalise(completion?.value, completion?.target) + '% completed'}
+                        title = {roundedPercent(completion?.value, completion?.target)}
                     >
                         {getTitle(deliverable.title, completion.gitlabEpic?.webUrl)}
                     </Tooltip>
@@ -86,13 +88,22 @@ export default function DeliverableWorkEntry({ id }) {
             <Tooltip
                 followCursor
                 disableInteractive
-                title = {normalise(completion?.value, completion?.target) + '% completed'}
+                title = {roundedPercent(completion?.value, completion?.target)}
             >
-                <LinearProgress
-                    variant = 'determinate'
-                    value = {normalise(completion?.value, completion?.target)}
-                    color = 'primary'
-                />
+                <Box display = 'flex' alignItems = 'center'>
+                    <Box minWidth = {35}>
+                        <Typography variant = 'body2' color = 'text.secondary'>
+                            {Math.floor(normalise(completion?.value, completion?.target)) + '%'}
+                        </Typography>
+                    </Box>
+                    <Box width = '100%' marginLeft = {1}>
+                        <LinearProgress
+                            variant = 'determinate'
+                            value = {normalise(completion?.value, completion?.target)}
+                            color = 'primary'
+                        />
+                    </Box>
+                </Box>
             </Tooltip>
         </Stack>
     )
