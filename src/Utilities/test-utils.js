@@ -136,12 +136,37 @@ export function selectAssertionStatusesMock() {
 export function selectCompletionTypesMock() {
     const enumSelectors = require('Redux/AppSettings/selectors')
     jest.spyOn(enumSelectors, 'selectCompletionTypes').mockReturnValue({
-        BINARY: { name: 'BINARY', displayName: 'Binary', description: 'Complete? true or false' },
-        PERCENTAGE: { name: 'PERCENTAGE', displayName: 'Percentage', description: 'Percentage of completeness' },
-        NUMBER: { name: 'NUMBER', displayName: 'Number', description: 'Numerical representation of completeness' },
-        MONEY: { name: 'MONEY', displayName: 'Money', description: 'Monetary representation of completeness' },
-        GITLAB_EPIC: { name: 'GITLAB_EPIC', displayName: 'GitLab Epic', description: 'GitLab Epic' },
-        GITLAB_ISSUE: { name: 'GITLAB_ISSUE', displayName: 'GitLab Issue', description: 'GitLab Issue' },
+        BINARY: { name: 'BINARY', displayName: 'Binary', description: 'Complete? true or false', descriptor: null },
+        PERCENTAGE: {
+            name: 'PERCENTAGE',
+            displayName: 'Percentage',
+            description: 'Percentage of completeness',
+            descriptor: null
+        },
+        NUMBER: {
+            name: 'NUMBER',
+            displayName: 'Number',
+            description: 'Numerical representation of completeness',
+            descriptor: null
+        },
+        MONEY: {
+            name: 'MONEY',
+            displayName: 'Money',
+            description: 'Monetary representation of completeness',
+            descriptor: null
+        },
+        GITLAB_EPIC: {
+            name: 'GITLAB_EPIC',
+            displayName: 'GitLab Epic',
+            description: 'GitLab Epic',
+            descriptor: 'total weight'
+        },
+        GITLAB_ISSUE: {
+            name: 'GITLAB_ISSUE',
+            displayName: 'GitLab Issue',
+            description: 'GitLab Issue',
+            descriptor: null
+        },
     })
 }
 

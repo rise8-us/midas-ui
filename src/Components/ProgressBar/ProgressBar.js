@@ -15,6 +15,7 @@ export default function ProgressBar({
     target,
     timeout,
     value,
+    descriptor
 }) {
 
     const { start, end, show } = overlayDate
@@ -55,13 +56,14 @@ export default function ProgressBar({
                 />
             </div>
             <Collapse in = {showPercent} timeout = {timeout} collapsedSize = {0}>
-                {progressCompleteComponent(progressValue, target, value)}
+                {progressCompleteComponent(progressValue, target, value, descriptor)}
             </Collapse>
         </Stack>
     )
 }
 
 ProgressBar.propTypes = {
+    descriptor: PropTypes.string,
     hasEdit: PropTypes.bool,
     overlayDate: PropTypes.shape({
         end: PropTypes.string,
@@ -79,6 +81,7 @@ ProgressBar.propTypes = {
 }
 
 ProgressBar.defaultProps = {
+    descriptor: null,
     hasEdit: false,
     hasHover: false,
     overlayDate: {
@@ -86,14 +89,14 @@ ProgressBar.defaultProps = {
         show: false,
         start: undefined,
     },
-    progressCompleteComponent: (percent, target, value) => (
+    progressCompleteComponent: (percent, target, value, descriptor) => (
         <Stack spacing = {1} direction = 'row' justifyContent = 'center'>
             <Typography variant = 'body2' color = 'primary'>
                 {`${percent}% Complete`}
             </Typography>
             {target > 1 &&
             <Typography variant = 'body2' color = 'text.secondary'>
-                ({value} / {target})
+                ({value} / {target}{descriptor})
             </Typography>
             }
         </Stack>

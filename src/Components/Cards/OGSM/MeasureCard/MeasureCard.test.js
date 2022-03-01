@@ -5,6 +5,7 @@ import {
     render,
     screen,
     selectAssertionStatusesMock,
+    selectCompletionTypesMock,
     useDispatchMock,
     useModuleMock,
     userEvent
@@ -57,12 +58,19 @@ describe('<MeasureCard />', () => {
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
         selectAssertionStatusesMock()
+        selectCompletionTypesMock()
         selectMeasureByIdMock.mockReturnValue(measure)
         requestUpdateMeasureMock.mockClear()
     })
 
     test('should render', () => {
-        selectMeasureByIdMock.mockReturnValue(completedMeasure)
+        selectMeasureByIdMock.mockReturnValue({
+            ...completedMeasure,
+            completion: {
+                ...completedMeasure.completion,
+                completionType: 'GITLAB_EPIC'
+            }
+        })
         render(<MeasureCard id = {completedMeasure.id} hasEdit = {false} />)
 
         userEvent.hover(screen.getByTestId('Collapsable__card'))

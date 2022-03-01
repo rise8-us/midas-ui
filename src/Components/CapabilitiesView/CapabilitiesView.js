@@ -66,7 +66,7 @@ export default function CapabilitiesView() {
             <Divider/>
             <Box>
                 <Typography paddingY = {1}>
-                    Overall progress of currently scoped work is <b><u>{progress}</u>%</b> done.
+                    <b>{progress}%</b> of currently scoped work is complete.
                 </Typography>
             </Box>
             <Collapse in = {hasEdit} collapsedSize = {0}>
