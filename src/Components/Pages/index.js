@@ -1,5 +1,6 @@
 export { Account } from './Account'
 export { Admin } from './Admin'
+export { AppMetrics } from './AppMetrics'
 export { Capabilities } from './Capabilities'
 export { Dashboard } from './Dashboard'
 export { PageNotFound } from './PageNotFound'
@@ -8,4 +9,3 @@ export { Product } from './Product'
 export { Products } from './Products'
 export { Projects } from './Projects'
 export { Tags } from './Tags'
-

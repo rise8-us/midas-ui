@@ -40,6 +40,7 @@ function App() {
                     <Route exact path = '/tags' component = {Pages.Tags} />
                     <Route exact path = '/capabilities' component = {Pages.Capabilities} />
                     {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}
+                    <Route exact path = '/appMetrics' component = {Pages.AppMetrics} />
                     <Route component = {Pages.PageNotFound} />
                 </Switch>
             </WebsocketProvider>

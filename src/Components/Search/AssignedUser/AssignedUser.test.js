@@ -3,6 +3,7 @@ import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from '
 import { AssignedUser } from './index'
 
 describe('<AssignedUser />', () => {
+    jest.setTimeout(15000)
 
     const selectUserByIdMock = useModuleMock('Redux/Users/selectors', 'selectUserById')
 

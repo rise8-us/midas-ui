@@ -35,7 +35,7 @@ export const getTodayAsPercentageInRange = (start, end) => {
     const total = Math.abs(getDifferenceInDays(start, end))
     const soFar = Math.abs(getDifferenceInDays(start, (new Date())))
 
-    return total > 0 ? (soFar / total) * 100 : 0
+    return total > 0 ? Math.floor((soFar / total) * 100) : 0
 }
 
 export const getIsDateInRange = (date, range) => {
