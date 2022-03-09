@@ -26,7 +26,6 @@ describe('<DateFilter>', () => {
         expect(screen.getByTestId('FilterAltOffOutlinedIcon')).toBeInTheDocument()
     })
 
-
     test('should render with filterByDate set', () => {
         render(<DateFilter {...defaultProps} filterByDate = 'startDate'/>)
 
