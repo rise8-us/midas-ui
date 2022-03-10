@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Page } from 'Components/Page'
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestGetUniqueLogonMetrics } from 'Redux/AppMetrics/actions'
 import { camelToCapitalCase } from 'Utilities/caseConversions'
@@ -27,19 +27,23 @@ RowEntry.defaultProps = {
 }
 
 const calculateAverageOverDays = (duration, appUserMetricsArray) => {
-    let daysAgo = new Date()
-    daysAgo.setDate(daysAgo.getDate() - duration)
+    let startIndex
+    let daysAgoDate
+    let i = 0
 
-    const thirtyDaysAgo = getDateInDatabaseOrder(daysAgo.toISOString())
-    const startIndex = appUserMetricsArray.findIndex(entry => entry.id === thirtyDaysAgo)
+    do {
+        let daysAgo = new Date()
+        daysAgo.setDate(daysAgo.getDate() - (duration - i))
+        daysAgoDate = getDateInDatabaseOrder(daysAgo.toISOString())
+        startIndex = appUserMetricsArray.findIndex(entry => entry.id === daysAgoDate)
+        i++
+    } while (i <= duration && startIndex === -1)
 
     const counts = appUserMetricsArray.slice(startIndex).reduce((curr, next) => {
         curr.uniqueLogins = curr.uniqueLogins + next.uniqueLogins
 
-
         Object.entries(next.uniqueRoleMetrics).forEach(([key, value]) => {
-            const prevTotal = curr[key] ?? 0
-            curr[key] = Number.parseInt(prevTotal) + Number.parseInt(value?.length)
+            curr[key] = (curr[key] ?? 0) + (value?.length ?? 0)
         })
 
         return curr
@@ -56,8 +60,6 @@ export default function AppMetrics() {
 
     const [rawData, setRawData] = useState([])
     const [loading, setLoading] = useState(true)
-    const last30Days = useMemo(() => calculateAverageOverDays(30, rawData), [rawData])
-    const last90Days = useMemo(() => calculateAverageOverDays(90, rawData), [rawData])
 
     const dispatch = useDispatch()
 
@@ -99,18 +101,17 @@ export default function AppMetrics() {
                         ))}
                     </Stack>
                     <Stack direction = 'row' justifyContent = 'space-evenly'>
-                        <Stack>
-                            <Typography variant = 'h6'>Avg Unique/Day last 30 Days</Typography>
-                            {Object.entries(last30Days).map(([key, value], index) => (
-                                <RowEntry key = {index} title = {camelToCapitalCase(key)} value = {value}/>
-                            ))}
-                        </Stack>
-                        <Stack>
-                            <Typography variant = 'h6'>Avg Unique/Day last 90 Days</Typography>
-                            {Object.entries(last90Days).map(([key, value], index) => (
-                                <RowEntry key = {index} title = {camelToCapitalCase(key)} value = {value}/>
-                            ))}
-                        </Stack>
+                        {[30, 60, 90].map((daysAgo, index) => {
+                            const data = calculateAverageOverDays(daysAgo, rawData)
+                            return (
+                                <Stack key = {index}>
+                                    <Typography variant = 'h6'>Avg Unique/Day last {daysAgo} Days</Typography>
+                                    {Object.entries(data).map(([key, value], idx) => (
+                                        <RowEntry key = {idx} title = {camelToCapitalCase(key)} value = {value}/>
+                                    ))}
+                                </Stack>
+                            )
+                        })}
                     </Stack>
                 </Box>
             }
