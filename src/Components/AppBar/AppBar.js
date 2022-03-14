@@ -1,22 +1,14 @@
-import { AccountCircle, Gavel, LocalOffer, Menu } from '@mui/icons-material'
-import { Button, Grid, IconButton, Tooltip, Typography } from '@mui/material'
-import MatterMostLogo from 'Assets/mattermostLogo.svg'
+import { AccountCircle, ContactSupportOutlined, Gavel, LocalOffer, Menu } from '@mui/icons-material'
+import { Button, Grid, IconButton, Typography } from '@mui/material'
 import MidasLogo from 'Assets/MidasLogo.svg'
 import { MoreOptionsPopperMenu } from 'Components/MoreOptionsPopperMenu'
 import { AppBarSearch } from 'Components/Search'
-import tooltipConstants from 'Constants/Tooltips'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { styled } from 'Styles/materialThemes'
 import { getRoot } from 'Utilities/queryParams'
-
-const ImgMattermostLogo = styled('img')(() => ({
-    cursor: 'pointer',
-    height: 26,
-    margin: 3
-}))
 
 const GridWrapStyled = styled(Grid)(({ theme }) => ({
     zIndex: 1000,
@@ -76,6 +68,23 @@ function AppBar() {
         }
     ]
 
+    const contactSupportOptions = [
+        {
+            text: 'Submit feedback',
+            link: 'https://chat.il2.dso.mil/midas/channels/feedback'
+        }, {
+            text: 'Request support',
+            link: 'https://chat.il2.dso.mil/midas/channels/support'
+        }, {
+            text: 'Report a bug',
+            link: 'https://chat.il2.dso.mil/midas/channels/bugs',
+            divider: true
+        }, {
+            text: 'Change log',
+            link: 'https://chat.il2.dso.mil/midas/channels/announcements'
+        }
+    ]
+
     return (
         <GridWrapStyled container alignItems = 'center' wrap = 'nowrap'>
             <Grid item style = {{ height: '18px' }} sx = {{ display: { xs: 'none', md: 'flex' } }}>
@@ -116,17 +125,19 @@ function AppBar() {
             <Grid item>
                 <AppBarSearch />
             </Grid>
-            <GridItemStyled item>
-                <Tooltip title = {tooltipConstants.MATTERMOST_LOGO} postion = 'bottom'>
-                    <a
-                        href = 'https://chat.il2.dso.mil/midas/channels/town-square'
-                        target = '_blank'
-                        rel = 'noreferrer'
-                        style = {{ display: 'flex' }}
-                    >
-                        <ImgMattermostLogo src = {MatterMostLogo}/>
-                    </a>
-                </Tooltip>
+            <GridItemStyled item marginLeft = {1}>
+                <MoreOptionsPopperMenu
+                    options = {contactSupportOptions}
+                    icon = {
+                        <IconButton
+                            color = 'secondary'
+                            size = 'small'
+                            title = 'contact midas support'
+                        >
+                            <ContactSupportOutlined />
+                        </IconButton>
+                    }
+                />
             </GridItemStyled>
             <GridItemStyled item>
                 <IconButton

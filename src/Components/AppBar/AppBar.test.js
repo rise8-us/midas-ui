@@ -99,6 +99,27 @@ describe('<AppBar />', () => {
 
         fireEvent.click(screen.getByText('Portfolios'))
         expect(history.location.pathname).toEqual('/portfolios')
+
+        fireEvent.click(screen.getByText('Capabilities'))
+        expect(history.location.pathname).toEqual('/capabilities')
+    })
+
+    test('should link to support channels', () => {
+        selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
+
+        renderWithRouter(<AppBar />)
+
+        fireEvent.click(screen.getByTestId('ContactSupportOutlinedIcon'))
+
+        expect(screen.getAllByTestId('MoreOptionsPopperMenu__link')).toHaveLength(4)
+        expect(screen.getByRole('link', { name: 'Submit feedback' }))
+            .toHaveAttribute('href', 'https://chat.il2.dso.mil/midas/channels/feedback')
+        expect(screen.getByRole('link', { name: 'Request support' }))
+            .toHaveAttribute('href', 'https://chat.il2.dso.mil/midas/channels/support')
+        expect(screen.getByRole('link', { name: 'Report a bug' }))
+            .toHaveAttribute('href', 'https://chat.il2.dso.mil/midas/channels/bugs')
+        expect(screen.getByRole('link', { name: 'Change log' }))
+            .toHaveAttribute('href', 'https://chat.il2.dso.mil/midas/channels/announcements')
     })
 
 })
