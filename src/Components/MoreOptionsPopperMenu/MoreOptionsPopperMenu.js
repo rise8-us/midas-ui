@@ -1,5 +1,5 @@
 import { MoreVert } from '@mui/icons-material'
-import { Card, ClickAwayListener, IconButton, Popper, Typography } from '@mui/material'
+import { Card, ClickAwayListener, Divider, IconButton, Link, Popper, Typography } from '@mui/material'
 import { alpha } from '@mui/system'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
@@ -18,11 +18,20 @@ const DivOption = styled('div')(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '180px',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     border: '1px solid',
-    borderColor: alpha(theme.palette.text.primary, .04),
+    borderColor: alpha(theme.palette.text.primary, .05),
     boxShadow: '0 0 24px 0 #00000088'
 }))
+
+function RowOption({ color, text, icon }) {
+    return (
+        <>
+            <Typography style = {{ color }}>{text}</Typography>
+            {icon}
+        </>
+    )
+}
 
 function MoreOptionsPopperMenu({ options, icon }) {
 
@@ -51,16 +60,36 @@ function MoreOptionsPopperMenu({ options, icon }) {
             >
                 <ClickAwayListener onClickAway = {togglePopper}>
                     <StyledCard>
-                        {options.map((option) => (
-                            <DivOption
-                                key = {option.text}
-                                onClick = {(e) => handleOptionClick(e, option.onClick)}
-                            >
-                                <Typography style = {{ color: option.color }}>
-                                    {option.text}
-                                </Typography>
-                                {option.icon}
-                            </DivOption>
+                        {options.map((option, key) => (
+                            <React.Fragment key = {key}>
+                                <DivOption onClick = {(e) => handleOptionClick(e, option.onClick)}>
+                                    {option.link ?
+                                        <Link
+                                            href = {option.link}
+                                            target = '_blank'
+                                            rel = 'noreferrer'
+                                            underline = 'none'
+                                            color = 'text.primary'
+                                            data-testid = 'MoreOptionsPopperMenu__link'
+                                        >
+                                            <RowOption
+                                                color = {option.color}
+                                                text = {option.text}
+                                                icon = {option.icon}
+                                            />
+                                        </Link>
+                                        :
+                                        <RowOption
+                                            color = {option.color}
+                                            text = {option.text}
+                                            icon = {option.icon}
+                                        />
+                                    }
+                                </DivOption>
+                                {option.divider &&
+                                    <Divider sx = {{ marginY: 1 }} data-testid = 'MoreOptionsPopperMenu__divider'/>
+                                }
+                            </React.Fragment>
                         ))}
                     </StyledCard>
                 </ClickAwayListener>
@@ -71,22 +100,37 @@ function MoreOptionsPopperMenu({ options, icon }) {
 
 MoreOptionsPopperMenu.propTypes = {
     options: PropTypes.arrayOf(PropTypes.shape({
+        color: PropTypes.string,
+        divider: PropTypes.bool,
+        href: PropTypes.string,
         icon: PropTypes.node,
-        text: PropTypes.string,
         onClick: PropTypes.func,
-        color: PropTypes.string
+        text: PropTypes.string,
     })),
     icon: PropTypes.node
 }
 
 MoreOptionsPopperMenu.defaultProps = {
     options: [{
+        color: 'inherit',
+        divider: false,
+        href: undefined,
         icon: undefined,
-        text: 'No options',
         onClick: undefined,
-        color: 'inherit'
+        text: 'No options',
     }],
     icon: <IconButton color = 'secondary' size = 'small' title = 'more'><MoreVert /></IconButton>
+}
+
+RowOption.propTypes = {
+    color: PropTypes.string,
+    icon: PropTypes.node,
+    text: PropTypes.string
+}
+RowOption.defaultProps = {
+    color: 'inherit',
+    icon: undefined,
+    text: 'No options'
 }
 
 export default MoreOptionsPopperMenu

@@ -29,4 +29,17 @@ describe('<MoreOptionsPopperMenu>', () => {
         expect(onClickMock).toHaveBeenCalled()
     })
 
+    test('should render link and divider', () => {
+        render(<MoreOptionsPopperMenu
+            options = {[
+                { text: 'test', link: 'www.google.com', divider: true }
+            ]}
+        />)
+
+        fireEvent.click(screen.getByTitle('more'))
+
+        expect(screen.getByTestId('MoreOptionsPopperMenu__link')).toHaveAttribute('href', 'www.google.com')
+        expect(screen.getByTestId('MoreOptionsPopperMenu__divider')).toBeInTheDocument()
+    })
+
 })
