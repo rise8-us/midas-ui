@@ -23,19 +23,16 @@ export const getDateInDatabaseOrder = (dateString) => {
 
 export const getDifferenceInDays = (start, end) => {
     if (!start || !end) return 0
-
     const startDate = Date.parse(start)
     const endDate = Date.parse(end)
-
     return (endDate - startDate) / (1000 * 3600 * 24)
 }
 
+
 export const getTodayAsPercentageInRange = (start, end) => {
-
     const total = Math.abs(getDifferenceInDays(start, end))
-    const soFar = Math.abs(getDifferenceInDays(start, (new Date())))
-
-    return total > 0 ? Math.floor((soFar / total) * 100) : 0
+    const soFar = Math.abs(getDifferenceInDays(start, new Date()))
+    return total > 0 ? Math.round((soFar / total) * 100) : 0
 }
 
 export const getIsDateInRange = (date, range) => {

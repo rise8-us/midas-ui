@@ -1,14 +1,12 @@
 import { AddCircleOutline, BarChart } from '@mui/icons-material'
 import { CircularProgress, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { MeasureCard } from 'Components/Cards/OGSM/MeasureCard'
-import { ogsmRefactor } from 'Constants/FeatureMessages'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateMeasure, requestSearchMeasures } from 'Redux/Measures/actions'
 import { selectMeasureIdsByAssertionId } from 'Redux/Measures/selectors'
-import { enqueueMessage } from 'Redux/Snackbar/reducer'
 
 export default function MeasuresContainer({ assertionId, hasEdit }) {
 
@@ -27,7 +25,6 @@ export default function MeasuresContainer({ assertionId, hasEdit }) {
             assertionId,
             completionType: 'BINARY'
         })).then(() => setAdding(false))
-            .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
     useEffect(() => {

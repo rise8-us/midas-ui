@@ -1,13 +1,11 @@
 import { AddCircleOutline } from '@mui/icons-material'
 import { CircularProgress, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { ogsmRefactor } from 'Constants/FeatureMessages'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
-import { enqueueMessage } from 'Redux/Snackbar/reducer'
 
 const defaultAssertionData = (type, pId) => ({
     text: `Enter new ${type} here...`,
@@ -49,7 +47,6 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
                 setAdding(false)
                 onCreate()
             })
-            .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
     return (
