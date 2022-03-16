@@ -8,7 +8,6 @@ import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { AssignedUser } from 'Components/Search'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
-import { ogsmRefactor } from 'Constants/FeatureMessages'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,7 +20,6 @@ import {
 } from 'Redux/Assertions/actions'
 import { selectAssertionById } from 'Redux/Assertions/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
-import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
@@ -78,7 +76,6 @@ function ObjectiveCard({ id, hasEdit }) {
     const updateObjective = (key, value) => {
         value !== objective[key] &&
             dispatch(requestUpdateAssertion({ ...objective, children: [], [key]: value }))
-                .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
     const archiveObjective = () => dispatch(requestArchiveAssertion({ id, isArchived: !objective.isArchived }))

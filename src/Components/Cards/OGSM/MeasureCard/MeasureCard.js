@@ -7,7 +7,6 @@ import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
 import { ProgressBar } from 'Components/ProgressBar'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
-import { ogsmRefactor } from 'Constants/FeatureMessages'
 import { parseISO } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useRef, useState } from 'react'
@@ -17,7 +16,6 @@ import { selectAssertionStatuses, selectCompletionTypes } from 'Redux/AppSetting
 import { requestSearchComments } from 'Redux/Comments/actions'
 import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actions'
 import { selectMeasureById } from 'Redux/Measures/selectors'
-import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { styled } from 'Styles/materialThemes'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
@@ -81,7 +79,6 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     const updateMeasure = (key, value) => {
         value !== measure[key] &&
             dispatch(requestUpdateMeasure({ ...measure, [key]: value }))
-                .then(() => dispatch(enqueueMessage(ogsmRefactor)))
     }
 
     const updateMeasureCompletion = (data) => {
