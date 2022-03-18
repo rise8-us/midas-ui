@@ -59,8 +59,8 @@ export default function DateRangeSelector(props) {
     const [endDate, setEndDate] = useState(initialEnd)
 
     const onChange = ([newStart, newEnd]) => {
-        setStartDate(newStart)
-        setEndDate(newEnd)
+        setStartDate(newStart?.toISOString())
+        setEndDate(newEnd?.toISOString())
     }
 
     useEffect(() => {

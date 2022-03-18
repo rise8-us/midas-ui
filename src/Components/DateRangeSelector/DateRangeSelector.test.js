@@ -25,8 +25,8 @@ describe('<DateRangeSelector />', () => {
         fireEvent.click(screen.getByLabelText('Next month'))
         fireEvent.click(screen.getByLabelText('Feb 1, 2020'))
 
-        expect(mockOnSelect.mock.calls[0][0].toISOString()).toMatch(/2020-02-01/)
-        expect(mockOnSelect.mock.calls[0][1].toISOString()).toMatch(/2020-12-31/)
+        expect(mockOnSelect.mock.calls[0][0]).toMatch(/2020-02-01/)
+        expect(mockOnSelect.mock.calls[0][1]).toMatch(/2020-12-31/)
     })
 
     test('should clear both inputs', async() => {
