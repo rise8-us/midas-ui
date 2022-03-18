@@ -1,6 +1,6 @@
 import { Box, Checkbox, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export default function TooltipOptions({ title, width, onChange, multiple, options }) {
 

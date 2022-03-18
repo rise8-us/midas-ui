@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen, useDispatchMock, waitFor } from 'Utilities/test-utils'
 import { AppMetrics } from './index'
 

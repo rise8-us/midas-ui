@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen } from 'Utilities/test-utils'
 import { SonarqubeIndicator } from './index'
 

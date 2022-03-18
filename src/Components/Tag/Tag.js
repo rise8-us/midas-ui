@@ -1,7 +1,6 @@
 import { Cancel } from '@mui/icons-material'
 import { Chip, Tooltip, useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 const generateLabel = (label, scope) => {
     if (scope) return `${scope} | ${label}`

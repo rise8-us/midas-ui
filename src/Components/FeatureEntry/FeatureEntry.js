@@ -1,7 +1,7 @@
 import { CheckCircleOutlined } from '@mui/icons-material'
 import { DraggableRow } from 'Components/Draggable'
 import PropTypes from 'prop-types'
-import React from 'react'
+
 
 function FeatureEntry({ title, hasEdit, onUpdate, onDelete }) {
 

@@ -1,6 +1,5 @@
 import { Box, CircularProgress, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 function CircularStatus(props) {
 
     const { title, titleAdornment, variant, value, displayValue, size, tooltip, interactive, ...more } = props

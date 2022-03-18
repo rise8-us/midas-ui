@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen, selectRoadmapStatusesMock } from 'Utilities/test-utils'
 import { ProductRoadmapHeader } from './index'
 

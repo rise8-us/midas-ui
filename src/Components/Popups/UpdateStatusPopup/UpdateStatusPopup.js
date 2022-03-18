@@ -1,7 +1,7 @@
 import { Autocomplete, Stack, TextField } from '@mui/material'
 import { Popup } from 'Components/Popup'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { requestUpdateAssertion } from 'Redux/Assertions/actions'

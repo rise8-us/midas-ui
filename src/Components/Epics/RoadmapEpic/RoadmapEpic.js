@@ -5,7 +5,7 @@ import { alpha, Grid, IconButton, Link, SvgIcon, Typography, useTheme } from '@m
 import { ReactComponent as GitLabLogo } from 'Assets/gitlabLogo.svg'
 import MonthNames from 'Constants/MonthNames'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRoadmapStatuses } from 'Redux/AppSettings/selectors'
 import { requestHideEpic } from 'Redux/Epics/actions'

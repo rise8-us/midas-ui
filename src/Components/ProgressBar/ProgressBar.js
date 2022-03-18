@@ -1,7 +1,6 @@
 import { ArrowDropUp, HikingOutlined } from '@mui/icons-material'
 import { Collapse, LinearProgress, Stack, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { getTodayAsPercentageInRange } from 'Utilities/dateHelpers'
 import { getNumberOrZero } from 'Utilities/getNumberOrZero'
 

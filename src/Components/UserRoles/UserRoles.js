@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, FormControlLabel, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRolesAsArray } from 'Redux/AppSettings/selectors'
 import { requestUpdateUserRoles } from 'Redux/Users/actions'

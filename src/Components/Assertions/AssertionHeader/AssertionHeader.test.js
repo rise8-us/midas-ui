@@ -1,4 +1,3 @@
-import React from 'react'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import { AssertionHeader } from './index'
 

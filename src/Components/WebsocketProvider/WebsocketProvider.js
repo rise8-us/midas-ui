@@ -1,6 +1,6 @@
 import { Stomp } from '@stomp/stompjs'
 import PropTypes from 'prop-types'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInitialized } from 'Redux/AppSettings/reducer'
 import assertionSubscriptions from 'Redux/Assertions/subscriptions'

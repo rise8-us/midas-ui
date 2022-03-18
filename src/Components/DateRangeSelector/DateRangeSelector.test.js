@@ -1,4 +1,3 @@
-import React from 'react'
 import { fireEvent, render, screen, userEvent, waitForElementToBeRemoved } from 'Utilities/test-utils'
 import { DateRangeSelector } from './index'
 

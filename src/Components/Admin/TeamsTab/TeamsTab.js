@@ -1,7 +1,6 @@
 import { Add, Archive, Unarchive } from '@mui/icons-material'
 import { Box, Button, IconButton } from '@mui/material'
 import { Table } from 'Components/Table'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestArchiveTeam } from 'Redux/Teams/actions'

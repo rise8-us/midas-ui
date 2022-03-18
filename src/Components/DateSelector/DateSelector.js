@@ -3,7 +3,7 @@ import DateAdapter from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { TextField } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getDateIfValid, getDateInDatabaseOrder, getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
 export default function DateSelector({

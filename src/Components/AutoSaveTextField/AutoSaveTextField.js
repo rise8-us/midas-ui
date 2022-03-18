@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import { LabelTooltip } from 'Components/LabelTooltip'
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import FormatErrors from 'Utilities/FormatErrors'
 import { getTextWidth } from 'Utilities/textHelpers'
 

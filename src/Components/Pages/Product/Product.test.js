@@ -1,4 +1,3 @@
-import React from 'react'
 import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Product } from './index'
 

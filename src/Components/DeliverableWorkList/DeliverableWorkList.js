@@ -2,7 +2,6 @@ import { Typography } from '@mui/material'
 import { DeliverableWorkEntry } from 'Components/DeliverableWorkEntry'
 import staticConstants from 'Constants/Statics'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 export default function DeliverableWorkList({ workList }) {
     return (

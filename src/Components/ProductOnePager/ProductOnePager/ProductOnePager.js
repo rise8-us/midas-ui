@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material'
 import { ProductDetails, ProductEpicsRoadmap, ProductHeader, ProductUserPersonas } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestFetchEpicsByProductId } from 'Redux/Epics/actions'
 import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'

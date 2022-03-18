@@ -2,7 +2,7 @@ import { Grid } from '@mui/material'
 import { CapabilitiesView } from 'Components/CapabilitiesView'
 import { CapabilitiesSidebar } from 'Components/Cards'
 import { Page } from 'Components/Page'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestSearchCapabilities } from 'Redux/Capabilities/actions'
 

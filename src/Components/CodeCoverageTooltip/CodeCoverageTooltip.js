@@ -2,7 +2,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined } from '@mui/icons-material'
 import { Box, IconButton, Link, Skeleton, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestSearchCoverages } from 'Redux/Coverages/actions'
 

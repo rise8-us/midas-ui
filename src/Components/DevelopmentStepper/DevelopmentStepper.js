@@ -4,7 +4,6 @@ import { ReactComponent as CTFCertificate } from 'Assets/ctf.svg'
 import { ReactComponent as GitlabPipeline } from 'Assets/gitlab.svg'
 import { ReactComponent as JiraLogo } from 'Assets/jiraLogo.svg'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 function StepIcons({ index, completed }) {
     const theme = useTheme()

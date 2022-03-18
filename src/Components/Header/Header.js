@@ -1,6 +1,5 @@
 import { Grid, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { styled } from 'Styles/materialThemes'
 
 const GridStyled = styled(Grid)(({ theme }) => ({

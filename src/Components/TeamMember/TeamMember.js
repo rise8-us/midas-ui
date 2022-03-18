@@ -1,7 +1,7 @@
 import { Grid, Tooltip, Typography } from '@mui/material'
 import { UserDetails } from 'Components/UserDetails'
 import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchOneUser } from 'Redux/Users/actions'
 import { selectUserById } from 'Redux/Users/selectors'

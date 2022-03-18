@@ -3,7 +3,7 @@ import { Grid, IconButton, Tooltip } from '@mui/material'
 import { alpha } from '@mui/system'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { styled } from 'Styles/materialThemes'
 
 const StyledAutoSaveTextField = styled(AutoSaveTextField)(({ theme }) => ({

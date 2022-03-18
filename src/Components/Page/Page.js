@@ -1,6 +1,5 @@
 import { AppBar } from 'Components/AppBar'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageScrollY } from 'Redux/AppSettings/reducer'
 import { scrollbar, styled } from 'Styles/materialThemes'

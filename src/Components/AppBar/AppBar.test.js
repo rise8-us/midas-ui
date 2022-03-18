@@ -1,5 +1,4 @@
 import { createMemoryHistory } from 'history'
-import React from 'react'
 import {
     fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
 } from 'Utilities/test-utils'

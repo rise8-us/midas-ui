@@ -1,7 +1,7 @@
 import { Chip, Grid } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { requestUpdateProduct } from 'Redux/Products/actions'

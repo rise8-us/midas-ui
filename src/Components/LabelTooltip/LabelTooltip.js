@@ -1,7 +1,6 @@
 import { HelpOutline } from '@mui/icons-material'
 import { Grid, Icon, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 function LabelTooltip({ text, iconFontSize, typographyProps, tooltipProps }) {
 

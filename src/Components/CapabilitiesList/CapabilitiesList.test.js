@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { CapabilitiesList } from './index'
 

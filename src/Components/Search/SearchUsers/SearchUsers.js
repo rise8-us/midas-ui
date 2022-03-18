@@ -2,7 +2,7 @@ import { Search } from '@mui/icons-material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { SearchBar } from 'Components/Search'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestFindUserBy } from 'Redux/Users/actions'
 

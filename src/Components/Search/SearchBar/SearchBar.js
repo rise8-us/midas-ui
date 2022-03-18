@@ -2,7 +2,7 @@ import { Search } from '@mui/icons-material'
 import { Autocomplete, CircularProgress, TextField } from '@mui/material'
 import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { styled } from 'Styles/materialThemes'
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme, growfrom, growto }) => ({

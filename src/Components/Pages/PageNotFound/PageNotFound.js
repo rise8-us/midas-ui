@@ -1,6 +1,5 @@
 import { Box, Link, Typography } from '@mui/material'
 import { Page } from 'Components/Page'
-import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 function PageNotFound() {

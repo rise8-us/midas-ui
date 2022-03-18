@@ -1,7 +1,7 @@
 import { Collapse } from '@mui/material'
 import { DraggableRow } from 'Components/Draggable'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCapabilityPage } from 'Redux/AppSettings/reducer'
 import { selectCapabilityPageSettings } from 'Redux/AppSettings/selectors'

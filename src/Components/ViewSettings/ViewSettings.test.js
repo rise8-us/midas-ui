@@ -1,4 +1,3 @@
-import React from 'react'
 import { fireEvent, render, screen, userEvent } from 'Utilities/test-utils'
 import { ViewSettings } from './index'
 
