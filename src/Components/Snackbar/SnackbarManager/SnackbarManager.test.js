@@ -1,4 +1,3 @@
-import React from 'react'
 import { act, fireEvent, render, screen, useDispatchMock, useModuleMock, useSelectorMock } from 'Utilities/test-utils'
 import { SnackbarManager } from './index'
 

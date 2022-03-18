@@ -1,4 +1,3 @@
-import React from 'react'
 import TagConstants from 'Redux/Tags/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import { Tags } from './index'

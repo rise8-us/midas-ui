@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import { ProjectCard } from 'Components/Cards'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from 'Redux/Popups/actions'
 import ProductConstants from 'Redux/Products/constants'

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectOpenPopups } from 'Redux/Popups/selectors'
 

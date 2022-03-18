@@ -4,7 +4,6 @@ import { ReactComponent as CTFCertificate } from 'Assets/ctf.svg'
 import { ReactComponent as GitlabPipeline } from 'Assets/gitlab.svg'
 import { ReactComponent as P1Logo } from 'Assets/Logo_P1_Yodahead.svg'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { PieChart } from '../PieChart'
 
 function StepIcons({ index }) {

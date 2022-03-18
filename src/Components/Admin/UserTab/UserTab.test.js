@@ -1,4 +1,3 @@
-import React from 'react'
 import { act, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { UserTab } from './index'
 

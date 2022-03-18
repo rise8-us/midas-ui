@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { selectAssertionById } from 'Redux/Assertions/selectors'

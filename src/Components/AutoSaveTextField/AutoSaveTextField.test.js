@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { AutoSaveTextField } from './index'
 

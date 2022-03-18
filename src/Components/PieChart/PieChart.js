@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import React from 'react'
 import { PieChart as ReactMinimalPieChart } from 'react-minimal-pie-chart'
 
 function PieChart({ size, data, label, ...PieChartProps }) {

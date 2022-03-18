@@ -1,6 +1,5 @@
 import { Stack, Typography } from '@mui/material'
 import Capability from 'Components/Capability/Capability'
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectAllCapabilityIds } from 'Redux/Capabilities/selectors'
 import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'

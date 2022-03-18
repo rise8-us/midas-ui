@@ -47,6 +47,8 @@ module.exports = {
         }
     },
     'rules': {
+        'react/jsx-uses-react': 'off',
+        'react/react-in-jsx-scope': 'off',
         'xss/no-location-href-assign': 2,
         'security/detect-object-injection': 0,
         'indent': ['warn', 4, {
@@ -81,7 +83,6 @@ module.exports = {
         'react/no-danger-with-children': 'warn',
         'react/jsx-equals-spacing': [1, 'always'],
         'react/jsx-max-props-per-line': [1, { maximum: 1, when: 'multiline' }],
-        'react/jsx-uses-react': 'warn',
         'react/jsx-uses-vars': 'warn',
         'react/no-unused-prop-types': [1, { }],
         'react/jsx-no-duplicate-props': [1, { }],

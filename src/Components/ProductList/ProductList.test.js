@@ -1,5 +1,4 @@
 import { createMemoryHistory } from 'history'
-import React from 'react'
 import { fireEvent, renderWithRouter, screen } from 'Utilities/test-utils'
 import { ProductList } from './index'
 

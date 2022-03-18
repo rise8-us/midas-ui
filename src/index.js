@@ -1,7 +1,7 @@
 
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Provider } from 'react-redux'

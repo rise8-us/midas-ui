@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, useTheme } from '@mui/material'
 import { ProductOnePager } from 'Components/ProductOnePager'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { scrollbar, styled } from 'Styles/materialThemes'
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({

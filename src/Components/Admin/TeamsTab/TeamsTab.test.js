@@ -1,4 +1,3 @@
-import React from 'react'
 import TeamsConstants from 'Redux/Teams/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
 import TeamsTab from './TeamsTab'

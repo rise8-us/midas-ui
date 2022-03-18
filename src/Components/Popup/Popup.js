@@ -2,7 +2,6 @@ import { Close } from '@mui/icons-material'
 import { Button, Dialog, DialogActions, DialogContent, Divider, IconButton, Typography } from '@mui/material'
 import { Header } from 'Components/Header'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { scrollbar, styled } from 'Styles/materialThemes'
 
 const DialogContentStyled = styled(DialogContent)(({ theme }) => ({

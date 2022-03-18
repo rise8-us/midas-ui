@@ -1,7 +1,6 @@
 import { alpha, Box, Grid, SvgIcon, Tooltip, Typography, useTheme } from '@mui/material'
 import { ReactComponent as CTFCertificate } from 'Assets/ctf.svg'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { styled } from 'Styles/materialThemes'
 
 const BoxStyled = styled(Box)(({ theme }) => ({

@@ -1,4 +1,3 @@
-import React from 'react'
 import TeamConstants from 'Redux/Teams/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProductTeam } from './index'

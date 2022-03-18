@@ -1,6 +1,5 @@
 import { Box, Paper, Table as MUITable, TableBody, TableCell, TableRow, useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { TableHeaders } from '../'
 
 // NOTE: reference - MUI Sticky Header Table -- https://codesandbox.io/s/x17ef?file=/demo.js:1069-1212

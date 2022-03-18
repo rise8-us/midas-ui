@@ -2,7 +2,6 @@ import { Grid, Stack, Tooltip, Typography } from '@mui/material'
 import { CircularStatus } from 'Components/CircularStatus'
 import { SonarqubeTooltip } from 'Components/SonarqubeTooltip'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 function SecurityRow({ displayValue, totalValue, color, title, tooltipTitle }) {
     return (

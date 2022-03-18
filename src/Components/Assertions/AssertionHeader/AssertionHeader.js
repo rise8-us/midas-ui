@@ -3,7 +3,7 @@ import { CircularProgress, Grid, IconButton, Tooltip, Typography } from '@mui/ma
 import { unwrapResult } from '@reduxjs/toolkit'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
 

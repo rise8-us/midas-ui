@@ -3,7 +3,7 @@ import { AssertionComments, GoalsContainer, StrategiesContainer } from 'Componen
 import { ObjectiveCard } from 'Components/Cards/OGSM/ObjectiveCard'
 import { ViewSettings } from 'Components/ViewSettings'
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'

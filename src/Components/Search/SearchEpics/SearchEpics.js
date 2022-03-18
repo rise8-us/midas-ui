@@ -1,7 +1,7 @@
 import { unwrapResult } from '@reduxjs/toolkit'
 import { SearchBar } from 'Components/Search'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchSearchEpics } from 'Redux/Epics/actions'
 

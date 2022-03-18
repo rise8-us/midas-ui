@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen, useSelectorMock, waitFor } from 'Utilities/test-utils'
 import { PopupManager } from './index'
 

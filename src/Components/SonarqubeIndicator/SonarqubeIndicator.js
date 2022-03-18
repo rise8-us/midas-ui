@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { CircularStatus } from '../CircularStatus'
 
 function SonarqubeIndicator({ title, value, adornment, tooltip }) {

@@ -1,7 +1,7 @@
 import { Popup } from 'Components/Popup'
 import ProductConfigurationFields from 'Components/ProductConfigurationFields/ProductConfigurationFields'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'

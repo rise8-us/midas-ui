@@ -1,6 +1,6 @@
 import { Box, Button, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 function AddComment({ additionalNode, onSubmit, handleEnterKey, showSubmitButton }) {
 

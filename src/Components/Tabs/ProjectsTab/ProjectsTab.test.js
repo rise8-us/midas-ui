@@ -1,4 +1,3 @@
-import React from 'react'
 import ProductConstants from 'Redux/Products/constants'
 import ProjectConstants from 'Redux/Projects/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'

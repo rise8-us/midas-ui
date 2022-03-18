@@ -1,7 +1,7 @@
 import { Box, Collapse, Divider, Stack, Typography } from '@mui/material'
 import { DeliverableWorkList } from 'Components/DeliverableWorkList'
 import { SearchEpics } from 'Components/Search'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilityPageSettings } from 'Redux/AppSettings/selectors'
 import { requestCreateDeliverable } from 'Redux/Deliverables/actions'

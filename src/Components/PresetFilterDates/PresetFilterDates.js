@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight } from '@mui/icons-material'
 import { Box, Grid, IconButton, Stack, Switch, Typography } from '@mui/material'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const quarters = {
     Calendar: {

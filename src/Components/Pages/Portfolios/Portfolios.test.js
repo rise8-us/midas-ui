@@ -1,4 +1,3 @@
-import React from 'react'
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Portfolios } from './index'

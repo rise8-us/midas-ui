@@ -3,7 +3,7 @@ import { Box, Card, CardActions, CardContent, CardHeader, IconButton, Typography
 import { PathToProdStepper } from 'Components/PathToProdStepper'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
-import React, { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import { hasProductAccess } from 'Redux/Auth/selectors'

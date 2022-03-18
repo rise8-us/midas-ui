@@ -1,7 +1,6 @@
 import { Create } from '@mui/icons-material'
 import { Chip } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { openPopup } from 'Redux/Popups/actions'

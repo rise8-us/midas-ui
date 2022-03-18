@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     fireEvent, render, screen, selectAssertionStatusesMock, useDispatchMock, useModuleMock
 } from 'Utilities/test-utils'

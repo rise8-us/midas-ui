@@ -5,7 +5,6 @@ import { IconButton, Tooltip } from '@mui/material'
 import { DraggableRow } from 'Components/Draggable'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 export default function PersonaEntry({
     title,

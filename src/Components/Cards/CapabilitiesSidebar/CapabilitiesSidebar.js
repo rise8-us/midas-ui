@@ -1,7 +1,6 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import { Card, CardContent, CardHeader, IconButton } from '@mui/material'
 import CapabilitiesList from 'Components/CapabilitiesList/CapabilitiesList'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { setCapabilityPagePermission } from 'Redux/PageAccess/reducer'

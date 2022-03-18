@@ -1,5 +1,4 @@
 import staticConstants from 'Constants/Statics'
-import React from 'react'
 import { render, screen } from 'Utilities/test-utils'
 import { DeliverableWorkList } from './index'
 

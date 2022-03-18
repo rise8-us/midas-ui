@@ -1,7 +1,6 @@
 import { ClearOutlined, Search } from '@mui/icons-material'
 import { SearchBar } from 'Components/Search/SearchBar'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setAppBarFilterString } from 'Redux/Filters/reducer'
 import { styled } from 'Styles/materialThemes'

@@ -1,7 +1,6 @@
 import { LinkOffOutlined } from '@mui/icons-material'
 import { Box, Grid, IconButton, LinearProgress, Link, Stack, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { requestDeleteDeliverable } from 'Redux/Deliverables/actions'

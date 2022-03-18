@@ -4,7 +4,7 @@ import { AssertionHeader, AssertionRootIdentifier } from 'Components/Assertions'
 import { DateFilter } from 'Components/DateFilter'
 import { TooltipOptions } from 'Components/TooltipOptions'
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getIsDateInRange } from 'Utilities/dateHelpers'
 
 const filters = [

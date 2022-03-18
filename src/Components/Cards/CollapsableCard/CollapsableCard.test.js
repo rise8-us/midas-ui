@@ -1,4 +1,3 @@
-import React from 'react'
 import { act, render, screen, userEvent } from 'Utilities/test-utils'
 import { CollapsableCard } from './index'
 

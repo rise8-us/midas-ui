@@ -3,7 +3,7 @@ import { Card, CircularProgress, Grid, IconButton, Stack, Tooltip, Typography } 
 import { StrategyCard } from 'Components/Cards/OGSM/StrategyCard'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
 import { selectChildIdsByParentId } from 'Redux/Assertions/selectors'

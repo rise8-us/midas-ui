@@ -1,4 +1,3 @@
-import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, screen } from 'Utilities/test-utils'
 import { PageNotFound } from './index'

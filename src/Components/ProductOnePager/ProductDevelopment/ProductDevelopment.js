@@ -3,7 +3,6 @@ import { DevelopmentSecurityRatings } from 'Components/DevelopmentSecurityRating
 import { DevelopmentStepper } from 'Components/DevelopmentStepper'
 import useSonarqubeRatings from 'Hooks/useSonarqubeRatings'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectProjectsByProductId } from 'Redux/Projects/selectors'
 

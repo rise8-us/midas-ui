@@ -1,6 +1,5 @@
 import { Box } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { scrollbar, styled } from 'Styles/materialThemes'
 import { Comment } from '../'
 

@@ -1,6 +1,6 @@
 import { Box, InputAdornment, TextField } from '@mui/material'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CirclePicker } from 'react-color'
 
 function ColorPicker({ onChange, errors, initialColor }) {

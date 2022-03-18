@@ -1,4 +1,3 @@
-import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'

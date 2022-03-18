@@ -5,7 +5,7 @@ import { DateRangeSelector } from 'Components/DateRangeSelector'
 import { PresetFilterDates } from 'Components/PresetFilterDates'
 import { TooltipOptions } from 'Components/TooltipOptions'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const filters = [
     { title: 'Start Date', value: 'startDate' },

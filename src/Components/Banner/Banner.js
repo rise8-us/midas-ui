@@ -1,7 +1,6 @@
 import { Box } from '@mui/material'
 import useWindowSize from 'Hooks/useWindowSize'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useSelector } from 'react-redux'
 
 const styles = {

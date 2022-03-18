@@ -1,4 +1,3 @@
-import React from 'react'
 import { render, screen, userEvent } from 'Utilities/test-utils'
 import { TooltipOptions } from './index'
 

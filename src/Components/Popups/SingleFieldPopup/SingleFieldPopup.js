@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import { Popup } from 'Components/Popup'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function SingleFieldPopup({ isOpen, initialValue, onSubmit, onClose, title, subtitle }) {
 

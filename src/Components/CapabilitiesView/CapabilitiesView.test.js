@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     mockSearchEpicsComponent, render, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
 } from 'Utilities/test-utils'

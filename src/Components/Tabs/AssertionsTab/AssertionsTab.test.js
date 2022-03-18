@@ -1,5 +1,4 @@
 import { createMemoryHistory } from 'history'
-import React from 'react'
 import { renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
 import { commentSidebarOpen } from './AssertionsTab'
 import { AssertionsTab } from './index'

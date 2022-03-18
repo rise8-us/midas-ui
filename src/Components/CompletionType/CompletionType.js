@@ -3,7 +3,7 @@ import { Autocomplete, Checkbox, Grid, TextField, Tooltip, Typography } from '@m
 import { SearchEpics } from 'Components/Search'
 import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { selectCompletionTypes } from 'Redux/AppSettings/selectors'
