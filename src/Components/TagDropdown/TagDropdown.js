@@ -100,6 +100,7 @@ function TagDropdown(props) {
                         ...params.InputProps,
                         disableUnderline,
                     }}
+                    data-testid = 'TagDropdown__input'
                     helperText = {<FormatErrors errors = {error}/>}
                 />
             }

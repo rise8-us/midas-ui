@@ -99,10 +99,10 @@ describe('<TagDropdown />', () => {
         } })
         render(<TagDropdown defaultTags = {[allTags[0]]} creatable />)
 
-        userEvent.type(screen.getByRole('textbox'), 'Tag 1')
+        userEvent.type(screen.getByTestId('TagDropdown__input'), 'Tag 1')
         expect(screen.getAllByText('Tag 1')).toHaveLength(2)
 
-        userEvent.type(screen.getByRole('textbox'), '42')
+        userEvent.type(screen.getByTestId('TagDropdown__input'), '42')
         expect(screen.getByText('Add "Tag 142"')).toBeInTheDocument()
 
         fireEvent.click(screen.getByText('Add "Tag 142"'))
@@ -117,7 +117,7 @@ describe('<TagDropdown />', () => {
         render(<TagDropdown defaultTags = {[allTags[2]]} creatable />)
         expect(screen.getByText('scoped | label 1')).toBeInTheDocument()
 
-        userEvent.type(screen.getByRole('textbox'), 'scoped::label 3')
+        userEvent.type(screen.getByTestId('TagDropdown__input'), 'scoped::label 3')
         fireEvent.click(screen.getByText('Add "scoped::label 3"'))
 
         expect(await screen.findByText('scoped | label 3')).toBeInTheDocument()
