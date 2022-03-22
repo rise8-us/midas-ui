@@ -80,6 +80,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-transform-typescript": "^7.16.1",
     "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.5",
     "@cypress/react": "^5.12.4",
     "@cypress/webpack-dev-server": "^1.8.3",
