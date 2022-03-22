@@ -68,10 +68,10 @@ describe('<Product>', () => {
         expect(screen.getByText('ProductUserPersonas')).toBeInTheDocument()
     })
 
-    test('should render ogsms tab', () => {
+    test('should render objectives tab', () => {
         renderWithRouter(<Product />)
 
-        fireEvent.click(screen.getByText(/measures/i))
+        fireEvent.click(screen.getByText(/objectives/i))
         expect(screen.getByText('AssertionsTab')).toBeInTheDocument()
     })
 

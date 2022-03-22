@@ -1,5 +1,5 @@
-import { selectRolesAsArray } from '../Redux/AppSettings/selectors'
-import store from '../Redux/store'
+import { selectRolesAsArray } from 'Redux/AppSettings/selectors'
+import store from 'Redux/store'
 
 export const convertRolesLongToRolesMap = (userRolesLong) => {
     const allRoles = selectRolesAsArray(store.getState())

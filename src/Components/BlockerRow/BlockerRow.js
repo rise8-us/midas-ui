@@ -30,7 +30,7 @@ function BlockerRow({ assertionId, productId, commentId }) {
 
     const goToProduct = () => history.push(`/products/${productId}`)
     const goToOgsm = () =>
-        history.push(`/products/${productId}/ogsms/${assertionId}`)
+        history.push(`/products/${productId}/objectives/${assertionId}`)
     const assertionStatus = useSelector((state) => state.app.assertionStatus)
     const product = useSelector((state) => selectProductById(state, productId))
     const comment = useSelector((state) => selectCommentById(state, commentId))

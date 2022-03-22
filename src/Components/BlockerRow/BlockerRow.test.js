@@ -93,7 +93,7 @@ describe('<BlockerRow />', () => {
 
         fireEvent.click(screen.getByText('assertion'))
 
-        expect(history.location.pathname).toEqual('/products/2/ogsms/1')
+        expect(history.location.pathname).toEqual('/products/2/objectives/1')
     })
 
 })

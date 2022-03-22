@@ -4,6 +4,7 @@ import {
 import { SearchEpics } from './index'
 
 describe('<SearchEpics>', () => {
+    jest.setTimeout(15000)
 
     const requestFetchSearchEpicsMock = useModuleMock('Redux/Epics/actions', 'requestFetchSearchEpics')
 

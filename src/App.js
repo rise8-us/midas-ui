@@ -4,18 +4,26 @@ import { PopupManager } from 'Components/PopupManager'
 import { SnackbarManager } from 'Components/Snackbar'
 import { WebsocketProvider } from 'Components/WebsocketProvider'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import { requestPostPageMetrics } from 'Redux/AppMetrics/actions'
 import { setInitialized } from 'Redux/AppSettings/reducer'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { initializeApp } from 'Utilities/initializeApp'
 
 function App() {
+    const history = useHistory()
+    const dispatch = useDispatch()
     const user = useSelector(selectUserLoggedIn)
 
     useEffect(() => {
         initializeApp().catch(() => setInitialized(false))
+        history.listen(trackPageView)
     }, [])
+
+    const trackPageView = ({ pathname }) => {
+        dispatch(requestPostPageMetrics(pathname.slice(1).replace(/\/$/, '')))
+    }
 
     return (
         <Banner>
