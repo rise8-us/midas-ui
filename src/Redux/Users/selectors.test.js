@@ -1,4 +1,4 @@
-import { useModuleMock } from 'Utilities/test-utils'
+import { selectRolesAsArrayMock } from 'Utilities/test-utils'
 import * as selectors from './selectors'
 
 const mockState = {
@@ -7,6 +7,11 @@ const mockState = {
             id: 42,
             username: 'yoda',
             roles: 2
+        },
+        43: {
+            id: 43,
+            username: 'luke',
+            roles: 0
         }
     }
 }
@@ -14,32 +19,41 @@ const mockState = {
 const expectedUser = {
     id: 42,
     username: 'yoda',
-    roles: { ROLE1: true, ROLE2: true }
+    roles: { PORTFOLIO_LEAD: true, ADMIN: false }
 }
 
-const convertRolesLongToRolesMapMock = useModuleMock('Utilities/bitwise', 'convertRolesLongToRolesMap')
-const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
+beforeEach(() => {
+    selectRolesAsArrayMock()
+})
 
 test('selectUserById - should return object', () => {
-    convertRolesLongToRolesMapMock.mockReturnValue({})
-    selectRolesAsArrayMock.mockResolvedValue({})
-
     const user = selectors.selectUserById(mockState, 42)
+
     expect(user).toBeInstanceOf(Object)
 })
 
 test('selectUserById - should return empty object', () => {
-    convertRolesLongToRolesMapMock.mockReturnValue({})
-    selectRolesAsArrayMock.mockResolvedValue({})
-
     const user = selectors.selectUserById(mockState, 43)
+
     expect(user).toBeInstanceOf(Object)
 })
 
 test('selectUserById - should have data', () => {
-    convertRolesLongToRolesMapMock.mockReturnValue({ ROLE1: true, ROLE2: true })
-    selectRolesAsArrayMock.mockResolvedValue({})
-
     const user = selectors.selectUserById(mockState, 42)
-    expect(user).toEqual(expectedUser)
+    expect(user).toMatchObject(expectedUser)
+})
+
+describe('selectTotalRoleCountsByUserIds', () => {
+    test('selectTotalRoleCountByUserIds - Should return an object with unassigned: 0', () => {
+        expect(selectors.selectTotalRoleCountByUserIds(mockState, [])).toEqual({ unassigned: [] })
+    })
+
+    test('selectTotalRoleCountByUserIds - Should return an object map with unassigned: 1', () => {
+        expect(selectors.selectTotalRoleCountByUserIds(mockState, [43])).toEqual({ unassigned: [43] })
+    })
+
+    test('selectTotalRoleCountByUserIds - Should return an object map with correct roles', () => {
+        expect(selectors.selectTotalRoleCountByUserIds(mockState, [42, 43]))
+            .toEqual({ portfolioLead: [42], unassigned: [43] })
+    })
 })

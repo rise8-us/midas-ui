@@ -169,6 +169,45 @@ export function selectCompletionTypesMock() {
     })
 }
 
+export function selectRolesAsArrayMock() {
+    const enumSelectors = require('Redux/AppSettings/selectors')
+    jest.spyOn(enumSelectors, 'selectRolesAsArray').mockReturnValue([
+        {
+            offset: 0,
+            name: 'ADMIN',
+            description: 'Can update or add anything'
+        }, {
+            offset: 1,
+            name: 'PORTFOLIO_LEAD',
+            description: 'Manages portfolio'
+        }, {
+            offset: 2,
+            name: 'PRODUCT_MANAGER',
+            description: 'Manages products'
+        }, {
+            offset: 3,
+            name: 'TECH_LEAD',
+            description: 'Lead SWE in charge of technical functionality'
+        }, {
+            offset: 4,
+            name: 'DESIGNER',
+            description: 'Manages product UI/UX designs'
+        }, {
+            offset: 5,
+            name: 'PLATFORM_OPERATOR',
+            description: 'Owner/Operator of platform hosting service'
+        }, {
+            offset: 6,
+            name: 'PORTFOLIO_ADMIN',
+            description: 'Admin over a portfolio'
+        }, {
+            offset: 7,
+            name: 'STAKEHOLDER',
+            description: 'Stakeholder'
+        }
+    ])
+}
+
 // re-export everything
 export * from '@testing-library/react'
 export * from '@testing-library/user-event'

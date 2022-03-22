@@ -2,6 +2,7 @@ import { render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } fr
 import { AppBarSearch } from './index'
 
 describe('<AppBarSearch />', () => {
+    jest.setTimeout(15000)
 
     const setAppBarFilterStringMock = useModuleMock('Redux/Filters/reducer', 'setAppBarFilterString')
 

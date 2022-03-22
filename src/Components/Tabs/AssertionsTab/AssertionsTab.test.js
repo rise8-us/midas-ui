@@ -60,18 +60,18 @@ describe('<AssertionsTab>', () => {
 
     test('should display objective blocker', () => {
         renderWithRouter(<AssertionsTab productId = {2} hasEdit = {false} />,
-            { history, route: '/products/2/ogsms/1', path: '/products/2/ogsms/:assertionId' })
+            { history, route: '/products/2/objectives/1', path: '/products/2/objectives/:assertionId' })
 
-        expect(history.location.pathname).toEqual('/products/2/ogsms/1')
+        expect(history.location.pathname).toEqual('/products/2/objectives/1')
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
     })
 
     test('should display strategy blocker', () => {
         renderWithRouter(<AssertionsTab productId = {2} hasEdit = {false} />,
-            { history, route: '/products/2/ogsms/2', path: '/products/2/ogsms/:assertionId' })
+            { history, route: '/products/2/objectives/2', path: '/products/2/objectives/:assertionId' })
 
-        expect(history.location.pathname).toEqual('/products/2/ogsms/2')
+        expect(history.location.pathname).toEqual('/products/2/objectives/2')
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
     })

@@ -2,8 +2,9 @@ import { LockOpenOutlined, LockOutlined, Settings } from '@mui/icons-material'
 import { Divider, Grid, Grow, IconButton, Tab, Tabs } from '@mui/material'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
-import { ProductPageOverview } from 'Components/ProductPageOverview'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
+import { ProductMetrics } from 'Components/Tabs/PageMetrics'
+import { ProductPageOverview } from 'Components/Tabs/ProductPageOverview'
 import { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
@@ -15,7 +16,7 @@ import { openPopup } from 'Redux/Popups/actions'
 import ProductConstants from 'Redux/Products/constants'
 import { requestFetchRoadmapsByProductId } from 'Redux/Roadmaps/actions'
 
-const knownTabs = ['overview', 'ogsms', 'projects']
+const knownTabs = ['overview', 'objectives', 'projects', 'metrics']
 const validTab = (potentialTab) => knownTabs.includes(potentialTab)
 const calculateHasEdit = (canEdit, readOnly) => canEdit && (!readOnly)
 
@@ -34,7 +35,7 @@ function Product() {
 
     const handleChange = (_e, newValue) => {
         setValue(newValue)
-        if (newValue === 'ogsms') history.push(`/products/${id}/${newValue}/${assertionId ?? ''}`)
+        if (newValue === 'objectives') history.push(`/products/${id}/${newValue}/${assertionId ?? ''}`)
         else history.push(`/products/${id}/${newValue}`)
     }
 
@@ -114,14 +115,19 @@ function Product() {
                                     data-testid = 'Product__overview'
                                 />
                                 <Tab
-                                    label = 'measures'
-                                    value = 'ogsms'
-                                    data-testid = 'Product__ogsms'
+                                    label = 'objectives'
+                                    value = 'objectives'
+                                    data-testid = 'Product__objectives'
                                 />
                                 <Tab
                                     label = 'Projects'
                                     value = 'projects'
                                     data-testid = 'Product__projects'
+                                />
+                                <Tab
+                                    label = 'Metrics'
+                                    value = 'metrics'
+                                    data-testid = 'Product__metrics'
                                 />
                             </Tabs>
                             <Divider variant = 'fullWidth' />
@@ -133,7 +139,7 @@ function Product() {
                                         <ProductPageOverview id = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
                                 }
-                                { value === 'ogsms' &&
+                                { value === 'objectives' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <AssertionsTab productId = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
@@ -141,6 +147,11 @@ function Product() {
                                 { value === 'projects' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <ProjectsTab id = {id} hasEdit = {hasEdit}/>
+                                    </Suspense>
+                                }
+                                { value === 'metrics' &&
+                                    <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                                        <ProductMetrics id = {id}/>
                                     </Suspense>
                                 }
                             </div>
