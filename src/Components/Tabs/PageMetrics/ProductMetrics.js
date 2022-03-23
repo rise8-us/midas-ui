@@ -54,9 +54,7 @@ function ProductMetrics({ id }) {
         if (uniqueViews.length > 0) {
             const missingUserIds = []
             uniqueViews.forEach(uId => {
-                if (!users[uId]) {
-                    missingUserIds.push(uId)
-                }
+                !users[uId] && missingUserIds.push(uId)
             })
             dispatch(requestFindUserBy(generateTeamUsersQuery(missingUserIds)))
         }
@@ -66,18 +64,15 @@ function ProductMetrics({ id }) {
     const filteredPeopleIds = uniqueViews?.length > 0 ? excludeUserIds(uniqueViews, usersOnTheTeam) : []
 
     return (
-        <Stack marginLeft = {3} maxWidth = '320px'>
-            <Stack direction = 'row' justifyContent = 'space-between' alignItems = 'end'>
-                <Typography variant = 'h6' color = 'text.primary'>Total Viewers:</Typography>
-                <Typography variant = 'subtitle1' color = 'primary'>{uniqueViews.length}</Typography>
+        <>
+            <Typography variant = 'h5' marginLeft = {3}>
+                Views in <b>{product.name}</b> over last 2 weeks
+            </Typography>
+            <Stack marginLeft = {3} maxWidth = '344px'>
+                <Divider sx = {{ marginY: 1 }}/>
+                <ProductRoleMetrics ids = {filteredPeopleIds}/>
             </Stack>
-            <Stack direction = 'row' justifyContent = 'space-between' alignItems = 'end'>
-                <Typography variant = 'h6' color = 'text.primary'>Non-team Viewers:</Typography>
-                <Typography variant = 'subtitle1' color = 'primary'>{filteredPeopleIds.length}</Typography>
-            </Stack>
-            <Divider sx = {{ marginY: 1 }}/>
-            <ProductRoleMetrics ids = {filteredPeopleIds}/>
-        </Stack>
+        </>
     )
 }
 
