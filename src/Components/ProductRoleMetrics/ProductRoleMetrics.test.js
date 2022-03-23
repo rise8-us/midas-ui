@@ -5,13 +5,14 @@ describe('<ProductRoleMetrics />', () => {
     const selectTotalRoleCountByUserIdsMock = useModuleMock('Redux/Users/selectors', 'selectTotalRoleCountByUserIds')
 
     test('should render', () => {
-        selectTotalRoleCountByUserIdsMock.mockReturnValue({ unassigned: [1, 2], fooBar: [1, 2, 3, 4] })
+        selectTotalRoleCountByUserIdsMock.mockReturnValue({ unassigned: [1, 2, 3], fooBar: [1, 2, 3, 4] })
 
         render(<ProductRoleMetrics ids = {[1, 2]} />)
 
-        expect(screen.getByText('Users by Role:')).toBeInTheDocument()
-        expect(screen.getByText('Unassigned')).toBeInTheDocument()
+        expect(screen.getByText('Non-team Viewers:')).toBeInTheDocument()
         expect(screen.getByText('2')).toBeInTheDocument()
+        expect(screen.getByText('Unassigned')).toBeInTheDocument()
+        expect(screen.getByText('3')).toBeInTheDocument()
         expect(screen.getByText('Foo Bar')).toBeInTheDocument()
         expect(screen.getByText('4')).toBeInTheDocument()
     })

@@ -31,7 +31,8 @@ describe('<ProductMetrics>', () => {
                 pageViews: {
                     'products/18/metrics': [1, 2, 3, 4],
                     'products/18/overview': [1, 92, 89],
-                    'products/18/projects': [1, 88, 28]
+                    'products/18/projects': [1, 88, 28],
+                    'products/19/projects': [1, 88, 28]
                 }
             }
         ]
