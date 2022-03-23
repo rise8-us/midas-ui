@@ -66,7 +66,7 @@ function ProductMetrics({ id }) {
     return (
         <>
             <Typography variant = 'h5' marginLeft = {3}>
-                Views in <b>{product.name}</b> over last 2 weeks
+                Views in <b>MIDAS</b> over last 2 weeks
             </Typography>
             <Stack marginLeft = {3} maxWidth = '344px'>
                 <Divider sx = {{ marginY: 1 }}/>
