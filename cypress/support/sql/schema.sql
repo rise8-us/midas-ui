@@ -1,8 +1,21 @@
--- Adminer 4.8.1 MySQL 8.0.21 dump
+-- Adminer 4.8.1 MySQL 8.0.27 dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
+
+DELIMITER ;;
+
+DROP FUNCTION IF EXISTS `nextID`;;
+CREATE FUNCTION `nextID`() RETURNS bigint
+BEGIN
+  DECLARE response BIGINT(20);
+  SET response = (SELECT `next_val` FROM `hibernate_sequence` LIMIT 1);
+  UPDATE `hibernate_sequence` SET `next_val` = `next_val` + 1;
+  RETURN (response);
+END;;
+
+DELIMITER ;
 
 SET NAMES utf8mb4;
 
@@ -81,6 +94,48 @@ CREATE TABLE `comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+DROP TABLE IF EXISTS `completion`;
+CREATE TABLE `completion` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_date` date DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL,
+  `completion_type` varchar(70) NOT NULL DEFAULT 'BINARY',
+  `value` float NOT NULL DEFAULT '0',
+  `target` float NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `completion_deliverable`;
+CREATE TABLE `completion_deliverable` (
+  `completion_id` bigint NOT NULL,
+  `deliverable_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `completion_gitlab_epic`;
+CREATE TABLE `completion_gitlab_epic` (
+  `completion_id` bigint NOT NULL,
+  `epic_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `completion_gitlab_issue`;
+CREATE TABLE `completion_gitlab_issue` (
+  `completion_id` bigint NOT NULL,
+  `issue_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `completion_measure`;
+CREATE TABLE `completion_measure` (
+  `completion_id` bigint NOT NULL,
+  `measure_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 DROP TABLE IF EXISTS `coverage`;
 CREATE TABLE `coverage` (
   `id` bigint NOT NULL,
@@ -114,7 +169,6 @@ CREATE TABLE `deliverable` (
   `position` int DEFAULT NULL,
   `parent_id` bigint DEFAULT NULL,
   `product_id` bigint DEFAULT NULL,
-  `epic_id` bigint DEFAULT NULL,
   `performance_measure_id` bigint DEFAULT NULL,
   `capability_id` bigint DEFAULT NULL,
   `assigned_to_id` bigint DEFAULT NULL,
@@ -133,9 +187,9 @@ CREATE TABLE `deliverable` (
 DROP TABLE IF EXISTS `epic`;
 CREATE TABLE `epic` (
   `id` bigint NOT NULL,
-  `epic_uid` bigint NOT NULL,
   `title` text NOT NULL,
   `description` text,
+  `is_hidden` bit(1) DEFAULT b'0',
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `start_date` date DEFAULT NULL,
   `start_date_from_inherited_source` date DEFAULT NULL,
@@ -146,10 +200,10 @@ CREATE TABLE `epic` (
   `epic_iid` int DEFAULT NULL,
   `state` text,
   `web_url` text,
-  `self_api` text,
-  `epic_issues_api` text,
-  `product_id` bigint NOT NULL,
-  `is_hidden` bit(1) DEFAULT b'0',
+  `epic_uid` varchar(255) DEFAULT NULL,
+  `total_weight` bigint NOT NULL DEFAULT '0',
+  `completed_weight` bigint NOT NULL DEFAULT '0',
+  `product_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
   CONSTRAINT `epic_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
@@ -207,17 +261,34 @@ CREATE TABLE `hibernate_sequence` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+DROP TABLE IF EXISTS `issue`;
+CREATE TABLE `issue` (
+  `id` bigint NOT NULL,
+  `title` text NOT NULL,
+  `description` text,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_date` date DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `synced_at` datetime DEFAULT NULL,
+  `issue_iid` int NOT NULL,
+  `issue_uid` varchar(255) DEFAULT NULL,
+  `state` text,
+  `web_url` text,
+  `weight` bigint NOT NULL DEFAULT '1',
+  `project_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `project_id` (`project_id`),
+  CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 DROP TABLE IF EXISTS `measure`;
 CREATE TABLE `measure` (
   `id` bigint NOT NULL,
   `assertion_id` bigint DEFAULT NULL,
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `start_date` date DEFAULT NULL,
-  `due_date` date DEFAULT NULL,
-  `completed_at` datetime DEFAULT NULL,
-  `completion_type` varchar(70) NOT NULL DEFAULT 'BINARY',
-  `value` float NOT NULL DEFAULT '0',
-  `target` float NOT NULL DEFAULT '1',
   `text` text,
   `status` varchar(70) NOT NULL DEFAULT 'NOT_STARTED',
   PRIMARY KEY (`id`),
@@ -230,6 +301,23 @@ DROP TABLE IF EXISTS `measure_comment`;
 CREATE TABLE `measure_comment` (
   `measure_id` bigint NOT NULL,
   `comment_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `metrics_app_user`;
+CREATE TABLE `metrics_app_user` (
+  `id` date NOT NULL,
+  `unique_logins` bigint NOT NULL,
+  `unique_role_metrics` json DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `metrics_page_view`;
+CREATE TABLE `metrics_page_view` (
+  `id` date NOT NULL,
+  `page_views` json DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -455,4 +543,4 @@ CREATE TABLE `user_team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2021-12-21 17:40:32
+-- 2022-03-23 13:48:28

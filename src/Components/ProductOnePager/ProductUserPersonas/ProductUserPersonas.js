@@ -141,6 +141,7 @@ function ProductUserPersonas({ productId, hasEdit }) {
                     </Grid>
                     <Grid item flexGrow = {1}>
                         <AutoSaveTextField
+                            dataTestId = 'ProductUserPersonas__create-personas'
                             placeholder = 'Add new user persona...'
                             inputRef = {newPersonaInput}
                             color = 'secondary'
