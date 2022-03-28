@@ -95,6 +95,7 @@ function ProductFeatures({ productId, hasEdit }) {
                     </Grid>
                     <Grid item style = {{ flexGrow: 1 }}>
                         <AutoSaveTextField
+                            dataTestId = 'ProductFeatures__create-feature'
                             placeholder = 'Add new feature...'
                             inputRef = {newFeatureInput}
                             color = 'secondary'

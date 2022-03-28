@@ -34,6 +34,7 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item>
                 <AutoSaveTextFieldStyled
                     label = 'OUR VISION'
+                    data-testid = 'ProductDetails__vision-statement'
                     initialValue = {defaultValue(product.vision)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('vision', e)}
@@ -46,6 +47,7 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item>
                 <AutoSaveTextFieldStyled
                     label = 'OUR MISSION'
+                    data-testid = 'ProductDetails__mission-statement'
                     initialValue = {defaultValue(product.mission)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('mission', e)}
@@ -58,6 +60,7 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item>
                 <AutoSaveTextFieldStyled
                     label = 'PROBLEM STATEMENT'
+                    data-testid = 'ProductDetails__problem-statement'
                     initialValue = {defaultValue(product.problemStatement)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('problemStatement', e)}

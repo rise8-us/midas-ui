@@ -58,6 +58,7 @@ function DraggableRow({
                 title = {tooltipText}
                 placement = {placement}
                 PopperProps = {{
+                    'data-testid': tooltipText,
                     style: {
                         display: !hasEdit && tooltipText.length > 0 ? 'initial' : 'none'
                     }
@@ -71,6 +72,7 @@ function DraggableRow({
                         onSave = {onUpdate}
                         multiline = {multiLine}
                         inputProps = {{
+                            'data-testid': title,
                             style: {
                                 textOverflow: 'ellipsis'
                             }
