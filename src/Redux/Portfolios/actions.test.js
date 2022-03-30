@@ -19,7 +19,7 @@ describe('Portfolio action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchAllPortfolios())
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products?search=type:PORTFOLIO')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/portfolios')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestFetchAllPortfolios.pending.toString())
@@ -40,7 +40,7 @@ describe('Portfolio action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestCreatePortfolio(Portfolio))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/portfolios')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual(Portfolio)
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('POST')
         expect(store.getActions()[0].type).toEqual(actions.requestCreatePortfolio.pending.toString())
@@ -62,7 +62,7 @@ describe('Portfolio action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestUpdatePortfolio(Portfolio))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products/1')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/portfolios/1')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual(requestBody)
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
         expect(store.getActions()[0].type).toEqual(actions.requestUpdatePortfolio.pending.toString())
@@ -83,7 +83,7 @@ describe('Portfolio action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestArchivePortfolio(requestBody))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products/1/archive')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/portfolios/1/archive')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ isArchived: false })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
         expect(store.getActions()[0].type).toEqual(actions.requestArchivePortfolio.pending.toString())
@@ -105,7 +105,7 @@ describe('Portfolio action thunks', () => {
         await store.dispatch(actions.requestSearchPortfolio(search))
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint)
-            .toContain('/api/products?search=type:PORTFOLIO AND id:1')
+            .toContain('/api/portfolios AND id:1')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestSearchPortfolio.pending.toString())

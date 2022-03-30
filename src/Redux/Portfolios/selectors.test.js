@@ -1,7 +1,6 @@
 import { useModuleMock } from 'Utilities/test-utils'
 import * as selectors from './selectors'
 
-const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByIds')
 const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
 
 const mockState = {
@@ -10,34 +9,16 @@ const mockState = {
             id: 4,
             name: 'Midas Portfolio',
             description: null,
-            children: [2],
+            productIds: [2],
             isArchived: false,
-            tagIds: [7],
-            tags: [
-                {
-                    id: 7,
-                    label: 'Some tags',
-                    description: null,
-                    color: ''
-                }
-            ]
         },
         5: {
             id: 5,
             name: 'Something Portfolio',
             description: 'Something Portfolio',
-            children: [3],
+            productIds: [3],
             isArchived: true,
-            tagIds: [2]
         },
-    },
-    tags: {
-        7: {
-            id: 7,
-            label: 'Some tags',
-            description: null,
-            color: ''
-        }
     },
     products: {
         2: {
@@ -50,7 +31,6 @@ const mockState = {
 }
 
 afterEach(() => {
-    selectTagsByIdsMock.mockClear()
     selectProductByIdMock.mockClear()
 })
 
@@ -72,19 +52,14 @@ test('selectPortfolioById - returns empty object', () => {
 })
 
 test('selectAllPortfolios - returns portfolio array', () => {
-    selectTagsByIdsMock.mockReturnValue([mockState.tags[7]])
     selectProductByIdMock.mockReturnValue(mockState.products[2])
 
     const portfolioOne = {
         id: 4,
         name: 'Midas Portfolio',
         description: '',
-        children: [2],
+        productIds: [2],
         isArchived: false,
-        tagIds: [7],
-        tags: [
-            mockState.tags[7]
-        ],
         products: [
             mockState.products[2]
         ]

@@ -38,10 +38,8 @@ describe('<PortfoliosTab />', () => {
 
         expect(screen.getByText('Name')).toBeInTheDocument()
         expect(screen.getByText('Product(s)')).toBeInTheDocument()
-        expect(screen.getByText('Tag(s)')).toBeInTheDocument()
         expect(screen.getByText('Portfolio Test')).toBeInTheDocument()
         expect(screen.getByText('Product')).toBeInTheDocument()
-        expect(screen.getByText('Tag Test')).toBeInTheDocument()
     })
 
     test('Should fire updatePortfolioPopup', () => {

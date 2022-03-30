@@ -11,7 +11,6 @@ import { selectProjects } from 'Redux/Projects/selectors'
 function ProjectsTab() {
     const dispatch = useDispatch()
     const allProjects = useSelector(selectProjects)
-
     const createProject = () =>
         dispatch(openPopup(ProjectConstants.CREATE_PROJECT, 'ProjectPopup'))
     const updateProject = (id) =>

@@ -2,13 +2,18 @@ import { selectProjectById } from '../Projects/selectors'
 
 export const selectProductById = (state, id) => {
     const product = state.products[id]
+
     if (!product) return {
         name: '',
         description: '',
         tagIds: [],
         tags: [],
         projects: [],
-        teamIds: []
+        personnel: {
+            ownerId: null,
+            adminIds: [],
+            teamIds: []
+        }
     }
 
     const projects = product.projectIds.map(pId => selectProjectById(state, pId))
@@ -38,9 +43,9 @@ export const selectUnarchivedProducts = (state) => {
 }
 
 export const selectAvailableProducts = (state) => {
-    return selectUnarchivedProducts(state).filter(p => p.parentId === null && p.type === 'PRODUCT')
+    return selectUnarchivedProducts(state).filter(p => p.portfolioId === null)
 }
 
 export const selectProductOwnerByProductId = (state, productId) => {
-    return state.products[productId]?.ownerId
+    return state.products[productId]?.personnel?.ownerId
 }

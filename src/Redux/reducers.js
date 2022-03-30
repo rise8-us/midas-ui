@@ -15,6 +15,7 @@ import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
 import pageAccessReducer from './PageAccess/reducer'
 import performanceMeasureReducer from './PerformanceMeasures/reducer'
 import personaReducer from './Personas/reducer'
+import personnelReducer from './Personnel/reducer'
 import popupReducer from './Popups/reducer'
 import portfolioReducer from './Portfolios/reducer'
 import productReducer from './Products/reducer'
@@ -44,6 +45,7 @@ export const rootReducer = combineReducers({
     pageAccess: pageAccessReducer,
     performanceMeasures: performanceMeasureReducer,
     personas: personaReducer,
+    personnel: personnelReducer,
     popups: popupReducer,
     portfolios: portfolioReducer,
     products: productReducer,

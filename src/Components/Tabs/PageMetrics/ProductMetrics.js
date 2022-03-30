@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestSearchPageMetrics } from 'Redux/AppMetrics/actions'
 import { selectProductById } from 'Redux/Products/selectors'
-import { selectTeamByProductId } from 'Redux/Teams/selectors'
+import { selectTeamById } from 'Redux/Teams/selectors'
 import { requestFindUserBy } from 'Redux/Users/actions'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 
@@ -22,8 +22,8 @@ function ProductMetrics({ id }) {
 
     const dispatch = useDispatch()
 
-    const team = useSelector(state => selectTeamByProductId(state, id))
     const product = useSelector(state => selectProductById(state, id))
+    const team = useSelector(state => selectTeamById(state, product?.personnel?.teamIds[0]))
     const users = useSelector(state => state.users)
 
     const [uniqueViews, setUniqueViews] = useState([])

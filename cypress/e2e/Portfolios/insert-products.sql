@@ -1,3 +1,0 @@
-INSERT INTO `product` (`id`, `name`, `creation_date`, `description`, `is_archived`, `owner_id`, `type`, `parent_id`, `gitlab_group_id`, `source_control_id`, `vision`, `mission`, `problem_statement`, `roadmap_type`) VALUES
-(200, 'alpha product', NOW(), '', 0, 1, 'PRODUCT', NULL, NULL, NULL, NULL, NULL, NULL, 'MANUAL'),
-(300, 'bravo product', NOW(), '', 0, 1, 'PRODUCT', NULL, NULL, NULL, NULL, NULL, NULL, 'MANUAL');

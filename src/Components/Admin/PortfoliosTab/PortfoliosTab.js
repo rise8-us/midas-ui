@@ -1,7 +1,6 @@
 import { Add, Archive, Edit, Unarchive } from '@mui/icons-material'
 import { Box, Button, Chip, IconButton } from '@mui/material'
 import { Table } from 'Components/Table'
-import { Tag } from 'Components/Tag'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestArchivePortfolio } from 'Redux/Portfolios/actions'
@@ -17,27 +16,15 @@ function PortfoliosTab() {
     const updatePortfolio = (id) => dispatch(
         openPopup(PortfolioConstant.UPDATE_PORTFOLIO, 'PortfolioPopup', { id }))
     const archivePortfolio = (id, isArchived) => dispatch(requestArchivePortfolio({ id, isArchived: !isArchived }))
-
     const buildRows = () => {
         return allPortfolios.map(portfolio => ({
             data: [
                 portfolio.name,
                 buildProducts(portfolio.products),
-                buildTags(portfolio.tags),
                 buildActions(portfolio.id, portfolio.isArchived)
             ],
             properties: { strikeThrough: portfolio.isArchived }
         }))
-    }
-
-    const buildTags = (portfolios) => {
-        return (
-            <Box display = 'flex' flexWrap = 'wrap'>
-                {portfolios.map((portfolio, index) => (
-                    <Tag key = {index} {...portfolio}/>
-                ))}
-            </Box>
-        )
     }
 
     const buildProducts = (products) => {
@@ -86,7 +73,7 @@ function PortfoliosTab() {
             </Box>
             <Table
                 rows = {buildRows()}
-                columns = {['Name', 'Product(s)', 'Tag(s)', '']}
+                columns = {['Name', 'Product(s)', '']}
             />
         </div>
     )

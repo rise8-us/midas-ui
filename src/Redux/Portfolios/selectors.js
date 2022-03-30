@@ -6,7 +6,7 @@ const selectPortfolios = (state) => {
 }
 
 const buildPortfolioData = (state, portfolio) => {
-    const products = portfolio.children.map(pId => selectProductById(state, pId))
+    const products = portfolio.productIds.map(pId => selectProductById(state, pId))
     return {
         ...portfolio,
         products,
@@ -19,8 +19,7 @@ export const selectPortfolioById = (state, id) => {
     if (!portfolio) return {
         name: '',
         description: '',
-        tags: [],
-        products: []
+        products: [],
     }
 
     return buildPortfolioData(state, portfolio)
