@@ -6,7 +6,7 @@ jest.mock('Components/TeamMember/TeamMember', () => function testing() { return 
 
 describe('<ProductTeam />', () => {
 
-    const selectTeamByProductIdMock = useModuleMock('Redux/Teams/selectors', 'selectTeamByProductId')
+    const selectTeamByIdMock = useModuleMock('Redux/Teams/selectors', 'selectTeamById')
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
@@ -20,7 +20,7 @@ describe('<ProductTeam />', () => {
     }
 
     test('should render', () => {
-        selectTeamByProductIdMock.mockReturnValue(foundTeam)
+        selectTeamByIdMock.mockReturnValue(foundTeam)
 
         render(<ProductTeam productId = {1}/>)
 
@@ -30,7 +30,7 @@ describe('<ProductTeam />', () => {
 
     test('should render edit button', () => {
         useDispatchMock().mockReturnValue({})
-        selectTeamByProductIdMock.mockReturnValue(foundTeam)
+        selectTeamByIdMock.mockReturnValue(foundTeam)
 
         render(<ProductTeam productId = {1} hasEdit/>)
 
@@ -41,7 +41,7 @@ describe('<ProductTeam />', () => {
 
     test('should render add button', () => {
         useDispatchMock().mockReturnValue({})
-        selectTeamByProductIdMock.mockReturnValue({ userIds: [] })
+        selectTeamByIdMock.mockReturnValue({ userIds: [] })
 
         render(<ProductTeam productId = {1} hasEdit/>)
 

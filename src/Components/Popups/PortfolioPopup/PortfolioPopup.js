@@ -2,7 +2,6 @@ import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
-import { TagDropdown } from 'Components/TagDropdown'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -25,8 +24,6 @@ const initDetails = (create) => {
     }
 }
 
-const searchErrors = (errors, searchString) => errors.filter(error => error.includes(searchString))
-
 function PortfolioPopup({ id }) {
     const dispatch = useDispatch()
 
@@ -43,7 +40,6 @@ function PortfolioPopup({ id }) {
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: portfolio.name,
         description: portfolio.description,
-        tags: portfolio.tags,
         products: portfolio.products,
         owner: undefined
     })
@@ -62,20 +58,15 @@ function PortfolioPopup({ id }) {
             ...portfolio,
             name: formValues.name,
             description: formValues.description,
-            tagIds: Object.values(formValues.tags.map(t => t.id)),
-            childIds: Object.values(formValues.products.map(p => p.id)),
-            ownerId: formValues.owner?.id ?? null,
-            type: 'PORTFOLIO',
-            projectIds: [],
-            teamIds: [],
-            roadmapType: 'MANUAL'
+            productIds: formValues.products?.map(product => product.id),
+            personnel: { ...portfolio.personnel, ownerId: formValues?.owner?.id ?? null, teamIds: [], adminIds: [] }
         }))
     }
 
     useEffect(() => {
-        if (!fetched && portfolio.ownerId > 0) {
+        if (!fetched && portfolio?.personnel?.ownerId > 0) {
             setFetched(true)
-            dispatch(requestFindUserBy(`id:${portfolio.ownerId}`)).then(unwrapResult)
+            dispatch(requestFindUserBy(`id:${portfolio.personnel.ownerId}`)).then(unwrapResult)
                 .then(data => { handleChange('owner', data[0]) })
         }
     }, [portfolio])
@@ -115,24 +106,13 @@ function PortfolioPopup({ id }) {
                     value = {formValues.owner}
                     onChange = {(_e, values) => handleChange('owner', values)}
                 />
-                <TagDropdown
-                    defaultTags = {formValues.tags}
-                    error = {searchErrors(errors, 'Tag')}
-                    deletable
-                    onChange = {(values) => handleChange('tags', values)}
-                    label = 'Tag(s)'
-                    type = {['ALL', 'PORTFOLIO']}
-                    creatable
-                    creatableType = 'PORTFOLIO'
-                    forcePopupIcon
-                />
                 <Autocomplete
                     multiple
                     autoSelect
                     options = {availableProducts}
-                    getOptionLabel = {(option) => option.name}
-                    isOptionEqualToValue = {(option, value) => option.id === value.id}
-                    groupBy = {(option) => option.firstLetter}
+                    getOptionLabel = {(option) => option?.name}
+                    isOptionEqualToValue = {(option, value) => option?.id === value.id}
+                    groupBy = {(option) => option?.firstLetter}
                     data-testid = 'PortfolioPopup__select-products'
                     onChange = {(_e, values) => handleChange('products', values)}
                     value = {formValues.products}

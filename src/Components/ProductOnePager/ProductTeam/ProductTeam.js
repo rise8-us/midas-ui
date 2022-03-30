@@ -4,14 +4,14 @@ import { TeamMember } from 'Components/TeamMember'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { openPopup } from 'Redux/Popups/actions'
-import { selectProductOwnerByProductId } from 'Redux/Products/selectors'
+import { selectProductById, selectProductOwnerByProductId } from 'Redux/Products/selectors'
 import TeamConstants from 'Redux/Teams/constants'
-import { selectTeamByProductId } from 'Redux/Teams/selectors'
+import { selectTeamById } from 'Redux/Teams/selectors'
 
 function ProductTeam({ productId, hasEdit }) {
     const dispatch = useDispatch()
-
-    const team = useSelector(state => selectTeamByProductId(state, productId))
+    const product = useSelector(state => selectProductById(state, productId))
+    const team = useSelector(state => selectTeamById(state, product?.personnel?.teamIds[0]))
     const productOwnerId = useSelector(state => selectProductOwnerByProductId(state, productId))
 
     const userIds = team.userIds.filter(uId =>

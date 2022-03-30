@@ -23,7 +23,6 @@ const convertRolesLongToRolesMapMock = useModuleMock('Utilities/bitwise', 'conve
 const selectRolesAsArrayMock = useModuleMock('Redux/AppSettings/selectors', 'selectRolesAsArray')
 
 const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
-const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
 
 let localMockState = {}
 
@@ -125,8 +124,9 @@ describe('User Access selectors', () => {
             products: {
                 9: {
                     id: 9,
-                    ownerId: 42,
-                    parentId: null
+                    personnel: {
+                        ownerId: 42,
+                    }
                 }
             }
         }
@@ -154,15 +154,18 @@ describe('User Access selectors', () => {
             products: {
                 9: {
                     id: 9,
-                    ownerId: 4,
-                    parentId: 10
+                    personnel: {
+                        ownerId: 4
+                    },
+                    portfolioId: 10
                 }
             },
             portfolios: {
                 10: {
                     id: 10,
-                    ownerId: 42,
-                    parentId: null
+                    personnel: {
+                        ownerId: 42
+                    }
                 }
             }
         }
@@ -182,107 +185,6 @@ describe('User Access selectors', () => {
         expect(selectors.hasTeamAccess(localMockState, 42)).toEqual(false)
     })
 
-    test('should return false if non number projectId is passed', () => {
-        expect(selectors.hasProjectAccess({}, null)).toEqual(false)
-    })
-
-    test('should return project access true if user is in product team', () => {
-        localMockState.auth.user.teamIds = [9, 42]
-
-        const mockProject = {
-            id: 66,
-            productId: 9
-        }
-        const mockProduct = {
-            id: 9,
-            ownerId: 4,
-            parentId: null,
-            teamIds: [42]
-        }
-
-        selectProjectByIdMock.mockReturnValue(mockProject)
-        selectProductByIdMock.mockReturnValue(mockProduct)
-
-        expect(selectors.hasProjectAccess(localMockState, 66)).toEqual(true)
-    })
-
-    test('should return project access true if user is product owner', () => {
-        localMockState = {
-            ...localMockState,
-            products: {
-                9: {
-                    id: 9,
-                    ownerId: 42,
-                    parentId: null,
-                    teamIds: []
-                }
-            }
-        }
-
-        const mockProject = {
-            id: 66,
-            productId: 9
-        }
-
-        selectProjectByIdMock.mockReturnValue(mockProject)
-
-        expect(selectors.hasProjectAccess(localMockState, 66)).toEqual(true)
-    })
-
-    test('should return project access true if user is admin', () => {
-        localMockState.auth.isAdmin = true
-        localMockState.auth.user.teamIds = [9]
-
-        const mockProject = {
-            id: 66,
-            teamId: 42,
-            productId: 9
-        }
-        const mockProduct = {
-            id: 9,
-            ownerId: 4,
-            parentId: null
-        }
-
-        selectProjectByIdMock.mockReturnValue(mockProject)
-        selectProductByIdMock.mockReturnValue(mockProduct)
-
-        expect(selectors.hasProjectAccess(localMockState, 66)).toEqual(true)
-    })
-
-    test('should return project access true if user is project owner', () => {
-        localMockState.auth.isAdmin = true
-
-        const mockProject = {
-            id: 66,
-            ownerId: 42,
-            productId: null
-        }
-
-        selectProjectByIdMock.mockReturnValue(mockProject)
-
-        expect(selectors.hasProjectAccess(localMockState, 66)).toEqual(true)
-    })
-
-    test('should return project access false if user has no access', () => {
-        localMockState.auth.user.teamIds = [1]
-
-        const mockProject = {
-            id: 66,
-            productId: 9
-        }
-        const mockProduct = {
-            id: 9,
-            ownerId: 4,
-            teamIds: [420],
-            parentId: null
-        }
-
-        selectProjectByIdMock.mockReturnValue(mockProject)
-        selectProductByIdMock.mockReturnValue(mockProduct)
-
-        expect(selectors.hasProjectAccess(localMockState, 66)).toEqual(false)
-    })
 
     test('should return product or team access false if id is null', () => {
         expect(selectors.hasProductOrTeamAccess(mockState)).toBeFalsy()
@@ -293,9 +195,10 @@ describe('User Access selectors', () => {
 
         const mockProduct = {
             id: 10,
-            ownerId: 142,
-            parentId: null,
-            teamIds: [9]
+            personnel: {
+                ownerId: 142,
+                teamIds: [9]
+            }
         }
 
         selectProductByIdMock.mockReturnValue(mockProduct)
@@ -308,9 +211,10 @@ describe('User Access selectors', () => {
 
         const mockProduct = {
             id: 10,
-            ownerId: 142,
-            parentId: null,
-            teamIds: [9]
+            personnel: {
+                ownerId: 142,
+                teamIds: [9]
+            }
         }
 
         selectProductByIdMock.mockReturnValue(mockProduct)

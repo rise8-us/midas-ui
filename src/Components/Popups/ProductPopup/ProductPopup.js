@@ -46,8 +46,7 @@ function ProductPopup({ id }) {
         mission: product.mission,
         name: product.name,
         problemStatement: product.problemStatement,
-        vision: product.vision,
-        owner: undefined
+        vision: product.vision
     })
 
     const handleChange = (name, value) => {
@@ -62,27 +61,29 @@ function ProductPopup({ id }) {
     const onSubmit = () => {
         dispatch(context.request({
             ...product,
-            type: 'PRODUCT',
             name: formValues.name,
             description: formValues.description,
             mission: formValues.mission,
             vision: formValues.vision,
             problemStatement: formValues.problemStatement,
-            ownerId: formValues.owner?.id ?? null,
             gitlabGroupId: gitlabGroupId,
             sourceControlId: sourceControl?.id ?? null,
             tagIds: Object.values(tags.map((tag) => tag.id)),
+            personnel: {
+                ...product.personnel,
+                ownerId: formValues.owner?.id ?? null,
+                teamIds: Object.values(teams.map((team) => team.id)),
+                adminIds: []
+            },
             projectIds: Object.values(projects.map((project) => project.id)),
-            teamIds: teams.map((team) => team.id),
             roadmapType: roadmapType?.name ?? 'MANUAL',
-            childIds: [],
         }))
     }
 
     useEffect(() => {
-        if (!fetched && product.ownerId > 0) {
+        if (!fetched && product?.personnel?.ownerId > 0) {
             setFetched(true)
-            dispatch(requestFindUserBy(`id:${product.ownerId}`))
+            dispatch(requestFindUserBy(`id:${product.personnel.ownerId}`))
                 .then(unwrapResult)
                 .then((data) => {
                     handleChange('owner', data[0])

@@ -360,6 +360,56 @@ CREATE TABLE `persona` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+DROP TABLE IF EXISTS `personnel`;
+CREATE TABLE `personnel` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `owner_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `owner_id` (`owner_id`),
+  CONSTRAINT `personnel_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `personnel_team`;
+CREATE TABLE `personnel_team` (
+  `team_id` bigint NOT NULL,
+  `personnel_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `personnel_user_admin`;
+CREATE TABLE `personnel_user_admin` (
+  `personnel_id` bigint NOT NULL,
+  `user_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `portfolio`;
+CREATE TABLE `portfolio` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(120) NOT NULL,
+  `description` text,
+  `is_archived` bit(1) NOT NULL DEFAULT b'0',
+  `gitlab_group_id` int DEFAULT NULL,
+  `source_control_id` bigint DEFAULT NULL,
+  `vision` text,
+  `mission` text,
+  `problem_statement` text,
+  PRIMARY KEY (`id`),
+  KEY `source_control_id` (`source_control_id`),
+  CONSTRAINT `portfolio_ibfk_1` FOREIGN KEY (`source_control_id`) REFERENCES `source_control` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `portfolio_personnel`;
+CREATE TABLE `portfolio_personnel` (
+  `portfolio_id` bigint NOT NULL,
+  `personnel_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `id` bigint NOT NULL,
@@ -367,9 +417,6 @@ CREATE TABLE `product` (
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `description` text,
   `is_archived` bit(1) NOT NULL DEFAULT b'0',
-  `owner_id` bigint DEFAULT NULL,
-  `type` varchar(70) DEFAULT NULL,
-  `parent_id` bigint DEFAULT NULL,
   `gitlab_group_id` int DEFAULT NULL,
   `source_control_id` bigint DEFAULT NULL,
   `vision` text,
@@ -377,12 +424,22 @@ CREATE TABLE `product` (
   `problem_statement` text,
   `roadmap_type` varchar(70) NOT NULL DEFAULT 'MANUAL',
   PRIMARY KEY (`id`),
-  KEY `product_manager_id` (`owner_id`),
-  KEY `parent_id` (`parent_id`),
   KEY `gitlab_config_id` (`source_control_id`),
-  CONSTRAINT `product_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `product_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `product` (`id`),
   CONSTRAINT `product_ibfk_4` FOREIGN KEY (`source_control_id`) REFERENCES `source_control` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `product_personnel`;
+CREATE TABLE `product_personnel` (
+  `product_id` bigint NOT NULL,
+  `personnel_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `product_portfolio`;
+CREATE TABLE `product_portfolio` (
+  `product_id` bigint NOT NULL,
+  `portfolio_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -390,13 +447,6 @@ DROP TABLE IF EXISTS `product_tag`;
 CREATE TABLE `product_tag` (
   `tag_id` bigint NOT NULL,
   `product_id` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-DROP TABLE IF EXISTS `product_team`;
-CREATE TABLE `product_team` (
-  `product_id` bigint NOT NULL,
-  `team_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -543,4 +593,4 @@ CREATE TABLE `user_team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2022-03-23 13:48:28
+-- 2022-03-28 22:18:34

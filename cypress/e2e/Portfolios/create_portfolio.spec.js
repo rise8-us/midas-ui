@@ -3,7 +3,7 @@ describe('Creates a portfolio', () => {
     before(() => {
         cy.initDB()
         cy.addLocalUserAsAdmin()
-        cy.loadSqlFiles(['e2e/Portfolios/insert-products.sql'])
+        cy.loadSqlFiles(['e2e/Portfolios/insert-portfolio.sql'])
         cy.visit('localhost:3000/portfolios')
     })
 
@@ -15,10 +15,10 @@ describe('Creates a portfolio', () => {
         cy.get('[data-testid=PortfolioPopup__select-products]').click()
         cy.get('li').contains('alpha product').click()
 
-        cy.get('[data-testid=Popup__button-submit]').click()
+        cy.get('[data-testid=Popup__button-submit]',{ timeout: 10000 }).click()
 
-        cy.get('[data-testid=PortfolioCard__header-title]').should('have.text', 'portfolio 1')
-        cy.get('[data-testid=PortfolioCard__text-productName]').should('have.text', 'alpha product')
+        cy.get('[data-testid="PortfolioCard__header-title-portfolio 1"]').should('have.text', 'portfolio 1')
+        cy.get('[data-testid="PortfolioCard__text-productName-alpha product"]').should('have.text', 'alpha product')
     })
 
 })

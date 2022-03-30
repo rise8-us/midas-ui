@@ -23,6 +23,12 @@ describe('<ProductConfigurationFields />', () => {
         GITLAB: { name: 'GITLAB', displayName: 'GitLab Epic' }
     }
 
+    const personnel = {
+        ownerId: null,
+        teamIds: [],
+        adminIds: []
+    }
+
     const ProjectsWithNoProductId = [
         { id: 10, name: 'Goofy', productId: null },
         { id: 11, name: 'Donald Duck', productId: null }
@@ -32,7 +38,7 @@ describe('<ProductConfigurationFields />', () => {
         id: 1,
         sourceControlId: null,
         gitlabGroupId: null,
-        teamIds: [],
+        personnel,
         projectIds: [9],
         tags: [],
         roadmapType: 'MANUAL'
@@ -122,8 +128,12 @@ describe('<ProductConfigurationFields />', () => {
 
     test('should render default team', async() => {
         useDispatchMock().mockResolvedValue({ payload: [allTeams[0]] })
-
-        render(<ProductConfigurationFields product = {{ ...product, teamIds: [9] }}/>)
+        const newPersonnel = {
+            ownerId: 100,
+            teamIds: [9],
+            adminIds: []
+        }
+        render(<ProductConfigurationFields product = {{ ...product, personnel: newPersonnel }}/>)
 
         expect(await screen.findByText(allTeams[0].name)).toBeInTheDocument()
     })

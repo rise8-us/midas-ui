@@ -53,7 +53,7 @@ function PortfolioCard({ id }) {
                 titleTypographyProps = {{
                     variant: 'h5',
                     color: 'text.primary',
-                    'data-testid': 'PortfolioCard__header-title',
+                    'data-testid': 'PortfolioCard__header-title-' + portfolio.name
                 }}
                 action = {
                     hasPortfolioAccess && (
@@ -69,7 +69,7 @@ function PortfolioCard({ id }) {
                 }
             />
             <CardContent>
-                {portfolio.products.length > 0 ? (
+                {portfolio.products?.length > 0 ? (
                     <>
                         <Box display = 'flex' justifyContent = 'space-between'>
                             <Typography color = 'text.secondary'>Product Name</Typography>
@@ -82,7 +82,7 @@ function PortfolioCard({ id }) {
                         No products are currently assigned to this portfolio.
                     </Typography>
                 )}
-                {portfolio.products.map((product, index) => {
+                {portfolio.products?.map((product, index) => {
                     const ctfProjects = product.projects.filter(
                         (p) => p.projectJourneyMap === 7
                     ).length
@@ -90,7 +90,7 @@ function PortfolioCard({ id }) {
                         <Box key = {index} display = 'flex' justifyContent = 'space-between'>
                             <TypographyLink
                                 onClick = {() => history.push(`/products/${product.id}/overview`)}
-                                data-testid = 'PortfolioCard__text-productName'
+                                data-testid = {'PortfolioCard__text-productName-' + product.name}
                             >
                                 {product.name}
                             </TypographyLink>

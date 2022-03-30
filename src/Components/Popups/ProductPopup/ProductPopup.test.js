@@ -35,9 +35,12 @@ describe('<ProductPopup />', () => {
         projectIds: [4],
         isArchived: false,
         portfolioId: 2,
+        personnel: {
+            ownerId: null,
+            teamIds: [1],
+            adminIds: []
+        },
         tagIds: [4, 13],
-        ownerId: null,
-        teamIds: [1],
         tags: [],
         projects: [],
         gitlabGroupId: 1,
@@ -50,7 +53,11 @@ describe('<ProductPopup />', () => {
         tagIds: [],
         tags: [],
         projects: [],
-        teamIds: []
+        personnel: {
+            ownerId: null,
+            teamIds: [],
+            adminIds: []
+        }
     }
 
     beforeEach(() => {
@@ -98,14 +105,15 @@ describe('<ProductPopup />', () => {
             problemStatement: undefined,
             tags: [],
             tagIds: [],
+            personnel: {
+                ownerId: null,
+                teamIds: [],
+                adminIds: []
+            },
             projects: [],
             projectIds: [],
-            teamIds: [],
-            type: 'PRODUCT',
-            childIds: [],
             gitlabGroupId: null,
             sourceControlId: null,
-            ownerId: null,
             roadmapType: 'MANUAL'
         })
     })
@@ -152,14 +160,15 @@ describe('<ProductPopup />', () => {
             description,
             vision,
             mission,
+            personnel: {
+                ownerId: null,
+                teamIds: [20],
+                adminIds: []
+            },
             problemStatement,
-            ownerId: null,
-            childIds: [],
-            type: 'PRODUCT',
             roadmapType: 'roadmaptype',
             gitlabGroupId: 50,
             tagIds: [10],
-            teamIds: [20],
             projectIds: [30],
             sourceControlId: 40,
         })
@@ -167,7 +176,12 @@ describe('<ProductPopup />', () => {
 
     test('should handle owner', async() => {
         useDispatchMock().mockResolvedValue({ payload: [{ id: 1, username: 'pm' }] })
-        selectProductByIdMock.mockReturnValue({ ...existingProduct, ownerId: 99 })
+        selectProductByIdMock.mockReturnValue({ ...existingProduct,
+            personnel: {
+                ownerId: 99,
+                teamIds: [],
+                adminIds: []
+            } })
 
         render(<ProductPopup id = {4} />)
 
@@ -184,15 +198,16 @@ describe('<ProductPopup />', () => {
             problemStatement: undefined,
             tags: [],
             tagIds: [],
+            personnel: {
+                ownerId: 24,
+                teamIds: [],
+                adminIds: []
+            },
             projects: [],
             projectIds: [],
-            teamIds: [],
-            type: 'PRODUCT',
-            childIds: [],
             gitlabGroupId: null,
             sourceControlId: null,
             roadmapType: 'MANUAL',
-            ownerId: 24,
         })
     })
 })

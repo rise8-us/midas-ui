@@ -19,7 +19,7 @@ describe('Product action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestFetchAllProducts())
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products?search=type:PRODUCT')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestFetchAllProducts.pending.toString())
@@ -105,7 +105,7 @@ describe('Product action thunks', () => {
         await store.dispatch(actions.requestSearchProduct(search))
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint)
-            .toContain('/api/products?search=type:PRODUCT AND id:1')
+            .toContain('/api/products AND id:1')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestSearchProduct.pending.toString())

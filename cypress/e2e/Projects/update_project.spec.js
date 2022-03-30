@@ -9,6 +9,7 @@ describe('Updates project', () => {
 
     it('updates project', () => {
         cy.get('[data-testid=Product__projects]').click()
+        cy.get('[data-testid=ProjectCard__header-title]', { timeout: 10000 }).should('be.visible')
         cy.get('[data-testid=ProjectCard__header-title]').should('have.text', 'alpha')
 
         cy.get('[data-testid=ProductPage__icon-inline-edit').click()

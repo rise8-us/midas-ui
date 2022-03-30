@@ -4,18 +4,18 @@ import * as selectors from './selectors'
 const selectTagsByIdsMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByIds')
 const selectProjectByIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
 
+
+
 const mockState = {
     products: {
         4: {
             id: 4,
-            ownerId: 12,
             name: 'Midas Product',
             description: null,
             projectIds: [2],
             isArchived: false,
-            portfolioId: 2,
+            portfolioId: 42,
             tagIds: [7],
-            parentId: 42,
             tags: [
                 {
                     id: 7,
@@ -24,33 +24,41 @@ const mockState = {
                     color: ''
                 }
             ],
-            type: 'PRODUCT'
+            personnel: {
+                ownerId: 12,
+                adminIds: [],
+                teamIds: []
+            }
         },
         5: {
             id: 5,
-            ownerId: 13,
             name: 'Something Product',
             description: 'Something Product',
             projectIds: [3],
             isArchived: true,
-            portfolioId: 4,
-            parentId: null,
+            portfolioId: null,
             tagIds: [2],
             tags: [],
-            type: 'PRODUCT'
+            personnel: {
+                ownerId: 13,
+                adminIds: [],
+                teamIds: []
+            }
         },
         6: {
             id: 6,
-            ownerId: 14,
             name: 'Something Product',
             description: 'Something Product',
             projectIds: [3],
             isArchived: false,
-            portfolioId: 4,
-            parentId: null,
+            portfolioId: null,
             tagIds: [2],
             tags: [],
-            type: 'PRODUCT'
+            personnel: {
+                ownerId: 14,
+                adminIds: [],
+                teamIds: []
+            }
         },
     },
     tags: {
@@ -99,22 +107,28 @@ test('selectProducts - returns product array', () => {
 
     const productOne = {
         id: 4,
-        ownerId: 12,
         name: 'Midas Product',
         description: '',
         projectIds: [2],
         isArchived: false,
-        portfolioId: 2,
-        parentId: 42,
-        type: 'PRODUCT',
+        portfolioId: 42,
         tagIds: [7],
         tags: [
-            mockState.tags[7]
+            {
+                id: 7,
+                label: 'Some tags',
+                description: null,
+                color: ''
+            }
         ],
         projects: [
             mockState.projects[2]
-        ]
-
+        ],
+        personnel: {
+            ownerId: 12,
+            adminIds: [],
+            teamIds: []
+        }
     }
     const products = selectors.selectProducts(mockState)
     expect(products[0]).toEqual(productOne)
@@ -133,7 +147,7 @@ test('selectUnarchivedProductIds - returns array of numbers', () => {
     expect(selectors.selectUnarchivedProductIds(mockState)).toEqual([4, 6])
 })
 
-test('selectUnarchivedProducts - returns unarchived products & no parentId', () => {
+test('selectUnarchivedProducts - returns unarchived products without portfolio', () => {
     expect(selectors.selectAvailableProducts(mockState)).toHaveLength(1)
 })
 

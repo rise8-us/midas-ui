@@ -79,8 +79,8 @@ export default function ProductConfigurationFields({
     }
 
     useEffect(() => {
-        product.teamIds?.length > 0 &&
-        dispatch(requestFindTeamBy(buildOrQueryById(product.teamIds)))
+        product.personnel?.teamIds?.length > 0 &&
+        dispatch(requestFindTeamBy(buildOrQueryById(product.personnel.teamIds)))
             .then(unwrapResult)
             .then((data) => {
                 setTeams(data)
@@ -249,7 +249,9 @@ ProductConfigurationFields.propTypes = {
         id: PropTypes.number,
         sourceControlId: PropTypes.number,
         gitlabGroupId: PropTypes.number,
-        teamIds: PropTypes.arrayOf(PropTypes.number),
+        personnel: PropTypes.shape({
+            teamIds: PropTypes.arrayOf(PropTypes.number),
+        }),
         projectIds: PropTypes.arrayOf(PropTypes.number),
         tags: PropTypes.arrayOf(PropTypes.shape({
             id: PropTypes.number,

@@ -33,7 +33,6 @@ describe('Updates and deletes a products persona', () => {
         cy.get('[data-testid="Beta persona"]').should('exist')
 
         cy.wait('@updateApiCheck').then((interception) => {
-            console.log(interception)
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.title).to.equal('Beta persona')
         })

@@ -32,23 +32,20 @@ describe('<PortfolioPopup />', () => {
     const returnedFoundPortfolio = {
         id: 4,
         name: 'Midas Portfolio',
-        description: 'New Portfolio',
-        projectIds: [4],
-        isArchived: false,
-        portfolioId: 2,
-        tagIds: [4, 13],
-        ownerId: null,
-        tags: [returnedTags[0], returnedTags[2]],
         products: [returnedProducts[0]],
-        roadmapType: 'MANUAL'
+        description: 'New Portfolio',
+        isArchived: false,
+        personnel: {
+            teamIds: [],
+            ownerId: null,
+            adminIds: []
+        }
     }
 
     const returnedNewPortfolio = {
         name: '',
         description: '',
-        tags: [],
         products: [],
-        roadmapType: 'MANUAL'
     }
 
     beforeEach(() => {
@@ -80,15 +77,13 @@ describe('<PortfolioPopup />', () => {
         expect(submitPortfolioMock).toHaveBeenCalledWith({
             name: '',
             description: '',
-            tags: [],
-            tagIds: [],
-            teamIds: [],
             products: [],
-            projectIds: [],
-            childIds: [],
-            ownerId: null,
-            type: 'PORTFOLIO',
-            roadmapType: 'MANUAL'
+            productIds: [],
+            personnel: {
+                teamIds: [],
+                ownerId: null,
+                adminIds: []
+            },
         })
     })
 
@@ -97,14 +92,12 @@ describe('<PortfolioPopup />', () => {
             errors: {
                 'portfolios/createOne': [
                     'portfolio name',
-                    'Tag error'
                 ]
             }
         }
         render(<PortfolioPopup />, { initialState: state })
 
         expect(await screen.findByText('portfolio name')).toBeInTheDocument()
-        expect(screen.getByText('Tag error')).toBeInTheDocument()
     })
 
     test('should call onSubmit for updatePortfolio', async() => {
@@ -127,9 +120,6 @@ describe('<PortfolioPopup />', () => {
         userEvent.type(nameInput, name)
 
         fireEvent.click(screen.getAllByTitle(/open/i)[0])
-        fireEvent.click(screen.getByText(/Tag 2/i))
-
-        fireEvent.click(screen.getAllByTitle(/open/i)[1])
         fireEvent.click(screen.getByText('product 2'))
 
         fireEvent.click(screen.getByText('Submit'))
@@ -138,13 +128,12 @@ describe('<PortfolioPopup />', () => {
             ...newFoundPorfolio,
             name,
             description,
-            projectIds: [],
-            teamIds: [],
-            childIds: [21],
-            tagIds: [4, 13, 2],
-            ownerId: null,
-            type: 'PORTFOLIO',
-            roadmapType: 'MANUAL'
+            productIds: [21],
+            personnel: {
+                adminIds: [],
+                teamIds: [],
+                ownerId: null,
+            }
         })
     })
 
@@ -158,13 +147,12 @@ describe('<PortfolioPopup />', () => {
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,
-            projectIds: [],
-            teamIds: [],
-            childIds: [20],
-            tagIds: [4, 13],
-            ownerId: 24,
-            type: 'PORTFOLIO',
-            roadmapType: 'MANUAL'
+            productIds: [20],
+            personnel: {
+                ownerId: 24,
+                teamIds: [],
+                adminIds: []
+            }
         })
     })
 })

@@ -7,7 +7,7 @@ const subscriptions = ({ stompClient }) => {
 
     subscribe(stompClient, Constants.WS_UPDATE_PRODUCT, (msg) => {
         let payload = JSON.parse(msg.body)
-        payload.type === 'PRODUCT' && store.dispatch(requestUpdateProduct.fulfilled(payload))
+        store.dispatch(requestUpdateProduct.fulfilled(payload))
     })
 }
 
