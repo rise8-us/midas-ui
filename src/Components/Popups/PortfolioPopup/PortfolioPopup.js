@@ -2,6 +2,7 @@ import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
+import { UsersCollection } from 'Components/UsersCollection'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -41,7 +42,8 @@ function PortfolioPopup({ id }) {
         name: portfolio.name,
         description: portfolio.description,
         products: portfolio.products,
-        owner: undefined
+        owner: undefined,
+        adminIds: portfolio.personnel?.adminIds ?? []
     })
 
     const handleChange = (name, value) => {
@@ -54,12 +56,19 @@ function PortfolioPopup({ id }) {
     const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
+        const adminIdsFinal = new Set(formValues.adminIds)
+
         dispatch(context.request({
             ...portfolio,
             name: formValues.name,
             description: formValues.description,
             productIds: formValues.products?.map(product => product.id),
-            personnel: { ...portfolio.personnel, ownerId: formValues?.owner?.id ?? null, teamIds: [], adminIds: [] }
+            personnel: {
+                ...portfolio.personnel,
+                ownerId: formValues?.owner?.id ?? null,
+                teamIds: [],
+                adminIds: Array.from(adminIdsFinal)
+            }
         }))
     }
 
@@ -101,14 +110,10 @@ function PortfolioPopup({ id }) {
                     margin = 'dense'
                     multiline
                 />
-                <SearchUsers
-                    title = 'Portfolio Owner'
-                    value = {formValues.owner}
-                    onChange = {(_e, values) => handleChange('owner', values)}
-                />
                 <Autocomplete
                     multiple
                     autoSelect
+                    style = {{ marginBottom: '8px' }}
                     options = {availableProducts}
                     getOptionLabel = {(option) => option?.name}
                     isOptionEqualToValue = {(option, value) => option?.id === value.id}
@@ -124,6 +129,18 @@ function PortfolioPopup({ id }) {
                             placeholder = 'Products in this portfolio'
                         />
                     }
+                />
+                <SearchUsers
+                    title = 'Portfolio Owner'
+                    value = {formValues.owner}
+                    onChange = {(_e, values) => handleChange('owner', values)}
+                />
+                <UsersCollection
+                    userIds = {formValues.adminIds}
+                    setUserIds = {value => handleChange('adminIds', value)}
+                    placeholderValue = 'Add another admin...'
+                    title = 'Portfolio Admins'
+                    dataTestId = 'PortfolioPopup__enter-admins'
                 />
             </Box>
         </Popup>

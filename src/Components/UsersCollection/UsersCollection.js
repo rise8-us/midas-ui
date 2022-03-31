@@ -19,7 +19,7 @@ const generateTeamUsersQuery = (userIds) => {
     return userIds.map(id => `id:${id}`).join(' OR ')
 }
 
-const TeamUsers = ({ userIds, setUserIds }) => {
+const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTestId }) => {
     const dispatch = useDispatch()
 
     const users = useSelector((state) => selectUsersByIds(state, userIds))
@@ -68,13 +68,13 @@ const TeamUsers = ({ userIds, setUserIds }) => {
     return (
         <>
             <SearchUsers
+                data-testid = {dataTestId}
                 onChange = {(_e, values) => {
                     values && addUser(values.id)
                 }}
-                title = ''
-                placeholder = 'Add another team member...'
+                title = {title}
+                placeholder = {placeholderValue}
                 style = {{
-                    height: '32px',
                     marginTop: '8px',
                     marginBottom: '24px',
                 }}
@@ -94,9 +94,18 @@ const TeamUsers = ({ userIds, setUserIds }) => {
     )
 }
 
-TeamUsers.propTypes = {
-    userIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-    setUserIds: PropTypes.func.isRequired,
+UsersCollection.defaultProps = {
+    placeholderValue: '',
+    title: '',
+    dataTestId: ''
 }
 
-export default TeamUsers
+UsersCollection.propTypes = {
+    userIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setUserIds: PropTypes.func.isRequired,
+    placeholderValue: PropTypes.string,
+    title: PropTypes.string,
+    dataTestId: PropTypes.string
+}
+
+export default UsersCollection

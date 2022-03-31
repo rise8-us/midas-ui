@@ -19,6 +19,10 @@ describe('Updates portfolio', () => {
         cy.get('[data-testid=PortfolioPopup__select-products]').click()
         cy.get('li').contains('alpha product').click()
 
+        cy.get('[data-testid=Table__row]').contains('user1')
+        cy.get('[data-testid=HighlightOffIcon]').click()
+        cy.get('[data-testid=Table__row]').should('not.exist');
+
         cy.get('[data-testid=Popup__button-submit]').click()
 
         cy.get('[data-testid="PortfolioCard__header-title-updated portfolio"]').should('have.text', 'updated portfolio')

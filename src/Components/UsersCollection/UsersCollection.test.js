@@ -1,13 +1,13 @@
 import {
     mockSearchUsersComponent, render, screen, useDispatchMock, useModuleMock, userEvent
 } from 'Utilities/test-utils'
-import { TeamUsers } from './index'
+import { UsersCollection } from './index'
 
 jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing(props) {
     return mockSearchUsersComponent(props)
 })
 
-describe('<TeamUsers />', () => {
+describe('<UsersCollection />', () => {
     jest.setTimeout(15000)
     const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
     const requestFindUserByMock = useModuleMock('Redux/Users/actions', 'requestFindUserBy')
@@ -33,7 +33,7 @@ describe('<TeamUsers />', () => {
 
     test('should render with user info', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
-        render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
+        render(<UsersCollection userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
         expect(screen.getByText('user1')).toBeInTheDocument()
         expect(screen.getByText('bro1')).toBeInTheDocument()
@@ -43,23 +43,23 @@ describe('<TeamUsers />', () => {
 
     test('should fetch users missing from store state', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, {}, {}])
-        render(<TeamUsers userIds = {[1, 2, 3]} setUserIds = {setUserIdsMock} />)
+        render(<UsersCollection userIds = {[1, 2, 3]} setUserIds = {setUserIdsMock} />)
 
         expect(requestFindUserByMock).toHaveBeenCalledWith('id:2 OR id:3')
     })
 
     test('should add user to userids list', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
-        render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
+        render(<UsersCollection userIds = {[1, 2]} setUserIds = {setUserIdsMock} placeholderValue = 'Text' />)
 
-        userEvent.type(screen.getByPlaceholderText('Add another team member...'), 'foobar')
+        userEvent.type(screen.getByPlaceholderText('Text'), 'foobar')
 
         expect(setUserIdsMock).toHaveBeenCalledWith([1, 2, 24])
     })
 
     test('should remove user from userids list', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, userMock2])
-        render(<TeamUsers userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
+        render(<UsersCollection userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
         userEvent.click(screen.getAllByTitle('remove user')[0])
 
