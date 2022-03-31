@@ -2,7 +2,7 @@ import { Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
-import { TeamUsers } from 'Components/TeamUsers'
+import { UsersCollection } from 'Components/UsersCollection'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -158,9 +158,10 @@ function TeamPopup({ id, productIds }) {
                     value = {formValues.techLead}
                     onChange = {(_e, values) => handleChange('techLead', values)}
                 />
-                <TeamUsers
+                <UsersCollection
                     userIds = {userIds}
                     setUserIds = {setUserIds}
+                    placeholderValue = 'Add another team member...'
                 />
             </Box>
         </Popup>

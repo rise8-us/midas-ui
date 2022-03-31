@@ -67,6 +67,17 @@ export function mockSearchUsersComponent({ onChange, ...everythingElse }) {
     )
 }
 
+export function mockUsersCollectionComponent({ setUserIds, ...everythingElse }) {
+    return (
+        <input
+            title = 'usersCollectionMock'
+            onChange = {() => setUserIds([24])}
+            placeholder = {everythingElse.placeholderValue}
+            {...everythingElse}
+        />
+    )
+}
+
 export function mockSearchEpicsComponent({ onChange, ...everythingElse }) {
     return (
         <input

@@ -1,10 +1,21 @@
 import {
-    fireEvent, mockSearchUsersComponent, render, screen, useDispatchMock, useModuleMock, userEvent
+    fireEvent,
+    mockSearchUsersComponent,
+    mockUsersCollectionComponent,
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
 } from 'Utilities/test-utils'
 import { PortfolioPopup } from './index'
 
 jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange }) {
     return mockSearchUsersComponent({ title, onChange })
+})
+
+jest.mock('Components/UsersCollection/UsersCollection', () => function testing({ title, setUserIds }) {
+    return mockUsersCollectionComponent({ title, setUserIds })
 })
 
 describe('<PortfolioPopup />', () => {
@@ -16,6 +27,7 @@ describe('<PortfolioPopup />', () => {
     const submitUpdatePortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestUpdatePortfolio')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const selectAvailableProductsMock = useModuleMock('Redux/Products/selectors', 'selectAvailableProducts')
+    const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
 
     const returnedTags = [
         { id: 4, label: 'Tag 1', description: '', color: '#000000' },
@@ -52,6 +64,7 @@ describe('<PortfolioPopup />', () => {
         selectPortfolioByIdMock.mockReturnValue(returnedNewPortfolio)
         selectTagsByTypesMock.mockReturnValue(returnedTags)
         selectAvailableProductsMock.mockReturnValue(returnedProducts)
+        selectUsersByIdsMock.mockReturnValue([])
         useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
     })
 
@@ -142,7 +155,7 @@ describe('<PortfolioPopup />', () => {
 
         render(<PortfolioPopup id = {4} />)
 
-        userEvent.type(screen.getByPlaceholderText('username, display name, or email'), 'bogus')
+        userEvent.type(screen.getByTitle('Portfolio Owner'), 'bogus')
         fireEvent.click(screen.getByText('Submit'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
@@ -152,6 +165,25 @@ describe('<PortfolioPopup />', () => {
                 ownerId: 24,
                 teamIds: [],
                 adminIds: []
+            }
+        })
+    })
+
+    test('should handle portfolio admins', () => {
+        selectPortfolioByIdMock.mockReturnValue({ ...returnedFoundPortfolio })
+
+        render(<PortfolioPopup id = {4} />)
+
+        userEvent.type(screen.getByTitle('Portfolio Admins'), 'bogus')
+        fireEvent.click(screen.getByText('Submit'))
+
+        expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
+            ...returnedFoundPortfolio,
+            productIds: [20],
+            personnel: {
+                ownerId: null,
+                teamIds: [],
+                adminIds: [24]
             }
         })
     })
