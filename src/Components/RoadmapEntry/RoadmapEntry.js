@@ -263,7 +263,7 @@ function RoadmapEntry({ id, hasEdit }) {
                 </Grid>
                 <Grid item zeroMinWidth>
                     <AutoSaveDescription
-                        variant = {editable ? 'filled' : 'standard'}
+                        variant = {hasEdit ? 'filled' : 'standard'}
                         canEdit = {hasEdit}
                         multiline
                         rows = {3}
