@@ -1,2 +1,1 @@
-export { default as GanttChart } from './GanttChart';
-
+export { default as GanttChart } from './GanttChart'

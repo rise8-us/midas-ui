@@ -1,2 +1,1 @@
-export { default as GanttBody } from './GanttBody';
-
+export { default as GanttBody } from './GanttBody'
