@@ -88,7 +88,7 @@ export default function Portfolio() {
                         <Box paddingY = {3}>
                             { value === 'objectives' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    <GanttChart maxHeight = 'calc(100% - 200px)'/>
+                                    <GanttChart maxHeight = 'calc(100% - 200px)' entries = {mockEntries}/>
                                 </Suspense>
                             }
                             { value === 'requirements' &&
@@ -103,3 +103,191 @@ export default function Portfolio() {
         </Page>
     )
 }
+
+const mockEntries = [
+    {
+        title: 'Create Midas App',
+        startDate: new Date('2020-12-15'),
+        endDate: new Date('2021-11-01'),
+        details: 'some deets'
+    }, {
+        title: 'Create User Profiles',
+        startDate: new Date('2021-03-01'),
+        endDate: new Date('2021-10-16'),
+        details: 'some deets',
+        completion: 67
+    }, {
+        title: 'Create Products Page',
+        startDate: new Date('2021-07-01'),
+        endDate: new Date('2021-12-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'Create Portfolios',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-03-01'),
+        endDate: new Date('2022-07-16'),
+        details: 'some deets',
+        completion: 67
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'first entry from last year',
+        startDate: new Date('2021-11-15'),
+        endDate: new Date('2022-06-01'),
+        details: 'some deets',
+        completion: 95
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-03-01'),
+        endDate: new Date('2022-07-16'),
+        details: 'some deets',
+        completion: 67
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'first entry from last year',
+        startDate: new Date('2021-11-15'),
+        endDate: new Date('2022-06-01'),
+        details: 'some deets',
+        completion: 95
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-03-01'),
+        endDate: new Date('2022-07-16'),
+        details: 'some deets',
+        completion: 67
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry2',
+        startDate: new Date('2022-07-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry3',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }, {
+        title: 'test entry4',
+        startDate: new Date('2022-10-01'),
+        endDate: new Date('2023-2-01'),
+        details: 'some deets',
+        completion: 24
+    }]

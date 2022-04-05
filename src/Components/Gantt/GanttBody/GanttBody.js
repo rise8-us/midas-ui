@@ -3,13 +3,11 @@ import { PropTypes } from 'prop-types'
 import { DateConstants, getIsDateInRange } from 'Utilities/dateHelpers'
 import { GanttEntry } from '../GanttEntry'
 
-const calculateDividerPosition = (dateRange) => {
+const calculateDivider = (dateRange) => {
     const today = new Date()
-    if (getIsDateInRange(today, [dateRange[0].toISOString(), dateRange[1].toISOString()])) {
-        return (today - dateRange[0]) / (dateRange[1] - dateRange[0]) * 100
-    } else {
-        return false
-    }
+    const inRange = getIsDateInRange(today, [dateRange[0].toISOString(), dateRange[1].toISOString()])
+    const leftPosition = (today - dateRange[0]) / (dateRange[1] - dateRange[0]) * 100
+    return [inRange, leftPosition]
 }
 
 function GanttBody({ entries, dateRange }) {
@@ -19,7 +17,7 @@ function GanttBody({ entries, dateRange }) {
     const numEntries = entries.length
 
     const MIN_HEIGHT = baseHeight * numEntries
-    let dividerPosition = calculateDividerPosition(dateRange)
+    const [shouldRender, dividerPosition] = calculateDivider(dateRange)
 
     const sxDivider = {
         position: 'absolute',
@@ -49,7 +47,7 @@ function GanttBody({ entries, dateRange }) {
                     key = {index}>
                 </Grid>
             })}
-            {dividerPosition && <Box sx = {sxDivider}></Box>}
+            {shouldRender && <Box sx = {sxDivider}></Box>}
             {entries.map((entry, index) => {
                 return (<GanttEntry
                     entry = {entry}
