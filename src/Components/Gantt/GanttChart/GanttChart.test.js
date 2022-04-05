@@ -22,10 +22,11 @@ describe('<Gantt Chart />', () => {
             endDate: new Date('2023-2-01'),
             details: 'some deets',
             completion: 24
-        }]
+        }
+    ]
 
     test('should render', () => {
-        renderWithRouter(<GanttChart entries = {mockEntries} />)
+        renderWithRouter(<GanttChart entries = {mockEntries} maxHeight = '800px'/>)
 
         expect(screen.getByText('first entry from last year')).toBeInTheDocument()
         expect(screen.getByText('test entry3')).toBeInTheDocument()

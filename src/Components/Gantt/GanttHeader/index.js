@@ -1,2 +1,1 @@
-export { default as GanttEntry } from './GanttEntry';
-
+export { default as GanttHeader } from './GanttHeader'

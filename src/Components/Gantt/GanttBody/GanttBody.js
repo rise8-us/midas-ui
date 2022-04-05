@@ -12,7 +12,7 @@ const calculateDividerPosition = (dateRange) => {
     }
 }
 
-function GanttBody({ entries, maxHeight, dateRange }) {
+function GanttBody({ entries, dateRange }) {
     const theme = useTheme()
 
     const baseHeight = 56
@@ -61,6 +61,7 @@ function GanttBody({ entries, maxHeight, dateRange }) {
         </Grid>
     )
 }
+
 GanttBody.propTypes = {
     entries: PropTypes.arrayOf(PropTypes.shape({
         title: PropTypes.string,
@@ -69,9 +70,7 @@ GanttBody.propTypes = {
         details: PropTypes.string,
         completion: PropTypes.number
     })).isRequired,
-    maxHeight: PropTypes.string.isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
 }
-
 
 export default GanttBody

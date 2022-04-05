@@ -1,8 +1,7 @@
 import { renderWithRouter, screen } from 'Utilities/test-utils'
-import GanttHeader from './GanttHeader'
+import { GanttHeader } from './index'
 
 describe('<Gantt Header />', () => {
-
 
     test('should render', () => {
         let dateStart = new Date()

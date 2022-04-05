@@ -216,10 +216,11 @@ function GanttChart({ entries = mockEntries, maxHeight }) {
     const sxGanttChartContainer = {
         position: 'absolute',
         height: '100%',
-        width: '100%',
+        width: 'calc(100% - 48px)',
+        maxHeight: maxHeight,
         overflowY: 'scroll',
         overflowX: 'hidden',
-        background: theme.palette.background.paper
+        background: theme.palette.background.paper,
     }
 
     return (

@@ -15,7 +15,7 @@ describe('<PortfolioCard />', () => {
 
     const portfolio = {
         id: 1,
-        name: 'portfolio world',
+        name: 'portfolio',
         products: [
             {
                 id: 4,
@@ -98,6 +98,14 @@ describe('<PortfolioCard />', () => {
         render(<PortfolioCard id = {portfolio.id}/>)
 
         expect(screen.queryByTestId('PortfolioCard__button-edit')).not.toBeInTheDocument()
+    })
+
+    test('should go to portfolios page', () => {
+        render(<MemoryRouter><PortfolioCard id = {portfolio.id}/></MemoryRouter>)
+
+        fireEvent.click(screen.getByText('portfolio'))
+
+        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/1')
     })
 
 })

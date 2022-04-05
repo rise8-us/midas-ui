@@ -6,10 +6,10 @@ const calculatePosition = (dateRangeEntry, totalDateRange) => {
     const range = totalDateRange[1] - totalDateRange[0]
     const start = (dateRangeEntry[0] - totalDateRange[0]) / range
     const end = (dateRangeEntry[1] - totalDateRange[0]) / range
-    return [start * 100, end * 100, Math.abs(end - start) * 100]
+    return [start * 100, Math.abs(end - start) * 100]
 }
 function GanttEntry({ entry, index, dateRange }) {
-    const [startPos, endPos, duration] = calculatePosition([entry.startDate, entry.endDate], dateRange)
+    const [startPos, duration] = calculatePosition([entry.startDate, entry.endDate], dateRange)
 
     const contentsBox = (theme) => {
         return {

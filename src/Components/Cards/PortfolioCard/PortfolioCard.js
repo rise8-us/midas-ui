@@ -45,6 +45,9 @@ function PortfolioCard({ id }) {
         ref.current.style.gridRowEnd = `span ${spans}`
     })
 
+    const goToPortfolioPage = () =>
+        history.push(`/portfolios/${portfolio.id}`)
+
     return (
         <StyledCard ref = {ref}>
             <CardHeader
@@ -53,7 +56,16 @@ function PortfolioCard({ id }) {
                 titleTypographyProps = {{
                     variant: 'h5',
                     color: 'text.primary',
-                    'data-testid': 'PortfolioCard__header-title-' + portfolio.name
+                    onClick: goToPortfolioPage,
+                    'data-testid': 'PortfolioCard__header-title-' + portfolio.name,
+                    sx: {
+                        '&:hover': {
+                            color: 'primary.main',
+                            cursor: 'pointer'
+                        },
+                        height: 40,
+                        width: 'fit-content'
+                    }
                 }}
                 action = {
                     hasPortfolioAccess && (
