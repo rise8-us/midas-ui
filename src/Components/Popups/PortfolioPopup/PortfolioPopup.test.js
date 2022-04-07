@@ -85,7 +85,7 @@ describe('<PortfolioPopup />', () => {
     test('should call onSubmit', () => {
         render(<PortfolioPopup />)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitPortfolioMock).toHaveBeenCalledWith({
             name: '',
@@ -135,7 +135,7 @@ describe('<PortfolioPopup />', () => {
         fireEvent.click(screen.getAllByTitle(/open/i)[0])
         fireEvent.click(screen.getByText('product 2'))
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...newFoundPorfolio,
@@ -156,7 +156,7 @@ describe('<PortfolioPopup />', () => {
         render(<PortfolioPopup id = {4} />)
 
         userEvent.type(screen.getByTitle('Portfolio Owner'), 'bogus')
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,
@@ -175,7 +175,7 @@ describe('<PortfolioPopup />', () => {
         render(<PortfolioPopup id = {4} />)
 
         userEvent.type(screen.getByTitle('Portfolio Admins'), 'bogus')
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,

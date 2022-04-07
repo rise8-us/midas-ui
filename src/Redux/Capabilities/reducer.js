@@ -5,7 +5,11 @@ import * as actions from './actions'
 const capabilitySlice = createSlice({
     name: 'capabilities',
     initialState: { },
-    reducers: { },
+    reducers: {
+        setCapability: (state, action) => {
+            state[action.payload.id] = action.payload
+        }
+    },
     extraReducers: {
         [actions.requestCreateCapability.fulfilled]: (state, action) => {
             state[action.payload.id] = action.payload
@@ -27,5 +31,7 @@ const capabilitySlice = createSlice({
         },
     }
 })
+
+export const { setCapability } = capabilitySlice.actions
 
 export default capabilitySlice.reducer

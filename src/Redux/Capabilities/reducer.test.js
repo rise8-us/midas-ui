@@ -1,5 +1,5 @@
 import * as reduxActions from './actions'
-import reducer from './reducer'
+import reducer, { setCapability } from './reducer'
 
 const allCapabilitiesResponse = [
     { id: 1 },
@@ -40,10 +40,19 @@ describe('Capabilities Reducer', () => {
     })
 
     test('Create Capability', () => {
-        const actions = [{ type: reduxActions.requestCreateCapability.fulfilled,
-            payload: allCapabilitiesResponse[0] }]
+        const actions = [{
+            type: reduxActions.requestCreateCapability.fulfilled,
+            payload: allCapabilitiesResponse[0]
+        }]
         const state = actions.reduce(reducer, {})
         expect(state).toEqual({ 1: allCapabilitiesResponse[0] })
+    })
+
+    test('Set Capability', () => {
+        const actions = [{ type: setCapability.type, payload: allCapabilitiesResponse[1] }]
+        const state = actions.reduce(reducer, {})
+
+        expect(state).toEqual({ 2: allCapabilitiesResponse[1] })
     })
 
     test('Update Capability', () => {
