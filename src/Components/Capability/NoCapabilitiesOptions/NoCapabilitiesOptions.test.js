@@ -4,15 +4,22 @@ import { NoCapabilitiesOptions } from './index'
 
 describe('<NoCapabilitiesOptions />', () => {
 
+    const selectPortfolioPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
+
     test('should render', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({})
+
         render(<NoCapabilitiesOptions portfolioId = {1} onCreate = {jest.fn} />)
 
         expect(screen.getByText('Looks like theres nothing here...')).toBeInTheDocument()
-        expect(screen.getByText('New Requirement')).toBeInTheDocument()
-        expect(screen.getByText('Existing Requirement')).toBeInTheDocument()
+        expect(screen.queryByText('New Requirement')).not.toBeInTheDocument()
+        expect(screen.queryByText('Existing Requirement')).not.toBeInTheDocument()
     })
 
     test('should handle buttion clicks', async() => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+
         const onCreateMock = jest.fn()
         const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
         const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')

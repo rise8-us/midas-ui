@@ -1,5 +1,5 @@
 import {
-    act, fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor, waitForElementToBeRemoved
+    act, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor, waitForElementToBeRemoved
 } from 'Utilities/test-utils'
 import { LinkCapabilityPopup } from './index'
 
@@ -25,7 +25,7 @@ describe('<LinkCapabilityPopup />', () => {
         expect(screen.getByText('close')).toBeInTheDocument()
         expect(screen.getByTestId('LinkCapabilityPopup__select')).toBeInTheDocument()
 
-        fireEvent.click(screen.getByText('close'))
+        userEvent.click(screen.getByText('close'))
         expect(closePopupMock).toHaveBeenCalled()
     })
 
@@ -39,14 +39,14 @@ describe('<LinkCapabilityPopup />', () => {
         render(<LinkCapabilityPopup portfolioId = {1}/>)
 
         await act(async() => {
-            fireEvent.click(screen.getByTestId('LinkCapabilityPopup__select'))
-            fireEvent.click(await screen.findByText('Capability 1'))
+            userEvent.click(screen.getAllByRole('button')[1])
+            userEvent.click(await screen.findByText('Capability 1'))
         })
 
-        expect(screen.getByTestId('CheckBoxRoundedIcon')).toBeInTheDocument()
+        expect(screen.getByTestId('CheckCircleOutlinedIcon')).toBeInTheDocument()
 
-        jest.advanceTimersByTime(2500)
-        await waitForElementToBeRemoved(screen.getByTestId('CheckBoxRoundedIcon'))
+        jest.advanceTimersByTime(1000)
+        await waitForElementToBeRemoved(screen.getByTestId('CheckCircleOutlinedIcon'))
 
         jest.useRealTimers()
     })
@@ -63,8 +63,8 @@ describe('<LinkCapabilityPopup />', () => {
         render(<LinkCapabilityPopup portfolioId = {1}/>)
 
         await act(async() => {
-            fireEvent.click(screen.getByTestId('LinkCapabilityPopup__select'))
-            fireEvent.click(await screen.findByText('Capability 1'))
+            userEvent.click(screen.getAllByRole('button')[1])
+            userEvent.click(await screen.findByText('Capability 1'))
         })
 
         expect(screen.getByTestId('WarningAmberRoundedIcon')).toBeInTheDocument()

@@ -13,6 +13,7 @@ import { selectSourceControlById, selectSourceControls } from 'Redux/SourceContr
 import { requestFindTeamBy } from 'Redux/Teams/actions'
 import { styled } from 'Styles/materialThemes'
 import FormatErrors from 'Utilities/FormatErrors'
+import { buildOrQueryByIds } from 'Utilities/requests'
 
 const TextFieldStyled = styled(TextField)(() => ({
     '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
@@ -23,7 +24,6 @@ const TextFieldStyled = styled(TextField)(() => ({
 
 const filter = createFilterOptions()
 const searchErrors = (errors, searchString) => errors.filter(error => error.includes(searchString))
-export const buildOrQueryById = (teamIds) => teamIds.map(id => `id:${id}`).join(' OR ')
 
 export default function ProductConfigurationFields({
     product,
@@ -80,7 +80,7 @@ export default function ProductConfigurationFields({
 
     useEffect(() => {
         product.personnel?.teamIds?.length > 0 &&
-        dispatch(requestFindTeamBy(buildOrQueryById(product.personnel.teamIds)))
+        dispatch(requestFindTeamBy(buildOrQueryByIds(product.personnel.teamIds)))
             .then(unwrapResult)
             .then((data) => {
                 setTeams(data)

@@ -1,6 +1,12 @@
 import { fireEvent, renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
 import { Portfolio } from './index'
 
+jest.mock('Components/Portfolio/PortfolioCapabilities/PortfolioCapabilities',
+    () => function testing() { return (<div>RequirementsTab</div>) })
+
+jest.mock('Components/Gantt/GanttChart/GanttChart',
+    () => function testing() { return (<div>ObjectivesTab</div>) })
+
 describe('<Portfolio />', () => {
 
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
@@ -17,11 +23,17 @@ describe('<Portfolio />', () => {
         expect(screen.getByText('requirements')).toBeInTheDocument()
     })
 
-    test.skip('should handle tab switch', () => {
+    test('should render Gantt tab', () => {
+        renderWithRouter(<Portfolio />)
+
+        fireEvent.click(screen.getByText('objectives'))
+        expect(screen.getByText('ObjectivesTab')).toBeInTheDocument()
+    })
+
+    test('should render capabilities tab', () => {
         renderWithRouter(<Portfolio />)
 
         fireEvent.click(screen.getByText('requirements'))
-
-        expect(screen.getByText('Capabilities here')).toBeInTheDocument()
+        expect(screen.getByText('RequirementsTab')).toBeInTheDocument()
     })
 })

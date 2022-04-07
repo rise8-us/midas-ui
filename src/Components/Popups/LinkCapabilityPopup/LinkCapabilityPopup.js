@@ -1,5 +1,5 @@
-import { CheckBoxRounded, WarningAmberRounded } from '@mui/icons-material'
-import { CircularProgress, MenuItem, Select, Stack, Typography } from '@mui/material'
+import { CheckCircleOutlined, WarningAmberRounded } from '@mui/icons-material'
+import { CircularProgress, Collapse, FormControl, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { Popup } from 'Components/Popup'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
@@ -40,7 +40,7 @@ export default function LinkCapabilityPopup({ portfolioId }) {
         }).then(() => setTimeout(() => {
             setValue('')
             setSuccess(null)
-        }, 3000))
+        }, 1500))
     }
 
     const onClose = () => dispatch(closePopup('LinkCapabilityPopup'))
@@ -51,32 +51,52 @@ export default function LinkCapabilityPopup({ portfolioId }) {
             title = 'Link existing Requirements'
             hideRequiredText
             cancelText = 'close'
+            disableDefaultPadding
         >
-            <Select
-                value = {value}
-                onChange = {handleChange}
-                fullWidth
-                defaultOpen
-                data-testid = 'LinkCapabilityPopup__select'
-                renderValue = {renderValue => (
-                    <Stack direction = 'row' alignItems = 'center' justifyContent = 'space-between'>
-                        <Typography>{renderValue.title}</Typography>
-                        <div style = {{ display: 'flex', alignItems: 'center' }}>
-                            {processing && <CircularProgress size = {18}/>}
-                            {success === true &&
-                                <CheckBoxRounded sx = {theme => { return { color: theme.palette.success.main } }}/>
-                            }
-                            {success === false &&
-                                <WarningAmberRounded sx = {theme => { return { color: theme.palette.error.main } }}/>
-                            }
-                        </div>
-                    </Stack>
-                )}
-            >
-                {availableCapabilities.map((option, index) => (
-                    <MenuItem value = {option} key = {index}>{option.title}</MenuItem>
-                ))}
-            </Select>
+            <FormControl fullWidth disabled = { processing || success !== null }>
+                <Select
+                    value = {value}
+                    onChange = {handleChange}
+                    fullWidth
+                    displayEmpty
+                    data-testid = 'LinkCapabilityPopup__select'
+                    style = {{ maxHeight: '48px' }}
+                    renderValue = {renderValue => {
+                        if (value === '') {
+                            return 'Please select a requirement'
+                        }
+                        return (
+                            <Stack direction = 'row' alignItems = 'center' justifyContent = 'space-between'>
+                                <Typography>{renderValue.title}</Typography>
+                                <div style = {{ display: 'flex', alignItems: 'center' }}>
+                                    {processing && <CircularProgress size = {18}/>}
+                                    <Collapse
+                                        in = {!processing && success !== null}
+                                        timeout = {450}
+                                        style = {{ lineHeight: 'normal' }}
+                                    >
+                                        {success === true &&
+                                            <CheckCircleOutlined
+                                                sx = {theme => { return { color: theme.palette.success.main } }}
+                                            />
+                                        }
+                                        {success === false &&
+                                            <WarningAmberRounded
+                                                sx = {theme => { return { color: theme.palette.error.main } }}
+                                            />
+                                        }
+                                    </Collapse>
+                                </div>
+                            </Stack>
+                        )
+                    }}
+                >
+                    <MenuItem value = {value} sx = {{ display: 'none' }} ></MenuItem>
+                    {availableCapabilities.map((option, index) => (
+                        <MenuItem value = {option} key = {index}>{option.title}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
         </Popup>
     )
 }

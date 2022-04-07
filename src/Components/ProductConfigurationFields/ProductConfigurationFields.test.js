@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { ProductConfigurationFields } from './index'
-import { buildOrQueryById } from './ProductConfigurationFields'
 
 describe('<ProductConfigurationFields />', () => {
     jest.setTimeout(60000)
@@ -136,10 +135,6 @@ describe('<ProductConfigurationFields />', () => {
         render(<ProductConfigurationFields product = {{ ...product, personnel: newPersonnel }}/>)
 
         expect(await screen.findByText(allTeams[0].name)).toBeInTheDocument()
-    })
-
-    test('should create query string', () => {
-        expect(buildOrQueryById([1, 2])).toEqual('id:1 OR id:2')
     })
 
     test('should create a new project if not exist', async() => {
