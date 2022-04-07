@@ -1,13 +1,16 @@
 import { AddCircleOutline, LinkOutlined } from '@mui/icons-material'
 import { Button, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateCapability } from 'Redux/Capabilities/actions'
+import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 
 export default function NoCapabilitiesOptions({ portfolioId, onCreate }) {
 
     const dispatch = useDispatch()
+
+    const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const createCapability = () => {
         dispatch(requestCreateCapability({
@@ -23,24 +26,26 @@ export default function NoCapabilitiesOptions({ portfolioId, onCreate }) {
     return (
         <Stack spacing = {2}>
             <Typography>Looks like theres nothing here...</Typography>
-            <Stack direction = 'row' spacing = {2}>
-                <Button
-                    startIcon = {<AddCircleOutline/>}
-                    variant = 'outlined'
-                    color = 'primary'
-                    onClick = {createCapability}
-                >
-                    New Requirement
-                </Button>
-                <Button
-                    startIcon = {<LinkOutlined/>}
-                    variant = 'outlined'
-                    color = 'primary'
-                    onClick = {openLinkCapabilityPopup}
-                >
-                    Existing Requirement
-                </Button>
-            </Stack>
+            { pagePermissions.edit &&
+                <Stack direction = 'row' spacing = {2}>
+                    <Button
+                        startIcon = {<AddCircleOutline/>}
+                        variant = 'outlined'
+                        color = 'primary'
+                        onClick = {createCapability}
+                    >
+                        New Requirement
+                    </Button>
+                    <Button
+                        startIcon = {<LinkOutlined/>}
+                        variant = 'outlined'
+                        color = 'primary'
+                        onClick = {openLinkCapabilityPopup}
+                    >
+                        Existing Requirement
+                    </Button>
+                </Stack>
+            }
         </Stack>
     )
 }

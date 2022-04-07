@@ -23,7 +23,7 @@ export default function Portfolio() {
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
-    const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, portfolio.id))
+    const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, id))
     const isAuthorized = isOwnerOrAdmin(userLoggedIn.id, portfolio?.personnel) || userLoggedIn.isAdmin
 
     const handleChange = (_e, newValue) => {
@@ -32,7 +32,7 @@ export default function Portfolio() {
 
     const updatePageEdit = () => {
         dispatch(setPortfolioPagePermission({
-            id: portfolio.id,
+            id,
             permissions: {
                 edit: pagePermissions.edit ? false : true
             }
@@ -101,7 +101,7 @@ export default function Portfolio() {
                             }
                             { value === 'requirements' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    <PortfolioCapabilities portfolioId = {portfolio.id}/>
+                                    <PortfolioCapabilities portfolioId = {id}/>
                                 </Suspense>
                             }
                         </Box>

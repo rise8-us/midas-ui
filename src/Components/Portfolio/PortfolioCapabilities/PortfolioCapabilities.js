@@ -5,12 +5,14 @@ import { CapabilityDescription, CapabilityTitle, NoCapabilitiesOptions } from 'C
 import { CapabilityCard } from 'Components/Cards/CapabilityCard'
 import { DeliverablesContainer } from 'Components/DeliverablesContainer'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateCapability } from 'Redux/Capabilities/actions'
 import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
+import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
+import { buildOrQueryByIds } from 'Utilities/requests'
 
 export default function PortfolioCapabilities({ portfolioId }) {
     const dispatch = useDispatch()
@@ -43,26 +45,29 @@ export default function PortfolioCapabilities({ portfolioId }) {
         }
     ]
 
+    useEffect(() => {
+        capabilities[viewingCapability]?.deliverableIds?.length > 0 &&
+            dispatch(requestSearchDeliverables(buildOrQueryByIds(capabilities[viewingCapability].deliverableIds)))
+    }, [capabilities])
+
 
     if (capabilities.length === 0) {
         return (
             <NoCapabilitiesOptions
                 portfolioId = {portfolioId}
-                onCreation = {setViewingCapability}
+                onCreate = {setViewingCapability}
             />
         )
     }
 
     return (
-        <Grid container direction = 'row'>
+        <Grid container direction = 'row' data-testid = 'PortfolioCapabilities__parent-grid'>
             <Grid item lg = {6}>
                 <CapabilityCard
                     title = {
                         <CapabilityTitle
                             capability = {capabilities[viewingCapability]}
                             onDelete = {setViewingCapability}
-                            portfolioId = {portfolioId}
-                            referenceId = {capabilities.length}
                             canEdit = {pagePermissions.edit ?? false}
                             showMoreOptions
                             options = {options}
@@ -81,12 +86,14 @@ export default function PortfolioCapabilities({ portfolioId }) {
                         <IconButton
                             disabled = {viewingCapability === 0}
                             onClick = {() => handleChange(-1)}
+                            data-testid = 'PortfolioCapabilities__previous-button'
                         >
                             Previous
                         </IconButton>
                         <IconButton
                             disabled = { viewingCapability === capabilities.length - 1}
                             onClick = {() => handleChange(1)}
+                            data-testid = 'PortfolioCapabilities__next-button'
                         >
                             Next
                         </IconButton>

@@ -7,7 +7,6 @@ jest.mock('js-file-download')
 
 describe('requests', () => {
 
-
     test('createAxiosDownloadRequest', () => {
         let answer = {
             method: 'GET',
@@ -127,5 +126,9 @@ describe('requests', () => {
         const demand = { endpoint: '/some/download', method: 'GET', body: {} }
         const result = await requestUtils.handleThunkDownloadRequest(demand, () => 'Unknown error occured')
         expect(result).toEqual('Unknown error occured')
+    })
+
+    test('should create query string', () => {
+        expect(requestUtils.buildOrQueryByIds([1, 2])).toEqual('id:1 OR id:2')
     })
 })
