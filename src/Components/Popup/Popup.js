@@ -9,6 +9,7 @@ const DialogContentStyled = styled(DialogContent)(({ theme }) => ({
 }))
 
 const Popup = ({
+    cancelText,
     children,
     disableDefaultPadding,
     disableDefaultDivider,
@@ -61,7 +62,7 @@ const Popup = ({
                     color = 'secondary'
                     variant = 'text'
                 >
-                    cancel
+                    {cancelText}
                 </Button>
                 { onSubmit &&
                     <Button
@@ -79,6 +80,7 @@ const Popup = ({
 }
 
 Popup.propTypes = {
+    cancelText: PropTypes.string,
     children: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.arrayOf(PropTypes.element)
@@ -96,12 +98,13 @@ Popup.propTypes = {
 }
 
 Popup.defaultProps = {
+    cancelText: 'cancel',
     disableDefaultDivider: false,
     disableDefaultPadding: false,
     hideRequiredText: false,
     onSubmit: undefined,
     open: true,
-    submitText: 'Submit',
+    submitText: 'submit',
     subtitle: null,
     subtitleVariant: 'h6'
 }

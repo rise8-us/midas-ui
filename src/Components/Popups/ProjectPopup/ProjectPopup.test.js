@@ -84,7 +84,7 @@ describe('<ProjectPopup />', () => {
         selectProjectByIdMock.mockReturnValue(returnedNewProject)
         render(<ProjectPopup />)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateProjectMock).toHaveBeenCalledWith({
             ...returnedNewProject, tagIds: [], sourceControlId: null
@@ -116,7 +116,7 @@ describe('<ProjectPopup />', () => {
         fireEvent.click(screen.getAllByTitle('Open')[1])
         fireEvent.click(screen.getAllByText('Tag 1')[1])
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdateProjectMock).toHaveBeenCalledWith({
             ...returnedFoundProject, name, description, gitlabProjectId, tagIds: [13], productId: 1,

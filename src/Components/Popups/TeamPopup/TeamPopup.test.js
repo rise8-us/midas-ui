@@ -85,7 +85,7 @@ describe('<TeamPopup />', () => {
     test('should call onSubmit to create team', () => {
         render(<TeamPopup/>)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateTeamMock).toHaveBeenCalledWith({
             name: '',
@@ -119,7 +119,7 @@ describe('<TeamPopup />', () => {
             userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
         }
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdateTeamMock).toHaveBeenCalledWith({
             ...returnedFoundTeam,
@@ -155,7 +155,7 @@ describe('<TeamPopup />', () => {
             userEvent.type(screen.getAllByPlaceholderText('username, display name, or email')[i], 'jsmith')
         }
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(screen.getByTitle('Product Owner'))
         expect(submitUpdateTeamMock).toHaveBeenCalledWith({

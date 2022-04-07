@@ -54,7 +54,7 @@ describe('<UpdateStatusPopup />', () => {
     test('should show errors when inputs are empty on Submit', async() => {
         render(<UpdateStatusPopup id = {1} type = 'assertion' />)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(await screen.findByText('Status cannot be blank!')).toBeInTheDocument()
         expect(await screen.findByText('Details cannot be blank!')).toBeInTheDocument()
@@ -95,7 +95,7 @@ describe('<UpdateStatusPopup />', () => {
         fireEvent.click(await screen.getByTitle('Open'))
         fireEvent.click(screen.getByText('On Track'))
         userEvent.type(screen.getByPlaceholderText('Enter your status update here'), 'an untitled note')
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(requestCreateCommentMock).toHaveBeenCalledWith({
             measureId: 1,
@@ -118,7 +118,7 @@ describe('<UpdateStatusPopup />', () => {
         fireEvent.click(await screen.getByTitle('Open'))
         fireEvent.click(screen.getByText('On Track'))
         userEvent.type(screen.getByPlaceholderText('Enter your status update here'), 'an untitled note')
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(requestCreateCommentMock).toHaveBeenCalledWith({
             assertionId: 1,

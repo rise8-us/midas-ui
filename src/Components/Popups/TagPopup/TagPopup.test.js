@@ -77,7 +77,7 @@ describe('<TagPopup />', () => {
         userEvent.type(labelInput, updatedData.label)
         fireEvent.click(colorPicker)
         userEvent.type(descriptionInput, updatedData.description)
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateTagMock).toHaveBeenCalledWith({ ...updatedData })
     })
@@ -102,7 +102,7 @@ describe('<TagPopup />', () => {
         fireEvent.click(colorPicker)
         userEvent.type(labelInput, updatedData.label)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdateTagMock).toHaveBeenCalledWith({ ...returnedFoundTag, ...updatedData })
     })
@@ -112,7 +112,7 @@ describe('<TagPopup />', () => {
 
         fireEvent.click(screen.getByTitle('Open'))
         fireEvent.click(screen.getByText('FOO'))
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateTagMock).toHaveBeenCalledWith(
             { color: undefined, description: '', label: '', tagType: 'FOO' }

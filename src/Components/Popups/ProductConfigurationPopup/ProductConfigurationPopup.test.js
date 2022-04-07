@@ -32,7 +32,7 @@ describe('<ProductConfigurationPopup />', () => {
         render(<ProductConfigurationPopup id = {1}/>)
 
         fireEvent.click(screen.getByText('cancel'))
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(screen.getByText('Update Product Configuration')).toBeInTheDocument()
         expect(screen.getByText('productName')).toBeInTheDocument()
@@ -59,7 +59,7 @@ describe('<ProductConfigurationPopup />', () => {
         userEvent.type(screen.getByPlaceholderText('group'), 'e')
         userEvent.type(screen.getByPlaceholderText('roadmaptype'), 'f')
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(requestUpdateProductMock).toHaveBeenCalledWith({
             ...product,

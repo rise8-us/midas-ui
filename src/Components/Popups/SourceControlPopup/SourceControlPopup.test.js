@@ -57,7 +57,7 @@ describe('<SourceControlPopup />', () => {
     test('should call onSubmit for createSourceControl', () => {
         render(<SourceControlPopup />)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateSourceControlMock).toHaveBeenCalledWith({
             name: '', description: '', baseUrl: '', token: null })
@@ -86,7 +86,7 @@ describe('<SourceControlPopup />', () => {
         userEvent.type(nameInput, name)
         userEvent.type(tokenInput, token)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdateSourceControlMock).toHaveBeenCalledWith({
             ...returnedFoundSourceControl, name, description, baseUrl, token })

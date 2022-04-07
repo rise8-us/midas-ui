@@ -10,3 +10,11 @@ export const selectCapabilityById = (state, id) => {
 
     return state.capabilities[id] ?? newCapability
 }
+
+export const selectCapabilitiesByPortfolioId = (state, portfolioId) => {
+    return Object.values(state.capabilities).filter(capability => capability.portfolioId === portfolioId)
+}
+
+export const selectCapabilitiesWithNoPortfolioId = (state) => {
+    return Object.values(state.capabilities).filter(capability => capability.portfolioId === null)
+}

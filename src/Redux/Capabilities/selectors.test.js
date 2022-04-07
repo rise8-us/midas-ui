@@ -2,32 +2,43 @@ import * as selectors from './selectors'
 
 const mockState = {
     capabilities: {
-        1434: {
-            id: 1434,
-            creationDate: '2021-12-16T15:56:17',
-            title: 'I am a Test Title',
-            description: 'Stuff and things for stuff and things.',
+        2: {
+            id: 2,
+            portfolioId: 1
         },
-        1435: {
-            id: 1435,
-            creationDate: '2021-12-16T15:56:31',
-            title: 'This is a Senior Test',
-            description: 'There are many like it but this one is mine.',
+        3: {
+            id: 3,
+            portfolioId: null,
         },
-        1436: {
-            id: 1436,
-            creationDate: '2021-12-16T15:56:35',
-            title: 'Testification',
-            description: 'Tell us about your testing experience!',
+        4: {
+            id: 4,
+            portfolioId: 1
         }
     }
 }
 
-test('selectAllCapabilityIds - returns array with ids', () => {
-    const results = selectors.selectAllCapabilityIds(mockState)
+describe('capabilities selectors', () => {
+    test('selectAllCapabilityIds - returns array with ids', () => {
+        const results = selectors.selectAllCapabilityIds(mockState)
 
-    expect(results).toBeInstanceOf(Array)
-    expect(results).toEqual([1434, 1435, 1436])
-    expect(results).toHaveLength(3)
+        expect(results).toBeInstanceOf(Array)
+        expect(results).toEqual([2, 3, 4])
+        expect(results).toHaveLength(3)
+    })
+
+    test('selectCapabilitiesByPortfolioId', () => {
+        const results = selectors.selectCapabilitiesByPortfolioId(mockState, 1)
+
+        expect(results).toBeInstanceOf(Array)
+        expect(results).toHaveLength(2)
+        expect(results).toEqual([mockState.capabilities[2], mockState.capabilities[4]])
+    })
+
+    test('selectCapabilitiesWithNoPortfolioId', () => {
+        const results = selectors.selectCapabilitiesWithNoPortfolioId(mockState, 1)
+
+        expect(results).toBeInstanceOf(Array)
+        expect(results).toHaveLength(1)
+        expect(results[0].id).toEqual(3)
+    })
 })
-

@@ -95,7 +95,7 @@ describe('<ProductPopup />', () => {
 
         render(<ProductPopup />)
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateProductMock).toHaveBeenCalledWith({
             name: '',
@@ -152,7 +152,7 @@ describe('<ProductPopup />', () => {
         userEvent.type(screen.getByPlaceholderText('group'), 'e')
         userEvent.type(screen.getByPlaceholderText('roadmaptype'), 'f')
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdateProductMock).toHaveBeenCalledWith({
             ...existingProduct,
@@ -189,7 +189,7 @@ describe('<ProductPopup />', () => {
         userEvent.clear(owner)
         userEvent.type(owner, 'foo')
 
-        fireEvent.click(screen.getByText('Submit'))
+        fireEvent.click(screen.getByText('submit'))
 
         expect(submitUpdateProductMock).toHaveBeenCalledWith({
             ...existingProduct,

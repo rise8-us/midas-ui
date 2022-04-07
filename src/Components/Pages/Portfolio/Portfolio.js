@@ -2,10 +2,12 @@ import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import { Box, Divider, Grid, IconButton, Skeleton, Tab, Tabs, Typography } from '@mui/material'
 import { GanttChart } from 'Components/Gantt'
 import { Page } from 'Components/Page'
-import { Suspense, useState } from 'react'
+import { PortfolioCapabilities } from 'Components/Portfolio/PortfolioCapabilities'
+import { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
+import { setCapability } from 'Redux/Capabilities/reducer'
 import { setPortfolioPagePermission } from 'Redux/PageAccess/reducer'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
@@ -17,7 +19,7 @@ export default function Portfolio() {
     const { portfolioId } = useParams()
     const id = parseInt(portfolioId)
 
-    const [value, setValue] = useState('objectives')
+    const [value, setValue] = useState('requirements') // TODO: change back to objectives
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
@@ -37,11 +39,17 @@ export default function Portfolio() {
         }))
     }
 
+    useEffect(() => {
+        if (Array.isArray(portfolio?.capabilities)) {
+            portfolio.capabilities.forEach(capability => dispatch(setCapability(capability)))
+        }
+    }, [portfolio])
+
     return (
         <Page>
             <Grid container direction = 'column' paddingX = {3}>
                 <Grid container item>
-                    <Grid item xs = 'auto' padding = {1}>
+                    <Grid item xs = 'auto'>
                         <Typography variant = 'h3'>
                             {
                                 portfolio?.name ??
@@ -93,7 +101,7 @@ export default function Portfolio() {
                             }
                             { value === 'requirements' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    Capabilities here
+                                    <PortfolioCapabilities portfolioId = {portfolio.id}/>
                                 </Suspense>
                             }
                         </Box>
