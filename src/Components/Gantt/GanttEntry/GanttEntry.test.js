@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import { renderWithRouter, screen } from 'Utilities/test-utils'
 import GanttEntry from './GanttEntry'
 
@@ -9,16 +10,31 @@ let dateRange = [dateStart, dateEnd]
 
 describe('<Gantt Entry />', () => {
 
+    const renderComponent = (target) => {
+        return (
+            <Box data-testid = 'GanttEntry__defaultEntryWrapper'>
+                <p style = {{ marginBlock: 0, padding: '8px' }}>
+                    {target.title}
+                </p>
+            </Box>
+        )
+    }
+
     const entry = {
         title: 'This is the title',
-        startDate: new Date('2020-01-01'),
-        endDate: new Date('2025-12-31'),
-        details: 'These are the details',
-        completion: 67
+        startDate: '2020-01-01',
+        endDate: '2025-12-31'
     }
 
     test('should render', () => {
-        renderWithRouter(<GanttEntry entry = {entry} index = {1} dateRange = {dateRange}/>)
+        renderWithRouter(<GanttEntry
+            startDate = {entry.startDate}
+            dueDate = {entry.dueDate}
+            index = {1}
+            dateRange = {dateRange}
+        >
+            renderComponent = {renderComponent(entry)}
+        </GanttEntry>)
 
         expect(screen.getByText('This is the title')).toBeInTheDocument()
     })
