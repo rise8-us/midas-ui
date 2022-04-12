@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { requestDeleteDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById } from 'Redux/Deliverables/selectors'
-import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { styled } from 'Styles/materialThemes'
 
@@ -44,10 +43,8 @@ const getTitle = (title, href) => {
         </Typography>
     )
 }
-export default function DeliverableWorkEntry({ id }) {
+export default function DeliverableWorkEntry({ id, hasEdit }) {
     const dispatch = useDispatch()
-
-    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
 
     const deliverable = useSelector(state => selectDeliverableById(state, id))
     const product = useSelector(state => selectProductById(state, deliverable?.productId))
@@ -109,5 +106,10 @@ export default function DeliverableWorkEntry({ id }) {
 }
 
 DeliverableWorkEntry.propTypes = {
-    id: PropTypes.number.isRequired
+    hasEdit: PropTypes.bool,
+    id: PropTypes.number.isRequired,
+}
+
+DeliverableWorkEntry.defaultProps = {
+    hasEdit: false
 }

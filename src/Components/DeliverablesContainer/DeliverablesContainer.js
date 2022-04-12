@@ -6,16 +6,17 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { useDispatch, useSelector } from 'react-redux'
+import { setPortfolioPageSettings } from 'Redux/AppSettings/reducer'
 import * as deliverableActions from 'Redux/Deliverables/actions'
 import { selectDeliverablesByCapabilityId } from 'Redux/Deliverables/selectors'
-import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
+import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { onDragEnd } from 'Utilities/draggable'
 
-export default function DeliverablesContainer({ capabilityId }) {
+export default function DeliverablesContainer({ capabilityId, portfolioId }) {
 
     const dispatch = useDispatch()
 
-    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
+    const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const deliverables = useSelector(state => selectDeliverablesByCapabilityId(state, capabilityId))
 
     let newDeliverableInput = React.useRef(null)
@@ -49,6 +50,10 @@ export default function DeliverablesContainer({ capabilityId }) {
         dispatch(deliverableActions.requestUpdateDeliverablesBulk(updatedIndexes))
     }
 
+    const updatePortfolioPageSettings = (deliverableId) => {
+        dispatch(setPortfolioPageSettings({ id: portfolioId, selectedDeliverableId: deliverableId }))
+    }
+
     return (
         <Grid item marginLeft = '-34px' paddingTop = {2}>
             <DragDropContext onDragEnd = {(result) => onDragEnd(result, deliverables, onDragEndAction)}>
@@ -59,13 +64,15 @@ export default function DeliverablesContainer({ capabilityId }) {
                                 capabilityId = {capabilityId}
                                 onUpdate = {updateDeliverable}
                                 onDelete = {deleteDeliverable}
+                                hasEdit = {pagePermissions.edit}
+                                onClick = {updatePortfolioPageSettings}
                             />
                             {provided.placeholder}
                         </div>
                     )}
                 </Droppable>
             </DragDropContext>
-            {hasEdit &&
+            {pagePermissions.edit &&
                 <Grid container paddingLeft = '30px'>
                     <Grid item minWidth = {3} marginRight = {1}>
                         <IconButton title = 'Add Deliverable'
@@ -96,4 +103,5 @@ export default function DeliverablesContainer({ capabilityId }) {
 
 DeliverablesContainer.propTypes = {
     capabilityId: PropTypes.number.isRequired,
+    portfolioId: PropTypes.number.isRequired,
 }

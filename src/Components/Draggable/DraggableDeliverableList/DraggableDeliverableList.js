@@ -5,15 +5,15 @@ import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import { useSelector } from 'react-redux'
 import { selectDeliverablesByCapabilityId } from 'Redux/Deliverables/selectors'
-import { selectCapabilitiesPagePermission } from 'Redux/PageAccess/selectors'
 
 const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
     capabilityId,
+    hasEdit,
     onUpdate,
-    onDelete
+    onDelete,
+    onClick
 }) {
 
-    const hasEdit = useSelector(state => selectCapabilitiesPagePermission(state, 'edit'))
     const deliverables = useSelector(state => selectDeliverablesByCapabilityId(state, capabilityId))
 
     return (
@@ -38,6 +38,8 @@ const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
                                 title = {deliverable.title}
                                 onUpdate = {newValue => onUpdate(newValue, deliverable)}
                                 onDelete = {() => onDelete(deliverable.id)}
+                                onClick = {() => onClick(deliverable.id)}
+                                hasEdit = {hasEdit}
                             />
                         </div>
                     )}
@@ -58,9 +60,14 @@ const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
 
 DraggableDeliverableList.propTypes = {
     capabilityId: PropTypes.number.isRequired,
+    hasEdit: PropTypes.bool,
+    onClick: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 }
 
-export default DraggableDeliverableList
+DraggableDeliverableList.defaultProps = {
+    hasEdit: false
+}
 
+export default DraggableDeliverableList

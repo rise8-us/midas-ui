@@ -1,5 +1,5 @@
-import { AddCircleOutline, Link } from '@mui/icons-material'
-import { Box, Divider, Grid, IconButton } from '@mui/material'
+import { AddCircleOutline, ArrowCircleLeftOutlined, ArrowCircleRightOutlined, Link } from '@mui/icons-material'
+import { Box, Button, Divider, Grid, Stack } from '@mui/material'
 import { CapabilitiesView } from 'Components/CapabilitiesView'
 import { CapabilityDescription, CapabilityTitle, NoCapabilitiesOptions } from 'Components/Capability'
 import { CapabilityCard } from 'Components/Cards/CapabilityCard'
@@ -7,6 +7,7 @@ import { DeliverablesContainer } from 'Components/DeliverablesContainer'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectPortfolioPageSettings } from 'Redux/AppSettings/selectors'
 import { requestCreateCapability } from 'Redux/Capabilities/actions'
 import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
 import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
@@ -17,12 +18,18 @@ import { buildOrQueryByIds } from 'Utilities/requests'
 export default function PortfolioCapabilities({ portfolioId }) {
     const dispatch = useDispatch()
 
-    const [viewingCapability, setViewingCapability] = useState(0)
     const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
+    const pageSettings = useSelector(state => selectPortfolioPageSettings(state, portfolioId))
+    const [viewingCapability, setViewingCapability] = useState(0)
+    const [fetched, setFetched] = useState(false)
+
+    const { selectedDeliverableId } = pageSettings
 
     const handleChange = (value) => {
-        setViewingCapability(prev => prev + value)
+        const newValue = viewingCapability + value
+        setViewingCapability(newValue)
+        fetchDeliverablesByIds(capabilities[newValue].deliverableIds)
     }
 
     const createCapability = () => {
@@ -33,23 +40,28 @@ export default function PortfolioCapabilities({ portfolioId }) {
         })).then(() => { setViewingCapability(capabilities.length) })
     }
 
+    const fetchDeliverablesByIds = (ids) => {
+        ids?.length > 0 && dispatch(requestSearchDeliverables(buildOrQueryByIds(ids)))
+    }
+
+    useEffect(() => {
+        if (!fetched && capabilities[viewingCapability]?.deliverableIds?.length > 0) {
+            fetchDeliverablesByIds(capabilities[viewingCapability].deliverableIds)
+            setFetched(true)
+        }
+    }, [capabilities])
+
     const options = [
         {
             text: 'Add new',
             icon: <AddCircleOutline />,
-            onClick: createCapability
+            onClick: () => createCapability()
         }, {
             text: 'Link existing',
             icon: <Link />,
             onClick: () => dispatch(openPopup('LinkCapabilityPopup', 'LinkCapabilityPopup', { portfolioId }))
         }
     ]
-
-    useEffect(() => {
-        capabilities[viewingCapability]?.deliverableIds?.length > 0 &&
-            dispatch(requestSearchDeliverables(buildOrQueryByIds(capabilities[viewingCapability].deliverableIds)))
-    }, [capabilities])
-
 
     if (capabilities.length === 0) {
         return (
@@ -82,30 +94,41 @@ export default function PortfolioCapabilities({ portfolioId }) {
                         />
                     }
                 >
-                    <Box>
-                        <IconButton
-                            disabled = {viewingCapability === 0}
-                            onClick = {() => handleChange(-1)}
-                            data-testid = 'PortfolioCapabilities__previous-button'
-                        >
-                            Previous
-                        </IconButton>
-                        <IconButton
-                            disabled = { viewingCapability === capabilities.length - 1}
-                            onClick = {() => handleChange(1)}
-                            data-testid = 'PortfolioCapabilities__next-button'
-                        >
-                            Next
-                        </IconButton>
+                    <Stack>
+                        <Box display = 'flex' justifyContent = 'space-between'>
+                            <Button
+                                disabled = {viewingCapability === 0}
+                                onClick = {() => handleChange(-1)}
+                                data-testid = 'PortfolioCapabilities__previous-button'
+                                startIcon = {<ArrowCircleLeftOutlined />}
+                            >
+                                Previous
+                            </Button>
+                            <Button
+                                disabled = {viewingCapability === capabilities.length - 1}
+                                onClick = {() => handleChange(1)}
+                                data-testid = 'PortfolioCapabilities__next-button'
+                                endIcon = {<ArrowCircleRightOutlined />}
+                            >
+                                Next
+                            </Button>
+                        </Box>
                         <Divider style = {{ padding: '4px 0' }}/>
-                    </Box>
-                    <Box paddingLeft = {4}>
-                        <DeliverablesContainer capabilityId = {capabilities[viewingCapability]?.id}/>
-                    </Box>
+                        <Box paddingLeft = {4}>
+                            <DeliverablesContainer
+                                capabilityId = {capabilities[viewingCapability]?.id}
+                                portfolioId = {portfolioId}
+                            />
+                        </Box>
+                    </Stack>
                 </CapabilityCard>
             </Grid>
             <Grid item lg = {6}>
-                <CapabilitiesView />
+                <CapabilitiesView
+                    portfolioId = {portfolioId}
+                    selectedDeliverableId = {selectedDeliverableId}
+                    hasEdit = {pagePermissions.edit}
+                />
             </Grid>
         </Grid>
     )

@@ -1,4 +1,3 @@
-export { CapabilitiesSidebar } from './CapabilitiesSidebar'
 export { DashboardCard } from './DashboardCard'
 export { PortfolioCard } from './PortfolioCard'
 export { ProductCard } from './ProductCard'

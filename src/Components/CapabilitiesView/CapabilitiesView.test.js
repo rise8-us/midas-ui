@@ -13,10 +13,10 @@ describe('<CapabilitiesView>', () => {
     const requestCreateDeliverableMock = useModuleMock('Redux/Deliverables/actions', 'requestCreateDeliverable')
     const enqueueMessageMock = useModuleMock('Redux/Snackbar/reducer', 'enqueueMessage')
 
-    const selectCapabilityPageSettingsMock =
-        useModuleMock('Redux/AppSettings/selectors', 'selectCapabilityPageSettings')
-    const selectCapabilitiesPagePermissionMock =
-        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
+    const defaultProps = {
+        selectedDeliverableId: 2,
+        portfolioId: 1
+    }
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ data: { } })
@@ -30,12 +30,10 @@ describe('<CapabilitiesView>', () => {
             }
         })
         selectDeliverableByParentIdMock.mockReturnValue([])
-        selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: 2 })
-        selectCapabilitiesPagePermissionMock.mockReturnValue(false)
     })
 
     test('should render with no edit', () => {
-        render(<CapabilitiesView />)
+        render(<CapabilitiesView {...defaultProps}/>)
 
         expect(screen.getByText('DELIVERABLE PARENT TITLE')).toBeInTheDocument()
         expect(screen.queryByPlaceholderText('Link epics by title or product name')).not.toBeInTheDocument()
@@ -46,25 +44,19 @@ describe('<CapabilitiesView>', () => {
             useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
         })
 
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
-
-        render(<CapabilitiesView />)
+        render(<CapabilitiesView hasEdit {...defaultProps}/>)
 
         expect(screen.getByPlaceholderText('Link epics by title or product name')).toBeInTheDocument()
     })
 
     test('should not render when selectedDeliverableId===null', () => {
-        selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: null })
-
-        render(<CapabilitiesView />)
+        render(<CapabilitiesView portfolioId = {1}/>)
 
         expect(screen.queryByText('DELIVERABLE PARENT TITLE')).not.toBeInTheDocument()
     })
 
     test('should handle input selection : add new', async() => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
-
-        render(<CapabilitiesView />)
+        render(<CapabilitiesView hasEdit {...defaultProps}/>)
 
         userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
 
@@ -88,7 +80,6 @@ describe('<CapabilitiesView>', () => {
     })
 
     test('should handle input selection : already exists', () => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
         selectDeliverableByParentIdMock.mockReturnValue([{
             title: 'epic title',
             productId: 1,
@@ -102,7 +93,7 @@ describe('<CapabilitiesView>', () => {
             }
         }])
 
-        renderWithRouter(<CapabilitiesView />)
+        renderWithRouter(<CapabilitiesView hasEdit {...defaultProps}/>)
 
         userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
 

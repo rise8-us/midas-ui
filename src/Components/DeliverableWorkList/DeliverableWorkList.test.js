@@ -8,7 +8,7 @@ jest.mock('Components/DeliverableWorkEntry/DeliverableWorkEntry',
 describe('<DeliverableWorkList />', () => {
 
     test('should render with entry', () => {
-        render(<DeliverableWorkList workList = {[{ id: 1 }]}/>)
+        render(<DeliverableWorkList deliverables = {[{ id: 1 }]}/>)
 
         expect(screen.getByText('1')).toBeInTheDocument()
         expect(screen.queryByText(staticConstants.NO_DELIVERABLES_ASSIGNED)).not.toBeInTheDocument()

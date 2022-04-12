@@ -31,7 +31,6 @@ describe('<AppBar />', () => {
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
         expect(screen.getByText('Portfolios')).toBeInTheDocument()
-        expect(screen.getByText('Capabilities')).toBeInTheDocument()
 
         expect(screen.getByTitle('tags')).toBeInTheDocument()
         expect(screen.queryByTitle('account')).not.toBeInTheDocument()
@@ -99,8 +98,6 @@ describe('<AppBar />', () => {
         fireEvent.click(screen.getByText('Portfolios'))
         expect(history.location.pathname).toEqual('/portfolios')
 
-        fireEvent.click(screen.getByText('Capabilities'))
-        expect(history.location.pathname).toEqual('/capabilities')
     })
 
     test('should link to support channels', () => {
