@@ -2,7 +2,7 @@ import staticConstants from 'Constants/Statics'
 import { render, screen } from 'Utilities/test-utils'
 import { DeliverableWorkList } from './index'
 
-jest.mock('Components/DeliverableWorkEntry/DeliverableWorkEntry',
+jest.mock('Components/Deliverables/DeliverableWorkEntry/DeliverableWorkEntry',
     () => (function testing(props) { return (<div>{props.id}</div>) }))
 
 describe('<DeliverableWorkList />', () => {

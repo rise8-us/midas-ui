@@ -1,18 +1,7 @@
-import { Box } from '@mui/material'
-import { renderWithRouter, screen } from 'Utilities/test-utils'
-import GanttChart from './GanttChart'
+import { render, screen } from 'Utilities/test-utils'
+import { GanttChart } from './index'
 
-describe('<Gantt Chart />', () => {
-
-    const renderComponent = (target) => {
-        return (
-            <Box data-testid = 'GanttEntry__defaultEntryWrapper'>
-                <p style = {{ marginBlock: 0, padding: '8px' }}>
-                    {target.title}
-                </p>
-            </Box>
-        )
-    }
+describe('<GanttChart />', () => {
 
     const mockEntries = [
         {
@@ -34,7 +23,7 @@ describe('<Gantt Chart />', () => {
     ]
 
     test('should render', () => {
-        renderWithRouter(<GanttChart entries = {mockEntries} maxHeight = '800px' renderComponent = {renderComponent}/>)
+        render(<GanttChart entries = {mockEntries} maxHeight = '800px'/>)
 
         expect(screen.getByText('first entry from last year')).toBeInTheDocument()
         expect(screen.getByText('test entry3')).toBeInTheDocument()

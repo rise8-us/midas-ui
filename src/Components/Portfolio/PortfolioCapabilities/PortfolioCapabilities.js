@@ -1,9 +1,8 @@
 import { AddCircleOutline, ArrowCircleLeftOutlined, ArrowCircleRightOutlined, Link } from '@mui/icons-material'
 import { Box, Button, Divider, Grid, Stack } from '@mui/material'
-import { CapabilitiesView } from 'Components/CapabilitiesView'
 import { CapabilityDescription, CapabilityTitle, NoCapabilitiesOptions } from 'Components/Capability'
 import { CapabilityCard } from 'Components/Cards/CapabilityCard'
-import { DeliverablesContainer } from 'Components/DeliverablesContainer'
+import { DeliverablesContainer, DeliverablesView } from 'Components/Deliverables'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -124,7 +123,7 @@ export default function PortfolioCapabilities({ portfolioId }) {
                 </CapabilityCard>
             </Grid>
             <Grid item lg = {6}>
-                <CapabilitiesView
+                <DeliverablesView
                     portfolioId = {portfolioId}
                     selectedDeliverableId = {selectedDeliverableId}
                     hasEdit = {pagePermissions.edit}

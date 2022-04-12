@@ -3,8 +3,7 @@ import { PropTypes } from 'prop-types'
 import { calculateSinglePosition, getIsDateInRange } from 'Utilities/dateHelpers'
 import { GanttEntry } from '../GanttEntry'
 
-
-function GanttBody({ entries, dateRange, renderComponent }) {
+export default function GanttBody({ entries, dateRange, renderComponent }) {
     const theme = useTheme()
 
     const baseHeight = 56
@@ -57,7 +56,6 @@ function GanttBody({ entries, dateRange, renderComponent }) {
                     </GanttEntry>
                 ))}
         </>
-
     )
 }
 
@@ -79,5 +77,3 @@ GanttBody.defaultProps = {
         startDate: null,
     }]
 }
-
-export default GanttBody

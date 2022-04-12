@@ -1,8 +1,9 @@
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { calculatePositionRange, calculateSinglePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
-function GanttEntry({ startDate, dueDate, index, dateRange, children, disableDefaultCSS }) {
+export default function GanttEntry(props) {
+    const { startDate, dueDate, index, dateRange, children, disableDefaultCSS } = props
 
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)
@@ -35,10 +36,8 @@ function GanttEntry({ startDate, dueDate, index, dateRange, children, disableDef
     }
 
     return (
-        <Box data-testid = 'GanttEntry__entry-button' sx = {disableDefaultCSS ? contentsBox2 : contentsBox}>
-            { duration > 0 && <Stack padding = {1}>
-                {children}
-            </Stack>}
+        <Box data-testid = 'GanttEntry__wrap' sx = {disableDefaultCSS ? contentsBox2 : contentsBox}>
+            {duration > 0 && <>{children}</>}
         </Box>
     )
 }
@@ -56,7 +55,5 @@ GanttEntry.defaultProps = {
     children: undefined,
     disableDefaultCSS: false
 }
-
-export default GanttEntry
 
 //TODO: If entry is not visible, it should not extend max height.

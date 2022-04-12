@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { DeliverableEntry } from 'Components/DeliverableEntry'
+import { DeliverableEntry } from 'Components/Deliverables'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'

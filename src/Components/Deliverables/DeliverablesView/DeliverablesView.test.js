@@ -1,13 +1,13 @@
 import {
     mockSearchEpicsComponent, render, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
 } from 'Utilities/test-utils'
-import { CapabilitiesView } from './index'
+import { DeliverablesView } from './index'
 
 jest.mock('Components/Search/SearchEpics/SearchEpics', () => function testing({ onChange }) {
     return mockSearchEpicsComponent({ onChange })
 })
 
-describe('<CapabilitiesView>', () => {
+describe('<DeliverablesView>', () => {
     const selectDeliverableByIdMock = useModuleMock('Redux/Deliverables/selectors', 'selectDeliverableById')
     const selectDeliverableByParentIdMock = useModuleMock('Redux/Deliverables/selectors', 'selectDeliverableByParentId')
     const requestCreateDeliverableMock = useModuleMock('Redux/Deliverables/actions', 'requestCreateDeliverable')
@@ -33,7 +33,7 @@ describe('<CapabilitiesView>', () => {
     })
 
     test('should render with no edit', () => {
-        render(<CapabilitiesView {...defaultProps}/>)
+        render(<DeliverablesView {...defaultProps}/>)
 
         expect(screen.getByText('DELIVERABLE PARENT TITLE')).toBeInTheDocument()
         expect(screen.queryByPlaceholderText('Link epics by title or product name')).not.toBeInTheDocument()
@@ -44,19 +44,19 @@ describe('<CapabilitiesView>', () => {
             useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
         })
 
-        render(<CapabilitiesView hasEdit {...defaultProps}/>)
+        render(<DeliverablesView hasEdit {...defaultProps}/>)
 
         expect(screen.getByPlaceholderText('Link epics by title or product name')).toBeInTheDocument()
     })
 
     test('should not render when selectedDeliverableId===null', () => {
-        render(<CapabilitiesView portfolioId = {1}/>)
+        render(<DeliverablesView portfolioId = {1}/>)
 
         expect(screen.queryByText('DELIVERABLE PARENT TITLE')).not.toBeInTheDocument()
     })
 
     test('should handle input selection : add new', async() => {
-        render(<CapabilitiesView hasEdit {...defaultProps}/>)
+        render(<DeliverablesView hasEdit {...defaultProps}/>)
 
         userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
 
@@ -93,7 +93,7 @@ describe('<CapabilitiesView>', () => {
             }
         }])
 
-        renderWithRouter(<CapabilitiesView hasEdit {...defaultProps}/>)
+        renderWithRouter(<DeliverablesView hasEdit {...defaultProps}/>)
 
         userEvent.type(screen.getByPlaceholderText('Link epics by title or product name'), 'A')
 

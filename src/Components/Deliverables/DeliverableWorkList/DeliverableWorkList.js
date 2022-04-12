@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { DeliverableWorkEntry } from 'Components/DeliverableWorkEntry'
+import { DeliverableWorkEntry } from 'Components/Deliverables'
 import staticConstants from 'Constants/Statics'
 import PropTypes from 'prop-types'
 

@@ -1,18 +1,7 @@
-import { Box } from '@mui/material'
-import { renderWithRouter, screen } from 'Utilities/test-utils'
-import GanttBody from './GanttBody'
+import { render, screen } from 'Utilities/test-utils'
+import { GanttBody } from './index'
 
-describe('<Gantt Body />', () => {
-
-    const renderComponent = (target) => {
-        return (
-            <Box data-testid = 'GanttEntry__defaultEntryWrapper'>
-                <p style = {{ marginBlock: 0, padding: '8px' }}>
-                    {target.title}
-                </p>
-            </Box>
-        )
-    }
+describe('<GanttBody />', () => {
 
     const mockEntries = [
         {
@@ -27,23 +16,23 @@ describe('<Gantt Body />', () => {
             title: 'test entry3',
             startDate: '2022-07-01',
             dueDate: '2023-2-01'
-        }]
-
-    const MAX_HEIGHT = 'calc(100vh - 156px)'
+        }
+    ]
 
     let dateStart = new Date()
     let dateEnd = new Date()
     dateStart.setMonth(dateStart.getMonth() - 3)
     dateEnd.setMonth(dateStart.getMonth() + 12)
-    let dateRange = [dateStart, dateEnd]
 
     test('should render', () => {
-        renderWithRouter(<GanttBody
-            entries = {mockEntries}
-            maxHeight = {MAX_HEIGHT}
-            dateRange = {dateRange}
-            renderComponent = {renderComponent}
-        />)
+        render(
+            <GanttBody
+                entries = {mockEntries}
+                maxHeight = '400px'
+                dateRange = {[dateStart, dateEnd]}
+                renderComponent = {(entry) => (<div>{entry.title}</div>)}
+            />
+        )
 
         expect(screen.getByText('first entry from last year')).toBeInTheDocument()
         expect(screen.getByText('test entry3')).toBeInTheDocument()
