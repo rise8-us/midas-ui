@@ -1,5 +1,5 @@
 import { Box, Collapse, Divider, Stack, Typography } from '@mui/material'
-import { DeliverableWorkList } from 'Components/DeliverableWorkList'
+import { DeliverableWorkList } from 'Components/Deliverables'
 import { SearchEpics } from 'Components/Search'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
@@ -8,7 +8,7 @@ import { requestCreateDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById, selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
 
-export default function CapabilitiesView({ hasEdit, selectedDeliverableId, portfolioId }) {
+export default function DeliverablesView({ hasEdit, selectedDeliverableId, portfolioId }) {
     const dispatch = useDispatch()
 
     const deliverable = useSelector(state => selectDeliverableById(state, selectedDeliverableId))
@@ -79,13 +79,13 @@ export default function CapabilitiesView({ hasEdit, selectedDeliverableId, portf
     )
 }
 
-CapabilitiesView.propTypes = {
+DeliverablesView.propTypes = {
     hasEdit: PropTypes.bool,
     portfolioId: PropTypes.number.isRequired,
     selectedDeliverableId: PropTypes.number,
 }
 
-CapabilitiesView.defaultProps = {
+DeliverablesView.defaultProps = {
     hasEdit: false,
     selectedDeliverableId: null
 }

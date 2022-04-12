@@ -1,41 +1,30 @@
-import { Box } from '@mui/material'
-import { renderWithRouter, screen } from 'Utilities/test-utils'
-import GanttEntry from './GanttEntry'
+import { render, screen, useModuleMock } from 'Utilities/test-utils'
+import { GanttEntry } from './index'
 
-let dateStart = new Date()
-let dateEnd = new Date()
-dateStart.setMonth(dateStart.getMonth() - 3)
-dateEnd.setMonth(dateStart.getMonth() + 12)
-let dateRange = [dateStart, dateEnd]
+describe('<GanttEntry />', () => {
+    let dateStart = new Date()
+    let dateEnd = new Date()
+    dateStart.setMonth(dateStart.getMonth() - 3)
+    dateEnd.setMonth(dateStart.getMonth() + 12)
 
-describe('<Gantt Entry />', () => {
-
-    const renderComponent = (target) => {
-        return (
-            <Box data-testid = 'GanttEntry__defaultEntryWrapper'>
-                <p style = {{ marginBlock: 0, padding: '8px' }}>
-                    {target.title}
-                </p>
-            </Box>
-        )
-    }
-
-    const entry = {
-        title: 'This is the title',
-        startDate: '2020-01-01',
-        endDate: '2025-12-31'
-    }
+    const parseStringToDateMock = useModuleMock('Utilities/dateHelpers', 'parseStringToDate')
 
     test('should render', () => {
-        renderWithRouter(<GanttEntry
-            startDate = {entry.startDate}
-            dueDate = {entry.dueDate}
-            index = {1}
-            dateRange = {dateRange}
-        >
-            renderComponent = {renderComponent(entry)}
-        </GanttEntry>)
+        parseStringToDateMock
+            .mockReturnValueOnce(dateStart)
+            .mockReturnValueOnce(dateEnd)
 
-        expect(screen.getByText('This is the title')).toBeInTheDocument()
+        render(
+            <GanttEntry
+                startDate = 'foo'
+                dueDate = 'bar'
+                index = {1}
+                dateRange = {[dateStart, dateEnd]}
+            >
+                hello world
+            </GanttEntry>
+        )
+
+        expect(screen.getByText('hello world')).toBeInTheDocument()
     })
 })

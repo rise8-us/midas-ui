@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { GanttBody } from '../GanttBody'
 import { GanttHeader } from '../GanttHeader'
 
-
 const defaultGanttEntryStyling = (theme) => {
     return {
         borderRadius: '4px',
@@ -13,6 +12,7 @@ const defaultGanttEntryStyling = (theme) => {
         textAlign: 'left'
     }
 }
+
 function GanttChart({ entries, maxHeight, renderComponent }) {
     const theme = useTheme()
 

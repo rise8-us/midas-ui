@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types'
 import { useMemo } from 'react'
 import { getMonthAbbreviated } from 'Utilities/dateHelpers'
 
-function GanttHeader({ dateRange }) {
+export default function GanttHeader({ dateRange }) {
     const theme = useTheme()
 
     const monthArray = useMemo(() => {
@@ -51,4 +51,3 @@ function GanttHeader({ dateRange }) {
 GanttHeader.propTypes = {
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
 }
-export default GanttHeader
