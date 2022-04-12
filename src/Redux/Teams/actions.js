@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkRequest } from 'Utilities/requests'
+import { searchHelper } from 'Utilities/searchHelper'
 import Constants from './constants'
 
 export const requestFetchAllTeams = createAsyncThunk(
@@ -38,7 +39,7 @@ export const requestArchiveTeam = createAsyncThunk(
 export const requestFindTeamBy = createAsyncThunk(
     Constants.FIND_TEAM_BY,
     async(search, { rejectWithValue }) => {
-        const request = { endpoint: `/api/teams?search=${search}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/teams?search=${searchHelper(search)}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

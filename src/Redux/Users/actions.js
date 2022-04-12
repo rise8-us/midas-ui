@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkRequest } from 'Utilities/requests'
+import { searchHelper } from 'Utilities/searchHelper'
 import Constants from './constants'
 
 
@@ -31,7 +32,7 @@ export const requestUpdateUserRoles = createAsyncThunk(
 export const requestFindUserBy = createAsyncThunk(
     Constants.FIND_USER_BY,
     async(search, { rejectWithValue }) => {
-        const request = { endpoint: `/api/users?search=${search}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/users?search=${searchHelper(search)}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

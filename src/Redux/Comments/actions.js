@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkRequest } from 'Utilities/requests'
+import { searchHelper } from 'Utilities/searchHelper'
 import Constants from './constants'
 
 export const requestSearchComments = createAsyncThunk(
     Constants.SEARCH_COMMENTS,
     async(search, { rejectWithValue }) => {
-        const request = { endpoint: `/api/comments?search=${search}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/comments?search=${searchHelper(search)}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

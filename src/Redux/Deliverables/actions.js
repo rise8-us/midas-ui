@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkRequest } from 'Utilities/requests'
+import { searchHelper } from 'Utilities/searchHelper'
 import Constants from './constants'
 
 export const requestSearchDeliverables = createAsyncThunk(
     Constants.SEARCH_DELIVERABLES,
     async(search, { rejectWithValue }) => {
-        const request = { endpoint: `/api/deliverables?search=${search}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/deliverables?search=${searchHelper(search)}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

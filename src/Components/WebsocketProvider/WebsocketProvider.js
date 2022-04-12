@@ -8,8 +8,10 @@ import capabilitySubscriptions from 'Redux/Capabilities/subscriptions'
 import commentSubscriptions from 'Redux/Comments/subscriptions'
 import deliverableSubscriptions from 'Redux/Deliverables/subscriptions'
 import epicSubscriptions from 'Redux/Epics/subscriptions'
+import ganttEventSubscriptions from 'Redux/Events/subscriptions'
 import featureSubscriptions from 'Redux/Features/subscriptions'
 import measureSubscriptions from 'Redux/Measures/subscriptions'
+import ganttMilestoneSubscriptions from 'Redux/Milestones/subscriptions'
 import missionThreadSubscriptions from 'Redux/MissionThreads/subscriptions'
 import performanceMeasuresSubscriptions from 'Redux/PerformanceMeasures/subscriptions'
 import personaSubscriptions from 'Redux/Personas/subscriptions'
@@ -20,6 +22,7 @@ import releaseSubscriptions from 'Redux/Releases/subscriptions'
 import { enqueueMessage, removeMessage } from 'Redux/Snackbar/reducer'
 import sourceControlSubscriptions from 'Redux/SourceControls/subscriptions'
 import tagSubscriptions from 'Redux/Tags/subscriptions'
+import ganttTargetSubscriptions from 'Redux/Targets/subscriptions'
 import teamSubscriptions from 'Redux/Teams/subscriptions'
 import SockJS from 'sockjs-client'
 import { initializeApp } from 'Utilities/initializeApp'
@@ -67,12 +70,15 @@ function WebsocketProvider({ children }) {
         }))
 
         assertionSubscriptions({ stompClient })
-        measureSubscriptions({ stompClient })
         capabilitySubscriptions({ stompClient })
         commentSubscriptions({ stompClient })
         deliverableSubscriptions({ stompClient })
         epicSubscriptions({ stompClient })
         featureSubscriptions({ stompClient })
+        ganttEventSubscriptions({ stompClient })
+        ganttMilestoneSubscriptions({ stompClient })
+        ganttTargetSubscriptions({ stompClient })
+        measureSubscriptions({ stompClient })
         missionThreadSubscriptions({ stompClient })
         performanceMeasuresSubscriptions({ stompClient })
         personaSubscriptions({ stompClient })

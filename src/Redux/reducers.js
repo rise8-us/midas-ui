@@ -7,9 +7,11 @@ import commentReducer from './Comments/reducer'
 import deliverablesReducer from './Deliverables/reducer'
 import epicReducer from './Epics/reducer'
 import errorReducer from './Errors/reducer'
+import eventReducer from './Events/reducer'
 import featureReducer from './Features/reducer'
 import filterReducer from './Filters/reducer'
 import measureReducer from './Measures/reducer'
+import milestoneReducer from './Milestones/reducer'
 import missionThreadReducer from './MissionThreads/reducer'
 import modifiedAssertionsReducer from './ModifiedAssertions/reducer'
 import pageAccessReducer from './PageAccess/reducer'
@@ -25,6 +27,7 @@ import roadmapReducer from './Roadmaps/reducer'
 import snackbarReducer from './Snackbar/reducer'
 import sourceControlReducer from './SourceControls/reducer'
 import tagReducer from './Tags/reducer'
+import targetReducer from './Targets/reducer'
 import teamReducer from './Teams/reducer'
 import userReducer from './Users/reducer'
 
@@ -37,9 +40,11 @@ export const rootReducer = combineReducers({
     deliverables: deliverablesReducer,
     epics: epicReducer,
     errors: errorReducer,
+    events: eventReducer,
     features: featureReducer,
     filters: filterReducer,
     measures: measureReducer,
+    milestones: milestoneReducer,
     missionThreads: missionThreadReducer,
     modifiedAssertions: modifiedAssertionsReducer,
     pageAccess: pageAccessReducer,
@@ -55,6 +60,7 @@ export const rootReducer = combineReducers({
     snackbar: snackbarReducer,
     sourceControls: sourceControlReducer,
     tags: tagReducer,
+    targets: targetReducer,
     teams: teamReducer,
     users: userReducer
 })

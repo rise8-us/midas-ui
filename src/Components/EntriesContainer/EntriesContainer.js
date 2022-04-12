@@ -1,13 +1,36 @@
 import { GanttChart } from 'Components/Gantt'
+import { GanttEvent } from 'Components/Gantt/GanttEvent'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
 import { GanttTarget } from 'Components/Gantt/GanttTarget'
+import PropTypes from 'prop-types'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { requestSearchEvents } from 'Redux/Events/actions'
+import { selectEventsByPortfolioId } from 'Redux/Events/selectors'
+import { requestSearchMilestones } from 'Redux/Milestones/actions'
+import { selectMilestonesByPortfolioId } from 'Redux/Milestones/selectors'
+import { requestSearchTargets } from 'Redux/Targets/actions'
+import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
 
-export default function EntriesContainer() {
+export default function EntriesContainer({ portfolioId }) {
+
+    const dispatch = useDispatch()
+    const searchValue = 'portfolio.id:' + portfolioId
+
+    useEffect(() => {
+        dispatch(requestSearchMilestones(searchValue))
+        dispatch(requestSearchEvents(searchValue))
+        dispatch(requestSearchTargets(searchValue))
+    }, [])
+
+    const milestones = useSelector(state => selectMilestonesByPortfolioId(state, portfolioId))
+    const events = useSelector(state => selectEventsByPortfolioId(state, portfolioId))
+    const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
     const entries = [
-        ...mockMilestones,
-        //events
-        ...newMockEntries
+        ...milestones,
+        ...events,
+        ...targets
     ]
 
     const renderComponent = (entry, dateRange, index) => {
@@ -17,7 +40,7 @@ export default function EntriesContainer() {
         case 'milestone':
             return <GanttMilestone milestone = {entry} dateRange = {dateRange} index = {index} />
         case 'event':
-            break
+            return <GanttEvent event = {entry}/>
         }
     }
 
@@ -30,11 +53,11 @@ export default function EntriesContainer() {
     )
 }
 
-// EntriesContainer.propTypes = {
-//     portfolioId: PropTypes.number.isRequired,
-// }
+EntriesContainer.propTypes = {
+    portfolioId: PropTypes.number.isRequired,
+}
 
-const newMockEntries = [
+const mockTargets = [
     {
         title: 'Create Midas App',
         startDate: '2020-12-15',
