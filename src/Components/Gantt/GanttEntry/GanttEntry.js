@@ -1,52 +1,60 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { PropTypes } from 'prop-types'
+import { calculatePositionRange, calculateSinglePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
-const calculatePosition = (dateRangeEntry, totalDateRange) => {
+function GanttEntry({ startDate, dueDate, index, dateRange, children, disableDefaultCSS }) {
 
-    const range = totalDateRange[1] - totalDateRange[0]
-    const start = (dateRangeEntry[0] - totalDateRange[0]) / range
-    const end = (dateRangeEntry[1] - totalDateRange[0]) / range
-    return [start * 100, Math.abs(end - start) * 100]
-}
-function GanttEntry({ entry, index, dateRange }) {
-    const [startPos, duration] = calculatePosition([entry.startDate, entry.endDate], dateRange)
+    const start = parseStringToDate(startDate)
+    const due = parseStringToDate(dueDate)
+    const [startPos, duration] = start ?
+        calculatePositionRange([start, due], dateRange) :
+        calculateSinglePosition(dateRange, due)
 
-    const contentsBox = (theme) => {
+    const defaultStyle = {
+        display: 'inline',
+        position: 'absolute',
+        left: `${startPos}%`,
+        width: `${duration}%`,
+        zIndex: 3
+    }
+
+    const contentsBox = () => {
         return {
-            display: 'block',
-            position: 'absolute',
-            borderRadius: '4px',
-            top: `${16 + index * 56}px`,
-            left: `${startPos}%`,
-            width: `${duration}%`,
-            zIndex: 3,
-            background: theme.palette.grey[800],
-            boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
-            textAlign: 'left'
+            ...defaultStyle,
+            top: `${index * 56 + 32}px`,
+        }
+    }
+
+    const contentsBox2 = () => {
+        return {
+            ...defaultStyle,
+            top: '32px',
+            height: '100%',
+            width: '100%'
         }
     }
 
     return (
-        <Box data-testid = 'GanttEntry__entry-button' sx = {contentsBox}>
+        <Box data-testid = 'GanttEntry__entry-button' sx = {disableDefaultCSS ? contentsBox2 : contentsBox}>
             { duration > 0 && <Stack padding = {1}>
-                <Typography>
-                    {entry.title}
-                </Typography>
+                {children}
             </Stack>}
         </Box>
     )
 }
 
 GanttEntry.propTypes = {
-    entry: PropTypes.shape({
-        title: PropTypes.string,
-        startDate: PropTypes.instanceOf(Date),
-        endDate: PropTypes.instanceOf(Date),
-        details: PropTypes.string,
-        completion: PropTypes.number
-    }).isRequired,
+    startDate: PropTypes.string,
+    dueDate: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
-    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
+    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
+    children: PropTypes.node,
+    disableDefaultCSS: PropTypes.bool
+}
+GanttEntry.defaultProps = {
+    startDate: undefined,
+    children: undefined,
+    disableDefaultCSS: false
 }
 
 export default GanttEntry

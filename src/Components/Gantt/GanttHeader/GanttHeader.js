@@ -1,4 +1,4 @@
-import { Grid, Typography, useTheme } from '@mui/material'
+import { Typography, useTheme } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useMemo } from 'react'
 import { getMonthAbbreviated } from 'Utilities/dateHelpers'
@@ -18,24 +18,33 @@ function GanttHeader({ dateRange }) {
     }, [dateRange])
 
     const sxGridContainer = {
+        display: 'flex',
         position: 'sticky',
         top: 0,
+        zIndex: 5,
         backgroundColor: theme.palette.background.paper,
-        width: '100%',
         borderBottom: '1px solid black',
-        zIndex: 5
+    }
+
+    const columnStyle = {
+        borderLeft: '1px solid black',
+        flexGrow: 1
     }
 
     return (
-        <Grid container wrap = 'nowrap' sx = {sxGridContainer}>
+        <div style = {sxGridContainer}>
             {monthArray.map((monthIndex, index) => (
-                <Grid container item sx = {{ minWidth: '112px', borderLeft: '1px solid black' }} key = {index}>
-                    <Typography variant = 'h6' sx = {{ color: theme.palette.grey[600], marginLeft: 1 }}>
+                <div style = {columnStyle} key = {index}>
+                    <Typography
+                        variant = 'h6'
+                        width = {0}
+                        sx = {{ color: theme.palette.grey[600], marginLeft: 1 }}
+                    >
                         {getMonthAbbreviated(monthIndex)}
                     </Typography>
-                </Grid>
+                </div>
             ))}
-        </Grid>
+        </div>
     )
 }
 

@@ -3,6 +3,14 @@ export const getDateIfValid = (dateString) => {
     return date.toString() === 'Invalid Date' ? null : date
 }
 
+export const parseStringToDate = (entry) => {
+    const splitEntry = entry?.split('-')
+
+    if (!splitEntry) return null
+
+    return new Date(splitEntry[0], splitEntry[1] - 1, splitEntry[2])
+}
+
 export const getDateInDisplayOrder = (dateString) => {
     const date = getDateIfValid(dateString)
     return date ? [
@@ -44,6 +52,19 @@ export const getIsDateInRange = (date, range) => {
     if (start === null) return Date.parse(date) < Date.parse(end)
     if (end === null) return Date.parse(date) > Date.parse(start)
     return Date.parse(date) > Date.parse(start) && Date.parse(date) < Date.parse(end)
+}
+
+export const calculateSinglePosition = (dateRange, dateToCalculate = new Date()) => {
+    const inRange = getIsDateInRange(dateToCalculate, [dateRange[0].toISOString(), dateRange[1].toISOString()])
+    const position = (dateToCalculate - dateRange[0]) / (dateRange[1] - dateRange[0]) * 100
+    return [inRange, position]
+}
+
+export const calculatePositionRange = (dateRangeEntry, totalDateRange) => {
+    const range = totalDateRange[1] - totalDateRange[0]
+    const start = (dateRangeEntry[0] - totalDateRange[0]) / range
+    const end = (dateRangeEntry[1] - totalDateRange[0]) / range
+    return [start * 100, Math.abs(end - start) * 100]
 }
 
 export const DateConstants = {
