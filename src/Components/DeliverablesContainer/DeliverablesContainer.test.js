@@ -3,8 +3,8 @@ import { DeliverablesContainer } from './index'
 
 describe('<DeliverablesContainer />', () => {
 
-    const selectCapabilitiesPagePermissionMock =
-        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
+    const selectPortfolioPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
     const selectDeliverablesByCapabilityIdMock =
         useModuleMock('Redux/Deliverables/selectors', 'selectDeliverablesByCapabilityId')
     const requestCreateDeliverableMock =
@@ -14,8 +14,11 @@ describe('<DeliverablesContainer />', () => {
     const requestDeleteDeliverableMock =
         useModuleMock('Redux/Deliverables/actions', 'requestDeleteDeliverable')
 
+    const defaultProps = { capabilityId: 2,  portfolioId: 1 }
+
     beforeEach(() => {
         useDispatchMock().mockReturnValue()
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
         selectDeliverablesByCapabilityIdMock.mockReturnValue([
             {
                 assignedToId: null,
@@ -38,15 +41,15 @@ describe('<DeliverablesContainer />', () => {
     })
 
     test('should render', () => {
-        render(<DeliverablesContainer capabilityId = {2}/>)
+        render(<DeliverablesContainer {...defaultProps}/>)
         expect(screen.getByDisplayValue('Deliverable')).toBeInTheDocument()
+        selectPortfolioPagePermissionMock.mockReturnValue({ })
     })
 
     test('should call dispatch to create deliverable', () => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<DeliverablesContainer capabilityId = {2}/>)
+        render(<DeliverablesContainer {...defaultProps}/>)
 
         userEvent.type(screen.getByPlaceholderText('Add new deliverable...'), 'DeliverableCreate{enter}')
 
@@ -54,10 +57,9 @@ describe('<DeliverablesContainer />', () => {
     })
 
     test('should call dispatch to update deliverable', () => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<DeliverablesContainer capabilityId = {2}/>)
+        render(<DeliverablesContainer {...defaultProps}/>)
 
         act(() => {
             userEvent.type(screen.getByText('Deliverable'), 'DeliverableCreate{enter}')
@@ -67,10 +69,9 @@ describe('<DeliverablesContainer />', () => {
     })
 
     test('should call dispatch to delete deliverable', () => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
         useDispatchMock().mockResolvedValue({ type: '' })
 
-        render(<DeliverablesContainer capabilityId = {2}/>)
+        render(<DeliverablesContainer {...defaultProps}/>)
 
         act(() => {
             userEvent.click(screen.getByText('Deliverable'))

@@ -1,5 +1,5 @@
 import { requestFetchInit } from '../Init/actions'
-import reducer, { setAssertionComment, setCapabilityPage, setInitialized, setPageScrollY } from './reducer'
+import reducer, { setAssertionComment, setInitialized, setPageScrollY, setPortfolioPageSettings } from './reducer'
 
 const mockStore = {
     assertionCommentId: null,
@@ -18,9 +18,7 @@ const mockStore = {
     sonarqubeSecurity: {},
     tagTypes: [],
     initialized: false,
-    capabilityPage: {
-        selectedDeliverableId: null
-    }
+    portfolioPage: {}
 }
 
 test('should handle initial state', () => {
@@ -81,19 +79,19 @@ test('should handle setInitialized', () => {
     })
 })
 
-describe('should handle setCapabilityPage', () => {
-    const payload = { selectedDeliverableId: 2 }
+describe('should handle setPortfolioPageSetting', () => {
+    const payload = { id: 1, selectedDeliverableId: 2 }
 
     test('should set selectedDeliverableId to null', () => {
-        const mockState = { ...mockStore, capabilityPage: payload }
+        const mockState = { ...mockStore, portfolioPage: { 1: { selectedDeliverableId: 2 } } }
 
-        expect(reducer(mockState, { type: setCapabilityPage.type, payload: payload }))
-            .toEqual({ ...mockStore, capabilityPage: { selectedDeliverableId: null } })
+        expect(reducer(mockState, { type: setPortfolioPageSettings.type, payload: payload }))
+            .toEqual({ ...mockStore, portfolioPage: { 1: { selectedDeliverableId: null } } })
     })
 
     test('should set selectedDeliverableId to 2', () => {
-        expect(reducer(mockStore, { type: setCapabilityPage.type, payload: payload }))
-            .toEqual({ ...mockStore, capabilityPage: payload })
+        expect(reducer(mockStore, { type: setPortfolioPageSettings.type, payload: payload }))
+            .toEqual({ ...mockStore, portfolioPage: { 1: { selectedDeliverableId: 2 } } })
     })
 })
 

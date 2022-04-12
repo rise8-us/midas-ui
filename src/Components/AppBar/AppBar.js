@@ -61,9 +61,6 @@ function AppBar() {
         }, {
             text: 'Portfolios',
             onClick: () => history.push('/portfolios')
-        }, {
-            text: 'Capabilities',
-            onClick: () => history.push('/capabilities')
         }
     ]
 

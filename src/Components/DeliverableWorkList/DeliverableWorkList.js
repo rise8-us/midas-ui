@@ -3,13 +3,13 @@ import { DeliverableWorkEntry } from 'Components/DeliverableWorkEntry'
 import staticConstants from 'Constants/Statics'
 import PropTypes from 'prop-types'
 
-export default function DeliverableWorkList({ workList }) {
+export default function DeliverableWorkList({ deliverables, hasEdit }) {
     return (
         <>
-            {workList.map((child, index) => (
-                <DeliverableWorkEntry key = {index} id = {child.id}/>
+            {deliverables.map((child, index) => (
+                <DeliverableWorkEntry key = {index} id = {child.id} hasEdit = {hasEdit}/>
             ))}
-            {workList.length === 0 &&
+            {deliverables.length === 0 &&
                 <Typography
                     fontStyle = 'italic'
                     fontWeight = {300}
@@ -24,11 +24,13 @@ export default function DeliverableWorkList({ workList }) {
 }
 
 DeliverableWorkList.propTypes = {
-    workList: PropTypes.arrayOf(PropTypes.shape({
+    hasEdit: PropTypes.bool,
+    deliverables: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number
     }))
 }
 
 DeliverableWorkList.defaultProps = {
-    workList: []
+    hasEdit: false,
+    deliverables: []
 }

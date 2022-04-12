@@ -6,11 +6,10 @@ describe('<DraggableDeliverableList />', () => {
     const commonProps = {
         capabilityId: 1,
         onUpdate: jest.fn,
-        onDelete: jest.fn
+        onDelete: jest.fn,
+        onClick: jest.fn
     }
 
-    const selectCapabilitiesPagePermissionMock =
-        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
     const selectDeliverablesByCapabilityIdMock =
         useModuleMock('Redux/Deliverables/selectors', 'selectDeliverablesByCapabilityId')
 
@@ -19,17 +18,13 @@ describe('<DraggableDeliverableList />', () => {
     })
 
     test('should render no deliverables text', () => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(false)
-
         render(<DraggableDeliverableList {...commonProps}/>)
 
         expect(screen.getByText('No Deliverables added yet.')).toBeInTheDocument()
     })
 
     test('should not render no deliverables text', () => {
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
-
-        render(<DraggableDeliverableList {...commonProps}/>)
+        render(<DraggableDeliverableList {...commonProps} hasEdit/>)
 
         expect(screen.queryByText('No Deliverables added yet.')).not.toBeInTheDocument()
     })

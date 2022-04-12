@@ -1,4 +1,4 @@
-import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { PortfolioCapabilities } from './index'
 
 describe('<PortfolioCapabilities />', () => {
@@ -7,18 +7,19 @@ describe('<PortfolioCapabilities />', () => {
     const selectCapabilitiesByPortfolioIdMock =
         useModuleMock('Redux/Capabilities/selectors', 'selectCapabilitiesByPortfolioId')
 
-    const foundCapabilities = [{
-        title: 'title 1',
-        description: 'description 1',
-        id: 1,
-        deliverableIds: [1]
-    },
-    {
-        title: 'title 2',
-        description: 'description 2',
-        id: 2,
-        deliverableIds: [2]
-    }]
+    const foundCapabilities = [
+        {
+            title: 'title 1',
+            description: 'description 1',
+            id: 1,
+            deliverableIds: [1]
+        }, {
+            title: 'title 2',
+            description: 'description 2',
+            id: 2,
+            deliverableIds: [2]
+        }
+    ]
 
     const permissions = {
         edit: true
@@ -39,6 +40,8 @@ describe('<PortfolioCapabilities />', () => {
     })
 
     test('should render existing portfolio capability', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({})
+
         render(<PortfolioCapabilities portfolioId = {1}/>)
 
         expect(screen.getByDisplayValue('title 1')).toBeInTheDocument()
@@ -61,6 +64,49 @@ describe('<PortfolioCapabilities />', () => {
 
         expect(screen.getByDisplayValue('title 1')).toBeInTheDocument()
         expect(screen.getByDisplayValue('description 1')).toBeInTheDocument()
+    })
+
+    test('should handle moreOptions menu - Link existing', async() => {
+        const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+        useDispatchMock().mockResolvedValue({})
+
+        render(<PortfolioCapabilities portfolioId = {1}/>)
+
+        userEvent.click(screen.getByTestId('MoreVertIcon'))
+        expect(await screen.findByText('Link existing')).toBeInTheDocument()
+        userEvent.click(screen.getByText('Link existing'))
+
+        expect(openPopupMock).toHaveBeenCalledWith('LinkCapabilityPopup', 'LinkCapabilityPopup', { portfolioId: 1 })
+    })
+
+    test('should handle moreOptions menu - Add new', async() => {
+        const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
+        waitFor(() => {
+            useDispatchMock().mockResolvedValue({ })
+        })
+        requestCreateCapabilityMock.mockReturnValue()
+
+        selectCapabilitiesByPortfolioIdMock
+            .mockReturnValueOnce(foundCapabilities)
+            .mockReturnValueOnce(foundCapabilities)
+            .mockReturnValue([...foundCapabilities, {
+                title: 'title 3',
+                description: 'description 3',
+                id: 3,
+                deliverableIds: []
+            }])
+
+        render(<PortfolioCapabilities portfolioId = {1}/>)
+
+        userEvent.click(screen.getByTestId('MoreVertIcon'))
+        userEvent.click(await screen.findByText('Add new'))
+
+        expect(requestCreateCapabilityMock).toHaveBeenCalledWith({
+            referenceId: 3,
+            portfolioId: 1,
+            title: 'Enter new requirement here'
+        })
+
     })
 
 })

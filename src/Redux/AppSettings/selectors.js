@@ -24,4 +24,8 @@ export const selectAssertionCommentInfo = (state) => ({
     type: state.app.assertionCommentType
 })
 
-export const selectCapabilityPageSettings = (state) => state.app.capabilityPage
+export const selectPortfolioPageSettings = (state, id) => {
+    return state.app.portfolioPage[id] ?? {
+        selectedDeliverableId: null
+    }
+}

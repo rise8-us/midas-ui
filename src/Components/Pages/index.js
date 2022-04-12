@@ -1,7 +1,6 @@
 export { Account } from './Account'
 export { Admin } from './Admin'
 export { AppMetrics } from './AppMetrics'
-export { Capabilities } from './Capabilities'
 export { Dashboard } from './Dashboard'
 export { PageNotFound } from './PageNotFound'
 export { Portfolio } from './Portfolio'

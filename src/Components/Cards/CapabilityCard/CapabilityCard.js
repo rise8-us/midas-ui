@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@mui/material'
 import PropTypes from 'prop-types'
-import { scrollbar, styled } from 'Styles/materialThemes'
+import { styled } from 'Styles/materialThemes'
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
@@ -9,11 +9,8 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }))
 
 const StyledCardContent = styled(CardContent)(({ theme }) => ({
-    ...scrollbar(theme),
-    overflowY: 'scroll',
     paddingBottom: 0,
-    marginBottom: theme.spacing(2),
-    maxHeight: 'calc(100vh - 244px)'
+    marginBottom: theme.spacing(2)
 }))
 
 export default function CapabilityCard({ title, subheader, action, children }) {

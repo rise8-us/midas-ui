@@ -1,13 +1,10 @@
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { DeliverableEntry } from './index'
 
 describe('<DeliverableEntry>', () => {
 
-    const setCapabilityPageMock = useModuleMock('Redux/AppSettings/reducer', 'setCapabilityPage')
-    const selectCapabilityPageSettingsMock =
-        useModuleMock('Redux/AppSettings/selectors', 'selectCapabilityPageSettings')
-    const selectCapabilitiesPagePermissionMock =
-        useModuleMock('Redux/PageAccess/selectors', 'selectCapabilitiesPagePermission')
+    const selectPortfolioPageSettingsMock =
+        useModuleMock('Redux/AppSettings/selectors', 'selectPortfolioPageSettings')
 
     const defaultProps = {
         id: 1,
@@ -17,28 +14,26 @@ describe('<DeliverableEntry>', () => {
     }
 
     test('should render', () => {
-        selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: 1 })
-        selectCapabilitiesPagePermissionMock.mockReturnValue(false)
+        selectPortfolioPageSettingsMock.mockReturnValue({ selectedDeliverableId: 1 })
 
-        render(<DeliverableEntry {...defaultProps} />)
+        render(<DeliverableEntry {...defaultProps}/>)
 
-        fireEvent.mouseEnter(screen.getByTestId('DeliverableEntry__wrap'))
-        fireEvent.mouseLeave(screen.getByTestId('DeliverableEntry__wrap'))
-        fireEvent.mouseEnter(screen.getByTestId('DraggableRow__container'))
+        userEvent.hover(screen.getByTestId('DeliverableEntry__wrap'))
+        userEvent.click(screen.getByTestId('DeliverableEntry__wrap'))
 
         expect(screen.getByTestId('DeliverableEntry__empty-div')).toBeInTheDocument()
     })
 
-    test('should update selectedDeliverableId', () => {
+    test('should fire onClick', () => {
         useDispatchMock().mockReturnValue({})
-        selectCapabilityPageSettingsMock.mockReturnValue({ selectedDeliverableId: null })
-        selectCapabilitiesPagePermissionMock.mockReturnValue(true)
+        selectPortfolioPageSettingsMock.mockReturnValue({ selectedDeliverableId: null })
+        const onClickMock = jest.fn()
 
-        render(<DeliverableEntry {...defaultProps}/>)
+        render(<DeliverableEntry {...defaultProps} hasEdit onClick = {onClickMock}/>)
 
         fireEvent.click(screen.getByTestId('DeliverableEntry__wrap'))
 
-        expect(setCapabilityPageMock).toHaveBeenCalledWith({ selectedDeliverableId: 1 })
+        expect(onClickMock).toHaveBeenCalled()
     })
 
 })

@@ -19,7 +19,7 @@ export default function Portfolio() {
     const { portfolioId } = useParams()
     const id = parseInt(portfolioId)
 
-    const [value, setValue] = useState('requirements') // TODO: change back to objectives
+    const [value, setValue] = useState('objectives')
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
