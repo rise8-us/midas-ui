@@ -2,6 +2,32 @@ import * as dateHelper from './dateHelpers'
 
 describe('date Helpers', () => {
 
+    describe('GanttDate Helpers', () => {
+        const rangeStart = new Date(2020, 0, 1)
+        const rangeEnd = new Date(2020, 11, 31)
+        const entryStart = new Date(2020, 2, 1)
+        const entryEnd = new Date(2020, 8, 1)
+
+        test('test calculatePosition - both null', () => {
+            expect(dateHelper.calculatePosition([null, null], [])).toEqual([0, 0])
+        })
+
+        test('test calculatePosition - one null', () => {
+            expect(dateHelper.calculatePosition([null, entryEnd], [rangeStart, rangeEnd])).toEqual([66.837899543379, 0])
+            expect(dateHelper.calculatePosition([entryEnd, null], [rangeStart, rangeEnd])).toEqual([66.837899543379, 0])
+        })
+
+        test('test calculatePosition - no nulls & in range', () => {
+            expect(dateHelper.calculatePosition([entryStart, entryEnd], [rangeStart, rangeEnd]))
+                .toEqual([16.43835616438356, 50.39954337899544])
+        })
+
+        test('test calculatePosition - no nulls & not in range', () => {
+            expect(dateHelper.calculatePosition([rangeStart, entryStart], [entryEnd, rangeEnd]))
+                .toEqual([null, 49.56970740103268])
+        })
+    })
+
     test('getDateIfValid - null param', () => {
         expect(dateHelper.getDateIfValid(null)).toBeNull()
     })
@@ -82,10 +108,10 @@ describe('date Helpers', () => {
     })
 
     test('getDayAbbreviated - default', () => {
-        expect(dateHelper.getDayAbbreviated(0)).toEqual('Mon')
+        expect(dateHelper.getDayAbbreviated(0)).toEqual('Sun')
     })
 
     test('getDayAbbreviated - custom', () => {
-        expect(dateHelper.getDayAbbreviated(0, 6)).toEqual('Monday')
+        expect(dateHelper.getDayAbbreviated(0, 6)).toEqual('Sunday')
     })
 })

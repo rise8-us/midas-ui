@@ -36,7 +36,6 @@ export const getDifferenceInDays = (start, end) => {
     return (endDate - startDate) / (1000 * 3600 * 24)
 }
 
-
 export const getTodayAsPercentageInRange = (start, end) => {
     const total = Math.abs(getDifferenceInDays(start, end))
     const soFar = Math.abs(getDifferenceInDays(start, new Date()))
@@ -54,21 +53,32 @@ export const getIsDateInRange = (date, range) => {
     return Date.parse(date) > Date.parse(start) && Date.parse(date) < Date.parse(end)
 }
 
-export const calculateSinglePosition = (dateRange, dateToCalculate = new Date()) => {
-    const inRange = getIsDateInRange(dateToCalculate, [dateRange[0].toISOString(), dateRange[1].toISOString()])
+export const calculateSinglePosition = (dateToCalculate, dateRange) => {
     const position = (dateToCalculate - dateRange[0]) / (dateRange[1] - dateRange[0]) * 100
-    return [inRange, position]
+    return [position, 0]
 }
 
-export const calculatePositionRange = (dateRangeEntry, totalDateRange) => {
+export const calculatePosition = (dateRangeEntry, totalDateRange) => {
+    if (dateRangeEntry[0] === null && dateRangeEntry[1] === null) {
+        return [0, 0]
+    }
+
+    if (dateRangeEntry.includes(null)) {
+        const dateInput = dateRangeEntry[0] ?? dateRangeEntry[1]
+        return calculateSinglePosition(dateInput, totalDateRange)
+    }
+
     const range = totalDateRange[1] - totalDateRange[0]
     const start = (dateRangeEntry[0] - totalDateRange[0]) / range
     const end = (dateRangeEntry[1] - totalDateRange[0]) / range
-    return [start * 100, Math.abs(end - start) * 100]
+
+    if (start < 1 && end > 0) return [start * 100, Math.abs(end - start) * 100]
+
+    return [null, Math.abs(end - start) * 100]
 }
 
 export const DateConstants = {
-    Day: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    Day: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     Month: ['January', 'Febuary', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December']
 }

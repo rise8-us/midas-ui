@@ -1,20 +1,17 @@
 import { Box } from '@mui/material'
 import { PropTypes } from 'prop-types'
-import { calculatePositionRange, calculateSinglePosition, parseStringToDate } from 'Utilities/dateHelpers'
+import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
 export default function GanttEntry(props) {
     const { startDate, dueDate, index, dateRange, children, disableDefaultCSS } = props
 
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)
-    const [startPos, duration] = start ?
-        calculatePositionRange([start, due], dateRange) :
-        calculateSinglePosition(dateRange, due)
+    const [startLeft, duration] = calculatePosition([start, due], dateRange)
 
     const defaultStyle = {
-        display: 'inline',
         position: 'absolute',
-        left: `${startPos}%`,
+        left: `${startLeft}%`,
         width: `${duration}%`,
         zIndex: 3
     }
@@ -22,22 +19,24 @@ export default function GanttEntry(props) {
     const contentsBox = () => {
         return {
             ...defaultStyle,
-            top: `${index * 56 + 32}px`,
+            top: `${index * 56}px`,
         }
     }
 
     const contentsBox2 = () => {
         return {
             ...defaultStyle,
-            top: '32px',
+            top: '0px',
             height: '100%',
-            width: '100%'
+            width: 'auto',
         }
     }
 
+    if (!startLeft) return null
+
     return (
         <Box data-testid = 'GanttEntry__wrap' sx = {disableDefaultCSS ? contentsBox2 : contentsBox}>
-            {duration > 0 && <>{children}</>}
+            {children}
         </Box>
     )
 }
