@@ -1,47 +1,28 @@
-import { Typography, useTheme } from '@mui/material'
 import { PropTypes } from 'prop-types'
-import { useMemo } from 'react'
-import { getMonthAbbreviated } from 'Utilities/dateHelpers'
+import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
 
-export default function GanttHeader({ dateRange }) {
-    const theme = useTheme()
+export default function GanttHeader(props) {
+    const { columns, chartBackgroundColor, borderColor, titleComponent, ...titleProps } = props
+    const TitleComponent = titleComponent
 
-    const monthArray = useMemo(() => {
-        let currentMonth = dateRange[0].getMonth()
-        const monthOrder = []
-
-        for (let i = 0; i < 12; i++) {
-            monthOrder.push(currentMonth)
-            currentMonth = (currentMonth + 1) % 12
-        }
-        return monthOrder
-    }, [dateRange])
-
-    const sxGridContainer = {
-        display: 'flex',
+    const containerStyle = {
+        ...rowStyles(chartBackgroundColor, borderColor),
         position: 'sticky',
         top: 0,
         zIndex: 5,
-        backgroundColor: theme.palette.background.paper,
-        borderBottom: '1px solid black',
-    }
-
-    const columnStyle = {
-        borderLeft: '1px solid black',
-        flexGrow: 1
     }
 
     return (
-        <div style = {sxGridContainer}>
-            {monthArray.map((monthIndex, index) => (
-                <div style = {columnStyle} key = {index}>
-                    <Typography
-                        variant = 'h6'
-                        width = {0}
-                        sx = {{ color: theme.palette.grey[600], marginLeft: 1 }}
-                    >
-                        {getMonthAbbreviated(monthIndex)}
-                    </Typography>
+        <div style = {containerStyle} data-testid = 'GanttHeader__wrap'>
+            {columns.map((column, index) => (
+                <div
+                    style = {cellStyles(borderColor, column.flexGrow)}
+                    data-testid = {'GanttHeader__column-' + index}
+                    key = {index}
+                >
+                    <TitleComponent {...titleProps}>
+                        {column.title}
+                    </TitleComponent>
                 </div>
             ))}
         </div>
@@ -49,5 +30,18 @@ export default function GanttHeader({ dateRange }) {
 }
 
 GanttHeader.propTypes = {
-    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
+    borderColor: PropTypes.string,
+    chartBackgroundColor: PropTypes.string,
+    columns: PropTypes.arrayOf(PropTypes.shape({
+        title: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        flexGrow: PropTypes.number
+    })),
+    titleComponent: PropTypes.elementType
+}
+
+GanttHeader.defaultProps = {
+    borderColor: '#d8d8d8',
+    chartBackgroundColor: '#fff',
+    columns: [],
+    titleComponent: 'p'
 }

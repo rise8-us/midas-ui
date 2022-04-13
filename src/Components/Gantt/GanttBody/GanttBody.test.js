@@ -3,7 +3,7 @@ import { GanttBody } from './index'
 
 describe('<GanttBody />', () => {
 
-    const mockEntries = [
+    const entries = [
         {
             title: 'first entry from last year',
             startDate: '2021-11-15',
@@ -27,10 +27,10 @@ describe('<GanttBody />', () => {
     test('should render', () => {
         render(
             <GanttBody
-                entries = {mockEntries}
-                maxHeight = '400px'
+                entries = {entries}
                 dateRange = {[dateStart, dateEnd]}
                 renderComponent = {(entry) => (<div>{entry.title}</div>)}
+                columns = {[{}]}
             />
         )
 

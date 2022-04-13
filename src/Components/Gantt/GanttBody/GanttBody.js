@@ -1,20 +1,21 @@
 import { useTheme } from '@mui/material'
 import { PropTypes } from 'prop-types'
-import { calculateSinglePosition, getIsDateInRange } from 'Utilities/dateHelpers'
+import { calculatePosition, getIsDateInRange } from 'Utilities/dateHelpers'
+import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
 import { GanttEntry } from '../GanttEntry'
 
-export default function GanttBody({ entries, dateRange, renderComponent }) {
+export default function GanttBody({ borderColor, columns, chartBackgroundColor, dateRange, entries, renderComponent }) {
     const theme = useTheme()
 
     const baseHeight = 56
     const numEntries = entries.length
 
     const MIN_HEIGHT = baseHeight * numEntries
-    const [shouldRenderDivider, dividerPosition] = calculateSinglePosition(dateRange)
+    const [dividerPosition] = calculatePosition([new Date(), null], dateRange)
 
     const sxDivider = {
         top: '0px',
-        position: 'inherit',
+        position: 'absolute',
         left: `calc(${dividerPosition}% + 3px)`,
         height: '100%',
         width: '3px',
@@ -22,9 +23,8 @@ export default function GanttBody({ entries, dateRange, renderComponent }) {
         zIndex: 4
     }
 
-    const sxGridContainer = {
-        display: 'flex',
-        backgroundColor: theme.palette.background.paper,
+    const containerStyles = {
+        ...rowStyles(chartBackgroundColor, borderColor),
         minHeight: (MIN_HEIGHT + 2 + 16) + 'px',
     }
 
@@ -33,17 +33,17 @@ export default function GanttBody({ entries, dateRange, renderComponent }) {
         const dueDateInRange = getIsDateInRange(entry.dueDate, isoDateRange)
         const startDateInRange = getIsDateInRange(entry.startDate, isoDateRange)
 
-        return entry.startDate !== null ? (startDateInRange || dueDateInRange) : dueDateInRange
+        return startDateInRange || dueDateInRange
     }
 
     return (
-        <>
-            <div style = {sxGridContainer}>
-                {Array(12).fill().map((_, index) => (
-                    <div style = {{ flexGrow: 1, borderLeft: '1px solid black' }} key = {index} />
+        <div style = {{ position: 'relative' }}>
+            <div style = {containerStyles}>
+                {columns.map((column, index) => (
+                    <div style = {cellStyles(borderColor, column.flexGrow)} key = {index} />
                 ))}
             </div>
-            {shouldRenderDivider && <div style = {sxDivider} />}
+            {dividerPosition && <div style = {sxDivider} />}
             {entries?.filter(entry => dateRangeFilter(entry))
                 .map((entry, index) => (
                     <GanttEntry
@@ -55,22 +55,29 @@ export default function GanttBody({ entries, dateRange, renderComponent }) {
                         {renderComponent(entry, dateRange, index)}
                     </GanttEntry>
                 ))}
-        </>
+        </div>
     )
 }
 
 GanttBody.propTypes = {
+    borderColor: PropTypes.string,
+    chartBackgroundColor: PropTypes.string,
+    columns: PropTypes.arrayOf(PropTypes.shape({
+        title: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        flexGrow: PropTypes.number
+    })).isRequired,
+    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
     entries: PropTypes.arrayOf(PropTypes.shape({
         title: PropTypes.string,
         startDate: PropTypes.string,
         dueDate: PropTypes.string.isRequired,
-    })
-    ),
+    })),
     renderComponent: PropTypes.func.isRequired,
-    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
 }
 
 GanttBody.defaultProps = {
+    borderColor: '#d8d8d8',
+    chartBackgroundColor: '#fff',
     entries: [{
         title: null,
         dueDate: null,

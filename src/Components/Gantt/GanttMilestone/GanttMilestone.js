@@ -1,12 +1,12 @@
 import { Box } from '@mui/material'
 import { PropTypes } from 'prop-types'
-import { calculateSinglePosition, parseStringToDate } from 'Utilities/dateHelpers'
+import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
 function GanttMilestone({ milestone, index, dateRange }) {
 
     const dueDate = parseStringToDate(milestone.dueDate)
 
-    const [shouldRender, position] = calculateSinglePosition(dateRange, dueDate)
+    const [shouldRender, position] = calculatePosition([null, dueDate], dateRange)
 
     const sxMilestone = {
         position: 'absolute',
