@@ -9,6 +9,10 @@ export default function EntriesContainer() {
         //events
         ...newMockEntries
     ]
+    let dateStart = new Date()
+    dateStart.setMonth(dateStart.getMonth() - 3)
+    dateStart.setDate(1)
+    dateStart.setHours(0, 0, 0)
 
     const renderComponent = (entry, dateRange, index) => {
         switch (entry.type) {
@@ -23,6 +27,7 @@ export default function EntriesContainer() {
 
     return (
         <GanttChart
+            startDate = {dateStart}
             maxHeight = 'calc(100% - 200px)'
             entries = {entries}
             renderComponent = {renderComponent}
