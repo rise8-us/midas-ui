@@ -4,7 +4,7 @@ import { Portfolio } from './index'
 jest.mock('Components/Portfolio/PortfolioCapabilities/PortfolioCapabilities',
     () => function testing() { return (<div>RequirementsTab</div>) })
 
-jest.mock('Components/Gantt/GanttChart/GanttChart',
+jest.mock('Components/EntriesContainer/EntriesContainer',
     () => function testing() { return (<div>ObjectivesTab</div>) })
 
 describe('<Portfolio />', () => {

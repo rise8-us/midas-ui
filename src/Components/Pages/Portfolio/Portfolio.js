@@ -96,7 +96,7 @@ export default function Portfolio() {
                         <Box paddingY = {3}>
                             { value === 'objectives' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    <EntriesContainer/>
+                                    <EntriesContainer portfolioId = {id}/>
                                 </Suspense>
                             }
                             { value === 'requirements' &&
