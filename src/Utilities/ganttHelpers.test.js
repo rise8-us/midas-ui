@@ -16,32 +16,42 @@ describe('ganttHelpers', () => {
     test('should handle viewBy = quarter', () => {
         const results = ganttHelpers.generateChartFormat(startDate, 'quarter', 5)
 
-        expect(results[0]).toEqual({ title: 'Q1, Feb - Apr 00', flexGrow: 90 })
-        expect(results[1]).toEqual({ title: 'Q2, May - Jul 00', flexGrow: 92 })
-        expect(results[3]).toEqual({ title: 'Q4, Nov 00 - Jan 01', flexGrow: 92 })
-        expect(results[4]).toEqual({ title: 'Q1, Feb - Apr 01', flexGrow: 89 })
+        expect(results[0]).toEqual({ title: 'Q1, Feb - Apr \'00', flexGrow: 90 })
+        expect(results[1]).toEqual({ title: 'Q2, May - Jul \'00', flexGrow: 92 })
+        expect(results[3]).toEqual({ title: 'Q4, Nov \'00 - Jan \'01', flexGrow: 92 })
+        expect(results[4]).toEqual({ title: 'Q1, Feb - Apr \'01', flexGrow: 89 })
     })
 
     test('should handle viewBy = month', () => {
         const results = ganttHelpers.generateChartFormat(startDate, 'month', 12)
 
-        expect(results[0]).toEqual({ title: 'Feb 00', flexGrow: 29 })
-        expect(results[11]).toEqual({ title: 'Jan 01', flexGrow: 31 })
+        expect(results[0]).toEqual({ title: 'Feb \'00', flexGrow: 29 })
+        expect(results[11]).toEqual({ title: 'Jan \'01', flexGrow: 31 })
     })
 
     test('should handle viewBy = week', () => {
         const results = ganttHelpers.generateChartFormat(startDate, 'week', 5)
 
-        expect(results[0]).toEqual({ title: '1 - 7 Feb', flexGrow: 1 })
+        expect(results[0]).toEqual({ title: '1 - 7 Feb \'00', flexGrow: 1 })
         expect(results[1]).toEqual({ title: '8 - 14 Feb', flexGrow: 1 })
         expect(results[4]).toEqual({ title: '29 Feb - 6 Mar', flexGrow: 1 })
+
+        const bridgedStartDate = new Date(2000, 11, 30)
+        const secondResults = ganttHelpers.generateChartFormat(bridgedStartDate, 'week',  5)
+        expect(secondResults[0]).toEqual({ title: '30 Dec \'00 - 5 Jan \'01', flexGrow: 1 })
     })
 
     test('should handle viewBy = day', () => {
         const results = ganttHelpers.generateChartFormat(startDate, 'day', 8)
 
-        expect(results[0]).toEqual({ title: '1 Tue, Feb', flexGrow: 1 })
-        expect(results[6]).toEqual({ title: '7 Mon, Feb', flexGrow: 1 })
-        expect(results[7]).toEqual({ title: '8 Tue, Feb', flexGrow: 1 })
+        expect(results[0]).toEqual({ title: 'Tue, 1 Feb \'00', flexGrow: 1 })
+        expect(results[6]).toEqual({ title: 'Mon, 7 Feb', flexGrow: 1 })
+        expect(results[7]).toEqual({ title: 'Tue, 8 Feb', flexGrow: 1 })
+    })
+
+    test('getYearAbbreviated', () => {
+        const results = ganttHelpers.getYearAbbreviated(startDate)
+
+        expect(results).toEqual(' \'00')
     })
 })
