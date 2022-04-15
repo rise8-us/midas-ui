@@ -12,11 +12,17 @@ describe('<Gantt Milestone />', () => {
     const milestone = {
         title: 'This is the milestone title',
         dueDate: '2022-06-31',
-        description: 'These are the details'
+        description: 'These are the details',
+        portfolioId: 1
     }
 
     test('should render', () => {
-        renderWithRouter(<GanttMilestone milestone = {milestone} index = {1} dateRange = {dateRange}/>)
+        renderWithRouter(<GanttMilestone
+            milestone = {milestone}
+            index = {1}
+            dateRange = {dateRange}
+            portfolioId = {1}
+        />)
 
         expect(screen.getByText('This is the milestone title')).toBeInTheDocument()
     })
