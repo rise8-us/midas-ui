@@ -23,7 +23,7 @@ describe('<GanttChart />', () => {
     ]
 
     test('should render', () => {
-        render(<GanttChart entries = {mockEntries} maxHeight = '800px'/>)
+        render(<GanttChart startDate = {new Date(2022, 1, 1)} entries = {mockEntries} maxHeight = '800px'/>)
 
         expect(screen.getByText('first entry from last year')).toBeInTheDocument()
         expect(screen.getByText('test entry3')).toBeInTheDocument()

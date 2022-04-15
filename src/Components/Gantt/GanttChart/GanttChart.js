@@ -14,19 +14,21 @@ const defaultGanttEntryStyling = (theme) => {
     }
 }
 
-export default function GanttChart({ entries, maxHeight, renderComponent, viewBy, scope }) {
+const setEndDateByViewBy = {
+    year: (date, scope) => date.setYear(date.getFullYear() + scope),
+    quarter: (date, scope) => date.setMonth(date.getMonth() + (scope * 3)),
+    month: (date, scope) => date.setMonth(date.getMonth() + scope),
+    week: (date, scope) => date.setDay(date.getDate() + (scope * 7)),
+    day: (date, scope) => date.setDay(date.getDate() + scope),
+}
+
+export default function GanttChart({ startDate, entries, maxHeight, renderComponent, viewBy, scope }) {
     const theme = useTheme()
 
-    let dateStart = new Date()
-    let dateEnd = new Date()
-    dateStart.setMonth(dateStart.getMonth() - 3)
-    dateEnd.setMonth(dateEnd.getMonth() + 9)
-    dateStart.setDate(1)
-    dateStart.setHours(0, 0, 0)
-    dateEnd.setHours(0, 0, 0)
-    dateEnd.setDate(1)
+    let endDate = new Date(startDate.getTime())
+    setEndDateByViewBy[viewBy](endDate, scope)
 
-    const [dateRange, setDateRange] = useState([dateStart, dateEnd])
+    const [dateRange, setDateRange] = useState([startDate, endDate])
 
     const chartFormat = generateChartFormat(dateRange[0], viewBy, scope)
 
@@ -87,8 +89,9 @@ GanttChart.propTypes = {
     ).isRequired,
     maxHeight: PropTypes.string.isRequired,
     renderComponent: PropTypes.func,
-    viewBy: PropTypes.oneOf(['year', 'month', 'week']),
-    scope: PropTypes.number
+    viewBy: PropTypes.oneOf(['year', 'quarter', 'month', 'week', 'day']),
+    scope: PropTypes.number,
+    startDate: PropTypes.instanceOf(Date).isRequired
 }
 
 GanttChart.defaultProps = {
