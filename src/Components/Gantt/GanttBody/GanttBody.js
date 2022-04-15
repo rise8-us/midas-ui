@@ -20,7 +20,7 @@ export default function GanttBody({ borderColor, columns, chartBackgroundColor, 
         height: '100%',
         width: '3px',
         background: theme.palette.primary.main,
-        zIndex: 4
+        zIndex: 1
     }
 
     const containerStyles = {

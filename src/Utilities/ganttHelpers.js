@@ -39,15 +39,15 @@ const viewByModes = {
 
             const startMonth = dateHelpers.getMonthAbbreviated(startDate.getMonth())
             const endMonth = dateHelpers.getMonthAbbreviated(endDate.getMonth())
-            const startYear = startDate.getFullYear().toString().slice(2, 4)
-            const endYear = endDate.getFullYear().toString().slice(2, 4)
+            const startYear = getYearAbbreviated(startDate)
+            const endYear = getYearAbbreviated(endDate)
 
             const quarter = index % QUARTER_IN_YEAR
 
-            const startYearTitle = startYear === endYear ? '' : ' ' + startYear
+            const startYearTitle = startYear === endYear ? '' : startYear
             const quarterTitle = 'Q' + (quarter + 1) + ', '
 
-            return quarterTitle + startMonth + startYearTitle + ' - ' + endMonth + ' ' + endYear
+            return quarterTitle + startMonth + startYearTitle + ' - ' + endMonth + endYear
         },
         incrementor: (date) => date.setMonth(date.getMonth() + 3),
         flexGrow: (iterator) => {
@@ -63,14 +63,13 @@ const viewByModes = {
         formatter: (date, index) => {
             const month = dateHelpers.getMonthAbbreviated(date.getMonth())
             return month +
-                (index === 0 || month === 'Jan' ?
-                    ' ' + date.getFullYear().toString().slice(2, 4) : '')
+                (index === 0 || month === 'Jan' ? getYearAbbreviated(date) : '')
         },
         incrementor: (date) => date.setMonth(date.getMonth() + 1),
         flexGrow: (iterator) => new Date(iterator.getFullYear(), iterator.getMonth() + 1, 0).getDate()
     },
     week: {
-        formatter: (startDate) => {
+        formatter: (startDate, index) => {
             let endDate = new Date(startDate.getTime())
             endDate.setDate(endDate.getDate() + 6)
 
@@ -78,18 +77,25 @@ const viewByModes = {
             const endDay = endDate.getDate()
             const startMonth = dateHelpers.getMonthAbbreviated(startDate.getMonth())
             const endMonth = dateHelpers.getMonthAbbreviated(endDate.getMonth())
+            const endYear = index === 0 || (endMonth === 'Jan' && endDay >= 1 && endDay <= 7) ?
+                getYearAbbreviated(endDate) : ''
+            const startYear = (startMonth === 'Dec' && endMonth === 'Jan') ?
+                getYearAbbreviated(startDate) : ''
 
-            return startDay + `${startMonth !== endMonth ? ' ' + startMonth : ''}` + ' - ' + endDay + ' ' + endMonth
+            return startDay + `${startMonth !== endMonth ? ' ' + startMonth : ''}` + startYear +
+                ' - ' + endDay + ' ' + endMonth + endYear
         },
         incrementor: (date) => date.setDate(date.getDate() + 7),
         flexGrow: () => 1
     },
     day: {
-        formatter: (date) => {
+        formatter: (date, index) => {
             const num = date.getDate()
             const weekday = dateHelpers.getDayAbbreviated(date.getDay())
             const month = dateHelpers.getMonthAbbreviated(date.getMonth())
-            return num + ' ' + weekday + ', ' + month
+            const year = index === 0
+                || (month === 'Jan' && num === 1) ? getYearAbbreviated(date) : ''
+            return weekday + ', ' + num + ' ' + month + year
         },
         incrementor: (date) => date.setDate(date.getDate() + 1),
         flexGrow: () => 1
@@ -99,8 +105,8 @@ const viewByModes = {
 export const rowStyles = (backgroundColor, borderColor) => {
     return {
         backgroundColor,
-        borderBottom: '1px solid',
-        borderColor,
+        borderBottom: `1px solid ${borderColor}`,
+        borderRight: `1px solid ${borderColor}`,
         display: 'flex'
     }
 }
@@ -108,8 +114,20 @@ export const rowStyles = (backgroundColor, borderColor) => {
 export const cellStyles = (borderColor, flexGrow = 1) => {
     return {
         borderLeft: '1px solid',
-        borderColor,
+        color: borderColor,
         flexGrow,
         width: 0
     }
+}
+
+export const getYearAbbreviated = (date) => {
+    return ` '${date.getFullYear().toString().slice(2, 4)}`
+}
+
+export const setDateByViewBy = {
+    year: (date, scope) => date.setYear(date.getFullYear() + scope),
+    quarter: (date, scope) => date.setMonth(date.getMonth() + (scope * 3)),
+    month: (date, scope) => date.setMonth(date.getMonth() + scope),
+    week: (date, scope) => date.setDate(date.getDate() + (scope * 7)),
+    day: (date, scope) => date.setDate(date.getDate() + scope),
 }

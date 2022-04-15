@@ -1,4 +1,4 @@
-import { Add } from '@mui/icons-material'
+import { Add, ChevronLeft, ChevronRight } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import { GanttChart } from 'Components/Gantt'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
@@ -90,6 +90,15 @@ export default function EntriesContainer({ portfolioId }) {
                 maxHeight = 'calc(100% - 200px)'
                 entries = {entries}
                 renderComponent = {renderComponent}
+                actionBar = {{
+                    navLeftIcon: <ChevronLeft size = 'small' />,
+                    navRightIcon: <ChevronRight size = 'small' />,
+                    buttonComponent: Button,
+                    buttonProps: {
+                        style: { minWidth: '34px', borderRadius: 0, borderRight: '1px solid black' },
+                        size: 'small'
+                    }
+                }}
             />
         </>
     )
@@ -123,7 +132,7 @@ const mockTargets = [
     }, {
         title: 'test entry4',
         startDate: '2022-10-01',
-        dueDate: '2023-2-01',
+        dueDate: '2023-1-01',
         type: 'target'
     }
 ]
