@@ -1,8 +1,16 @@
-import { Box } from '@mui/material'
+import { Edit } from '@mui/icons-material'
+import { Box, IconButton, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import MilestoneConstants from 'Redux/Milestones/constants'
+import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
+import { openPopup } from 'Redux/Popups/actions'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
-function GanttMilestone({ milestone, index, dateRange }) {
+function GanttMilestone({ milestone, index, dateRange, portfolioId }) {
+
+    const dispatch = useDispatch()
+    const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const dueDate = parseStringToDate(milestone.dueDate)
 
@@ -21,6 +29,8 @@ function GanttMilestone({ milestone, index, dateRange }) {
 
     const sxFlag = {
         position: 'absolute',
+        alignItems: 'center',
+        display: 'flex',
         left: `${position}%`,
         top: `${index * 25}px`,
         marginTop: '2px',
@@ -29,11 +39,29 @@ function GanttMilestone({ milestone, index, dateRange }) {
         zIndex: 4
     }
 
+    const updateMilestone = () =>
+        dispatch(openPopup(MilestoneConstants.UPDATE_MILESTONE, 'MilestonePopup', {
+            id: milestone.id,
+            portfolioId: portfolioId
+        }))
+
     return (
         <div>
             {shouldRender && <Box sx = {sxMilestone}>
                 <Box sx = {sxFlag}>
-                    {milestone.title}
+                    <Typography>
+                        {milestone.title}
+                    </Typography>
+                    {permissions.edit &&
+                        <IconButton
+                            onClick = {updateMilestone}
+                            color = 'secondary'
+                            data-testid = 'GanttMilestone__button-edit'
+                            size = 'small'
+                        >
+                            <Edit fontSize = 'small'/>
+                        </IconButton>
+                    }
                 </Box>
             </Box>}
         </div>
@@ -42,10 +70,12 @@ function GanttMilestone({ milestone, index, dateRange }) {
 
 GanttMilestone.propTypes = {
     milestone: PropTypes.shape({
+        id: PropTypes.number,
         title: PropTypes.string,
         dueDate: PropTypes.string,
         description: PropTypes.string
     }).isRequired,
+    portfolioId: PropTypes.number.isRequired,
     index: PropTypes.number.isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
 }
