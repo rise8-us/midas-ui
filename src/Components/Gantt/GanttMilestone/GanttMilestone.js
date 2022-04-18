@@ -1,7 +1,8 @@
-import { Edit } from '@mui/icons-material'
+import { DeleteOutline, Edit } from '@mui/icons-material'
 import { Box, IconButton, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
+import { requestDeleteMilestone } from 'Redux/Milestones/actions'
 import MilestoneConstants from 'Redux/Milestones/constants'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
@@ -44,6 +45,10 @@ function GanttMilestone({ milestone, dateRange, portfolioId }) {
             portfolioId: portfolioId
         }))
 
+    const deleteMilestone = () => {
+        dispatch(requestDeleteMilestone(milestone.id))
+    }
+
     return (
         <div>
             {shouldRender && <Box sx = {sxMilestone}>
@@ -52,6 +57,7 @@ function GanttMilestone({ milestone, dateRange, portfolioId }) {
                         {milestone.title}
                     </Typography>
                     {permissions.edit &&
+                    <div style = {{ display: 'flex', paddingLeft: '10px' }}>
                         <IconButton
                             onClick = {updateMilestone}
                             color = 'secondary'
@@ -60,6 +66,15 @@ function GanttMilestone({ milestone, dateRange, portfolioId }) {
                         >
                             <Edit fontSize = 'small'/>
                         </IconButton>
+                        <IconButton
+                            onClick = {deleteMilestone}
+                            color = 'secondary'
+                            data-testid = 'GanttMilestone__button-delete'
+                            size = 'small'
+                        >
+                            <DeleteOutline fontSize = 'small'/>
+                        </IconButton>
+                    </div>
                     }
                 </Box>
             </Box>}
