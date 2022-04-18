@@ -35,12 +35,10 @@ function RowOption({ color, text, icon }) {
 
 function MoreOptionsPopperMenu({ options, icon }) {
 
-    const [open, setOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
 
     const togglePopper = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget)
-        setOpen((prev) => !prev)
     }
 
     const handleOptionClick = (event, onClick) => {
@@ -55,7 +53,7 @@ function MoreOptionsPopperMenu({ options, icon }) {
                 placement = 'top-start'
                 disablePortal = {true}
                 anchorEl = {anchorEl}
-                open = {open}
+                open = {Boolean(anchorEl)}
                 style = {{ zIndex: 2 }}
             >
                 <ClickAwayListener onClickAway = {togglePopper}>
