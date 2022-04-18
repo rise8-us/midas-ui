@@ -38,7 +38,8 @@ describe('Event selectors', () => {
     test('selectEventsByPortfolioId - maps properly', () => {
         expect(selectors.selectEventsByPortfolioId(mockState, 2)).toEqual([{
             ...mockState.events[6],
-            type: 'event'
+            type: 'event',
+            row: 1
         }])
     })
 })

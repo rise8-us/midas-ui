@@ -1,1 +1,1 @@
-export { default as GanttActionBar } from './GanttActionBar';
+export { default as GanttActionBar } from './GanttActionBar'

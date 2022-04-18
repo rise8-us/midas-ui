@@ -35,7 +35,8 @@ describe('Milestone selectors', () => {
     test('selectMilestonesByPortfolioId - maps properly', () => {
         expect(selectors.selectMilestonesByPortfolioId(mockState, 2)).toEqual([{
             ...mockState.milestones[6],
-            type: 'milestone'
+            type: 'milestone',
+            row: 0
         }])
     })
 })

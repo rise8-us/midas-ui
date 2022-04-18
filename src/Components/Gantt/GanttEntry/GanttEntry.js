@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
 export default function GanttEntry(props) {
-    const { startDate, dueDate, index, dateRange, children, disableDefaultCSS } = props
+    const { startDate, dueDate, index, dateRange, children, enableFullHeight } = props
 
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)
@@ -13,29 +13,19 @@ export default function GanttEntry(props) {
         position: 'absolute',
         left: `${startLeft}%`,
         width: `${duration}%`,
+        top: `${index * 56}px`,
         zIndex: 3
     }
 
-    const contentsBox = () => {
-        return {
-            ...defaultStyle,
-            top: `${index * 56}px`,
-        }
-    }
-
-    const contentsBox2 = () => {
-        return {
-            ...defaultStyle,
-            top: '0px',
-            height: '100%',
-            width: 'auto',
-        }
+    const fullHeightBox = {
+        ...defaultStyle,
+        height: '100%',
     }
 
     if (!startLeft) return null
 
     return (
-        <Box data-testid = 'GanttEntry__wrap' sx = {disableDefaultCSS ? contentsBox2 : contentsBox}>
+        <Box data-testid = 'GanttEntry__wrap' sx = {enableFullHeight ? fullHeightBox : defaultStyle}>
             {children}
         </Box>
     )
@@ -47,12 +37,10 @@ GanttEntry.propTypes = {
     index: PropTypes.number.isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
     children: PropTypes.node,
-    disableDefaultCSS: PropTypes.bool
+    enableFullHeight: PropTypes.bool
 }
 GanttEntry.defaultProps = {
     startDate: undefined,
     children: undefined,
-    disableDefaultCSS: false
+    enableFullHeight: false
 }
-
-//TODO: If entry is not visible, it should not extend max height.

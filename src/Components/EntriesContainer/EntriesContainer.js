@@ -19,7 +19,6 @@ import TargetConstants from 'Redux/Targets/constants'
 import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 
-
 const StyledButton = styled(Button)(({ theme }) => ({
     '&:hover': {
         color: theme.palette.primary.main,
@@ -143,27 +142,31 @@ const mockMilestones = [
         description: 'Second Milestone Test',
         dueDate: '2021-09-01',
         type: 'milestone',
-        disableDefaultCSS: true
+        enableFullHeight: true,
+        row: 0
     },
     {
         title: 'Milestone1',
         description: 'First Milestone Test',
         dueDate: '2022-05-15',
         type: 'milestone',
-        disableDefaultCSS: true
+        enableFullHeight: true,
+        row: 0
     },
     {
         title: 'Milestone2',
         description: 'Second Milestone Test',
         dueDate: '2022-8-24',
         type: 'milestone',
-        disableDefaultCSS: true
+        enableFullHeight: true,
+        row: 0
     },
     {
         title: 'Milestone3',
         description: 'Second Milestone Test',
         dueDate: '2023-02-04',
         type: 'milestone',
-        disableDefaultCSS: true
+        enableFullHeight: true,
+        row: 0
     }
 ]

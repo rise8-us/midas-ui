@@ -12,5 +12,5 @@ export const selectMilestonesByPortfolioId = (state, portfolioId) => {
 
     return Object.values(milestones)
         .filter(milestone => milestone.portfolioId === portfolioId)
-        .map(milestone => ({ ...milestone, type: 'milestone' }))
+        .map(milestone => ({ ...milestone, type: 'milestone', row: 0 }))
 }
