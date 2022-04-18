@@ -31,14 +31,14 @@ describe('<GanttEntry />', () => {
         expect(screen.getByText('hello world')).toBeInTheDocument()
     })
 
-    test('should render disableDefaultCSS', () => {
+    test('should render enableFullHeight', () => {
         render(
-            <GanttEntry {...defaultProps} disableDefaultCSS>
+            <GanttEntry {...defaultProps} enableFullHeight>
                 hello world
             </GanttEntry>
         )
 
         expect(screen.getByText('hello world')).toBeInTheDocument()
-        expect(screen.getByTestId('GanttEntry__wrap')).toHaveStyle('top: 0px')
+        expect(screen.getByTestId('GanttEntry__wrap')).toHaveStyle('height: 100%')
     })
 })

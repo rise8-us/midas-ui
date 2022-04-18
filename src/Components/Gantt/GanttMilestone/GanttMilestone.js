@@ -7,7 +7,7 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
-function GanttMilestone({ milestone, index, dateRange, portfolioId }) {
+function GanttMilestone({ milestone, dateRange, portfolioId }) {
 
     const dispatch = useDispatch()
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
@@ -32,7 +32,6 @@ function GanttMilestone({ milestone, index, dateRange, portfolioId }) {
         alignItems: 'center',
         display: 'flex',
         left: `${position}%`,
-        top: `${index * 25}px`,
         marginTop: '2px',
         background: 'black',
         paddingX: '10px',
@@ -76,7 +75,6 @@ GanttMilestone.propTypes = {
         description: PropTypes.string
     }).isRequired,
     portfolioId: PropTypes.number.isRequired,
-    index: PropTypes.number.isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
 }
 
