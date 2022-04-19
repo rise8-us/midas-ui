@@ -20,15 +20,17 @@ export default function GanttActionBar(props) {
         border: `1px solid ${borderColor}`
     }
 
+    const componentName = buttonComponent?.render?.name ?? buttonComponent
+
     return (
         <div data-testid = 'GanttActionBar__wrapper' style = {actionBarStyle}>
             <ButtonComponent
-                data-testid = {`GanttActionBar__button-left-${buttonComponent}`}
+                data-testid = {`GanttActionBar__button-left-${componentName}`}
                 onClick = {() => setDateRange(-1)}
                 {...buttonProps}
             >{navLeftIcon}</ButtonComponent>
             <ButtonComponent
-                data-testid = {`GanttActionBar__button-right-${buttonComponent}`}
+                data-testid = {`GanttActionBar__button-right-${componentName}`}
                 onClick = {() => setDateRange(1)}
                 {...buttonProps}
             >{navRightIcon}</ButtonComponent>
