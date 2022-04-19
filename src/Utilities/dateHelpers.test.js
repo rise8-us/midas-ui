@@ -14,19 +14,19 @@ describe('date Helpers', () => {
 
         test('test calculatePosition - one null', () => {
             expect(dateHelper.calculatePosition(
-                [null, entryEnd], [rangeStart, rangeEnd])).toEqual([expect.closeTo(66.837899543379, 1), 0])
+                [null, entryEnd], [rangeStart, rangeEnd])).toEqual([66.837899543379, 0])
             expect(dateHelper.calculatePosition(
-                [entryEnd, null], [rangeStart, rangeEnd])).toEqual([expect.closeTo(66.837899543379, 1), 0])
+                [entryEnd, null], [rangeStart, rangeEnd])).toEqual([66.837899543379, 0])
         })
 
         test('test calculatePosition - no nulls & in range', () => {
             expect(dateHelper.calculatePosition([entryStart, entryEnd], [rangeStart, rangeEnd]))
-                .toEqual([16.43835616438356, expect.closeTo(50.39954337899544, 1)])
+                .toEqual([16.43835616438356, 50.39954337899544])
         })
 
         test('test calculatePosition - no nulls & not in range', () => {
             expect(dateHelper.calculatePosition([rangeStart, entryStart], [entryEnd, rangeEnd]))
-                .toEqual([null, expect.closeTo(49.56970740103268, 1)])
+                .toEqual([null, 49.56970740103268])
         })
     })
 

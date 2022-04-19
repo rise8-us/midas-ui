@@ -3,6 +3,7 @@ import { Button } from '@mui/material'
 import { MoreOptionsPopperMenu } from 'Components/MoreOptionsPopperMenu'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import EventConstants from 'Redux/Events/constants'
 import MilestoneConstants from 'Redux/Milestones/constants'
 import { openPopup } from 'Redux/Popups/actions'
 import TargetConstants from 'Redux/Targets/constants'
@@ -13,7 +14,8 @@ export default function GanttAddNewItem({ portfolioId }) {
 
     const createMilestone = () =>
         dispatch(openPopup(MilestoneConstants.CREATE_MILESTONE, 'MilestonePopup', { portfolioId: portfolioId }))
-    const createEvent = () => console.log('event dispatch goes here')
+    const createEvent = () =>
+        dispatch(openPopup(EventConstants.CREATE_EVENT, 'EventPopup', { portfolioId: portfolioId }))
     const createTarget = () =>
         dispatch(openPopup(TargetConstants.CREATE_TARGET, 'TargetPopup', { portfolioId: portfolioId }))
 

@@ -2,8 +2,7 @@ import { Box } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
-export default function GanttEntry(props) {
-    const { startDate, dueDate, index, dateRange, children, enableFullHeight } = props
+export default function GanttEntry({ startDate, dueDate, index, dateRange, children, enableFullHeight }) {
 
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)

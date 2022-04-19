@@ -6,7 +6,6 @@ import { GanttActionBar } from '../GanttActionBar'
 import { GanttBody } from '../GanttBody'
 import { GanttHeader } from '../GanttHeader'
 
-
 const defaultGanttEntryStyling = (theme) => {
     return {
         borderRadius: '4px',
