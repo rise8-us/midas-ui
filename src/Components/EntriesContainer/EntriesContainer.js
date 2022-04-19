@@ -54,7 +54,7 @@ export default function EntriesContainer({ portfolioId }) {
                 portfolioId = {portfolioId}
             />
         case 'event':
-            return <GanttEvent event = {entry}/>
+            return <GanttEvent event = {entry} dateRange = {dateRange} />
         }
     }
 

@@ -19,7 +19,6 @@ function GanttMilestone({ milestone, dateRange, portfolioId }) {
 
     const sxMilestone = {
         position: 'absolute',
-        left: `${position}%`,
         width: '3px',
         marginLeft: '10px',
         background: 'black',
