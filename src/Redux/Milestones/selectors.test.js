@@ -36,6 +36,7 @@ describe('Milestone selectors', () => {
         expect(selectors.selectMilestonesByPortfolioId(mockState, 2)).toEqual([{
             ...mockState.milestones[6],
             type: 'milestone',
+            enableFullHeight: true,
             row: 0
         }])
     })
