@@ -1,11 +1,5 @@
 import { renderWithRouter, screen } from 'Utilities/test-utils'
-import GanttMilestone from './GanttMilestone'
-
-let dateStart = new Date()
-let dateEnd = new Date()
-dateStart.setMonth(dateStart.getMonth() - 3)
-dateEnd.setMonth(dateStart.getMonth() + 12)
-let dateRange = [dateStart, dateEnd]
+import { GanttMilestone } from './index'
 
 describe('<Gantt Milestone />', () => {
 
@@ -17,12 +11,7 @@ describe('<Gantt Milestone />', () => {
     }
 
     test('should render', () => {
-        renderWithRouter(<GanttMilestone
-            milestone = {milestone}
-            index = {1}
-            dateRange = {dateRange}
-            portfolioId = {1}
-        />)
+        renderWithRouter(<GanttMilestone milestone = {milestone}/>)
 
         expect(screen.getByText('This is the milestone title')).toBeInTheDocument()
     })

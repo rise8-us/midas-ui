@@ -1,68 +1,77 @@
 import { DeleteOutline, Edit } from '@mui/icons-material'
-import { Box, IconButton, Typography } from '@mui/material'
+import { IconButton, Tooltip, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
+import { styled } from 'Styles/materialThemes'
 
-const defaultGanttEntryStyling = (theme) => {
-    return {
-        display: 'flex',
-        alignItems: 'center',
-        borderRadius: '4px',
-        background: theme.palette.grey[800],
-        boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
-        textAlign: 'left',
-        padding: theme.spacing(1)
+const StyledDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    borderRadius: '4px',
+    background: theme.palette.grey[800],
+    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
+    textAlign: 'left',
+    padding: theme.spacing(0, 1),
+    minHeight: '40px',
+    '&:hover': {
+        boxShadow: '0px 0px 16px 0px black'
     }
-}
-export default function GanttTarget({ target, portfolioId }) {
+}))
 
+export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
+
+    const { id, portfolioId, title } = target
+
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const updateTarget = () =>
-        dispatch(openPopup(TargetConstants.UPDATE_TARGET, 'TargetPopup', { id: target.id, portfolioId: portfolioId }))
+        dispatch(openPopup(TargetConstants.UPDATE_TARGET, 'TargetPopup', { id, portfolioId }))
 
     const deleteTarget = () => {
-        dispatch(requestDeleteTarget(target.id))
+        dispatch(requestDeleteTarget(id))
     }
 
     return (
-        <Box data-testid = 'GanttEntry__defaultEntryWrapper' sx = {defaultGanttEntryStyling}>
-            <Typography>
-                {target.title}
-            </Typography>
-            {permissions.edit &&
-            <div style = {{ display: 'flex', paddingLeft: '10px' }}>
-                <IconButton
-                    onClick = {updateTarget}
-                    color = 'secondary'
-                    data-testid = 'GanttTarget__button-edit'
-                    size = 'small'
-                >
-                    <Edit fontSize = 'small'/>
-                </IconButton>
-                <IconButton
-                    onClick = {deleteTarget}
-                    color = 'secondary'
-                    data-testid = 'GanttTarget__button-delete'
-                    size = 'small'
-                >
-                    <DeleteOutline fontSize = 'small'/>
-                </IconButton>
-            </div>
-            }
-        </Box>
+        <Tooltip title = {title}>
+            <StyledDiv data-testid = 'GanttTarget__card'>
+                <Typography textOverflow = 'ellipsis' overflow = 'hidden' marginRight = {1}>
+                    {title}
+                </Typography>
+                {permissions.edit &&
+                    <div style = {{ display: 'flex', flexWrap: 'wrap' }}>
+                        <IconButton
+                            onClick = {updateTarget}
+                            color = 'secondary'
+                            data-testid = 'GanttTarget__button-edit'
+                            size = 'small'
+                        >
+                            <Edit fontSize = 'small'/>
+                        </IconButton>
+                        <IconButton
+                            onClick = {deleteTarget}
+                            color = 'secondary'
+                            data-testid = 'GanttTarget__button-delete'
+                            size = 'small'
+                        >
+                            <DeleteOutline fontSize = 'small'/>
+                        </IconButton>
+                    </div>
+                }
+            </StyledDiv>
+        </Tooltip>
     )
 }
 
 GanttTarget.propTypes = {
     target: PropTypes.shape({
         id: PropTypes.number,
+        portfolioId: PropTypes.number,
         title: PropTypes.string,
     }).isRequired,
-    portfolioId: PropTypes.number.isRequired
 }

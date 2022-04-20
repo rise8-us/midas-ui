@@ -33,9 +33,9 @@ export default function EntriesContainer({ portfolioId }) {
     const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
     const entries = [
-        ...milestones,
-        ...events,
-        ...targets
+        ...mockTargets,
+        ...mockMilestones,
+        ...mockEvents,
     ]
 
     let dateStart = new Date()
@@ -43,18 +43,14 @@ export default function EntriesContainer({ portfolioId }) {
     dateStart.setDate(1)
     dateStart.setHours(0, 0, 0)
 
-    const renderComponent = (entry, dateRange) => {
+    const renderComponent = (entry) => {
         switch (entry.type) {
         case 'target':
-            return <GanttTarget target = {entry} portfolioId = {portfolioId}/>
+            return <GanttTarget target = {entry}/>
         case 'milestone':
-            return <GanttMilestone
-                milestone = {entry}
-                dateRange = {dateRange}
-                portfolioId = {portfolioId}
-            />
+            return <GanttMilestone milestone = {entry}/>
         case 'event':
-            return <GanttEvent event = {entry} dateRange = {dateRange} />
+            return <GanttEvent event = {entry}/>
         }
     }
 
@@ -82,32 +78,48 @@ EntriesContainer.propTypes = {
     portfolioId: PropTypes.number.isRequired,
 }
 
+const mockEvents = [{
+    title: 'This is a test event',
+    startDate: '2021-10-01',
+    dueDate: '2023-10-15',
+    type: 'event',
+    portfolioId: 91,
+    organizerIds: [],
+    location: 'foo',
+    row: 1
+}]
+
 const mockTargets = [
     {
         title: 'Create Midas App',
         startDate: '2020-12-15',
         dueDate: '2021-11-01',
-        type: 'target'
+        type: 'target',
+        portfolioId: 91
     }, {
         title: 'Create User Profiles',
         startDate: '2021-03-01',
         dueDate: '2021-10-16',
-        type: 'target'
+        type: 'target',
+        portfolioId: 91
     }, {
         title: 'Create Products Page',
         startDate: '2021-07-01',
         dueDate: '2021-12-01',
-        type: 'target'
+        type: 'target',
+        portfolioId: 91
     }, {
         title: 'Create Portfolios',
         startDate: '2022-10-01',
-        dueDate: '2023-2-01',
-        type: 'target'
+        dueDate: '2022-10-15',
+        type: 'target',
+        portfolioId: 91
     }, {
-        title: 'test entry4',
-        startDate: '2022-10-01',
+        title: 'test entry4 dafdasfdas dfafas',
+        startDate: '2022-12-01',
         dueDate: '2023-1-01',
-        type: 'target'
+        type: 'target',
+        portfolioId: 91
     }
 ]
 
@@ -118,7 +130,8 @@ const mockMilestones = [
         dueDate: '2021-09-01',
         type: 'milestone',
         enableFullHeight: true,
-        row: 0
+        row: 0,
+        portfolioId: 91
     },
     {
         title: 'Milestone1',
@@ -126,7 +139,8 @@ const mockMilestones = [
         dueDate: '2022-05-15',
         type: 'milestone',
         enableFullHeight: true,
-        row: 0
+        row: 0,
+        portfolioId: 91
     },
     {
         title: 'Milestone2',
@@ -134,7 +148,8 @@ const mockMilestones = [
         dueDate: '2022-8-24',
         type: 'milestone',
         enableFullHeight: true,
-        row: 0
+        row: 0,
+        portfolioId: 91
     },
     {
         title: 'Milestone3',
@@ -142,6 +157,7 @@ const mockMilestones = [
         dueDate: '2023-02-04',
         type: 'milestone',
         enableFullHeight: true,
-        row: 0
+        row: 0,
+        portfolioId: 91
     }
 ]

@@ -1,83 +1,91 @@
 import { DeleteOutline, Edit } from '@mui/icons-material'
-import { Box, IconButton, Typography } from '@mui/material'
+import { IconButton, Tooltip, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteMilestone } from 'Redux/Milestones/actions'
 import MilestoneConstants from 'Redux/Milestones/constants'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
-import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
+import { styled } from 'Styles/materialThemes'
 
-function GanttMilestone({ milestone, dateRange, portfolioId }) {
+const defaultStyles = {
+    position: 'absolute',
+    zIndex: 4
+}
 
+const MilestoneFlagPole = styled('div')(({ theme }) => ({
+    ...defaultStyles,
+    width: '3px',
+    height: '100%',
+    background: theme.palette.info.dark,
+    top: 0,
+    '&:hover': {
+        boxShadow: '0px 0px 8px 0px black'
+    }
+}))
+
+const MilestoneFlag = styled('div')(({ theme }) => ({
+    ...defaultStyles,
+    display: 'flex',
+    alignItems: 'center',
+    background: theme.palette.info.dark,
+    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
+    padding: theme.spacing(0, 1),
+    minHeight: '40px',
+    borderRadius: theme.spacing(1),
+    borderTopLeftRadius: 0,
+    '&:hover': {
+        boxShadow: '0px 0px 12px 0px black'
+    }
+}))
+
+export default function GanttMilestone({ milestone }) {
     const dispatch = useDispatch()
+
+    const { portfolioId, id, title } = milestone
+
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
-    const dueDate = parseStringToDate(milestone.dueDate)
-
-    const [shouldRender, position] = calculatePosition([null, dueDate], dateRange)
-
-    const sxMilestone = {
-        position: 'absolute',
-        width: '3px',
-        marginLeft: '10px',
-        background: 'black',
-        zIndex: 4,
-        height: '100%',
-        top: 0
-    }
-
-    const sxFlag = {
-        position: 'absolute',
-        alignItems: 'center',
-        display: 'flex',
-        left: `${position}%`,
-        marginTop: '2px',
-        background: 'black',
-        paddingX: '10px',
-        zIndex: 4
-    }
-
     const updateMilestone = () =>
-        dispatch(openPopup(MilestoneConstants.UPDATE_MILESTONE, 'MilestonePopup', {
-            id: milestone.id,
-            portfolioId: portfolioId
-        }))
+        dispatch(openPopup(MilestoneConstants.UPDATE_MILESTONE, 'MilestonePopup', { id, portfolioId }))
 
     const deleteMilestone = () => {
-        dispatch(requestDeleteMilestone(milestone.id))
+        dispatch(requestDeleteMilestone(id))
     }
 
     return (
-        <div>
-            {shouldRender && <Box sx = {sxMilestone}>
-                <Box sx = {sxFlag}>
-                    <Typography>
-                        {milestone.title}
+        <>
+            <Tooltip title = {title} arrow followCursor>
+                <MilestoneFlagPole />
+            </Tooltip>
+            <Tooltip title = {title} arrow followCursor>
+                <MilestoneFlag>
+                    <Typography maxWidth = '160px' textOverflow = 'ellipsis' overflow = 'hidden' marginRight = {1}>
+                        {title}
                     </Typography>
                     {permissions.edit &&
-                    <div style = {{ display: 'flex', paddingLeft: '10px' }}>
-                        <IconButton
-                            onClick = {updateMilestone}
-                            color = 'secondary'
-                            data-testid = 'GanttMilestone__button-edit'
-                            size = 'small'
-                        >
-                            <Edit fontSize = 'small'/>
-                        </IconButton>
-                        <IconButton
-                            onClick = {deleteMilestone}
-                            color = 'secondary'
-                            data-testid = 'GanttMilestone__button-delete'
-                            size = 'small'
-                        >
-                            <DeleteOutline fontSize = 'small'/>
-                        </IconButton>
-                    </div>
+                        <div style = {{ display: 'flex', maxHeight: '40px' }}>
+                            <IconButton
+                                onClick = {updateMilestone}
+                                style = {{ color: 'black' }}
+                                data-testid = 'GanttMilestone__button-edit'
+                                size = 'small'
+                            >
+                                <Edit fontSize = 'small'/>
+                            </IconButton>
+                            <IconButton
+                                onClick = {deleteMilestone}
+                                style = {{ color: 'black' }}
+                                data-testid = 'GanttMilestone__button-delete'
+                                size = 'small'
+                            >
+                                <DeleteOutline fontSize = 'small'/>
+                            </IconButton>
+                        </div>
                     }
-                </Box>
-            </Box>}
-        </div>
+                </MilestoneFlag>
+            </Tooltip>
+        </>
     )
 }
 
@@ -86,10 +94,7 @@ GanttMilestone.propTypes = {
         id: PropTypes.number,
         title: PropTypes.string,
         dueDate: PropTypes.string,
-        description: PropTypes.string
-    }).isRequired,
-    portfolioId: PropTypes.number.isRequired,
-    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired
+        description: PropTypes.string,
+        portfolioId: PropTypes.number
+    }).isRequired
 }
-
-export default GanttMilestone
