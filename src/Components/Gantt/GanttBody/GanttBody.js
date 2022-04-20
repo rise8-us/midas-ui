@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { getIsDateInRange } from 'Utilities/dateHelpers'
 import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
-import GanttDividerBar from '../GanttDividerBar/GanttDividerBar'
+import { GanttDividerBar } from '../GanttDividerBar'
 import { GanttEntry } from '../GanttEntry'
 
 export default function GanttBody({ borderColor, columns, chartBackgroundColor, dateRange, entries, renderComponent }) {

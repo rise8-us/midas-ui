@@ -10,8 +10,7 @@ describe('<GanttEvent />', () => {
     }
 
     test('should render', () => {
-        const dateRange = [new Date('2021-01-01'), new Date('2022-01-01')]
-        renderWithRouter(<GanttEvent event = {event} portfolioId = {1} dateRange = {dateRange}/>)
+        renderWithRouter(<GanttEvent event = {event}/>)
 
         expect(screen.getByText('This is the event title')).toBeInTheDocument()
     })
