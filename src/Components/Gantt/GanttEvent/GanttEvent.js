@@ -2,7 +2,7 @@ import { DeleteOutlined, Edit, Event } from '@mui/icons-material'
 import { IconButton, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import * as eventActions from 'Redux/Events/actions'
+import { requestDeleteEvent } from 'Redux/Events/actions'
 import EventConstants from 'Redux/Events/constants'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
@@ -47,24 +47,26 @@ const parseDate = (startDate, endDate) => {
 export default function GanttEvent({ event }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, startDate, dueDate, title } = event
+    const { id, portfolioId, startDate, dueDate, title, type } = event
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const dateString = parseDate(startDate, dueDate)
 
-    const updateEventPopup = () => {
-        dispatch(openPopup(EventConstants.UPDATE_EVENT, 'EventPopup', { id, portfolioId }))
+    const updateEvent = () => {
+        dispatch(
+            openPopup(EventConstants.UPDATE_EVENT, 'EventPopup', { id: event.id, portfolioId })
+        )
     }
 
-    const handleConfirmationPopup = () => {
-        dispatch(openPopup(EventConstants.DELETE_EVENT, 'ConfirmationPopup',
-            { onConfirm: handleConfirmDeleteEvent, onCancel: null,
-                detail: `You are about to delete event: '${title}'` }))
-    }
+    const deleteEvent = () =>
+        dispatch(openPopup(EventConstants.DELETE_EVENT, 'DeletePopup', {
+            id: id,
+            title: title,
+            type: type,
+            request: requestDeleteEvent,
+            constant: EventConstants.DELETE_EVENT
+        }))
 
-    const handleConfirmDeleteEvent = () => {
-        dispatch(eventActions.requestDeleteEvent(id))
-    }
 
     return (
         <StyledDiv>
@@ -81,14 +83,14 @@ export default function GanttEvent({ event }) {
                 <div style = {{ display: 'flex' }}>
                     <IconButton
                         size = 'small'
-                        onClick = {updateEventPopup}
+                        onClick = {updateEvent}
                         data-testid = 'Event__button-edit'
                     >
                         <Edit fontSize = 'small' htmlColor = 'black'/>
                     </IconButton>
                     <IconButton
                         size = 'small'
-                        onClick = {handleConfirmationPopup}
+                        onClick = {deleteEvent}
                         data-testid = 'Event__button-delete'
                     >
                         <DeleteOutlined fontSize = 'small' htmlColor = 'black'/>
@@ -107,6 +109,7 @@ GanttEvent.propTypes = {
         dueDate: PropTypes.string,
         description: PropTypes.string,
         location: PropTypes.string,
-        portfolioId: PropTypes.number
+        portfolioId: PropTypes.number,
+        type: PropTypes.string
     }).isRequired,
 }

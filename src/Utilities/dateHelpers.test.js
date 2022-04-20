@@ -21,12 +21,12 @@ describe('date Helpers', () => {
 
         test('test calculatePosition - no nulls & in range', () => {
             expect(dateHelper.calculatePosition([entryStart, entryEnd], [rangeStart, rangeEnd]))
-                .toEqual([expect.closeTo(16.43835616438356), expect.closeTo(50.39954337899544)])
+                .toEqual([expect.closeTo(16.43835616438356), expect.closeTo(50.39954337899544, 1)])
         })
 
         test('test calculatePosition - no nulls & not in range', () => {
             expect(dateHelper.calculatePosition([rangeStart, entryStart], [entryEnd, rangeEnd]))
-                .toEqual([null, expect.closeTo(49.56970740103268)])
+                .toEqual([null, expect.closeTo(49.56970740103268, 1)])
         })
     })
 

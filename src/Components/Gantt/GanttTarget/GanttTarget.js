@@ -26,16 +26,21 @@ const StyledDiv = styled('div')(({ theme }) => ({
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, title } = target
+    const { id, portfolioId, title, type } = target
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const updateTarget = () =>
         dispatch(openPopup(TargetConstants.UPDATE_TARGET, 'TargetPopup', { id, portfolioId }))
 
-    const deleteTarget = () => {
-        dispatch(requestDeleteTarget(id))
-    }
+    const deleteTarget = () =>
+        dispatch(openPopup(TargetConstants.DELETE_TARGET, 'DeletePopup', {
+            id: id,
+            title: title,
+            type: type,
+            request: requestDeleteTarget,
+            constant: TargetConstants.DELETE_TARGET
+        }))
 
     return (
         <Tooltip title = {title}>
@@ -73,5 +78,6 @@ GanttTarget.propTypes = {
         id: PropTypes.number,
         portfolioId: PropTypes.number,
         title: PropTypes.string,
+        type: PropTypes.string,
     }).isRequired,
 }

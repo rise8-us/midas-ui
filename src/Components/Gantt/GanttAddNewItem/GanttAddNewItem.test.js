@@ -23,7 +23,7 @@ describe('<GanttAddNewItem />', () => {
         )
     })
 
-    test.skip('create new event', () => {
+    test('create new event', () => {
         render(<GanttAddNewItem portfolioId = {0} />)
 
         userEvent.click(screen.getByTestId('GanttAddNewItem__button'))

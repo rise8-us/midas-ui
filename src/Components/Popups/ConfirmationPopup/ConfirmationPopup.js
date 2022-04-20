@@ -1,35 +1,31 @@
-import { Typography } from '@mui/material'
 import { Popup } from 'Components/Popup'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { closePopup } from 'Redux/Popups/actions'
 
-function ConfirmationPopup({ onConfirm, onCancel, detail, open }) {
-
-    const [isOpen, setIsOpen] = useState(open)
+function ConfirmationPopup({ onConfirm, onCancel, detail, open, constant }) {
+    const dispatch = useDispatch()
 
     const handleConfirm = (event) => {
-        setIsOpen(false)
         typeof onConfirm === 'function' && onConfirm(event)
     }
 
     const handleCancel = (event) => {
-        setIsOpen(false)
         typeof onCancel === 'function' && onCancel(event)
+        dispatch(closePopup(constant))
     }
-
-    useEffect(() => isOpen !== open && setIsOpen(open), [open])
 
     return (
         <Popup
             hideRequiredText
             title = 'Are you sure?'
-            open = {isOpen}
+            open = {open}
             subtitle = 'Please confirm or cancel'
             submitText = 'confirm'
             onClose = {handleCancel}
             onSubmit = {handleConfirm}
         >
-            <Typography>{detail}</Typography>
+            {detail}
         </Popup>
     )
 }
@@ -37,15 +33,17 @@ function ConfirmationPopup({ onConfirm, onCancel, detail, open }) {
 ConfirmationPopup.propTypes = {
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
-    detail: PropTypes.string,
-    open: PropTypes.bool
+    detail: PropTypes.node,
+    open: PropTypes.bool,
+    constant: PropTypes.string,
 }
 
 ConfirmationPopup.defaultProps = {
     onConfirm: undefined,
     onCancel: undefined,
     detail: '',
-    open: true
+    open: true,
+    constant: ''
 }
 
 export default ConfirmationPopup

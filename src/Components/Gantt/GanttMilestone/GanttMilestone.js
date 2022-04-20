@@ -42,16 +42,21 @@ const MilestoneFlag = styled('div')(({ theme }) => ({
 export default function GanttMilestone({ milestone }) {
     const dispatch = useDispatch()
 
-    const { portfolioId, id, title } = milestone
+    const { portfolioId, id, title, type } = milestone
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const updateMilestone = () =>
         dispatch(openPopup(MilestoneConstants.UPDATE_MILESTONE, 'MilestonePopup', { id, portfolioId }))
 
-    const deleteMilestone = () => {
-        dispatch(requestDeleteMilestone(id))
-    }
+    const deleteMilestone = () =>
+        dispatch(openPopup(MilestoneConstants.DELETE_MILESTONE, 'DeletePopup', {
+            id: id,
+            title: title,
+            type: type,
+            request: requestDeleteMilestone,
+            constant: MilestoneConstants.DELETE_MILESTONE
+        }))
 
     return (
         <>
@@ -95,6 +100,7 @@ GanttMilestone.propTypes = {
         title: PropTypes.string,
         dueDate: PropTypes.string,
         description: PropTypes.string,
+        type: PropTypes.string,
         portfolioId: PropTypes.number
     }).isRequired
 }
