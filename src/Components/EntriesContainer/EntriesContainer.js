@@ -33,9 +33,9 @@ export default function EntriesContainer({ portfolioId }) {
     const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
     const entries = [
-        ...mockTargets,
-        ...mockMilestones,
-        ...mockEvents,
+        ...targets,
+        ...milestones,
+        ...events,
     ]
 
     let dateStart = new Date()
