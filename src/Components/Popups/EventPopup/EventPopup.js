@@ -27,8 +27,11 @@ function EventPopup({ id, portfolioId }) {
     const context = initDetails(event.id === undefined)
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleError = useMemo(() => errors.filter(error => error.includes('title')), [errors])
+    const startDateError = useMemo(() => errors.filter(error => error.includes('start')), [errors])
+    const dueDateError = useMemo(() => errors.filter(error => error.includes('due')), [errors])
 
     const [organizerIds, setOrganizerIds] = useState(event.organizerIds || [])
+
     const [formValues, formDispatch] = useReducer(useFormReducer, {
         title: event.title,
         description: event.description,
@@ -36,6 +39,7 @@ function EventPopup({ id, portfolioId }) {
         dueDate: event.dueDate,
         location: event.location
     })
+
     const handleChange = (name, value) => {
         formDispatch({
             type: 'onChange',
@@ -87,12 +91,13 @@ function EventPopup({ id, portfolioId }) {
                     multiline
                     fullWidth
                 />
-                <Box display = 'flex' justifyContent = 'space-between' paddingY = '24px'>
+                <Box display = 'flex' justifyContent = 'space-between' paddingTop = '24px'>
                     <DateSelector
                         label = 'Start Date'
                         initialValue = {getDateInDisplayOrder(formValues.startDate)}
                         onAccept = {(value) => handleChange('startDate', value)}
                         hasEdit = {true}
+                        errors = {startDateError}
                     />
                     <DateSelector
                         label = 'Due Date'
@@ -100,6 +105,7 @@ function EventPopup({ id, portfolioId }) {
                         initialValue = {getDateInDisplayOrder(formValues.dueDate)}
                         onAccept = {(value) => handleChange('dueDate', value)}
                         hasEdit = {true}
+                        errors = {dueDateError}
                     />
                 </Box>
                 <UsersCollection

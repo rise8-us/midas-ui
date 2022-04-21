@@ -29,6 +29,8 @@ function TargetPopup({ id, portfolioId }) {
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleError = useMemo(() => errors.filter(error => error.includes('title')), [errors])
+    const startDateError = useMemo(() => errors.filter(error => error.includes('start')), [errors])
+    const dueDateError = useMemo(() => errors.filter(error => error.includes('due')), [errors])
 
     const [formValues, formDispatch] = useReducer(useFormReducer, {
         title: target.title,
@@ -88,6 +90,7 @@ function TargetPopup({ id, portfolioId }) {
                         initialValue = {getDateInDisplayOrder(formValues.startDate)}
                         onAccept = {(value) => handleChange('startDate', value)}
                         hasEdit = {true}
+                        errors = {startDateError}
                     />
                     <DateSelector
                         label = 'Due Date'
@@ -95,6 +98,7 @@ function TargetPopup({ id, portfolioId }) {
                         initialValue = {getDateInDisplayOrder(formValues.dueDate)}
                         onAccept = {(value) => handleChange('dueDate', value)}
                         hasEdit = {formValues.startDate ? true : false}
+                        errors = {dueDateError}
                     />
                 </Box>
             </Box>

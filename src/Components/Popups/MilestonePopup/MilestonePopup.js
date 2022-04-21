@@ -29,6 +29,7 @@ function MilestonePopup({ id, portfolioId }) {
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleError = useMemo(() => errors.filter(error => error.includes('title')), [errors])
+    const dueDateError = useMemo(() => errors.filter(error => error.includes('due')), [errors])
 
     const [formValues, formDispatch] = useReducer(useFormReducer, {
         title: milestone.title,
@@ -87,6 +88,7 @@ function MilestonePopup({ id, portfolioId }) {
                         initialValue = {getDateInDisplayOrder(formValues.dueDate)}
                         onAccept = {(value) => handleChange('dueDate', value)}
                         hasEdit = {true}
+                        errors = {dueDateError}
                     />
                 </Box>
             </Box>
