@@ -27,13 +27,20 @@ const MilestoneFlagPole = styled('div')(({ theme }) => ({
 const MilestoneFlag = styled('div')(({ theme }) => ({
     ...defaultStyles,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'start',
+    textAlign: 'center',
+    justifyContent: 'center',
     background: theme.palette.info.dark,
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
     padding: theme.spacing(0, 1),
     minHeight: '40px',
+    maxHeight: '40px',
+    width: 'fit-content',
+    minWidth: '160px',
     borderRadius: theme.spacing(1),
     borderTopLeftRadius: 0,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
     '&:hover': {
         boxShadow: '0px 0px 12px 0px black'
     }
@@ -65,7 +72,7 @@ export default function GanttMilestone({ milestone }) {
             </Tooltip>
             <Tooltip title = {title} arrow followCursor>
                 <MilestoneFlag>
-                    <Typography maxWidth = '160px' textOverflow = 'ellipsis' overflow = 'hidden' marginRight = {1}>
+                    <Typography marginRight = {1}>
                         {title}
                     </Typography>
                     {permissions.edit &&

@@ -30,4 +30,11 @@ describe('<DateSelector />', () => {
 
         expect(mockOnAccept).toHaveBeenCalledWith(null)
     })
+
+    test('errors display errors', () => {
+        const errors = ['This is an error']
+        render(<DateSelector initialValue = {null} errors = {errors} onAccept = {mockOnAccept} clearable hasEdit/>)
+
+        expect(screen.getByText(errors[0])).toBeInTheDocument()
+    })
 })

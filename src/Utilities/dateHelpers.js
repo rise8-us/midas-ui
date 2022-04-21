@@ -8,7 +8,7 @@ export const parseStringToDate = (entry) => {
 
     if (!splitEntry) return null
 
-    return new Date(splitEntry[0], splitEntry[1] - 1, splitEntry[2])
+    return new Date(Number(splitEntry[0]), Number(splitEntry[1]) - 1, Number(splitEntry[2]))
 }
 
 export const getDateInDisplayOrder = (dateString) => {
@@ -81,6 +81,14 @@ export const DateConstants = {
     Day: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     Month: ['January', 'Febuary', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December']
+}
+
+export const dateRangeFilter = (entry, dateRange) => {
+    const isoDateRange = [dateRange[0].toISOString(), dateRange[1].toISOString()]
+    const dueDateInRange = getIsDateInRange(entry.dueDate, isoDateRange)
+    const startDateInRange = getIsDateInRange(entry.startDate, isoDateRange)
+    return startDateInRange || dueDateInRange ||
+    (dateRange[0] > parseStringToDate(entry.startDate) && dateRange[1] < parseStringToDate(entry.dueDate))
 }
 
 export const getMonthAbbreviated = (index, length) => DateConstants.Month[index].substring(0, length ?? 3)

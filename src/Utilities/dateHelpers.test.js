@@ -116,4 +116,58 @@ describe('date Helpers', () => {
     test('getDayAbbreviated - custom', () => {
         expect(dateHelper.getDayAbbreviated(0, 6)).toEqual('Sunday')
     })
+
+    describe('dateRangerFilter', () => {
+        const rangeStart = new Date(2020, 0, 1)
+        const rangeEnd = new Date(2020, 11, 31)
+        const dateRange = [rangeStart, rangeEnd]
+
+        let entryStart = '2020-3-1'
+        let entryEnd = '2020-9-1'
+        let entry = { startDate: entryStart, dueDate: entryEnd }
+
+        test('entry is inside range', () => {
+            expect(dateHelper.dateRangeFilter(entry, dateRange)).toBe(true)
+        })
+
+        test('entry startDate is outside of range, dueDate is in range', () => {
+            entryStart = '2019-3-1'
+            entryEnd = '2020-9-1'
+            entry = { startDate: entryStart, dueDate: entryEnd }
+
+            expect(dateHelper.dateRangeFilter(entry, dateRange)).toBe(true)
+        })
+
+        test('entry dueDate is outside of range, startDate is in range', () => {
+            entryStart = '2020-3-1'
+            entryEnd = '2022-9-1'
+            entry = { startDate: entryStart, dueDate: entryEnd }
+
+            expect(dateHelper.dateRangeFilter(entry, dateRange)).toBe(true)
+        })
+
+        test('entry startDate is before the range start, dueDate is after the range end', () => {
+            entryStart = '2019-3-1'
+            entryEnd = '2022-9-1'
+            entry = { startDate: entryStart, dueDate: entryEnd }
+
+            expect(dateHelper.dateRangeFilter(entry, dateRange)).toBe(true)
+        })
+
+        test('entry startDate is before the range start, dueDate is before the range end', () => {
+            entryStart = '2019-3-1'
+            entryEnd = '2019-9-1'
+            entry = { startDate: entryStart, dueDate: entryEnd }
+
+            expect(dateHelper.dateRangeFilter(entry, dateRange)).toBe(false)
+        })
+
+        test('entry startDate is after the range start, dueDate is after the range end', () => {
+            entryStart = '2022-3-1'
+            entryEnd = '2022-9-1'
+            entry = { startDate: entryStart, dueDate: entryEnd }
+
+            expect(dateHelper.dateRangeFilter(entry, dateRange)).toBe(false)
+        })
+    })
 })

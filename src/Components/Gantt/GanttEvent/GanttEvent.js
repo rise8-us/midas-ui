@@ -1,5 +1,5 @@
 import { DeleteOutlined, Edit, Event } from '@mui/icons-material'
-import { IconButton, Typography } from '@mui/material'
+import { IconButton, Tooltip, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteEvent } from 'Redux/Events/actions'
@@ -14,7 +14,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     minWidth: '200px',
     minHeight: '40px',
-    width: 'fit-content',
+    // width: 'fit-content',
     background: theme.palette.success.main,
     color: 'black',
     padding: theme.spacing(0, 1),
@@ -69,17 +69,18 @@ export default function GanttEvent({ event }) {
 
 
     return (
-        <StyledDiv>
-            <Event fontSize = 'large'/>
-            <div style = {{ minWidth: '160px' }}>
-                <Typography>
-                    {event.title}
-                </Typography>
-                <Typography>
-                    {dateString}
-                </Typography>
-            </div>
-            {permissions.edit &&
+        <Tooltip arrow followCursor title = {title}>
+            <StyledDiv>
+                <Event fontSize = 'large'/>
+                <div style = {{ minWidth: '160px' }}>
+                    <Typography>
+                        {event.title}
+                    </Typography>
+                    <Typography>
+                        {dateString}
+                    </Typography>
+                </div>
+                {permissions.edit &&
                 <div style = {{ display: 'flex' }}>
                     <IconButton
                         size = 'small'
@@ -96,8 +97,9 @@ export default function GanttEvent({ event }) {
                         <DeleteOutlined fontSize = 'small' htmlColor = 'black'/>
                     </IconButton>
                 </div>
-            }
-        </StyledDiv>
+                }
+            </StyledDiv>
+        </Tooltip>
     )
 }
 

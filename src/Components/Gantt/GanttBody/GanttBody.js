@@ -1,16 +1,21 @@
 import { useTheme } from '@mui/material'
 import { PropTypes } from 'prop-types'
-import { getIsDateInRange } from 'Utilities/dateHelpers'
+import { useMemo } from 'react'
+import { dateRangeFilter } from 'Utilities/dateHelpers'
 import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
 import { GanttDividerBar } from '../GanttDividerBar'
 import { GanttEntry } from '../GanttEntry'
+
+const entryWrapperProps = {
+    style: { position: 'absolute', top: '0px', width: '100%', height: '-webkit-fill-available' }
+}
 
 export default function GanttBody({ borderColor, columns, chartBackgroundColor, dateRange, entries, renderComponent }) {
     const theme = useTheme()
 
     const baseHeight = 56
     const numEntries = entries.length
-    let currentRow = 0
+    let currentRow = -1
 
     const MIN_HEIGHT = baseHeight * numEntries
 
@@ -19,17 +24,26 @@ export default function GanttBody({ borderColor, columns, chartBackgroundColor, 
         minHeight: (MIN_HEIGHT + 2 + 16) + 'px',
     }
 
-    const dateRangeFilter = (entry) => {
-        const isoDateRange = [dateRange[0].toISOString(), dateRange[1].toISOString()]
-        const dueDateInRange = getIsDateInRange(entry.dueDate, isoDateRange)
-        const startDateInRange = getIsDateInRange(entry.startDate, isoDateRange)
-
-        return startDateInRange || dueDateInRange
+    const inRangeEntries = entries?.filter(entry => dateRangeFilter(entry, dateRange))
+    const skipIgnoredRowsLoop = () => {
+        do {
+            currentRow++
+        } while (ignoredRows.has(currentRow))
+        return currentRow
     }
 
     const determineIndex = (row) => {
-        return row >= 0 && row !== currentRow ? row : currentRow++
+        return row >= 0 ? row : skipIgnoredRowsLoop()
     }
+
+    const ignoredRows = useMemo(() => {
+        const presetRows = new Set()
+
+        inRangeEntries.forEach(entry => {
+            entry.row > -1 && presetRows.add(entry.row)
+        })
+        return presetRows
+    }, [inRangeEntries])
 
     return (
         <div style = {{ position: 'relative' }}>
@@ -39,8 +53,8 @@ export default function GanttBody({ borderColor, columns, chartBackgroundColor, 
                 ))}
             </div>
             <GanttDividerBar dateRange = {dateRange} color = {theme.palette.primary.main} />
-            {entries?.filter(entry => dateRangeFilter(entry))
-                .map((entry, index) => (
+            <div {...entryWrapperProps}>
+                {inRangeEntries.map((entry, index) => (
                     <GanttEntry
                         index = {determineIndex(entry.row)}
                         key = {index}
@@ -50,6 +64,7 @@ export default function GanttBody({ borderColor, columns, chartBackgroundColor, 
                         {renderComponent(entry, dateRange, index)}
                     </GanttEntry>
                 ))}
+            </div>
         </div>
     )
 }
