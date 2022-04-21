@@ -11,6 +11,7 @@ import { styled } from 'Styles/materialThemes'
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: '4px',
     background: theme.palette.grey[800],
@@ -43,7 +44,7 @@ export default function GanttTarget({ target }) {
         }))
 
     return (
-        <Tooltip title = {title}>
+        <Tooltip arrow followCursor title = {title}>
             <StyledDiv data-testid = 'GanttTarget__card'>
                 <Typography textOverflow = 'ellipsis' overflow = 'hidden' marginRight = {1}>
                     {title}

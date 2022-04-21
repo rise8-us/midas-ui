@@ -21,11 +21,13 @@ export default function DeletePopup({ id, title, type, request, constant }) {
             onConfirm = {handlePopupConfirm}
             onCancel = {handlePopupCancel}
             detail = {
-                <Typography>You are about to delete {type}:
+                <div style = { { display: 'inline' } }>
+                    <Typography>You are about to delete {type}:
+                    </Typography>
                     <Typography fontWeight = 'bold' color = 'error.main'>
                         {title}
                     </Typography>
-                </Typography>
+                </div>
             }
             constant = {constant}
         />

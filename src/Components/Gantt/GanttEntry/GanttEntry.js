@@ -1,4 +1,3 @@
-import { Box } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
@@ -19,14 +18,15 @@ export default function GanttEntry({ startDate, dueDate, index, dateRange, child
     const fullHeightBox = {
         ...defaultStyle,
         height: '100%',
+        position: 'absolute',
     }
 
     if (!startLeft) return null
 
     return (
-        <Box data-testid = 'GanttEntry__wrap' sx = {enableFullHeight ? fullHeightBox : defaultStyle}>
+        <div data-testid = 'GanttEntry__wrap' style = {enableFullHeight ? fullHeightBox : defaultStyle}>
             {children}
-        </Box>
+        </div>
     )
 }
 

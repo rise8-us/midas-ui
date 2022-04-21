@@ -131,3 +131,13 @@ export const setDateByViewBy = {
     week: (date, scope) => date.setDate(date.getDate() + (scope * 7)),
     day: (date, scope) => date.setDate(date.getDate() + scope),
 }
+
+export const entrySize = (type = 'default') => {
+    const entrySizes = {
+        'milestone': 0,
+        'event': 56,
+        'target': 48,
+        'default': 48
+    }
+    return entrySizes[type]
+}
