@@ -5,10 +5,11 @@ import { TextField } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { getDateIfValid, getDateInDatabaseOrder, getDateInDisplayOrder } from 'Utilities/dateHelpers'
+import FormatErrors from 'Utilities/FormatErrors'
 
 export default function DateSelector({
     clearable, disableUnderline, hasEdit, initialValue, inputFormat, minDate, onAccept,
-    placeholder, variant, ...datePickerProps }) {
+    placeholder, variant, errors, ...datePickerProps }) {
 
     const [value, setValue] = useState(initialValue)
 
@@ -50,6 +51,8 @@ export default function DateSelector({
                         placeholder = {placeholder}
                         InputLabelProps = {{ shrink: true }}
                         variant = {variant}
+                        error = {errors.length > 0}
+                        helperText = {<FormatErrors errors = {errors} />}
                         inputProps = {{
                             ...params.inputProps,
                             style: { padding: 0 }
@@ -64,6 +67,7 @@ export default function DateSelector({
 DateSelector.propTypes = {
     clearable: PropTypes.bool,
     disableUnderline: PropTypes.bool,
+    errors: PropTypes.arrayOf(PropTypes.string),
     hasEdit: PropTypes.bool,
     initialValue: PropTypes.string,
     inputFormat: PropTypes.string,
@@ -77,6 +81,7 @@ DateSelector.propTypes = {
 DateSelector.defaultProps = {
     clearable: true,
     disableUnderline: false,
+    errors: [],
     hasEdit: false,
     initialValue: null,
     inputFormat: 'MM/dd/yyyy',
