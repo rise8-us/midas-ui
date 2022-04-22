@@ -25,6 +25,26 @@ const theme = createTheme({
             SCI: '#EFF01A'
         },
         divider: '#3E4548',
+        gantt: {
+            milestone: {
+                dark: {
+                    background: '#981B1E',
+                    text: '#fff'
+                }
+            },
+            event: {
+                dark: {
+                    background: '#003E73',
+                    text: '#fff'
+                }
+            },
+            target: {
+                dark: {
+                    background: '#4C2C92',
+                    text: '#fff'
+                }
+            }
+        }
     },
     typography: {
         fontFamily: [

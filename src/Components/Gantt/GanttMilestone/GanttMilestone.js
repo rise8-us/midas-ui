@@ -7,6 +7,7 @@ import MilestoneConstants from 'Redux/Milestones/constants'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { styled } from 'Styles/materialThemes'
+import { GanttMilestoneTooltip } from '../GanttMilestoneTooltip'
 
 const defaultStyles = {
     position: 'absolute',
@@ -17,7 +18,7 @@ const MilestoneFlagPole = styled('div')(({ theme }) => ({
     ...defaultStyles,
     width: '3px',
     height: '100%',
-    background: theme.palette.info.dark,
+    background: theme.palette.gantt.milestone.dark.background,
     top: 0,
     '&:hover': {
         boxShadow: '0px 0px 8px 0px black'
@@ -30,7 +31,7 @@ const MilestoneFlag = styled('div')(({ theme }) => ({
     alignItems: 'start',
     textAlign: 'center',
     justifyContent: 'center',
-    background: theme.palette.info.dark,
+    background: theme.palette.gantt.milestone.dark.background,
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
     padding: theme.spacing(0, 1),
     minHeight: '40px',
@@ -41,6 +42,7 @@ const MilestoneFlag = styled('div')(({ theme }) => ({
     borderTopLeftRadius: 0,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+    color: theme.palette.gantt.milestone.dark.text,
     '&:hover': {
         boxShadow: '0px 0px 12px 0px black'
     }
@@ -67,10 +69,10 @@ export default function GanttMilestone({ milestone }) {
 
     return (
         <>
-            <Tooltip title = {title} arrow followCursor>
+            <Tooltip title = {<GanttMilestoneTooltip milestone = {milestone}/>} arrow followCursor>
                 <MilestoneFlagPole />
             </Tooltip>
-            <Tooltip title = {title} arrow followCursor>
+            <Tooltip title = {<GanttMilestoneTooltip milestone = {milestone}/>} arrow followCursor>
                 <MilestoneFlag>
                     <Typography marginRight = {1}>
                         {title}
