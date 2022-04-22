@@ -16,7 +16,7 @@ describe('<GanttAddNewItem />', () => {
         render(<GanttAddNewItem portfolioId = {0} />)
 
         userEvent.click(screen.getByTestId('GanttAddNewItem__button'))
-        userEvent.click(screen.getByText('Add Milestone'))
+        userEvent.click(screen.getByText('Milestone'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
             MilestoneConstants.CREATE_MILESTONE, 'MilestonePopup', { portfolioId: 0 }
@@ -27,7 +27,7 @@ describe('<GanttAddNewItem />', () => {
         render(<GanttAddNewItem portfolioId = {0} />)
 
         userEvent.click(screen.getByTestId('GanttAddNewItem__button'))
-        userEvent.click(screen.getByText('Add Event'))
+        userEvent.click(screen.getByText('Event'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
             EventConstants.CREATE_EVENT, 'EventPopup', { portfolioId: 0 }
@@ -38,7 +38,7 @@ describe('<GanttAddNewItem />', () => {
         render(<GanttAddNewItem portfolioId = {0} />)
 
         userEvent.click(screen.getByTestId('GanttAddNewItem__button'))
-        userEvent.click(screen.getByText('Add Target'))
+        userEvent.click(screen.getByText('Target'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
             TargetConstants.CREATE_TARGET, 'TargetPopup', { portfolioId: 0 }
