@@ -7,6 +7,7 @@ import MilestoneConstants from 'Redux/Milestones/constants'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { styled } from 'Styles/materialThemes'
+import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttMilestoneTooltip } from '../GanttMilestoneTooltip'
 
 const defaultStyles = {
@@ -28,21 +29,17 @@ const MilestoneFlagPole = styled('div')(({ theme }) => ({
 const MilestoneFlag = styled('div')(({ theme }) => ({
     ...defaultStyles,
     display: 'flex',
-    alignItems: 'start',
-    textAlign: 'center',
     justifyContent: 'center',
-    background: theme.palette.gantt.milestone.dark.background,
-    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
-    padding: theme.spacing(0, 1),
-    minHeight: '40px',
-    maxHeight: '40px',
-    width: 'fit-content',
-    minWidth: '160px',
-    borderRadius: theme.spacing(1),
-    borderTopLeftRadius: 0,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     color: theme.palette.gantt.milestone.dark.text,
+    alignItems: 'center',
+    width: 'fit-content',
+    textAlign: 'left',
+    maxWidth: 'calc(100vw - 48px - 76vw)',
+    flexWrap: 'nowrap',
+    background: theme.palette.gantt.milestone.dark.background,
+    padding: theme.spacing(0, 1),
+    borderRadius: theme.spacing(1),
+    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
     '&:hover': {
         boxShadow: '0px 0px 12px 0px black'
     }
@@ -51,8 +48,8 @@ const MilestoneFlag = styled('div')(({ theme }) => ({
 export default function GanttMilestone({ milestone }) {
     const dispatch = useDispatch()
 
-    const { portfolioId, id, title, type } = milestone
-
+    const { portfolioId, dueDate, id, title, type } = milestone
+    const dateString = parseDate(null, dueDate)
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const updateMilestone = () =>
@@ -74,26 +71,29 @@ export default function GanttMilestone({ milestone }) {
             </Tooltip>
             <Tooltip title = {<GanttMilestoneTooltip milestone = {milestone}/>} arrow followCursor>
                 <MilestoneFlag>
-                    <Typography marginRight = {1}>
-                        {title}
-                    </Typography>
+                    <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
+                        <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden' >
+                            {title}
+                        </Typography>
+                        <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                            {dateString}
+                        </Typography>
+                    </div>
                     {permissions.edit &&
                         <div style = {{ display: 'flex', maxHeight: '40px' }}>
                             <IconButton
                                 onClick = {updateMilestone}
-                                style = {{ color: 'black' }}
                                 data-testid = 'GanttMilestone__button-edit'
                                 size = 'small'
                             >
-                                <Edit fontSize = 'small'/>
+                                <Edit fontSize = 'small' htmlColor = 'black'/>
                             </IconButton>
                             <IconButton
                                 onClick = {deleteMilestone}
-                                style = {{ color: 'black' }}
                                 data-testid = 'GanttMilestone__button-delete'
                                 size = 'small'
                             >
-                                <DeleteOutline fontSize = 'small'/>
+                                <DeleteOutline fontSize = 'small' htmlColor = 'black'/>
                             </IconButton>
                         </div>
                     }

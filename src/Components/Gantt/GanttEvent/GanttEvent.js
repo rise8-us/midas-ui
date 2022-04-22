@@ -1,5 +1,5 @@
-import { DeleteOutlined, Edit, Event } from '@mui/icons-material'
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import { DeleteOutlined, Edit } from '@mui/icons-material'
+import { IconButton, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteEvent } from 'Redux/Events/actions'
@@ -7,18 +7,17 @@ import EventConstants from 'Redux/Events/constants'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { styled } from 'Styles/materialThemes'
-import { getMonthAbbreviated } from 'Utilities/dateHelpers'
+import { parseDate } from 'Utilities/ganttHelpers'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    minWidth: '200px',
+    maxWidth: 'calc(100vw - 48px - 76vw)',
     minHeight: '40px',
-    // width: 'fit-content',
-    background: theme.palette.success.main,
-    color: 'black',
+    background: theme.palette.gantt.event.dark.background,
+    color: theme.palette.gantt.event.dark.text,
     padding: theme.spacing(0, 1),
-    textAlign: 'center',
+    textAlign: 'left',
     borderRadius: '4px',
     alignItems: 'center',
     '&:hover': {
@@ -26,24 +25,6 @@ const StyledDiv = styled('div')(({ theme }) => ({
     }
 }))
 
-const parseDate = (startDate, endDate) => {
-    if (startDate === null) startDate = endDate
-    const [yearStart, monthStart, dayStart] = startDate.split('-')
-    const [yearEnd, monthEnd, dayEnd] = endDate.split('-')
-    const parsedMonth = (month) => parseInt(month) - 1
-
-    if (startDate === endDate) {
-        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
-    } else if (yearStart == yearEnd && monthStart == monthEnd) {
-        return `${dayStart} - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
-    } else if (yearStart == yearEnd) {
-        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))}`
-                + ` - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthEnd))} ${yearStart}`
-    } else {
-        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}` +
-    ` - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
-    }
-}
 export default function GanttEvent({ event }) {
     const dispatch = useDispatch()
 
@@ -69,18 +50,16 @@ export default function GanttEvent({ event }) {
 
 
     return (
-        <Tooltip arrow followCursor title = {title}>
-            <StyledDiv>
-                <Event fontSize = 'large'/>
-                <div style = {{ minWidth: '160px' }}>
-                    <Typography>
-                        {event.title}
-                    </Typography>
-                    <Typography>
-                        {dateString}
-                    </Typography>
-                </div>
-                {permissions.edit &&
+        <StyledDiv>
+            <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
+                <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                    {event.title}
+                </Typography>
+                <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                    {dateString}
+                </Typography>
+            </div>
+            {permissions.edit &&
                 <div style = {{ display: 'flex' }}>
                     <IconButton
                         size = 'small'
@@ -97,9 +76,8 @@ export default function GanttEvent({ event }) {
                         <DeleteOutlined fontSize = 'small' htmlColor = 'black'/>
                     </IconButton>
                 </div>
-                }
-            </StyledDiv>
-        </Tooltip>
+            }
+        </StyledDiv>
     )
 }
 

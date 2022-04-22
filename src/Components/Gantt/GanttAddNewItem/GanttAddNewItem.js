@@ -44,7 +44,7 @@ export default function GanttAddNewItem({ portfolioId }) {
                         title = 'Add Content to Chart'
                         endIcon = {<AddCircle />}
                     >
-                        Add a new...
+                        Add new
                     </Button>
                 }
             />
