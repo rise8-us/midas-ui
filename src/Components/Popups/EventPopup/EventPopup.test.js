@@ -12,7 +12,9 @@ import {
 import { EventPopup } from './index'
 
 jest.mock('Components/DateSelector/DateSelector', () => function testing(props) { return mockDateSelector(props) })
-jest.mock('Components/UsersCollection/UsersCollection', () => function testing(props) { return mockUsersCollectionComponent(props) })
+jest.mock('Components/UsersCollection/UsersCollection', () => function testing(props) {
+    return mockUsersCollectionComponent(props)
+})
 
 describe('<EventPopup />', () => {
 

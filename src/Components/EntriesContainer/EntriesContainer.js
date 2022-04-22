@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, useTheme } from '@mui/material'
 import { GanttChart } from 'Components/Gantt'
 import GanttAddNewItem from 'Components/Gantt/GanttAddNewItem/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
@@ -19,13 +19,14 @@ import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
 export default function EntriesContainer({ portfolioId }) {
 
     const dispatch = useDispatch()
+    const theme = useTheme()
     const searchValue = 'portfolio.id:' + portfolioId
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     useEffect(() => {
         dispatch(requestSearchMilestones(searchValue))
         dispatch(requestSearchEvents(searchValue))
-        dispatch(requestSearchTargets(searchValue))
+        dispatch(requestSearchTargets(searchValue + ' AND parentId:~'))
     }, [])
 
     const milestones = useSelector(state => selectMilestonesByPortfolioId(state, portfolioId))
@@ -57,7 +58,7 @@ export default function EntriesContainer({ portfolioId }) {
     return (
         <GanttChart
             startDate = {dateStart}
-            maxHeight = 'calc(100% - 200px)'
+            maxHeight = 'calc(100vh - 280px)'
             entries = {entries}
             renderComponent = {renderComponent}
             actionBar = {{
@@ -70,6 +71,14 @@ export default function EntriesContainer({ portfolioId }) {
                 },
                 additionalActions: permissions.edit ? <GanttAddNewItem portfolioId = {portfolioId} /> : null
             }}
+            chartBackgroundColor = {theme.palette.background.paper}
+            headerStyles = {{
+                color: theme.palette.grey[600],
+                ...theme.typography.subtitle2,
+                marginLeft: theme.spacing(1),
+                marginBlock: 'unset'
+            }}
+            todayColor = {theme.palette.primary.main}
         />
     )
 }
@@ -77,87 +86,3 @@ export default function EntriesContainer({ portfolioId }) {
 EntriesContainer.propTypes = {
     portfolioId: PropTypes.number.isRequired,
 }
-
-const mockEvents = [{
-    title: 'This is a test event',
-    startDate: '2021-10-01',
-    dueDate: '2023-10-15',
-    type: 'event',
-    portfolioId: 91,
-    organizerIds: [],
-    location: 'foo',
-    row: 1
-}]
-
-const mockTargets = [
-    {
-        title: 'Create Midas App',
-        startDate: '2020-12-15',
-        dueDate: '2021-11-01',
-        type: 'target',
-        portfolioId: 91
-    }, {
-        title: 'Create User Profiles',
-        startDate: '2021-03-01',
-        dueDate: '2021-10-16',
-        type: 'target',
-        portfolioId: 91
-    }, {
-        title: 'Create Products Page',
-        startDate: '2021-07-01',
-        dueDate: '2021-12-01',
-        type: 'target',
-        portfolioId: 91
-    }, {
-        title: 'Create Portfolios',
-        startDate: '2022-10-01',
-        dueDate: '2022-10-15',
-        type: 'target',
-        portfolioId: 91
-    }, {
-        title: 'test entry4 dafdasfdas dfafas',
-        startDate: '2022-12-01',
-        dueDate: '2023-1-01',
-        type: 'target',
-        portfolioId: 91
-    }
-]
-
-const mockMilestones = [
-    {
-        title: 'Old Milestone',
-        description: 'Second Milestone Test',
-        dueDate: '2021-09-01',
-        type: 'milestone',
-        enableFullHeight: true,
-        row: 0,
-        portfolioId: 91
-    },
-    {
-        title: 'Milestone1',
-        description: 'First Milestone Test',
-        dueDate: '2022-05-15',
-        type: 'milestone',
-        enableFullHeight: true,
-        row: 0,
-        portfolioId: 91
-    },
-    {
-        title: 'Milestone2',
-        description: 'Second Milestone Test',
-        dueDate: '2022-8-24',
-        type: 'milestone',
-        enableFullHeight: true,
-        row: 0,
-        portfolioId: 91
-    },
-    {
-        title: 'Milestone3',
-        description: 'Second Milestone Test',
-        dueDate: '2023-02-04',
-        type: 'milestone',
-        enableFullHeight: true,
-        row: 0,
-        portfolioId: 91
-    }
-]

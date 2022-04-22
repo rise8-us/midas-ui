@@ -8,7 +8,9 @@ describe('<GanttEntry />', () => {
         startDate: 'foo',
         dueDate: 'bar',
         index: 1,
-        dateRange: [date, date]
+        dateRange: [date, date],
+        defaultRowHeight: 2,
+        defaultRowSpacing: 0
     }
 
     const parseStringToDateMock = useModuleMock('Utilities/dateHelpers', 'parseStringToDate')

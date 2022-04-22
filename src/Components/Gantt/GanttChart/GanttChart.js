@@ -1,4 +1,3 @@
-import { Box, useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { generateChartFormat, setDateByViewBy } from 'Utilities/ganttHelpers'
@@ -6,25 +5,27 @@ import { GanttActionBar } from '../GanttActionBar'
 import { GanttBody } from '../GanttBody'
 import { GanttHeader } from '../GanttHeader'
 
-const defaultGanttEntryStyling = (theme) => {
-    return {
-        borderRadius: '4px',
-        background: theme.palette.grey[800],
-        boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
-        textAlign: 'left'
-    }
-}
-
-export default function GanttChart({ actionBar, startDate, entries, maxHeight, renderComponent, viewBy, scope }) {
-    const theme = useTheme()
-    const backgroundColor = theme.palette.background.paper
-    const borderColor = 'black'
+export default function GanttChart({
+    actionBar,
+    borderColor,
+    chartBackgroundColor,
+    defaultRowHeight,
+    defaultRowSpacing,
+    entries,
+    headerStyles,
+    maxHeight,
+    renderComponent,
+    scope,
+    startDate,
+    todayColor,
+    viewBy,
+}) {
     const chartStyle = {
         position: 'relative',
         maxHeight: maxHeight,
         overflowY: 'auto',
         overflowX: 'hidden',
-        background: backgroundColor,
+        background: chartBackgroundColor,
     }
 
     let endDate = new Date(startDate.getTime())
@@ -52,30 +53,30 @@ export default function GanttChart({ actionBar, startDate, entries, maxHeight, r
                 buttonProps = {actionBar.buttonProps}
                 setDateRange = {augmentedSetDateRange}
                 borderColor = {borderColor}
-                backgroundColor = {backgroundColor}
+                backgroundColor = {chartBackgroundColor}
                 additionalActions = {actionBar.additionalActions}
             />
             <div style = {chartStyle}>
                 <GanttHeader
                     columns = {chartFormat}
-                    chartBackgroundColor = {backgroundColor}
+                    chartBackgroundColor = {chartBackgroundColor}
                     borderColor = {borderColor}
-                    style = {{
-                        color: theme.palette.grey[600],
-                        ...theme.typography.subtitle2,
-                        marginLeft: theme.spacing(1),
-                        marginBlock: 'unset'
-                    }}
+                    style = {headerStyles}
                 />
-                {entries.length > 0 && <GanttBody
-                    entries = {entries}
-                    maxHeight = {maxHeight}
-                    dateRange = {dateRange}
-                    columns = {chartFormat}
-                    chartBackgroundColor = {backgroundColor}
-                    borderColor = {borderColor}
-                    renderComponent = {renderComponent}
-                />}
+                {entries.length > 0 &&
+                    <GanttBody
+                        entries = {entries}
+                        maxHeight = {maxHeight}
+                        dateRange = {dateRange}
+                        columns = {chartFormat}
+                        chartBackgroundColor = {chartBackgroundColor}
+                        borderColor = {borderColor}
+                        renderComponent = {renderComponent}
+                        todayColor = {todayColor}
+                        defaultRowHeight =  {defaultRowHeight}
+                        defaultRowSpacing = {defaultRowSpacing}
+                    />
+                }
             </div>
         </div>
     )
@@ -89,6 +90,10 @@ GanttChart.propTypes = {
         navLeftIcon: PropTypes.node,
         navRightIcon: PropTypes.node,
     }),
+    borderColor: PropTypes.string,
+    chartBackgroundColor: PropTypes.string,
+    defaultRowHeight: PropTypes.number,
+    defaultRowSpacing: PropTypes.number,
     entries: PropTypes.arrayOf(
         PropTypes.shape({
             title: PropTypes.string,
@@ -96,22 +101,38 @@ GanttChart.propTypes = {
             dueDate: PropTypes.string
         })
     ).isRequired,
+    headerStyles: PropTypes.shape({}),
     maxHeight: PropTypes.string.isRequired,
     renderComponent: PropTypes.func,
-    viewBy: PropTypes.oneOf(['year', 'quarter', 'month', 'week', 'day']),
     scope: PropTypes.number,
-    startDate: PropTypes.instanceOf(Date).isRequired
+    startDate: PropTypes.instanceOf(Date).isRequired,
+    todayColor: PropTypes.string,
+    viewBy: PropTypes.oneOf(['year', 'quarter', 'month', 'week', 'day']),
 }
 
 GanttChart.defaultProps = {
     actionBar: {},
+    borderColor: '#000',
+    chartBackgroundColor: '#bdbdbd',
+    defaultRowHeight: undefined,
+    defaultRowSpacing: undefined,
+    headerStyles: {},
     renderComponent: (entry) => (
-        <Box data-testid = 'GanttEntry__defaultEntryWrapper' sx = {defaultGanttEntryStyling}>
+        <div
+            data-testid = 'GanttEntry__defaultEntryWrapper'
+            style = {{
+                borderRadius: '4px',
+                background: '#CDD2D7',
+                boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
+                textAlign: 'left'
+            }}
+        >
             <p style = {{ marginBlock: 0, padding: '8px' }}>
                 {entry.title}
             </p>
-        </Box>
+        </div>
     ),
+    scope: 12,
+    todayColor: '#c3c3c3',
     viewBy: 'month',
-    scope: 12
 }
