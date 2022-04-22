@@ -1,17 +1,28 @@
 import { PropTypes } from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 
-export default function GanttEntry({ startDate, dueDate, index, dateRange, children, enableFullHeight }) {
+export default function GanttEntry({
+    children,
+    dateRange,
+    defaultRowHeight,
+    defaultRowSpacing,
+    dueDate,
+    enableFullHeight,
+    index,
+    startDate,
+}) {
 
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)
     const [startLeft, duration] = calculatePosition([start, due], dateRange)
 
+    const entryTopPosition = index * (defaultRowHeight + defaultRowSpacing)
+
     const defaultStyle = {
         position: 'absolute',
         left: `${startLeft}%`,
         width: `${duration}%`,
-        top: `${index * 56}px`,
+        top: `${entryTopPosition + defaultRowSpacing}px`,
         zIndex: 3
     }
 
@@ -31,15 +42,17 @@ export default function GanttEntry({ startDate, dueDate, index, dateRange, child
 }
 
 GanttEntry.propTypes = {
-    startDate: PropTypes.string,
-    dueDate: PropTypes.string.isRequired,
-    index: PropTypes.number.isRequired,
-    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
     children: PropTypes.node,
-    enableFullHeight: PropTypes.bool
+    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
+    defaultRowHeight: PropTypes.number.isRequired,
+    defaultRowSpacing: PropTypes.number.isRequired,
+    dueDate: PropTypes.string.isRequired,
+    enableFullHeight: PropTypes.bool,
+    index: PropTypes.number.isRequired,
+    startDate: PropTypes.string,
 }
 GanttEntry.defaultProps = {
-    startDate: undefined,
     children: undefined,
-    enableFullHeight: false
+    enableFullHeight: false,
+    startDate: undefined,
 }

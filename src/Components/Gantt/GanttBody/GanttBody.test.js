@@ -31,6 +31,9 @@ describe('<GanttBody />', () => {
                 dateRange = {[dateStart, dateEnd]}
                 renderComponent = {(entry) => (<div>{entry.title}</div>)}
                 columns = {[{}]}
+                defaultRowHeight = {2}
+                defaultRowSpacing = {0}
+                todayColor = 'gold'
             />
         )
 
