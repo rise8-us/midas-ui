@@ -1,7 +1,9 @@
-import { renderWithRouter, screen } from 'Utilities/test-utils'
+import { renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
 import { GanttEventTooltip } from './index'
 
 describe('<GanttEventTooltip />', () => {
+
+    const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
 
     const event = {
         title: 'This is the event title',
@@ -9,16 +11,20 @@ describe('<GanttEventTooltip />', () => {
         dueDate: '2022-06-31',
         startDate: '2022-06-01',
         location: 'Here',
-        organizers: [
-            {
-                displayName: 'Them'
-            },
-            {
-                displayName: 'Others'
-            }]
+        organizerIds: [1, 2]
     }
 
+    const organizers = [
+        {
+            displayName: 'Them'
+        },
+        {
+            displayName: 'Others'
+        }
+    ]
+
     test('should render', () => {
+        selectUsersByIdsMock.mockReturnValue(organizers)
         renderWithRouter(<GanttEventTooltip event = {event}/>)
 
         expect(screen.getByText('This is the event title')).toBeInTheDocument()
