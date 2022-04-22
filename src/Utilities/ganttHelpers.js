@@ -132,12 +132,22 @@ export const setDateByViewBy = {
     day: (date, scope) => date.setDate(date.getDate() + scope),
 }
 
-export const entrySize = (type = 'default') => {
-    const entrySizes = {
-        'milestone': 0,
-        'event': 56,
-        'target': 48,
-        'default': 48
+export const parseDate = (startDate, endDate) => {
+    if (startDate === null) startDate = endDate
+    if (endDate === null) endDate = startDate
+    const [yearStart, monthStart, dayStart] = startDate.split('-')
+    const [yearEnd, monthEnd, dayEnd] = endDate.split('-')
+    const parsedMonth = (month) => parseInt(month) - 1
+
+    if (startDate === endDate) {
+        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
+    } else if (yearStart === yearEnd && monthStart === monthEnd) {
+        return `${dayStart} - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
+    } else if (yearStart === yearEnd) {
+        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))}`
+                + ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearStart}`
+    } else {
+        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}` +
+    ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
     }
-    return entrySizes[type]
 }

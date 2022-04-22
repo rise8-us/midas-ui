@@ -34,13 +34,13 @@ const theme = createTheme({
             },
             event: {
                 dark: {
-                    background: '#003E73',
+                    background: '#4C2C92',
                     text: '#fff'
                 }
             },
             target: {
                 dark: {
-                    background: '#4C2C92',
+                    background: '#003E73',
                     text: '#fff'
                 }
             }

@@ -54,4 +54,36 @@ describe('ganttHelpers', () => {
 
         expect(results).toEqual(' \'00')
     })
+
+    describe('parseDate function', () => {
+        const date1 = '2021-01-01'
+        const date2 = '2021-04-21'
+        const date3 = '2022-03-13'
+        const date4 = '2021-01-05'
+
+        test('same dates', () => {
+            const result = ganttHelpers.parseDate(date1, date1)
+            expect(result).toEqual('01 Jan 2021')
+        })
+
+        test('startDate null', () => {
+            const result = ganttHelpers.parseDate(null, date1)
+            expect(result).toEqual('01 Jan 2021')
+        })
+
+        test('same month and year', () => {
+            const result = ganttHelpers.parseDate(date1, date4)
+            expect(result).toEqual('01 - 05 Jan 2021')
+        })
+
+        test('different months, same year', () => {
+            const result = ganttHelpers.parseDate(date1, date2)
+            expect(result).toEqual('01 Jan - 21 Apr 2021')
+        })
+
+        test('different month and year', () => {
+            const result = ganttHelpers.parseDate(date2, date3)
+            expect(result).toEqual('21 Apr 2021 - 13 Mar 2022')
+        })
+    })
 })

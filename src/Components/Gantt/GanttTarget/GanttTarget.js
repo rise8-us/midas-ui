@@ -7,14 +7,16 @@ import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
+import { parseDate } from 'Utilities/ganttHelpers'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
     alignItems: 'center',
     borderRadius: '4px',
-    background: theme.palette.grey[800],
+    color: theme.palette.gantt.target.dark.text,
+    background: theme.palette.gantt.target.dark.background,
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
     textAlign: 'left',
     padding: theme.spacing(0, 1),
@@ -27,8 +29,8 @@ const StyledDiv = styled('div')(({ theme }) => ({
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, title, type } = target
-
+    const { id, portfolioId, startDate, dueDate, title, type } = target
+    const dateString = parseDate(startDate, dueDate)
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     const updateTarget = () =>
@@ -44,28 +46,31 @@ export default function GanttTarget({ target }) {
         }))
 
     return (
-        <Tooltip arrow followCursor title = {title}>
-            <StyledDiv data-testid = 'GanttTarget__card'>
-                <Typography textOverflow = 'ellipsis' overflow = 'hidden' marginRight = {1}>
-                    {title}
-                </Typography>
+        <Tooltip title = {title}>
+            <StyledDiv data-testid = 'GanttTarget__card' >
+                <div style = {{ maxWidth: permissions.edit ? 'calc(100% - 76px)' : '100%' }}>
+                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                        {title}
+                    </Typography>
+                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                        {dateString}
+                    </Typography>
+                </div>
                 {permissions.edit &&
                     <div style = {{ display: 'flex', flexWrap: 'wrap' }}>
                         <IconButton
                             onClick = {updateTarget}
-                            color = 'secondary'
                             data-testid = 'GanttTarget__button-edit'
                             size = 'small'
                         >
-                            <Edit fontSize = 'small'/>
+                            <Edit fontSize = 'small' htmlColor = 'black'/>
                         </IconButton>
                         <IconButton
                             onClick = {deleteTarget}
-                            color = 'secondary'
                             data-testid = 'GanttTarget__button-delete'
                             size = 'small'
                         >
-                            <DeleteOutline fontSize = 'small'/>
+                            <DeleteOutline fontSize = 'small' htmlColor = 'black'/>
                         </IconButton>
                     </div>
                 }
@@ -80,5 +85,7 @@ GanttTarget.propTypes = {
         portfolioId: PropTypes.number,
         title: PropTypes.string,
         type: PropTypes.string,
-    }).isRequired,
+        startDate: PropTypes.string,
+        dueDate: PropTypes.string
+    }).isRequired
 }
