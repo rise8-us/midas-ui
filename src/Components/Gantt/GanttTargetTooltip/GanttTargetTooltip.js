@@ -9,13 +9,18 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: '14px',
     paddingLeft: theme.spacing(1)
 }))
-export default function GanttMilestoneTooltip({ milestone }) {
-    const { title, description, dueDate } = milestone
+
+export default function GanttTargetTooltip({ target }) {
+    const { title, description, startDate, dueDate } = target
 
     return (
         <Stack>
             <Typography variant = 'h6'>{title}</Typography>
             <Typography color = 'text.secondary' variant = 'subtitle2'>{description}</Typography>
+            <Typography>Start Date:</Typography>
+            <StyledTypography>
+                {parseStringToDate(startDate).toDateString()}
+            </StyledTypography>
             <Typography>Due Date:</Typography>
             <StyledTypography>
                 {parseStringToDate(dueDate).toDateString()}
@@ -24,10 +29,11 @@ export default function GanttMilestoneTooltip({ milestone }) {
     )
 }
 
-GanttMilestoneTooltip.propTypes = {
-    milestone: PropTypes.shape({
+GanttTargetTooltip.propTypes = {
+    target: PropTypes.shape({
         title: PropTypes.string,
-        dueDate: PropTypes.string,
         description: PropTypes.string,
+        dueDate: PropTypes.string,
+        startDate: PropTypes.string,
     }).isRequired
 }

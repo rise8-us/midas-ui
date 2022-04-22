@@ -8,6 +8,7 @@ import { requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,7 +47,7 @@ export default function GanttTarget({ target }) {
         }))
 
     return (
-        <Tooltip title = {title}>
+        <Tooltip title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
             <StyledDiv data-testid = 'GanttTarget__card' >
                 <div style = {{ maxWidth: permissions.edit ? 'calc(100% - 76px)' : '100%' }}>
                     <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
