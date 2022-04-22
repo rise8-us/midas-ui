@@ -21,13 +21,13 @@ export default function GanttAddNewItem({ portfolioId }) {
 
     const addCompButtons = [
         {
-            text: 'Add Milestone',
+            text: 'Milestone',
             onClick: createMilestone
         }, {
-            text: 'Add Event',
+            text: 'Event',
             onClick: createEvent
         }, {
-            text: 'Add Target',
+            text: 'Target',
             onClick: createTarget
         }
     ]
