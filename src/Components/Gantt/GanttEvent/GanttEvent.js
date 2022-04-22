@@ -1,5 +1,5 @@
 import { DeleteOutlined, Edit } from '@mui/icons-material'
-import { IconButton, Typography } from '@mui/material'
+import { IconButton, Tooltip, Typography } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteEvent } from 'Redux/Events/actions'
@@ -8,6 +8,7 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { GanttEventTooltip } from '../GanttEventTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -50,16 +51,17 @@ export default function GanttEvent({ event }) {
 
 
     return (
-        <StyledDiv>
-            <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
-                <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                    {event.title}
-                </Typography>
-                <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                    {dateString}
-                </Typography>
-            </div>
-            {permissions.edit &&
+        <Tooltip title = {<GanttEventTooltip event = {event}/>} arrow followCursor>
+            <StyledDiv>
+                <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
+                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                        {event.title}
+                    </Typography>
+                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+                        {dateString}
+                    </Typography>
+                </div>
+                {permissions.edit &&
                 <div style = {{ display: 'flex' }}>
                     <IconButton
                         size = 'small'
@@ -76,8 +78,9 @@ export default function GanttEvent({ event }) {
                         <DeleteOutlined fontSize = 'small' htmlColor = 'black'/>
                     </IconButton>
                 </div>
-            }
-        </StyledDiv>
+                }
+            </StyledDiv>
+        </Tooltip>
     )
 }
 
@@ -90,6 +93,7 @@ GanttEvent.propTypes = {
         description: PropTypes.string,
         location: PropTypes.string,
         portfolioId: PropTypes.number,
-        type: PropTypes.string
+        type: PropTypes.string,
+        organizerIds: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
 }
