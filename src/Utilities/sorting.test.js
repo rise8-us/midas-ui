@@ -36,6 +36,6 @@ describe('sorting', () => {
             { startDate: new Date(2022, 1, 1) },
         ]
 
-        expect(unsorted.sort(sortArrayByDate)).toEqual(sorted)
+        expect([...unsorted].sort(sortArrayByDate)).toEqual(sorted)
     })
 })
