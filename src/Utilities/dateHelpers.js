@@ -48,9 +48,9 @@ export const getIsDateInRange = (date, range) => {
     const nullCount = [start, end].filter(entry => entry === null).length
 
     if (date === null && nullCount === 2 || nullCount === 2) return true
-    if (start === null) return Date.parse(date) < Date.parse(end)
-    if (end === null) return Date.parse(date) > Date.parse(start)
-    return Date.parse(date) > Date.parse(start) && Date.parse(date) < Date.parse(end)
+    if (start === null) return parseStringToDate(date).getTime() <= end.getTime()
+    if (end === null) return parseStringToDate(date).getTime() >= start.getTime()
+    return parseStringToDate(date).getTime() >= start.getTime() && parseStringToDate(date).getTime() <= end.getTime()
 }
 
 export const calculateSinglePosition = (dateToCalculate, dateRange) => {
@@ -84,11 +84,14 @@ export const DateConstants = {
 }
 
 export const dateRangeFilter = (entry, dateRange) => {
+    let { startDate, dueDate } = entry
+    if (!startDate) startDate = dueDate
     const isoDateRange = [dateRange[0].toISOString(), dateRange[1].toISOString()]
-    const dueDateInRange = getIsDateInRange(entry.dueDate, isoDateRange)
-    const startDateInRange = getIsDateInRange(entry.startDate, isoDateRange)
+    const dueDateInRange = getIsDateInRange(dueDate, isoDateRange)
+    const startDateInRange = getIsDateInRange(startDate, isoDateRange)
+
     return startDateInRange || dueDateInRange ||
-    (dateRange[0] > parseStringToDate(entry.startDate) && dateRange[1] < parseStringToDate(entry.dueDate))
+    (dateRange[0] > parseStringToDate(startDate) && dateRange[1] < parseStringToDate(dueDate))
 }
 
 export const getMonthAbbreviated = (index, length) => DateConstants.Month[index].substring(0, length ?? 3)
