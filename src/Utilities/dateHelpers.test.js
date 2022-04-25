@@ -68,7 +68,7 @@ describe('date Helpers', () => {
     })
 
     describe('getIsDateInRange', () => {
-        test('returns truen when all null', () => {
+        test('returns true when all null', () => {
             expect(dateHelper.getIsDateInRange(null, [null, null])).toEqual(true)
         })
 
