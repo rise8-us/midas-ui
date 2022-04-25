@@ -32,8 +32,6 @@ export default function GanttEntry({
         position: 'absolute',
     }
 
-    if (!startLeft) return null
-
     return (
         <div data-testid = 'GanttEntry__wrap' style = {enableFullHeight ? fullHeightBox : defaultStyle}>
             {children}

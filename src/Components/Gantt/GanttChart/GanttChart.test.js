@@ -11,11 +11,11 @@ describe('<GanttChart />', () => {
             type: 'target'
         }, {
             title: 'outside of range left',
-            dueDate: '2021-12-02',
+            dueDate: '2021-12-01',
             type: 'milestone'
         }, {
             title: 'outside of range right',
-            dueDate: '2023-1-02',
+            dueDate: '2023-1-01',
             type: 'milestone'
         }, {
             title: 'test entry3',

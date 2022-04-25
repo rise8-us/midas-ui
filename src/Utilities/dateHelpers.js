@@ -48,6 +48,7 @@ export const getIsDateInRange = (date, range) => {
     const nullCount = [start, end].filter(entry => entry === null).length
 
     if (date === null && nullCount === 2 || nullCount === 2) return true
+    if (date === null) return false
     if (start === null) return parseStringToDate(date).getTime() <= end.getTime()
     if (end === null) return parseStringToDate(date).getTime() >= start.getTime()
     return parseStringToDate(date).getTime() >= start.getTime() && parseStringToDate(date).getTime() <= end.getTime()
