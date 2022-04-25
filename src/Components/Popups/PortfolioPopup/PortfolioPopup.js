@@ -13,8 +13,17 @@ import { requestCreatePortfolio, requestUpdatePortfolio } from 'Redux/Portfolios
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectAvailableProducts } from 'Redux/Products/selectors'
+import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
 import { requestFindUserBy } from 'Redux/Users/actions'
+import { styled } from 'Styles/materialThemes'
 import FormatErrors from 'Utilities/FormatErrors'
+
+const TextFieldStyled = styled(TextField)(() => ({
+    '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+      {
+          display: 'none',
+      },
+}))
 
 const initDetails = (create) => {
     return {
@@ -29,18 +38,26 @@ function PortfolioPopup({ id }) {
     const dispatch = useDispatch()
 
     const portfolio = useSelector(state => selectPortfolioById(state, id))
+    const selectedSourceControl = useSelector((state) => selectSourceControlById(state, portfolio.sourceControlId))
+    const allSourceControls = useSelector(selectSourceControls)
+    const notAssignedProducts = useSelector(selectAvailableProducts)
+
     const context = initDetails(portfolio.id === undefined)
     const [fetched, setFetched] = useState(false)
+    const [sourceControl, setSourceControl] = useState(
+        selectedSourceControl.id !== undefined ? selectedSourceControl : null
+    )
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
+    const gitLabError = useMemo(() => errors.filter(error => error.includes('Gitlab')), [errors])
 
-    const notAssignedProducts = useSelector(selectAvailableProducts)
     const availableProducts = notAssignedProducts.concat(portfolio.products)
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: portfolio.name,
         description: portfolio.description,
+        gitlabGroupId: portfolio.gitlabGroupId ?? '',
         products: portfolio.products,
         owner: undefined,
         adminIds: portfolio.personnel?.adminIds ?? []
@@ -62,6 +79,8 @@ function PortfolioPopup({ id }) {
             ...portfolio,
             name: formValues.name,
             description: formValues.description,
+            gitlabGroupId: formValues.gitlabGroupId,
+            sourceControlId: sourceControl?.id ?? null,
             productIds: formValues.products?.map(product => product.id),
             personnel: {
                 ...portfolio.personnel,
@@ -109,6 +128,35 @@ function PortfolioPopup({ id }) {
                     onChange = {(e) => handleChange('description', e.target.value)}
                     margin = 'dense'
                     multiline
+                />
+                <Autocomplete
+                    value = {sourceControl}
+                    onChange = {(_e, values) => setSourceControl(values)}
+                    options = {allSourceControls}
+                    getOptionLabel = {(option) => option.name}
+                    renderInput = {(params) => (
+                        <TextField
+                            {...params}
+                            label = 'Gitlab server'
+                            InputProps = {{
+                                ...params.InputProps,
+                                readOnly: true,
+                            }}
+                            margin = 'dense'
+                        />
+                    )}
+                />
+                <TextFieldStyled
+                    label = 'Gitlab Group Id'
+                    type = 'number'
+                    inputProps = {{
+                        'data-testid': 'PortfolioPopup__input-gitlabGroupId',
+                    }}
+                    value = {formValues.gitlabGroupId}
+                    onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
+                    error = {gitLabError.length > 0}
+                    helperText = {<FormatErrors errors = {gitLabError} />}
+                    margin = 'dense'
                 />
                 <Autocomplete
                     multiple

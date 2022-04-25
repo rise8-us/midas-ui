@@ -27,6 +27,7 @@ describe('<PortfolioPopup />', () => {
     const submitUpdatePortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestUpdatePortfolio')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const selectAvailableProductsMock = useModuleMock('Redux/Products/selectors', 'selectAvailableProducts')
+    const selectSourceControlsMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControls')
     const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
 
     const returnedTags = [
@@ -39,6 +40,11 @@ describe('<PortfolioPopup />', () => {
     const returnedProducts = [
         { id: 20, name: 'product 1' },
         { id: 21, name: 'product 2' },
+    ]
+
+    const returnedGitlabServers = [
+        { id: 23, name: 'IL9 Ultra Max Super Mega Security' },
+        { id: 24, name: 'IL7 Beyond Top Secret' }
     ]
 
     const returnedFoundPortfolio = {
@@ -64,6 +70,7 @@ describe('<PortfolioPopup />', () => {
         selectPortfolioByIdMock.mockReturnValue(returnedNewPortfolio)
         selectTagsByTypesMock.mockReturnValue(returnedTags)
         selectAvailableProductsMock.mockReturnValue(returnedProducts)
+        selectSourceControlsMock.mockReturnValue(returnedGitlabServers)
         selectUsersByIdsMock.mockReturnValue([])
         useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
     })
@@ -91,6 +98,8 @@ describe('<PortfolioPopup />', () => {
             name: '',
             description: '',
             products: [],
+            gitlabGroupId: '',
+            sourceControlId: null,
             productIds: [],
             personnel: {
                 teamIds: [],
@@ -122,17 +131,23 @@ describe('<PortfolioPopup />', () => {
 
         const name = 'My Edited Portfolio'
         const description = 'New description'
+        const gitlabGroupId = '123'
 
         const nameInput = screen.getByTestId('PortfolioPopup__input-name')
         const descriptionInput = screen.getByTestId('PortfolioPopup__input-description')
+        const gitlabGroupIdInput = screen.getByTestId('PortfolioPopup__input-gitlabGroupId')
 
         userEvent.clear(descriptionInput)
         userEvent.clear(nameInput)
 
         userEvent.type(descriptionInput, description)
         userEvent.type(nameInput, name)
+        userEvent.type(gitlabGroupIdInput, gitlabGroupId)
 
         fireEvent.click(screen.getAllByTitle(/open/i)[0])
+        fireEvent.click(screen.getByText('IL7 Beyond Top Secret'))
+
+        fireEvent.click(screen.getAllByTitle(/open/i)[1])
         fireEvent.click(screen.getByText('product 2'))
 
         fireEvent.click(screen.getByText('submit'))
@@ -141,6 +156,8 @@ describe('<PortfolioPopup />', () => {
             ...newFoundPorfolio,
             name,
             description,
+            gitlabGroupId: '123',
+            sourceControlId: 24,
             productIds: [21],
             personnel: {
                 adminIds: [],
@@ -160,6 +177,8 @@ describe('<PortfolioPopup />', () => {
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,
+            gitlabGroupId: '',
+            sourceControlId: null,
             productIds: [20],
             personnel: {
                 ownerId: 24,
@@ -179,6 +198,8 @@ describe('<PortfolioPopup />', () => {
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,
+            gitlabGroupId: '',
+            sourceControlId: null,
             productIds: [20],
             personnel: {
                 ownerId: null,
