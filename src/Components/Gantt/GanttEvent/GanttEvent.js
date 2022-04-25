@@ -13,6 +13,7 @@ import { GanttEventTooltip } from '../GanttEventTooltip'
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
+    width: 'fit-content',
     maxWidth: 'calc(100vw - 48px - 76vw)',
     minHeight: '40px',
     background: theme.palette.gantt.event.dark.background,
@@ -20,6 +21,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
     textAlign: 'left',
     borderRadius: '4px',
+    border: `1px solid ${theme.palette.background.paper}`,
     alignItems: 'center',
     '&:hover': {
         boxShadow: '0px 0px 16px 0px black'

@@ -1,4 +1,4 @@
-import { render, screen } from 'Utilities/test-utils'
+import { render, screen, userEvent } from 'Utilities/test-utils'
 import { GanttChart } from './index'
 
 describe('<GanttChart />', () => {
@@ -10,10 +10,13 @@ describe('<GanttChart />', () => {
             dueDate: '2022-10-01',
             type: 'target'
         }, {
-            title: 'test entry2',
-            startDate: '2022-03-01',
-            dueDate: '2022-07-16',
-            type: 'target'
+            title: 'outside of range left',
+            dueDate: '2021-12-02',
+            type: 'milestone'
+        }, {
+            title: 'outside of range right',
+            dueDate: '2023-1-02',
+            type: 'milestone'
         }, {
             title: 'test entry3',
             startDate: '2022-07-01',
@@ -23,9 +26,22 @@ describe('<GanttChart />', () => {
     ]
 
     test('should render', () => {
-        render(<GanttChart startDate = {new Date(2022, 1, 1)} entries = {mockEntries} maxHeight = '800px'/>)
+        render(<GanttChart startDate = {new Date(2022, 0, 1)} entries = {mockEntries} maxHeight = '800px'/>)
 
         expect(screen.getByText('first entry from last year')).toBeInTheDocument()
         expect(screen.getByText('test entry3')).toBeInTheDocument()
+    })
+
+    test('should move left', () => {
+        render(<GanttChart startDate = {new Date(2022, 0, 1)} entries = {mockEntries} maxHeight = '800px'/>)
+        expect(screen.queryByText('outside of range left')).not.toBeInTheDocument()
+        userEvent.click(screen.getByTestId('GanttActionBar__button-left-button'))
+        expect(screen.getByText('outside of range left')).toBeInTheDocument()
+    })
+
+    test('should move right', () => {
+        render(<GanttChart startDate = {new Date(2022, 0, 1)} entries = {mockEntries} maxHeight = '800px'/>)
+        userEvent.click(screen.getByTestId('GanttActionBar__button-right-button'))
+        expect(screen.getByText('outside of range right')).toBeInTheDocument()
     })
 })

@@ -15,6 +15,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     alignItems: 'center',
+    border: `1px solid ${theme.palette.background.paper}`,
     borderRadius: '4px',
     color: theme.palette.gantt.target.dark.text,
     background: theme.palette.gantt.target.dark.background,
@@ -22,6 +23,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     textAlign: 'left',
     padding: theme.spacing(0, 1),
     minHeight: '40px',
+    minWidth: '84px',
     '&:hover': {
         boxShadow: '0px 0px 16px 0px black'
     }
@@ -58,7 +60,7 @@ export default function GanttTarget({ target }) {
                     </Typography>
                 </div>
                 {permissions.edit &&
-                    <div style = {{ display: 'flex', flexWrap: 'wrap' }}>
+                    <div style = {{ display: 'flex', maxHeight: '40px' }}>
                         <IconButton
                             onClick = {updateTarget}
                             data-testid = 'GanttTarget__button-edit'

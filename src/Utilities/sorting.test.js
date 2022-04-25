@@ -1,4 +1,4 @@
-import { sortArrayAlphabetically } from './sorting'
+import { sortArrayAlphabetically, sortArrayByDate } from './sorting'
 
 describe('sorting', () => {
     test('sortArrayAlphabetically', () => {
@@ -18,7 +18,24 @@ describe('sorting', () => {
             { name: 'delta' },
         ]
 
-
         expect(sortArrayAlphabetically(unsorted, 'name')).toEqual(sorted)
+    })
+
+    test('sortArrayByDate', () => {
+        const unsorted = [
+            { startDate: new Date(2022, 1, 1) },
+            { startDate: new Date(2020, 1, 1) },
+            { startDate: new Date(2021, 1, 1) },
+            { startDate: null }
+        ]
+
+        const sorted = [
+            { startDate: null },
+            { startDate: new Date(2020, 1, 1) },
+            { startDate: new Date(2021, 1, 1) },
+            { startDate: new Date(2022, 1, 1) },
+        ]
+
+        expect(unsorted.sort(sortArrayByDate)).toEqual(sorted)
     })
 })

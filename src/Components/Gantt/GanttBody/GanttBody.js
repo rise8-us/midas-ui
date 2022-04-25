@@ -2,12 +2,9 @@ import { PropTypes } from 'prop-types'
 import { useMemo } from 'react'
 import { dateRangeFilter } from 'Utilities/dateHelpers'
 import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
+import { sortArrayByDate } from 'Utilities/sorting'
 import { GanttDividerBar } from '../GanttDividerBar'
 import { GanttEntry } from '../GanttEntry'
-
-const entryWrapperProps = {
-    style: { position: 'absolute', top: '0px', width: '100%', height: '-webkit-fill-available' }
-}
 
 export default function GanttBody({
     borderColor,
@@ -23,8 +20,17 @@ export default function GanttBody({
 }) {
 
     let currentRow = -1
+    const entryWrapperProps = {
+        style: {
+            position: 'absolute',
+            top: `-${defaultRowSpacing}px`,
+            width: '100%',
+            height: '-webkit-fill-available',
+            marginTop: `${defaultRowSpacing}px`
+        }
+    }
 
-    const inRangeEntries = entries?.filter(entry => dateRangeFilter(entry, dateRange))
+    const inRangeEntries = entries?.filter(entry => dateRangeFilter(entry, dateRange)).sort(sortArrayByDate)
     const skipIgnoredRowsLoop = () => {
         do {
             currentRow++
@@ -47,7 +53,9 @@ export default function GanttBody({
 
     const getMaxRowNumber = () => {
         const presetRowsMax = Math.max(...ignoredRows) + 1
-        return Math.max(presetRowsMax, inRangeEntries.length)
+        const actualSize = inRangeEntries.filter(entry => typeof entry.row !== 'number').length
+
+        return Math.max(presetRowsMax, actualSize + ignoredRows.size)
     }
 
     const containerStyles = {

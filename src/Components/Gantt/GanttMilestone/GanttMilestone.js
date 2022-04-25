@@ -18,9 +18,9 @@ const defaultStyles = {
 const MilestoneFlagPole = styled('div')(({ theme }) => ({
     ...defaultStyles,
     width: '3px',
-    height: '100%',
+    height: `calc(100% + ${theme.spacing(1)})`,
     background: theme.palette.gantt.milestone.dark.background,
-    top: 0,
+    top: `-${theme.spacing(1)}`,
     '&:hover': {
         boxShadow: '0px 0px 8px 0px black'
     }
@@ -29,6 +29,7 @@ const MilestoneFlagPole = styled('div')(({ theme }) => ({
 const MilestoneFlag = styled('div')(({ theme }) => ({
     ...defaultStyles,
     display: 'flex',
+    left: '3px',
     justifyContent: 'center',
     color: theme.palette.gantt.milestone.dark.text,
     alignItems: 'center',
@@ -39,6 +40,10 @@ const MilestoneFlag = styled('div')(({ theme }) => ({
     background: theme.palette.gantt.milestone.dark.background,
     padding: theme.spacing(0, 1),
     borderRadius: theme.spacing(1),
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    border: `1px solid ${theme.palette.background.paper}`,
+    borderLeft: 0,
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
     '&:hover': {
         boxShadow: '0px 0px 12px 0px black'
