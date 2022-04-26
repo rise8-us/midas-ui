@@ -1,4 +1,4 @@
-import { renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttTarget } from './index'
 
 describe('<GanttTarget />', () => {
@@ -12,18 +12,54 @@ describe('<GanttTarget />', () => {
         portfolioId: 1
     }
 
-    const selectTargetByIdMock = useModuleMock('Redux/Targets/selectors', 'selectTargetById')
-    const requestUpdateTargetMock = useModuleMock('Redux/Targets/actions', 'requestUpdateTarget')
+    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+    const selectPortfolioPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
-        selectTargetByIdMock.mockReturnValue(target)
-        requestUpdateTargetMock.mockClear()
+        selectPortfolioPagePermissionMock.mockReturnValue({})
+        openPopupMock.mockReset()
     })
 
     test('should render', () => {
-        renderWithRouter(<GanttTarget target = {target}/>)
+        render(<GanttTarget target = {target}/>)
 
         expect(screen.getByText('This is the target title')).toBeInTheDocument()
+    })
+
+    test('should handle onEditClick', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+
+        render(<GanttTarget target = {target}/>)
+
+        userEvent.click(screen.getByTestId('GanttActionButtons__edit'))
+        expect(openPopupMock).toHaveBeenCalledWith(
+            'target/update',
+            'TargetPopup',
+            {
+                id: 1,
+                portfolioId: 1
+            }
+        )
+    })
+
+    test('should handle onEditClick', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+
+        render(<GanttTarget target = {target}/>)
+
+        userEvent.click(screen.getByTestId('GanttActionButtons__delete'))
+
+        expect(openPopupMock).toHaveBeenCalledWith(
+            'target/delete',
+            'DeletePopup',
+            expect.objectContaining({
+                id: 1,
+                constant: 'target/delete',
+                title: 'This is the target title',
+                type: undefined
+            })
+        )
     })
 })

@@ -1,5 +1,4 @@
-import { DeleteOutline, Edit } from '@mui/icons-material'
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import { PropTypes } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
@@ -8,6 +7,8 @@ import { requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { GanttActionButtons } from '../GanttActionButtons'
+import { GanttTargetHeader } from '../GanttTargetHeader'
 import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -52,29 +53,11 @@ export default function GanttTarget({ target }) {
         <Tooltip title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
             <StyledDiv data-testid = 'GanttTarget__card' >
                 <div style = {{ maxWidth: permissions.edit ? 'calc(100% - 76px)' : '100%' }}>
-                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                        {title}
-                    </Typography>
-                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                        {dateString}
-                    </Typography>
+                    <GanttTargetHeader title = {title} dateRange = {dateString} />
                 </div>
                 {permissions.edit &&
                     <div style = {{ display: 'flex', maxHeight: '40px' }}>
-                        <IconButton
-                            onClick = {updateTarget}
-                            data-testid = 'GanttTarget__button-edit'
-                            size = 'small'
-                        >
-                            <Edit fontSize = 'small' htmlColor = 'black'/>
-                        </IconButton>
-                        <IconButton
-                            onClick = {deleteTarget}
-                            data-testid = 'GanttTarget__button-delete'
-                            size = 'small'
-                        >
-                            <DeleteOutline fontSize = 'small' htmlColor = 'black'/>
-                        </IconButton>
+                        <GanttActionButtons onEditClick = {updateTarget} onDeleteClick = {deleteTarget}/>
                     </div>
                 }
             </StyledDiv>
