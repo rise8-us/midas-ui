@@ -3,7 +3,7 @@ import { IconButton } from '@mui/material'
 import { SearchUsers } from 'Components/Search/SearchUsers'
 import { Table } from 'Components/Table'
 import PropTypes from 'prop-types'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFindUserBy } from 'Redux/Users/actions'
 import { selectUsersByIds } from 'Redux/Users/selectors'
@@ -23,6 +23,7 @@ const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTes
     const dispatch = useDispatch()
 
     const users = useSelector((state) => selectUsersByIds(state, userIds))
+    const [error, setError] = useState(null)
 
     const buildRows = () => {
         return users.map((user) => ({
@@ -44,7 +45,12 @@ const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTes
 
     const addUser = (userId) => {
         const updatedUserIds = [...userIds, userId]
-        setUserIds(updatedUserIds)
+        if (!userId) {
+            setError('Please select a user from the list')
+        } else {
+            setUserIds(updatedUserIds)
+            setError(null)
+        }
     }
 
     const removeUser = (userId) => {
@@ -78,6 +84,7 @@ const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTes
                     marginTop: '8px',
                     marginBottom: '24px',
                 }}
+                error = {error}
             />
             <DivTableContainer>
                 <Table
