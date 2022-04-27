@@ -10,13 +10,8 @@ import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttMilestoneTooltip } from '../GanttMilestoneTooltip'
 
-const defaultStyles = {
-    position: 'absolute',
-    zIndex: 4
-}
-
 const MilestoneFlagPole = styled('div')(({ theme }) => ({
-    ...defaultStyles,
+    position: 'sticky',
     width: '3px',
     height: `calc(100% + ${theme.spacing(1)})`,
     background: theme.palette.gantt.milestone.dark.background,
@@ -27,7 +22,6 @@ const MilestoneFlagPole = styled('div')(({ theme }) => ({
 }))
 
 const MilestoneFlag = styled('div')(({ theme }) => ({
-    ...defaultStyles,
     display: 'flex',
     left: '3px',
     justifyContent: 'center',
@@ -72,9 +66,6 @@ export default function GanttMilestone({ milestone }) {
     return (
         <>
             <Tooltip title = {<GanttMilestoneTooltip milestone = {milestone}/>} arrow followCursor>
-                <MilestoneFlagPole />
-            </Tooltip>
-            <Tooltip title = {<GanttMilestoneTooltip milestone = {milestone}/>} arrow followCursor>
                 <MilestoneFlag>
                     <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
                         <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden' >
@@ -103,6 +94,9 @@ export default function GanttMilestone({ milestone }) {
                         </div>
                     }
                 </MilestoneFlag>
+            </Tooltip>
+            <Tooltip title = {<GanttMilestoneTooltip milestone = {milestone}/>} arrow followCursor>
+                <MilestoneFlagPole />
             </Tooltip>
         </>
     )

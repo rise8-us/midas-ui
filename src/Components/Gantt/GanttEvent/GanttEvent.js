@@ -11,6 +11,7 @@ import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttEventTooltip } from '../GanttEventTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
+    position: 'relative',
     display: 'flex',
     justifyContent: 'space-between',
     width: 'fit-content',
@@ -24,7 +25,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.background.paper}`,
     alignItems: 'center',
     '&:hover': {
-        boxShadow: '0px 0px 16px 0px black'
+        boxShadow: '0px 0px 16px 0px black',
     }
 }))
 

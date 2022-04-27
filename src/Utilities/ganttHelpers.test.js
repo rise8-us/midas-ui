@@ -86,4 +86,57 @@ describe('ganttHelpers', () => {
             expect(result).toEqual('21 Apr 2021 - 13 Mar 2022')
         })
     })
+
+    describe('createIndexedRowsFromData', () => {
+        test('mixed with and without rows', () => {
+            const data = [{ a: 5, row: 3 }, { a: 5, row: 0 }, { a: 1, row: 1 }, { a: 3 }, { a: 2 }, { a: 6, row: 1 }]
+            const expected = {
+                0: [{ a: 5, row: 0 }],
+                1: [{ a: 1, row: 1 }, { a: 6, row: 1 }],
+                2: [{ a: 3 }],
+                3: [{ a: 5, row: 3 }],
+                4: [{ a: 2 }]
+            }
+
+            expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
+        })
+
+        test('without rows', () => {
+            const data = [{ a: 5 }, { a: 4 }, { a: 1 }, { a: 3 }, { a: 2 }, { a: 6 }]
+
+            const expected = {
+                0: [{ a: 5 }],
+                1: [{ a: 4 }],
+                2: [{ a: 1 }],
+                3: [{ a: 3 }],
+                4: [{ a: 2 }],
+                5: [{ a: 6 }],
+            }
+
+            expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
+        })
+
+        test('rows that are defined only have elements that specify that row', () => {
+            const data = [
+                { a: 5, row: 3 },
+                { a: 5, row: 0 },
+                { a: 1, row: 1 },
+                { a: 3 },
+                { a: 99, row: 2 },
+                { a: 2 },
+                { a: 6, row: 1 }
+            ]
+
+            const expected = {
+                0: [{ a: 5, row: 0 }],
+                1: [{ a: 1, row: 1 }, { a: 6, row: 1 }],
+                2: [{ a: 99, row: 2 }],
+                3: [{ a: 5, row: 3 }],
+                4: [{ a: 3 }],
+                5: [{ a: 2 }]
+            }
+
+            expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
+        })
+    })
 })

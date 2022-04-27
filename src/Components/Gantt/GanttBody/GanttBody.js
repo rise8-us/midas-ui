@@ -1,8 +1,6 @@
 import { PropTypes } from 'prop-types'
-import { useMemo } from 'react'
 import { dateRangeFilter } from 'Utilities/dateHelpers'
-import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
-import { sortArrayByDate } from 'Utilities/sorting'
+import { cellStyles, createIndexedRowsFromData, rowStyles } from 'Utilities/ganttHelpers'
 import { GanttDividerBar } from '../GanttDividerBar'
 import { GanttEntry } from '../GanttEntry'
 
@@ -14,75 +12,61 @@ export default function GanttBody({
     defaultRowHeight,
     defaultRowSpacing,
     entries,
-    maxHeight,
     renderComponent,
     todayColor,
 }) {
 
-    let currentRow = -1
     const entryWrapperProps = {
         style: {
-            position: 'absolute',
             top: `-${defaultRowSpacing}px`,
+            marginTop: `${defaultRowSpacing}px`,
             width: '100%',
-            height: '-webkit-fill-available',
-            marginTop: `${defaultRowSpacing}px`
         }
     }
 
-    const inRangeEntries = entries?.filter(entry => dateRangeFilter(entry, dateRange)).sort(sortArrayByDate)
-    const skipIgnoredRowsLoop = () => {
-        do {
-            currentRow++
-        } while (ignoredRows.has(currentRow))
-        return currentRow
-    }
-
-    const determineIndex = (row) => {
-        return row >= 0 ? row : skipIgnoredRowsLoop()
-    }
-
-    const ignoredRows = useMemo(() => {
-        const presetRows = new Set()
-
-        inRangeEntries.forEach(entry => {
-            entry.row > -1 && presetRows.add(entry.row)
-        })
-        return presetRows
-    }, [inRangeEntries])
-
-    const getMaxRowNumber = () => {
-        const presetRowsMax = Math.max(...ignoredRows) + 1
-        const actualSize = inRangeEntries.filter(entry => typeof entry.row !== 'number').length
-
-        return Math.max(presetRowsMax, actualSize + ignoredRows.size)
-    }
+    const inRangeEntries = createIndexedRowsFromData(entries?.filter(entry => dateRangeFilter(entry, dateRange)))
 
     const containerStyles = {
         ...rowStyles(chartBackgroundColor, borderColor),
-        height: (getMaxRowNumber() * (defaultRowHeight + defaultRowSpacing) + defaultRowSpacing + 2) + 'px',
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
+        top: 0
+    }
+
+    const rowStyling = {
+        display: 'flex',
+        marginBottom: defaultRowSpacing + 'px',
+        minHeight: defaultRowHeight
     }
 
     return (
-        <div style = {{ position: 'relative', maxHeight }}>
+        <div style = {{ position: 'relative', overflow: 'hidden' }}>
             <div style = {containerStyles}>
                 {columns.map((column, index) => (
-                    <div style = {cellStyles(borderColor, column.flexGrow)} key = {index}/>
+                    <div
+                        style = {{ ...cellStyles(borderColor, column.flexGrow) }}
+                        key = {index}
+                    />
                 ))}
             </div>
             <GanttDividerBar dateRange = {dateRange} color = {todayColor}/>
             <div {...entryWrapperProps}>
-                {inRangeEntries.map((entry, index) => (
-                    <GanttEntry
-                        index = {determineIndex(entry.row)}
-                        key = {index}
-                        dateRange = {dateRange}
-                        defaultRowHeight = {defaultRowHeight}
-                        defaultRowSpacing = {defaultRowSpacing}
-                        {...entry}
-                    >
-                        {renderComponent(entry, dateRange, index)}
-                    </GanttEntry>
+                {Object.entries(inRangeEntries).map(row => (
+                    <div style = {rowStyling} key = {row}>
+                        {row[1].map((entry, index) => (
+                            <GanttEntry
+                                key = {index}
+                                dateRange = {dateRange}
+                                startDate = {entry.startDate}
+                                dueDate = {entry.dueDate}
+                                enableFullHeight = {entry.enableFullHeight}
+                                style = {entry.style}
+                            >
+                                {renderComponent(entry)}
+                            </GanttEntry>
+                        ))}
+                    </div>
                 ))}
             </div>
         </div>
@@ -104,7 +88,6 @@ GanttBody.propTypes = {
         startDate: PropTypes.string,
         dueDate: PropTypes.string.isRequired,
     })),
-    maxHeight: PropTypes.string,
     renderComponent: PropTypes.func.isRequired,
     todayColor: PropTypes.string.isRequired
 }
@@ -118,6 +101,5 @@ GanttBody.defaultProps = {
         title: null,
         dueDate: null,
         startDate: null,
-    }],
-    maxHeight: '100%'
+    }]
 }
