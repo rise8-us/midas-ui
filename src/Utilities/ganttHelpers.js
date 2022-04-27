@@ -152,7 +152,7 @@ export const parseDate = (startDate, endDate) => {
     }
 }
 
-const isPositiveNumber = (num) => num !== null && num !== undefined && num >= 0
+const isWholeNumber = (num) => num !== null && num !== undefined && num >= 0
 
 const enterUndefinedRowIntoAvailableSlot = (entry, indexedEntries) => {
     const indexedEntriesKeyArray = Object.keys(indexedEntries)
@@ -184,7 +184,7 @@ export const createIndexedRowsFromData = (entries) => {
     const sortedEntries = rowfulEntries.concat(rowlessEntries)
 
     for (const entry of sortedEntries) {
-        if (!isPositiveNumber(entry?.row)) {
+        if (!isWholeNumber(entry?.row)) {
             enterUndefinedRowIntoAvailableSlot(entry, indexedEntries)
         } else if (indexedEntries[entry?.row]?.length > 0) {
             indexedEntries[entry.row].push(entry)
