@@ -15,6 +15,7 @@ import { selectMilestonesByPortfolioId } from 'Redux/Milestones/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { requestSearchTargets } from 'Redux/Targets/actions'
 import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
+import { sortArrayByDate } from 'Utilities/sorting'
 
 export default function EntriesContainer({ portfolioId }) {
 
@@ -36,7 +37,7 @@ export default function EntriesContainer({ portfolioId }) {
     const entries = [
         ...milestones,
         ...events,
-        ...targets,
+        ...targets.sort(sortArrayByDate),
     ]
 
     let dateStart = new Date()

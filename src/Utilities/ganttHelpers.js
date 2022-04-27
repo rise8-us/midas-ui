@@ -151,3 +151,47 @@ export const parseDate = (startDate, endDate) => {
     ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
     }
 }
+
+const isPositiveNumber = (num) => num !== null && num !== undefined && num >= 0
+
+const enterUndefinedRowIntoAvailableSlot = (entry, indexedEntries) => {
+    const indexedEntriesKeyArray = Object.keys(indexedEntries)
+
+    if (indexedEntriesKeyArray.length === 0) {
+        indexedEntries[0] = [entry]
+        return
+    }
+
+    if (indexedEntriesKeyArray.length - 1 === parseInt(indexedEntriesKeyArray.at(-1))) {
+        indexedEntries[indexedEntriesKeyArray.length] = [entry]
+        return
+    }
+
+    indexedEntriesKeyArray.every((key, index) => {
+        if (parseInt(key) !== index) {
+            indexedEntries[index] = [entry]
+            return false
+        }
+        return true
+    })
+}
+
+export const createIndexedRowsFromData = (entries) => {
+    let indexedEntries = {}
+
+    const rowfulEntries = entries.filter(x => x.row !== undefined).sort((a, b) => a.row - b.row)
+    const rowlessEntries = entries.filter(x => x.row === undefined)
+    const sortedEntries = rowfulEntries.concat(rowlessEntries)
+
+    for (const entry of sortedEntries) {
+        if (!isPositiveNumber(entry?.row)) {
+            enterUndefinedRowIntoAvailableSlot(entry, indexedEntries)
+        } else if (indexedEntries[entry?.row]?.length > 0) {
+            indexedEntries[entry.row].push(entry)
+        } else {
+            indexedEntries[entry?.row] = [entry]
+        }
+    }
+
+    return indexedEntries
+}
