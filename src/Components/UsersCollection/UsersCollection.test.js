@@ -1,5 +1,10 @@
 import {
-    mockSearchUsersComponent, render, screen, useDispatchMock, useModuleMock, userEvent
+    mockSearchUsersComponent,
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
 } from 'Utilities/test-utils'
 import { UsersCollection } from './index'
 
