@@ -1,0 +1,7 @@
+.ganttEntry {
+    z-index: 3;
+}
+
+.ganttEntry:hover {
+    z-index: 5;
+}

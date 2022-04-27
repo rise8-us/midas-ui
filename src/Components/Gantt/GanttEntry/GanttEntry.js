@@ -1,5 +1,6 @@
 import { PropTypes } from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
+import './GanttEntry.css'
 
 export default function GanttEntry({
     children,
@@ -18,7 +19,6 @@ export default function GanttEntry({
         position: 'relative',
         left: `${startLeft}%`,
         width: `${duration}%`,
-        zIndex: 3
     }
 
     const fullHeightBox = {
@@ -31,6 +31,7 @@ export default function GanttEntry({
 
     return (
         <div
+            className = 'ganttEntry'
             data-testid = 'GanttEntry__wrap'
             style = {{
                 ...finalStyle,
