@@ -1,4 +1,4 @@
-import { render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
+import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { PortfolioCapabilities } from './index'
 
 describe('<PortfolioCapabilities />', () => {
@@ -81,9 +81,8 @@ describe('<PortfolioCapabilities />', () => {
 
     test('should handle moreOptions menu - Add new', async() => {
         const requestCreateCapabilityMock = useModuleMock('Redux/Capabilities/actions', 'requestCreateCapability')
-        waitFor(() => {
-            useDispatchMock().mockResolvedValue({ })
-        })
+        useDispatchMock().mockResolvedValue({ })
+
         requestCreateCapabilityMock.mockReturnValue()
 
         selectCapabilitiesByPortfolioIdMock
@@ -99,7 +98,7 @@ describe('<PortfolioCapabilities />', () => {
         render(<PortfolioCapabilities portfolioId = {1}/>)
 
         userEvent.click(screen.getByTestId('MoreVertIcon'))
-        userEvent.click(await screen.findByText('Add new'))
+        await act(async() => userEvent.click(await screen.findByText('Add new')))
 
         expect(requestCreateCapabilityMock).toHaveBeenCalledWith({
             referenceId: 3,
