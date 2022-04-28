@@ -1,4 +1,4 @@
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { cellStyles, rowStyles } from 'Utilities/ganttHelpers'
 
 export default function GanttHeader(props) {

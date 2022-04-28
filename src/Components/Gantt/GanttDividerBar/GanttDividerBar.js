@@ -1,4 +1,4 @@
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { calculatePosition } from 'Utilities/dateHelpers'
 
 export default function GanttDividerBar({ dateRange, color }) {

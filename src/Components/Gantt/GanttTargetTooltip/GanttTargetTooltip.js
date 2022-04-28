@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { styled } from 'Styles/materialThemes'
 import { parseStringToDate } from 'Utilities/dateHelpers'
 

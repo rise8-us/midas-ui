@@ -1,5 +1,5 @@
 import { Tooltip } from '@mui/material'
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
