@@ -62,4 +62,12 @@ describe('<GanttTarget />', () => {
             })
         )
     })
+
+    test('should render description after expansion', async() => {
+        render(<GanttTarget target = {target}/>)
+
+        userEvent.click(screen.getByTestId('GanttTarget__expandButton_closed'))
+
+        expect(await screen.findByTestId('GanttTarget__expandButton_open')).toBeInTheDocument
+    })
 })
