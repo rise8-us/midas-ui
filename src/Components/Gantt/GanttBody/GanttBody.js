@@ -1,4 +1,4 @@
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { dateRangeFilter } from 'Utilities/dateHelpers'
 import { cellStyles, createIndexedRowsFromData, rowStyles } from 'Utilities/ganttHelpers'
 import { GanttDividerBar } from '../GanttDividerBar'

@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { selectUsersByIds } from 'Redux/Users/selectors'
 import { styled } from 'Styles/materialThemes'

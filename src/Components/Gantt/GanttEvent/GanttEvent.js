@@ -1,6 +1,6 @@
 import { DeleteOutlined, Edit } from '@mui/icons-material'
 import { IconButton, Tooltip, Typography } from '@mui/material'
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteEvent } from 'Redux/Events/actions'
 import EventConstants from 'Redux/Events/constants'

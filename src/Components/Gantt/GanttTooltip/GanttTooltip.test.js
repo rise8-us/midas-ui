@@ -1,20 +1,22 @@
 import { renderWithRouter, screen } from 'Utilities/test-utils'
-import { GanttMilestoneTooltip } from './index'
+import { GanttTooltip } from './index'
 
-describe('<GanttMilestoneTooltip />', () => {
+describe('<GanttTooltip />', () => {
 
-    const milestone = {
-        title: 'This is the milestone title',
-        dueDate: '2022-06-31',
+    const defaultProps = {
+        dateRange: 'Fri Jul 01 2022',
         description: 'These are the details',
+        onDeleteClick: jest.fn,
+        onEditClick: jest.fn,
+        permissions: { edit: true },
+        title: 'This is the milestone title',
     }
 
     test('should render', () => {
-        renderWithRouter(<GanttMilestoneTooltip milestone = {milestone}/>)
+        renderWithRouter(<GanttTooltip {...defaultProps}/>)
 
         expect(screen.getByText('This is the milestone title')).toBeInTheDocument()
         expect(screen.getByText('These are the details')).toBeInTheDocument()
-        expect(screen.getByText('Due Date:')).toBeInTheDocument()
         expect(screen.getByText('Fri Jul 01 2022')).toBeInTheDocument()
     })
 })

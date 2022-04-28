@@ -1,4 +1,4 @@
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import './GanttEntry.css'
 
