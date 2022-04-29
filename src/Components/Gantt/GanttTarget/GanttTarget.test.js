@@ -12,6 +12,14 @@ describe('<GanttTarget />', () => {
         portfolioId: 1
     }
 
+    const newSubTarget = {
+        title: 'Enter subtarget title',
+        parentId: 1,
+        portfolioId: 1,
+        dueDate: '2022-06-31',
+        startDate: '2022-06-01',
+    }
+
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
@@ -69,5 +77,17 @@ describe('<GanttTarget />', () => {
         userEvent.click(screen.getByTestId('GanttTarget__expandButton_closed'))
 
         expect(await screen.findByTestId('GanttTarget__expandButton_open')).toBeInTheDocument
+    })
+
+    test('should send request to add SubTarget', () => {
+        const requestCreateTargetMock = useModuleMock('Redux/Targets/actions', 'requestCreateTarget')
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+        useDispatchMock()
+
+        render(<GanttTarget target = {target}/>)
+
+        userEvent.click(screen.getByTestId('GanttTarget__createSubTarget_button'))
+
+        expect(requestCreateTargetMock).toHaveBeenCalledWith(newSubTarget)
     })
 })

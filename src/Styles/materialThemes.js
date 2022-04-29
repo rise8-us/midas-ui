@@ -43,6 +43,12 @@ const theme = createTheme({
                     background: '#003E73',
                     text: '#fff'
                 }
+            },
+            subtarget: {
+                dark: {
+                    background: '#002E57',
+                    text: '#fff'
+                }
             }
         }
     },
