@@ -1,16 +1,18 @@
-import { ExpandMore } from '@mui/icons-material'
-import { Collapse, IconButton, Tooltip, Typography } from '@mui/material'
+import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
+import { Button, Collapse, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
-import { requestDeleteTarget } from 'Redux/Targets/actions'
+import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
+import { selectTargetsByParentId } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
+import { GanttSubTarget } from '../GanttSubTarget'
 import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -19,7 +21,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     color: theme.palette.gantt.target.dark.text,
     background: theme.palette.gantt.target.dark.background,
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
-    padding: theme.spacing(0, 1),
+    padding: theme.spacing(1),
     minWidth: '106px',
     '&:hover': {
         boxShadow: '0px 0px 16px 0px black'
@@ -39,14 +41,17 @@ const StyledHeader = styled('div')(() => ({
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, startDate, dueDate, title, type } = target
+    const { id, portfolioId, startDate, dueDate, title, description, type } = target
     const dateString = parseDate(startDate, dueDate)
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
+    const subTargets = useSelector(state => selectTargetsByParentId(state, id))
     const ref = useRef()
+
     const updateTarget = (e) => {
         e.stopPropagation()
         dispatch(openPopup(TargetConstants.UPDATE_TARGET, 'TargetPopup', { id, portfolioId }))
     }
+
     const deleteTarget = (e) => {
         e.stopPropagation()
         dispatch(openPopup(TargetConstants.DELETE_TARGET, 'DeletePopup', {
@@ -58,7 +63,18 @@ export default function GanttTarget({ target }) {
         }))
     }
 
+    const createSubTarget = () => {
+        dispatch(requestCreateTarget({
+            startDate,
+            dueDate,
+            parentId: id,
+            title: 'Enter subtarget title',
+            portfolioId,
+        }))
+    }
+
     const [open, setOpen] = useState(false)
+    const [hover, setHover] = useState(false)
     const [horizontalOpen, setHorizontalOpen] = useState(false)
     const [widthBool, setWidthBool] = useState(false)
 
@@ -76,6 +92,10 @@ export default function GanttTarget({ target }) {
         }
     }
 
+    const handleOpenAll = () => {
+        console.log('hello world')
+    }
+
     useEffect(() => {
         if (ref.current.clientWidth > (window.innerWidth / 2)) {
             setWidthBool(true)
@@ -83,19 +103,25 @@ export default function GanttTarget({ target }) {
     }, [])
 
     return (
-        <Tooltip title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
-            <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles} >
-                <StyledHeader>
+        <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles}>
+            <Tooltip open = {hover && !open} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
+                <StyledHeader onMouseEnter = {() => setHover(true)} onMouseLeave = {() => setHover(false)}>
                     <div style = {{ maxWidth: `calc(100% - ${permissions.edit ? 106 : 30}px)` }}>
                         <GanttEntryHeader title = {title} dateRange = {dateString} />
                     </div>
-                    <div style = {{ display: 'flex', maxHeight: '40px' }}>
-                        {permissions.edit &&
-                            <GanttActionButtons onEditClick = {updateTarget} onDeleteClick = {deleteTarget}/>
-                        }
+                    <div>
+                        <IconButton onClick = {handleOpenAll} style = {{ display: 'none', maxHeight: '40px' }}>
+                            <KeyboardDoubleArrowDown
+                                style = {{
+                                    transform: `rotate(${open ? 180 : 0}deg)`,
+                                    transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+                                }}
+                            />
+                        </IconButton>
                         <IconButton
                             data-testid = {'GanttTarget__expandButton_' + (open ? 'open' : 'closed')}
                             onClick = {expandButtonHandler}
+                            style = {{ maxHeight: '40px' }}
                         >
                             <ExpandMore
                                 style = {{
@@ -106,18 +132,42 @@ export default function GanttTarget({ target }) {
                         </IconButton>
                     </div>
                 </StyledHeader>
-                <Collapse
-                    in = {open}
-                    collapsedSize = {0}
-                    easing = {'cubic-bezier(1,-0.01, 0.69, 1.01)'}
-                >
-                    <Typography>
-                        Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-                        Aliquam eget maximus est, id dignissim quam.
-                    </Typography>
-                </Collapse>
-            </StyledDiv>
-        </Tooltip>
+            </Tooltip>
+            <Collapse
+                in = {open}
+                collapsedSize = {0}
+                easing = {'cubic-bezier(1,-0.01, 0.69, 1.01)'}
+            >
+                <Typography color = 'secondary' variant = 'subtitle2'>{description}</Typography>
+                {permissions.edit &&
+                    <div style = {{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Button
+                            onClick = {createSubTarget}
+                            color = 'secondary'
+                            variant = 'contained'
+                            style = {{ margin: '8px 0px' }}
+                            data-testid = 'GanttTarget__createSubTarget_button'
+                        >
+                            Add a Sub-Target
+                        </Button>
+                        <div>
+                            <GanttActionButtons
+                                htmlColor = 'white'
+                                onEditClick = {updateTarget}
+                                onDeleteClick = {deleteTarget}
+                            />
+                        </div>
+                    </div>
+                }
+                <Stack spacing = {1}>
+                    {subTargets.map((subTarget, index) => (
+                        <GanttSubTarget
+                            target = {subTarget}
+                            key = {index}
+                        />))}
+                </Stack>
+            </Collapse>
+        </StyledDiv>
     )
 }
 
@@ -126,6 +176,7 @@ GanttTarget.propTypes = {
         id: PropTypes.number,
         portfolioId: PropTypes.number,
         title: PropTypes.string,
+        description: PropTypes.string,
         type: PropTypes.string,
         startDate: PropTypes.string,
         dueDate: PropTypes.string

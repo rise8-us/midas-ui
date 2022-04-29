@@ -5,9 +5,9 @@ export default function GanttEntryHeader({ title, dateRange }) {
     return (
         <>
             <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                {title}
+                <b>{title}</b>
             </Typography>
-            <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
+            <Typography variant = 'body2' whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
                 {dateRange}
             </Typography>
         </>
