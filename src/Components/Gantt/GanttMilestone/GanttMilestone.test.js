@@ -1,7 +1,7 @@
-import { renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttMilestone } from './index'
 
-describe('<Gantt Milestone />', () => {
+describe('<GanttMilestone />', () => {
 
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
@@ -20,7 +20,7 @@ describe('<Gantt Milestone />', () => {
     test('should render', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({})
 
-        renderWithRouter(<GanttMilestone milestone = {milestone}/>)
+        render(<GanttMilestone milestone = {milestone}/>)
 
         expect(screen.getByText('This is the milestone title')).toBeInTheDocument()
     })
@@ -29,7 +29,7 @@ describe('<Gantt Milestone />', () => {
         useDispatchMock().mockReturnValue()
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        renderWithRouter(<GanttMilestone milestone = {milestone}/>)
+        render(<GanttMilestone milestone = {milestone}/>)
 
         userEvent.hover(screen.getByText('This is the milestone title'))
         userEvent.click(await screen.findByTestId('EditIcon'))
@@ -37,7 +37,7 @@ describe('<Gantt Milestone />', () => {
         expect(openPopupMock).toHaveBeenCalledWith(
             'milestone/update',
             'MilestonePopup',
-            { id: 2, 'portfolioId': 1 }
+            { id: 2, portfolioId: 1 }
         )
     })
 
@@ -45,7 +45,7 @@ describe('<Gantt Milestone />', () => {
         useDispatchMock().mockReturnValue()
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        renderWithRouter(<GanttMilestone milestone = {milestone}/>)
+        render(<GanttMilestone milestone = {milestone}/>)
 
         userEvent.hover(screen.getByText('This is the milestone title'))
         userEvent.click(await screen.findByTestId('DeleteOutlineIcon'))
@@ -54,10 +54,10 @@ describe('<Gantt Milestone />', () => {
             'milestone/delete',
             'DeletePopup',
             expect.objectContaining({
-                'constant': 'milestone/delete',
-                'id': 2,
-                'title': 'This is the milestone title',
-                'type': 'milestone'
+                constant: 'milestone/delete',
+                id: 2,
+                title: 'This is the milestone title',
+                type: 'milestone'
             })
 
         )

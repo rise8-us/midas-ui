@@ -15,6 +15,7 @@ const newEvent = {
     dueDate: '',
     location: '',
     organizerIds: [],
+    attendeeIds: [],
     portfolioId: null
 }
 

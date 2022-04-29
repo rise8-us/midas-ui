@@ -4,8 +4,9 @@ import { Popup } from 'Components/Popup'
 import { UsersCollection } from 'Components/UsersCollection'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import { useMemo, useReducer, useState } from 'react'
+import { useMemo, useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { requestCreateEvent, requestUpdateEvent } from 'Redux/Events/actions'
 import EventConstants from 'Redux/Events/constants'
@@ -25,19 +26,22 @@ function EventPopup({ id, portfolioId }) {
     const dispatch = useDispatch()
     const event = useSelector(state => selectEventById(state, id))
     const context = initDetails(event.id === undefined)
+
+    const userLoggedIn = useSelector(selectUserLoggedIn)
+
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleError = useMemo(() => errors.filter(error => error.includes('title')), [errors])
     const startDateError = useMemo(() => errors.filter(error => error.includes('start')), [errors])
     const dueDateError = useMemo(() => errors.filter(error => error.includes('due')), [errors])
-
-    const [organizerIds, setOrganizerIds] = useState(event.organizerIds || [])
 
     const [formValues, formDispatch] = useReducer(useFormReducer, {
         title: event.title,
         description: event.description,
         startDate: event.startDate,
         dueDate: event.dueDate,
-        location: event.location
+        location: event.location,
+        organizerIds: event.organizerIds,
+        attendeeIds: event.attendeeIds
     })
 
     const handleChange = (name, value) => {
@@ -46,19 +50,25 @@ function EventPopup({ id, portfolioId }) {
             payload: { name, value }
         })
     }
+
     const onClose = () => dispatch(closePopup(context.constant))
+
     const onSubmit = () => {
         dispatch(context.request({
             ...event,
+            portfolioId: portfolioId,
             title: formValues.title,
             description: formValues.description,
             startDate: formValues.startDate,
             dueDate: formValues.dueDate,
-            portfolioId: portfolioId,
             location: formValues.location,
-            organizerIds: organizerIds
+            organizerIds: context.isCreate
+                ? [...(new Set([...formValues.organizerIds, userLoggedIn.id]))]
+                : formValues.organizerIds,
+            attendeeIds: formValues.attendeeIds,
         }))
     }
+
     return (
         <Popup
             title = {context.title}
@@ -69,24 +79,24 @@ function EventPopup({ id, portfolioId }) {
                 <TextField
                     label = 'Title'
                     data-testid = 'EventPopup__input-title'
-                    value = { formValues.title }
-                    onChange = {(e) => { handleChange('title', e.target.value) }}
-                    error = { titleError.length > 0 }
-                    helperText = { titleError[0] ?? 'Please enter a valid title' }
+                    value = {formValues.title}
+                    onChange = {(e) => handleChange('title', e.target.value)}
+                    error = {titleError.length > 0}
+                    helperText = {titleError[0]}
                     multiline
                     required
                 />
                 <TextField
                     label = 'Description'
                     data-testid = 'EventPopup__input-description'
-                    value = { formValues.description }
+                    value = {formValues.description}
                     onChange = {(e) => handleChange('description', e.target.value)}
                     multiline
                 />
                 <TextField
                     label = 'Location'
                     data-testid = 'EventPopup__input-location'
-                    value = { formValues.location }
+                    value = {formValues.location}
                     onChange = {(e) => handleChange('location', e.target.value)}
                     multiline
                     fullWidth
@@ -109,9 +119,14 @@ function EventPopup({ id, portfolioId }) {
                     />
                 </Box>
                 <UsersCollection
-                    userIds = {organizerIds}
-                    setUserIds = {setOrganizerIds}
+                    userIds = {formValues.organizerIds}
+                    setUserIds = {(value) => handleChange('organizerIds', value)}
                     placeholderValue = 'Add another organizer...'
+                />
+                <UsersCollection
+                    userIds = {formValues.attendeeIds}
+                    setUserIds = {(value) => handleChange('attendeeIds', value)}
+                    placeholderValue = 'Add another attendee...'
                 />
             </Box>
         </Popup>

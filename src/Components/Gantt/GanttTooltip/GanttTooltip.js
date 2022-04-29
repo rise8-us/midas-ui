@@ -22,7 +22,7 @@ export default function GanttTooltip({
 
     return (
         <div style = {{ minWidth: '240px' }}>
-            <Stack>
+            <Stack spacing = {2}>
                 <div style = {{ marginBottom: '8px' }}>
                     <div style = {headerRowStyle}>
                         <Typography variant = 'h6'>{title}</Typography>

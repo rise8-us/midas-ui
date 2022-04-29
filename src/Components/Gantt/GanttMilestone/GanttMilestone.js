@@ -1,4 +1,4 @@
-import { Tooltip, Typography } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteMilestone } from 'Redux/Milestones/actions'
@@ -8,6 +8,7 @@ import { openPopup } from 'Redux/Popups/actions'
 import { styled } from 'Styles/materialThemes'
 import { parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttTooltip } from '../GanttTooltip'
 
 const MilestoneFlagPole = styled('div')(({ theme }) => ({
@@ -81,12 +82,7 @@ export default function GanttMilestone({ milestone }) {
             >
                 <MilestoneFlag>
                     <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
-                        <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden' >
-                            {title}
-                        </Typography>
-                        <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                            {dateString}
-                        </Typography>
+                        <GanttEntryHeader title = {milestone.title} dateRange = {dateString} />
                     </div>
                 </MilestoneFlag>
             </Tooltip>
