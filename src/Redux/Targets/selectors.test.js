@@ -2,9 +2,17 @@ import * as selectors from './selectors'
 
 const mockState = {
     targets: {
-        4: { portfolioId: 1 },
-        5: { portfolioId: 1 },
-        6: { portfolioId: 2 },
+        4: { portfolioId: 1, parentId: null },
+        5: { portfolioId: 1, parentId: null },
+        6: { portfolioId: 2, parentId: null },
+    }
+}
+
+const mockState2 = {
+    targets: {
+        4: { portfolioId: 1, parentId: null },
+        5: { portfolioId: 1, parentId: 4 },
+        6: { portfolioId: 2, parentId: 4 },
     }
 }
 
@@ -38,6 +46,10 @@ describe('Target selectors', () => {
             ...mockState.targets[6],
             type: 'target'
         }])
+    })
+
+    test('selectTargetsByParentId', () => {
+        expect(selectors.selectTargetsByParentId(mockState2, 4)).toHaveLength(2)
     })
 })
 
