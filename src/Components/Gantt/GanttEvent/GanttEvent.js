@@ -55,7 +55,6 @@ export default function GanttEvent({ event }) {
         }))
     }
 
-
     return (
         <Tooltip
             arrow

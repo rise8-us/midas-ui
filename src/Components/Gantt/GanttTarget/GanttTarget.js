@@ -38,6 +38,14 @@ const StyledHeader = styled('div')(() => ({
     cursor: 'pointer'
 }))
 
+const StyledButton = styled(Button)(() => ({
+    background: '#0071bc',
+    margin: '8px 0px',
+    '&:hover': {
+        background: '#3e94cf'
+    }
+}))
+
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
@@ -92,10 +100,6 @@ export default function GanttTarget({ target }) {
         }
     }
 
-    const handleOpenAll = () => {
-        console.log('hello world')
-    }
-
     useEffect(() => {
         if (ref.current.clientWidth > (window.innerWidth / 2)) {
             setWidthBool(true)
@@ -106,11 +110,11 @@ export default function GanttTarget({ target }) {
         <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles}>
             <Tooltip open = {hover && !open} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
                 <StyledHeader onMouseEnter = {() => setHover(true)} onMouseLeave = {() => setHover(false)}>
-                    <div style = {{ maxWidth: `calc(100% - ${permissions.edit ? 106 : 30}px)` }}>
+                    <div style = {{ maxWidth: 'calc(100% - 30px)' }}>
                         <GanttEntryHeader title = {title} dateRange = {dateString} />
                     </div>
                     <div>
-                        <IconButton onClick = {handleOpenAll} style = {{ display: 'none', maxHeight: '40px' }}>
+                        <IconButton style = {{ display: 'none', maxHeight: '40px' }}>
                             <KeyboardDoubleArrowDown
                                 style = {{
                                     transform: `rotate(${open ? 180 : 0}deg)`,
@@ -138,18 +142,16 @@ export default function GanttTarget({ target }) {
                 collapsedSize = {0}
                 easing = {'cubic-bezier(1,-0.01, 0.69, 1.01)'}
             >
-                <Typography color = 'secondary' variant = 'subtitle2'>{description}</Typography>
+                <Typography margin = '8px' color = 'secondary' variant = 'subtitle2'>{description}</Typography>
                 {permissions.edit &&
                     <div style = {{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Button
+                        <StyledButton
                             onClick = {createSubTarget}
-                            color = 'secondary'
                             variant = 'contained'
-                            style = {{ margin: '8px 0px' }}
                             data-testid = 'GanttTarget__createSubTarget_button'
                         >
                             Add a Sub-Target
-                        </Button>
+                        </StyledButton>
                         <div>
                             <GanttActionButtons
                                 htmlColor = 'white'
