@@ -22,6 +22,7 @@ describe('<EventPopup />', () => {
     const submitCreateEventMock = useModuleMock('Redux/Events/actions', 'requestCreateEvent')
     const submitUpdateEventMock = useModuleMock('Redux/Events/actions', 'requestUpdateEvent')
     const getEventByIdMock = useModuleMock('Redux/Events/selectors', 'selectEventById')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
 
     const returnedFoundEvent = {
         id: 4,
@@ -30,7 +31,9 @@ describe('<EventPopup />', () => {
         startDate: '2022-01-01',
         dueDate: '2022-01-07',
         portfolioId: 1,
-        location: 'a location'
+        location: 'a location',
+        organizerIds: [],
+        attendeeIds: []
     }
 
     const returnedNewEvent = {
@@ -39,7 +42,9 @@ describe('<EventPopup />', () => {
         startDate: '',
         dueDate: '',
         portfolioId: null,
-        location: ''
+        location: '',
+        organizerIds: [],
+        attendeeIds: []
     }
 
     const updatedData = {
@@ -49,12 +54,14 @@ describe('<EventPopup />', () => {
         dueDate: '2022-01-07',
         portfolioId: 1,
         location: 'a location',
-        organizerIds: []
+        organizerIds: [],
+        attendeeIds: []
     }
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         getEventByIdMock.mockReturnValue(returnedNewEvent)
+        selectUserLoggedInMock.mockReturnValue({ id: 42 })
     })
 
     test('should render properly', () => {
@@ -82,27 +89,20 @@ describe('<EventPopup />', () => {
     })
 
     test('should call onSubmit for createEvent', () => {
-        const createData = {
-            title: 'This is a event',
-            description: 'This is a description',
+        render(<EventPopup portfolioId = {1} />)
+
+        fireEvent.click(screen.getByText('submit'))
+
+        expect(submitCreateEventMock).toHaveBeenCalledWith({
+            title: '',
+            description: '',
             startDate: '',
             dueDate: '',
             portfolioId: 1,
             location: '',
-            organizerIds: []
-        }
-        render(<EventPopup portfolioId = {1} />)
-
-        const titleInput = within(screen.getByTestId('EventPopup__input-title'))
-            .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('EventPopup__input-description'))
-            .getByRole('textbox')
-
-        userEvent.type(titleInput, createData.title)
-        userEvent.type(descriptionInput, createData.description)
-        fireEvent.click(screen.getByText('submit'))
-
-        expect(submitCreateEventMock).toHaveBeenCalledWith({ ...createData })
+            organizerIds: [42],
+            attendeeIds: []
+        })
     })
 
     test('should call onSubmit for updateEvent', () => {

@@ -1,5 +1,4 @@
-import { DeleteOutlined, Edit } from '@mui/icons-material'
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteEvent } from 'Redux/Events/actions'
@@ -8,6 +7,7 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttEventTooltip } from '../GanttEventTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -37,13 +37,15 @@ export default function GanttEvent({ event }) {
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const dateString = parseDate(startDate, dueDate)
 
-    const updateEvent = () => {
+    const updateEvent = (e) => {
+        e.stopPropagation()
         dispatch(
             openPopup(EventConstants.UPDATE_EVENT, 'EventPopup', { id: event.id, portfolioId })
         )
     }
 
-    const deleteEvent = () =>
+    const deleteEvent = (e) => {
+        e.stopPropagation()
         dispatch(openPopup(EventConstants.DELETE_EVENT, 'DeletePopup', {
             id: id,
             title: title,
@@ -51,37 +53,26 @@ export default function GanttEvent({ event }) {
             request: requestDeleteEvent,
             constant: EventConstants.DELETE_EVENT
         }))
+    }
 
 
     return (
-        <Tooltip title = {<GanttEventTooltip event = {event}/>} arrow followCursor>
+        <Tooltip
+            arrow
+            title = {
+                <GanttEventTooltip
+                    event = {event}
+                    permissions = {permissions}
+                    dateRange = {dateString}
+                    onEditClick = {updateEvent}
+                    onDeleteClick = {deleteEvent}
+                />
+            }
+        >
             <StyledDiv>
-                <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
-                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                        {event.title}
-                    </Typography>
-                    <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
-                        {dateString}
-                    </Typography>
+                <div>
+                    <GanttEntryHeader title = {event.title} dateRange = {dateString} />
                 </div>
-                {permissions.edit &&
-                <div style = {{ display: 'flex' }}>
-                    <IconButton
-                        size = 'small'
-                        onClick = {updateEvent}
-                        data-testid = 'Event__button-edit'
-                    >
-                        <Edit fontSize = 'small' htmlColor = 'black'/>
-                    </IconButton>
-                    <IconButton
-                        size = 'small'
-                        onClick = {deleteEvent}
-                        data-testid = 'Event__button-delete'
-                    >
-                        <DeleteOutlined fontSize = 'small' htmlColor = 'black'/>
-                    </IconButton>
-                </div>
-                }
             </StyledDiv>
         </Tooltip>
     )

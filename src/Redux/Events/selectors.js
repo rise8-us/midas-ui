@@ -6,6 +6,7 @@ export const selectEventById = (state, id) => {
         dueDate: '',
         location: '',
         organizerIds: [],
+        attendeeIds: [],
         portfolioId: null
     }
 }

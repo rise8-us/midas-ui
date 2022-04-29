@@ -10,7 +10,7 @@ import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
-import { GanttTargetHeader } from '../GanttTargetHeader'
+import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -87,7 +87,7 @@ export default function GanttTarget({ target }) {
             <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles} >
                 <StyledHeader>
                     <div style = {{ maxWidth: `calc(100% - ${permissions.edit ? 106 : 30}px)` }}>
-                        <GanttTargetHeader title = {title} dateRange = {dateString} />
+                        <GanttEntryHeader title = {title} dateRange = {dateString} />
                     </div>
                     <div style = {{ display: 'flex', maxHeight: '40px' }}>
                         {permissions.edit &&

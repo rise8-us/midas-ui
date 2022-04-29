@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 
-export default function GanttTargetHeader({ title, dateRange }) {
+export default function GanttEntryHeader({ title, dateRange }) {
     return (
         <>
             <Typography whiteSpace = 'nowrap' textOverflow = 'ellipsis' overflow = 'hidden'>
@@ -14,11 +14,11 @@ export default function GanttTargetHeader({ title, dateRange }) {
     )
 }
 
-GanttTargetHeader.propTypes = {
+GanttEntryHeader.propTypes = {
     title: PropTypes.string.isRequired,
     dateRange: PropTypes.node,
 }
 
-GanttTargetHeader.defaultProps = {
+GanttEntryHeader.defaultProps = {
     dateRange: ''
 }
