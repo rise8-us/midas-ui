@@ -89,7 +89,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                 <IconButton
                     data-testid = {'GanttTarget__expandButton_' + (open ? 'open' : 'closed')}
                     onClick = {() => setOpen(prev => !prev)}
-                    style = {{ maxHeight: '40px' }}
+                    style = {{ maxHeight: '40px', display: 'none' }}
                 >
                     <ExpandMore
                         style = {{

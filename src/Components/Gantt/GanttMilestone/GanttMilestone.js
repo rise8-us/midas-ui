@@ -81,7 +81,7 @@ export default function GanttMilestone({ milestone }) {
                 }
             >
                 <MilestoneFlag>
-                    <div style = {{ maxWidth: permissions.edit ? 'calc(100vw - 48px - 76vw - 76px)' : '100%' }}>
+                    <div>
                         <GanttEntryHeader title = {milestone.title} dateRange = {dateString} />
                     </div>
                 </MilestoneFlag>
