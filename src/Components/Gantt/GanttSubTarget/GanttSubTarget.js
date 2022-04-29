@@ -105,7 +105,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
             >
                 <div style = {{ display: 'none' }}>
                     <Button
-                        onClick = {() => {}}
+                        onClick = {(e) => e}
                         color = 'secondary'
                         variant = 'contained'
                         style = {{ marginRight: '8px' }}
@@ -113,7 +113,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                         Associate Req
                     </Button>
                     <Button
-                        onClick = {() => {}}
+                        onClick = {(e) => e}
                         color = 'secondary'
                         variant = 'contained'
                     >
