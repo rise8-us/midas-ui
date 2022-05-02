@@ -63,7 +63,6 @@ function PortfolioCard({ id }) {
                             color: 'primary.main',
                             cursor: 'pointer'
                         },
-                        height: 40,
                         width: 'fit-content'
                     }
                 }}
@@ -79,6 +78,7 @@ function PortfolioCard({ id }) {
                         </IconButton>
                     )
                 }
+                style = {{ paddingBottom: 0 }}
             />
             <CardContent>
                 {portfolio.products?.length > 0 ? (

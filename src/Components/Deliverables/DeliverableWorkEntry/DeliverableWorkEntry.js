@@ -56,7 +56,7 @@ export default function DeliverableWorkEntry({ id, hasEdit }) {
 
     return (
         <Stack marginBottom = {1}>
-            <Grid container alignItems = 'center' height = '34px' >
+            <Grid container alignItems = 'center'>
                 <Grid item xs = {8}>
                     <Tooltip
                         followCursor
