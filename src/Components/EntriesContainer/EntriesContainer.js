@@ -15,7 +15,7 @@ import { selectMilestonesByPortfolioId } from 'Redux/Milestones/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { requestSearchTargets } from 'Redux/Targets/actions'
 import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
-import { sortArrayByDate } from 'Utilities/sorting'
+import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
 export default function EntriesContainer({ portfolioId }) {
 
@@ -37,7 +37,7 @@ export default function EntriesContainer({ portfolioId }) {
     const entries = [
         ...milestones,
         ...events,
-        ...targets.sort(sortArrayByDate),
+        ...targets.sort(sortArrayByDateAndTitle),
     ]
 
     let dateStart = new Date()
@@ -80,6 +80,7 @@ export default function EntriesContainer({ portfolioId }) {
                 marginBlock: 'unset'
             }}
             todayColor = {theme.palette.primary.main}
+            scope = {6}
         />
     )
 }
