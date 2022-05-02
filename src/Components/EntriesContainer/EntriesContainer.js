@@ -80,7 +80,7 @@ export default function EntriesContainer({ portfolioId }) {
                 marginBlock: 'unset'
             }}
             todayColor = {theme.palette.primary.main}
-            scope = {6}
+            scope = {12}
         />
     )
 }
