@@ -37,7 +37,7 @@ export default function EntriesContainer({ portfolioId }) {
     const entries = [
         ...milestones,
         ...events,
-        ...targets.sort(sortArrayByDateAndTitle),
+        ...targets.filter(t => t.parentId === null).sort(sortArrayByDateAndTitle),
     ]
 
     let dateStart = new Date()
