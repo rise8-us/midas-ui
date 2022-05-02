@@ -7,7 +7,6 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
-import { selectTargetsByParentId } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
@@ -54,10 +53,9 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, startDate, dueDate, title, description, type } = target
+    const { id, portfolioId, startDate, dueDate, title, description, type, children } = target
     const dateString = parseDate(startDate, dueDate)
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
-    const subTargets = useSelector(state => selectTargetsByParentId(state, id))
     const ref = useRef()
 
     const updateTarget = (e) => {
@@ -166,7 +164,7 @@ export default function GanttTarget({ target }) {
                     </div>
                 }
                 <Stack spacing = {1}>
-                    {subTargets.map((subTarget, index) => (
+                    {children.map((subTarget, index) => (
                         <GanttSubTarget
                             target = {subTarget}
                             key = {index}
@@ -185,6 +183,7 @@ GanttTarget.propTypes = {
         description: PropTypes.string,
         type: PropTypes.string,
         startDate: PropTypes.string,
-        dueDate: PropTypes.string
+        dueDate: PropTypes.string,
+        children: PropTypes.arrayOf(PropTypes.shape({}))
     }).isRequired
 }

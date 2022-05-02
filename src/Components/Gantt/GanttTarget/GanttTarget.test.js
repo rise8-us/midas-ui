@@ -9,6 +9,7 @@ describe('<GanttTarget />', () => {
         dueDate: '2022-06-31',
         startDate: '2022-06-01',
         description: 'These are the details',
+        children: [],
         portfolioId: 1
     }
 
@@ -52,7 +53,7 @@ describe('<GanttTarget />', () => {
         )
     })
 
-    test('should handle onEditClick', () => {
+    test('should handle onDeleteClick', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
         render(<GanttTarget target = {target}/>)

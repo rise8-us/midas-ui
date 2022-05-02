@@ -27,7 +27,7 @@ export default function EntriesContainer({ portfolioId }) {
     useEffect(() => {
         dispatch(requestSearchMilestones(searchValue))
         dispatch(requestSearchEvents(searchValue))
-        dispatch(requestSearchTargets(searchValue + ' AND parent_id:~'))
+        dispatch(requestSearchTargets(searchValue + ' AND parent.id:~'))
     }, [])
 
     const milestones = useSelector(state => selectMilestonesByPortfolioId(state, portfolioId))
