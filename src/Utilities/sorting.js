@@ -7,4 +7,8 @@ export const sortArrayAlphabetically = (array, key) => {
     })
 }
 
-export const sortArrayByDate = (a, b) => a.startDate > b.startDate || !b.startDate ? 1 : -1
+export const sortArrayByStartDate = (a, b) => a.startDate > b.startDate || !b.startDate ? 1 : -1
+
+export const sortArrayByDateAndTitle = (a, b) => {
+    return a.startDate > b.startDate || a.title.localeCompare(b.title) === 1 ? 1 : -1
+}

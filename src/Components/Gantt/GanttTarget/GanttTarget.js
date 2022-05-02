@@ -9,6 +9,7 @@ import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { sortArrayAlphabetically } from 'Utilities/sorting'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttSubTarget } from '../GanttSubTarget'
@@ -55,6 +56,8 @@ export default function GanttTarget({ target }) {
 
     const { id, portfolioId, startDate, dueDate, title, description, type, children } = target
     const dateString = parseDate(startDate, dueDate)
+    const childrenSorted = sortArrayAlphabetically(children, 'title')
+
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const ref = useRef()
 
@@ -164,7 +167,7 @@ export default function GanttTarget({ target }) {
                     </div>
                 }
                 <Stack spacing = {1}>
-                    {children.map((subTarget, index) => (
+                    {childrenSorted.map((subTarget, index) => (
                         <GanttSubTarget
                             target = {subTarget}
                             key = {index}

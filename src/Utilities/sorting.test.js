@@ -1,4 +1,4 @@
-import { sortArrayAlphabetically, sortArrayByDate } from './sorting'
+import { sortArrayAlphabetically, sortArrayByStartDate } from './sorting'
 
 describe('sorting', () => {
     test('sortArrayAlphabetically', () => {
@@ -21,7 +21,7 @@ describe('sorting', () => {
         expect(sortArrayAlphabetically(unsorted, 'name')).toEqual(sorted)
     })
 
-    test('sortArrayByDate', () => {
+    test('sortArrayByStartDate', () => {
         const unsorted = [
             { startDate: new Date(2022, 1, 1) },
             { startDate: new Date(2020, 1, 1) },
@@ -36,6 +36,22 @@ describe('sorting', () => {
             { startDate: new Date(2022, 1, 1) },
         ]
 
-        expect([...unsorted].sort(sortArrayByDate)).toEqual(sorted)
+        expect([...unsorted].sort(sortArrayByStartDate)).toEqual(sorted)
+    })
+
+    test('sortArrayByStartDateAndTitle', () => {
+        const unsorted = [
+            { startDate: new Date(2022, 1, 1) },
+            { startDate: new Date(2020, 1, 1), title: '2' },
+            { startDate: new Date(2020, 1, 1), title: '1' },
+        ]
+
+        const sorted = [
+            { startDate: new Date(2020, 1, 1), title: '1' },
+            { startDate: new Date(2020, 1, 1), title: '2' },
+            { startDate: new Date(2022, 1, 1) },
+        ]
+
+        expect([...unsorted].sort(sortArrayByStartDate)).toEqual(sorted)
     })
 })
