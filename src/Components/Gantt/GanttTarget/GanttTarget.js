@@ -46,6 +46,11 @@ const StyledButton = styled(Button)(() => ({
     }
 }))
 
+const StyledExpandButton = styled(IconButton)(({ theme }) => ({
+    maxHeight: '40px',
+    marginRight: theme.spacing(-1)
+}))
+
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
@@ -122,10 +127,9 @@ export default function GanttTarget({ target }) {
                                 }}
                             />
                         </IconButton>
-                        <IconButton
+                        <StyledExpandButton
                             data-testid = {'GanttTarget__expandButton_' + (open ? 'open' : 'closed')}
                             onClick = {expandButtonHandler}
-                            style = {{ maxHeight: '40px' }}
                         >
                             <ExpandMore
                                 style = {{
@@ -133,7 +137,7 @@ export default function GanttTarget({ target }) {
                                     transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
                                 }}
                             />
-                        </IconButton>
+                        </StyledExpandButton>
                     </div>
                 </StyledHeader>
             </Tooltip>
