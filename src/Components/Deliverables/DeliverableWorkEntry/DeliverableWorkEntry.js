@@ -1,5 +1,6 @@
 import { LinkOffOutlined } from '@mui/icons-material'
 import { Box, Grid, IconButton, LinearProgress, Link, Stack, Tooltip, Typography } from '@mui/material'
+import { HrefText } from 'Components/HrefText'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
@@ -20,29 +21,10 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     }
 }))
 
-const normalise = (value, target) => isNaN(value) && isNaN(target) ? 0 : (value / target) * 100
+const normalise = (value, target) => isNaN(value) || isNaN(target) ? 0 : (value / target) * 100
 
 const roundedPercent = (value, target) => (Math.round(normalise(value, target) * 100) / 100) + '% completed'
 
-const getTitle = (title, href) => {
-    return href ? (
-        <Link
-            href = {href}
-            target = '_blank'
-            rel = 'noopener noreferrer'
-            underline = 'hover'
-            data-testid = 'DeliverableWorkEntry__title-link-wrap'
-        >
-            <StyledTypography color = 'secondary'>
-                {title}
-            </StyledTypography>
-        </Link>
-    ) : (
-        <Typography color = 'secondary'>
-            {title}
-        </Typography>
-    )
-}
 export default function DeliverableWorkEntry({ id, hasEdit }) {
     const dispatch = useDispatch()
 
@@ -63,7 +45,13 @@ export default function DeliverableWorkEntry({ id, hasEdit }) {
                         disableInteractive
                         title = {roundedPercent(completion?.value, completion?.target)}
                     >
-                        {getTitle(deliverable.title, completion.gitlabEpic?.webUrl)}
+                        <div>
+                            <HrefText
+                                text = {deliverable.title}
+                                href = {completion.gitlabEpic?.webUrl}
+                                color = 'secondary'
+                            />
+                        </div>
                     </Tooltip>
                 </Grid>
                 <Grid item xs = 'auto' marginLeft = 'auto'>
