@@ -147,7 +147,13 @@ export default function GanttTarget({ target }) {
                 collapsedSize = {0}
                 easing = {'cubic-bezier(1,-0.01, 0.69, 1.01)'}
             >
-                <Typography margin = '8px' color = 'secondary' variant = 'subtitle2'>{description}</Typography>
+                <Typography
+                    margin = '8px'
+                    color = 'secondary'
+                    variant = 'subtitle2'
+                >
+                    {description}
+                </Typography>
                 {permissions.edit &&
                     <div style = {{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <StyledButton

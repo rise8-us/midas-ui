@@ -1,9 +1,9 @@
-import { Box, TextField } from '@mui/material'
+import { Box, ClickAwayListener, TextField } from '@mui/material'
 import { DateSelector } from 'Components/DateSelector'
 import { Popup } from 'Components/Popup'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
-import { useMemo, useReducer } from 'react'
+import { useMemo, useReducer, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'
@@ -11,6 +11,7 @@ import { requestCreateTarget, requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { selectTargetById } from 'Redux/Targets/selectors'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
+import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
     return {
@@ -26,6 +27,8 @@ function TargetPopup({ id, portfolioId }) {
 
     const target = useSelector(state => selectTargetById(state, id))
     const context = initDetails(target.id === undefined)
+    const [hasFocus, setHasFocus] = useState(false)
+    const maxLength = 280
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleError = useMemo(() => errors.filter(error => error.includes('title')), [errors])
@@ -39,6 +42,8 @@ function TargetPopup({ id, portfolioId }) {
         dueDate: target.dueDate
     })
 
+    const titleLengthError = useMemo(() => formValues?.title.length > maxLength)
+
     const handleChange = (name, value) => {
         formDispatch({
             type: 'onChange',
@@ -49,14 +54,29 @@ function TargetPopup({ id, portfolioId }) {
     const onClose = () => dispatch(closePopup(context.constant))
 
     const onSubmit = () => {
-        dispatch(context.request({
-            ...target,
-            title: formValues.title,
-            description: formValues.description,
-            startDate: formValues.startDate,
-            dueDate: formValues.dueDate,
-            portfolioId: portfolioId
-        }))
+        !titleLengthError &&
+            dispatch(context.request({
+                ...target,
+                title: formValues.title,
+                description: formValues.description,
+                startDate: formValues.startDate,
+                dueDate: formValues.dueDate,
+                portfolioId: portfolioId
+            }))
+    }
+
+    const onFocus = () => {
+        setHasFocus(true)
+    }
+
+    const onClickAway = () => {
+        setHasFocus(false)
+    }
+
+    const showTitleLength = () => {
+        if (hasFocus || titleLengthError) {
+            return `${formValues.title.length}/${maxLength}`
+        }
     }
 
     return (
@@ -66,16 +86,19 @@ function TargetPopup({ id, portfolioId }) {
             onSubmit = {onSubmit}
         >
             <Box display = 'flex' flexDirection = 'column'>
-                <TextField
-                    label = 'Title'
-                    data-testid = 'TargetPopup__input-title'
-                    value = { formValues.title }
-                    onChange = {(e) => handleChange('title', e.target.value)}
-                    error = { titleError.length > 0 }
-                    helperText = { titleError[0] ?? 'Please enter a valid title' }
-                    margin = 'dense'
-                    required
-                />
+                <ClickAwayListener onClickAway = {onClickAway}>
+                    <TextField
+                        label = 'Title'
+                        data-testid = 'TargetPopup__input-title'
+                        value = {formValues.title}
+                        onChange = {(e) => handleChange('title', e.target.value)}
+                        onFocus = {onFocus}
+                        error = {titleError.length > 0 || titleLengthError}
+                        helperText = {<FormatErrors errors = {[...titleError, showTitleLength()]}/>}
+                        margin = 'dense'
+                        required
+                    />
+                </ClickAwayListener>
                 <TextField
                     label = 'Description'
                     data-testid = 'TargetPopup__input-description'
