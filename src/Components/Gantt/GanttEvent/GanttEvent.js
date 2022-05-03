@@ -69,7 +69,7 @@ export default function GanttEvent({ event }) {
             }
         >
             <StyledDiv>
-                <div>
+                <div style = {{ maxWidth: 'calc(100vw - 48px - 76vw - 14px)' }}>
                     <GanttEntryHeader title = {event.title} dateRange = {dateString} />
                 </div>
             </StyledDiv>

@@ -9,21 +9,38 @@ const performAction = (canDo, action, value) => canDo && action(value)
 
 const doubleValidate = (first, second) => first && second ? true : false
 
+const generateUID = (uniqueId) => uniqueId ?? Date.now().valueOf().toString()
+
+const handleKeyDown = (keyPress, ref, setValue, setInEditMode, initialValue) => {
+    if (keyPress === 'Enter') ref.current.blur()
+    else if (keyPress === 'Escape') {
+        setValue(initialValue)
+        setInEditMode(false)
+    }
+}
+
+const checkToSave = (canEdit, showCharCount, titleLengthError) =>
+    !(!canEdit || (showCharCount && titleLengthError))
+
+const hasErrors = (errors, showCharCount, titleLengthError) =>
+    errors.length > 0 || (showCharCount && titleLengthError)
+
 function AutoSaveTextField({
     autogrow, canEdit, className, dataTestId, enableSpellCheck, errors,
-    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, uniqueId, onHoverChange, ...textFieldProps }) {
+    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, uniqueId,
+    onHoverChange, maxLength, ...textFieldProps }) {
 
     const ref = useRef()
     const divRef = useRef()
 
-    const customId = useMemo(() => {
-        return uniqueId ?? Date.now().valueOf().toString()
-    }, [uniqueId])
+    const customId = useMemo(() => generateUID(uniqueId), [uniqueId])
 
     const [inEditMode, setInEditMode] = useState(false)
     const [value, setValue] = useState(initialValue)
 
     const [hasHover, setHasHover] = useState(false)
+    const titleLengthError = useMemo(() => value.length > maxLength)
+    const showCharCount = maxLength > 0
 
     const onChange = (event) => {
         event.stopPropagation()
@@ -58,16 +75,11 @@ function AutoSaveTextField({
 
     const onKeyDown = (event) => {
         event.stopPropagation()
-
-        if (event.key === 'Enter') ref.current.blur()
-        else if (event.key === 'Escape') {
-            setValue(initialValue)
-            setInEditMode(false)
-        }
+        handleKeyDown(event.key, ref, setValue, setInEditMode, initialValue)
     }
 
     const executeSave = () => {
-        if (!canEdit) return
+        if (!checkToSave(canEdit, showCharCount, titleLengthError)) return
 
         if (!revertOnEmpty || (revertOnEmpty && value.trim().length > 0)) {
             onSave(value)
@@ -75,6 +87,15 @@ function AutoSaveTextField({
         } else {
             setValue(initialValue)
         }
+    }
+
+    const getHelperText = () => {
+        const finalErrors = [...errors]
+
+        titleLengthError && finalErrors.unshift(
+            `${value.length}/${maxLength}` + '. Max character limit reached. Changes will not be saved.')
+
+        return <FormatErrors errors = {finalErrors}/>
     }
 
     useEffect(() => {
@@ -131,8 +152,8 @@ function AutoSaveTextField({
             onBlur = {onBlur}
             onKeyDown = {onKeyDown}
             onChange = {onChange}
-            error = { errors.length > 0 }
-            helperText = {errors.length === 0 ? null : <FormatErrors errors = {errors}/>}
+            error = {hasErrors(errors, showCharCount, titleLengthError)}
+            helperText = {showCharCount ? getHelperText() : <FormatErrors errors = {errors}/>}
         />
     )
 }
@@ -151,6 +172,7 @@ AutoSaveTextField.propTypes = {
         className: PropTypes.string
     }),
     label: PropTypes.string,
+    maxLength: PropTypes.number,
     multiline: PropTypes.bool,
     name: PropTypes.string,
     onHoverChange: PropTypes.func,
@@ -173,6 +195,7 @@ AutoSaveTextField.defaultProps = {
     initialValue: '',
     InputLabelProps: undefined,
     label: undefined,
+    maxLength: -1,
     multiline: false,
     name: '',
     onHoverChange: (e) => e,

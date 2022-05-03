@@ -73,6 +73,11 @@ const theme = createTheme({
                 textColor: 'inherit'
             }
         },
+        MuiTypography: {
+            defaultProps: {
+                whiteSpace: 'pre-line'
+            }
+        },
         MuiTab: {
             defaultProps: {
                 disableRipple: true
@@ -135,7 +140,8 @@ const theme = createTheme({
                     backgroundColor: '#24292E',
                     fontSize: '14px',
                     padding: '8px 10px',
-                    boxShadow: '0 0 1em #000000AA'
+                    boxShadow: '0 0 1em #000000AA',
+                    maxWidth: '500px'
                 },
                 arrow: {
                     color: '#24292E'

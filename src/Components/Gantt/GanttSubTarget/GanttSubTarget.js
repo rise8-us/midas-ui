@@ -60,10 +60,11 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                 <AutoSaveTextField
                     canEdit = {permissions.edit}
                     initialValue = {title}
-                    onSave = {(v) => updateTitle(v)}
+                    onSave = {updateTitle}
                     title = {title}
                     fullWidth
                     onHoverChange = {setHover}
+                    maxLength = {280}
                     inputProps = {{
                         style: {
                             textOverflow: 'ellipsis'
