@@ -28,17 +28,7 @@ describe('<DeliverableWorkEntry />', () => {
 
         expect(screen.getByText('deliverable title')).toBeInTheDocument()
         expect(screen.getByText('product 1')).toBeInTheDocument()
-        expect(screen.getByTestId('DeliverableWorkEntry__title-link-wrap')).toHaveAttribute('href', 'foo')
         expect(screen.queryByTestId('LinkOffOutlinedIcon')).not.toBeInTheDocument()
-    })
-
-    test('should render when link not provided', () => {
-        selectDeliverableByIdMock.mockReturnValue({ title: 'deliverable title', productId: 2, completion: {} })
-
-        renderWithRouter(<DeliverableWorkEntry id = {1}/>)
-
-        expect(screen.getByText('deliverable title')).toBeInTheDocument()
-        expect(screen.queryByTestId('DeliverableWorkEntry__title-link-wrap')).not.toBeInTheDocument()
     })
 
     test('should handle delete', () => {

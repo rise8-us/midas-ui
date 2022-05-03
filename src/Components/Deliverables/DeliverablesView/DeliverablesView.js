@@ -69,7 +69,7 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
                     {hasEdit &&
                         <SearchEpics
                             onChange = {onSelectEpic}
-                            defaultSearchTerms = {`portfolio.id:${portfolioId}`}
+                            defaultSearchTerms = {`product.portfolio.id:${portfolioId}`}
                         />
                     }
                 </div>
