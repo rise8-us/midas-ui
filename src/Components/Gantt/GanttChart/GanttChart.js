@@ -13,6 +13,7 @@ export default function GanttChart({
     defaultRowSpacing,
     entries,
     headerStyles,
+    leadingColumns,
     maxHeight,
     renderComponent,
     scope,
@@ -22,24 +23,26 @@ export default function GanttChart({
 }) {
     const chartStyle = {
         position: 'relative',
-        maxHeight: maxHeight,
         overflowY: 'auto',
         overflowX: 'hidden',
+        maxHeight: maxHeight,
         background: chartBackgroundColor,
     }
 
-    let endDate = new Date(startDate.getTime())
-    setDateByViewBy[viewBy](endDate, scope)
+    let rangeStart = new Date(startDate.getTime())
+    setDateByViewBy[viewBy](rangeStart, -leadingColumns)
+    let rangeEnd = new Date(rangeStart.getTime())
+    setDateByViewBy[viewBy](rangeEnd, scope)
 
-    const [dateRange, setDateRange] = useState([startDate, endDate])
+    const [dateRange, setDateRange] = useState([rangeStart, rangeEnd])
 
     const augmentedSetDateRange = (direction) => {
-        let newDateStart = dateRange[0]
-        let newDateEnd = dateRange[1]
+        let newRangeStart = dateRange[0]
+        let newRangeEnd = dateRange[1]
 
-        setDateByViewBy[viewBy](newDateStart, direction)
-        setDateByViewBy[viewBy](newDateEnd, direction)
-        setDateRange([newDateStart, newDateEnd])
+        setDateByViewBy[viewBy](newRangeStart, direction)
+        setDateByViewBy[viewBy](newRangeEnd, direction)
+        setDateRange([newRangeStart, newRangeEnd])
     }
 
     const chartFormat = generateChartFormat(dateRange[0], viewBy, scope)
@@ -102,6 +105,7 @@ GanttChart.propTypes = {
         })
     ).isRequired,
     headerStyles: PropTypes.shape({}),
+    leadingColumns: PropTypes.number,
     maxHeight: PropTypes.string.isRequired,
     renderComponent: PropTypes.func,
     scope: PropTypes.number,
@@ -117,6 +121,7 @@ GanttChart.defaultProps = {
     defaultRowHeight: undefined,
     defaultRowSpacing: undefined,
     headerStyles: {},
+    leadingColumns: 0,
     renderComponent: (entry) => (
         <div
             data-testid = 'GanttEntry__defaultEntryWrapper'

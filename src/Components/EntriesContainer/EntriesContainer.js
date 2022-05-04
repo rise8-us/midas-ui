@@ -41,7 +41,6 @@ export default function EntriesContainer({ portfolioId }) {
     ]
 
     let dateStart = new Date()
-    dateStart.setMonth(dateStart.getMonth() - 3)
     dateStart.setDate(1)
     dateStart.setHours(0, 0, 0)
 
@@ -80,7 +79,8 @@ export default function EntriesContainer({ portfolioId }) {
                 marginBlock: 'unset'
             }}
             todayColor = {theme.palette.primary.main}
-            scope = {12}
+            scope = {6}
+            leadingColumns = {2}
         />
     )
 }
