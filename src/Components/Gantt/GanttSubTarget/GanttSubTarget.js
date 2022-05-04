@@ -28,6 +28,14 @@ const StyledHeader = styled('div')(() => ({
     cursor: 'pointer'
 }))
 
+const StyledButton = styled(Button)(() => ({
+    background: '#0071bc',
+    margin: '8px 0px',
+    '&:hover': {
+        background: '#3e94cf'
+    }
+}))
+
 export default function GanttSubTarget({ target, defaultOpen }) {
     const dispatch = useDispatch()
 
@@ -91,6 +99,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     data-testid = {'GanttTarget__expandButton_' + (open ? 'open' : 'closed')}
                     onClick = {() => setOpen(prev => !prev)}
                     style = {{ maxHeight: '40px', display: 'none' }}
+                    size = 'small'
                 >
                     <ExpandMore
                         style = {{
@@ -100,27 +109,27 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     />
                 </IconButton>
             </StyledHeader>
-            <Collapse
-                in = {open}
-                collapsedSize = {0}
-            >
-                <div style = {{ display: 'none' }}>
-                    <Button
-                        onClick = {(e) => e}
-                        color = 'secondary'
-                        variant = 'contained'
-                        style = {{ marginRight: '8px' }}
-                    >
-                        Associate Req
-                    </Button>
-                    <Button
-                        onClick = {(e) => e}
-                        color = 'secondary'
-                        variant = 'contained'
-                    >
-                        Associate Epic
-                    </Button>
-                </div>
+            <Collapse in = {open} collapsedSize = {0}>
+                {permissions.edit &&
+                    <div>
+                        <StyledButton
+                            onClick = {(e) => e}
+                            color = 'secondary'
+                            variant = 'contained'
+                            style = {{ marginRight: '8px', display: 'none' }}
+                        >
+                            Associate Req
+                        </StyledButton>
+                        <StyledButton
+                            onClick = {(e) => e}
+                            color = 'secondary'
+                            variant = 'contained'
+                            style = {{ display: 'none' }}
+                        >
+                            Associate Epic
+                        </StyledButton>
+                    </div>
+                }
             </Collapse>
         </StyledDiv>
     )

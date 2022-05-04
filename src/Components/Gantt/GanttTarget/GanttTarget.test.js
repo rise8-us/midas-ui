@@ -9,7 +9,7 @@ describe('<GanttTarget />', () => {
         dueDate: '2022-06-31',
         startDate: '2022-06-01',
         description: 'These are the details',
-        children: [],
+        childrenIds: [],
         portfolioId: 1
     }
 

@@ -2,9 +2,9 @@ import * as selectors from './selectors'
 
 const mockState = {
     targets: {
-        4: { portfolioId: 1, parentId: null },
-        5: { portfolioId: 1, parentId: null },
-        6: { portfolioId: 2, parentId: null },
+        4: { id: 4, portfolioId: 1, parentId: null },
+        5: { id: 5, portfolioId: 1, parentId: null },
+        6: { id: 6, portfolioId: 2, parentId: null },
     }
 }
 
@@ -39,7 +39,15 @@ describe('Target selectors', () => {
             type: 'target'
         }])
     })
+
+    test('selectTargetsByIds - returns proper array', () => {
+        expect(selectors.selectTargetsByIds(mockState, [4, 5])).toEqual([
+            { id: 4, portfolioId: 1, parentId: null },
+            { id: 5, portfolioId: 1, parentId: null }
+        ])
+    })
+
+    test('selectTargetsByIds - returns empty array', () => {
+        expect(selectors.selectTargetsByIds(mockState, [])).toHaveLength(0)
+    })
 })
-
-
-

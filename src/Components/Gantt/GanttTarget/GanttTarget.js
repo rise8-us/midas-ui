@@ -1,5 +1,5 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
-import { Button, Collapse, IconButton, Stack, Tooltip, Typography } from '@mui/material'
+import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,10 +9,9 @@ import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
-import { sortArrayAlphabetically } from 'Utilities/sorting'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
-import { GanttSubTarget } from '../GanttSubTarget'
+import { GanttSubTargetList } from '../GanttSubTargetList'
 import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -54,9 +53,8 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
 export default function GanttTarget({ target }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, startDate, dueDate, title, description, type, children } = target
+    const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
-    const childrenSorted = sortArrayAlphabetically(children, 'title')
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const ref = useRef()
@@ -172,13 +170,7 @@ export default function GanttTarget({ target }) {
                         </div>
                     </div>
                 }
-                <Stack spacing = {1}>
-                    {childrenSorted.map((subTarget, index) => (
-                        <GanttSubTarget
-                            target = {subTarget}
-                            key = {index}
-                        />))}
-                </Stack>
+                <GanttSubTargetList ids = {childrenIds} />
             </Collapse>
         </StyledDiv>
     )
@@ -193,6 +185,6 @@ GanttTarget.propTypes = {
         type: PropTypes.string,
         startDate: PropTypes.string,
         dueDate: PropTypes.string,
-        children: PropTypes.arrayOf(PropTypes.shape({}))
+        childrenIds: PropTypes.arrayOf(PropTypes.number)
     }).isRequired
 }
