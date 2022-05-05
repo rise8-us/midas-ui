@@ -55,7 +55,6 @@ export default function GanttTarget({ target }) {
 
     const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
-
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const ref = useRef()
 

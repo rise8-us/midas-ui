@@ -2,6 +2,10 @@ export const selectAllCapabilityIds = (state) => {
     return Object.keys(state.capabilities).map(id => parseInt(id))
 }
 
+export const selectCapabilitiesByIds = (state, ids) => {
+    return Object.values(state.capabilities).filter(capability => ids.includes(capability.id))
+}
+
 export const selectCapabilityById = (state, id) => {
     const newCapability = {
         title: '',

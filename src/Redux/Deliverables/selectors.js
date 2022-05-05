@@ -1,6 +1,13 @@
 export const selectDeliverableById = (state, id) =>
     state.deliverables[id] ?? { children: [] }
 
+export const selectDeliverablesById = (state, ids) => {
+    const deliverables = state.deliverables
+
+    return Object.values(deliverables)
+        .filter(deliverable => ids.includes(deliverable.id))
+}
+
 export const selectDeliverablesByCapabilityId = (state, capabilityId) => {
     const deliverables = state.deliverables
 

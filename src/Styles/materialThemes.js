@@ -49,6 +49,12 @@ const theme = createTheme({
                     background: '#002E57',
                     text: '#fff'
                 }
+            },
+            requirements: {
+                dark: {
+                    background: '#00213D',
+                    text: '#fff'
+                }
             }
         }
     },

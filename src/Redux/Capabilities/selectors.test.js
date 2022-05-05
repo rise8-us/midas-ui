@@ -41,4 +41,11 @@ describe('capabilities selectors', () => {
         expect(results).toHaveLength(1)
         expect(results[0].id).toEqual(3)
     })
+
+    test('selectCapabilitiesByIds', () => {
+        const results = selectors.selectCapabilitiesByIds(mockState, [2, 3])
+
+        expect(results).toBeInstanceOf(Array)
+        expect(results).toHaveLength(2)
+    })
 })

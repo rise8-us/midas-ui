@@ -8,6 +8,7 @@ import { GanttTarget } from 'Components/Gantt/GanttTarget'
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { requestSearchEvents } from 'Redux/Events/actions'
 import { selectEventsByPortfolioId } from 'Redux/Events/selectors'
 import { requestSearchMilestones } from 'Redux/Milestones/actions'
@@ -28,6 +29,7 @@ export default function EntriesContainer({ portfolioId }) {
         dispatch(requestSearchMilestones(searchValue))
         dispatch(requestSearchEvents(searchValue))
         dispatch(requestSearchTargets(searchValue + ' AND parent.id:~'))
+        dispatch(requestSearchDeliverables('capability.' + searchValue))
     }, [])
 
     const milestones = useSelector(state => selectMilestonesByPortfolioId(state, portfolioId))
