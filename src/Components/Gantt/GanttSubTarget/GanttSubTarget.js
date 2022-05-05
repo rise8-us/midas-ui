@@ -4,11 +4,14 @@ import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
+import { selectDeliverablesById } from 'Redux/Deliverables/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget, requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
+import { GanttRequirements } from '../GanttRequirements'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     borderRadius: '6px',
@@ -38,9 +41,10 @@ const StyledButton = styled(Button)(() => ({
 
 export default function GanttSubTarget({ target, defaultOpen }) {
     const dispatch = useDispatch()
-
-    const { id, portfolioId, title } = target
+    const { id, portfolioId, title, deliverableIds } = target
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
+    const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
+    const deliverables = useSelector(state => selectDeliverablesById(state, deliverableIds))
 
     const deleteTarget = () => {
         dispatch(openPopup(TargetConstants.DELETE_TARGET, 'DeletePopup', {
@@ -52,6 +56,13 @@ export default function GanttSubTarget({ target, defaultOpen }) {
         }))
     }
 
+    const associateReq = () => {
+        dispatch(openPopup(
+            TargetConstants.UPDATE_TARGET,
+            'AssociateRequirementsPopup',
+            { id, capabilities, target }))
+    }
+
     const updateTitle = (newTitle) => {
         dispatch(requestUpdateTarget({
             ...target,
@@ -61,6 +72,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
 
     const [open, setOpen] = useState(defaultOpen)
     const [hover, setHover] = useState(false)
+
 
     return (
         <StyledDiv>
@@ -98,7 +110,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                 <IconButton
                     data-testid = {'GanttTarget__expandButton_' + (open ? 'open' : 'closed')}
                     onClick = {() => setOpen(prev => !prev)}
-                    style = {{ maxHeight: '40px', display: 'none' }}
+                    style = {{ maxHeight: '40px' }}
                     size = 'small'
                 >
                     <ExpandMore
@@ -109,19 +121,22 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     />
                 </IconButton>
             </StyledHeader>
-            <Collapse in = {open} collapsedSize = {0}>
+            <Collapse
+                in = {open}
+                collapsedSize = {0}
+            >
                 {permissions.edit &&
                     <div>
                         <StyledButton
-                            onClick = {(e) => e}
+                            data-testid = 'GanttSubTarget__associate-req'
+                            onClick = {associateReq}
                             color = 'secondary'
                             variant = 'contained'
-                            style = {{ marginRight: '8px', display: 'none' }}
+                            style = {{ marginRight: '8px' }}
                         >
                             Associate Req
                         </StyledButton>
                         <StyledButton
-                            onClick = {(e) => e}
                             color = 'secondary'
                             variant = 'contained'
                             style = {{ display: 'none' }}
@@ -130,6 +145,11 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                         </StyledButton>
                     </div>
                 }
+                <GanttRequirements
+                    id = {id}
+                    portfolioId = {portfolioId}
+                    deliverables = {deliverables}
+                    target = {target}/>
             </Collapse>
         </StyledDiv>
     )
@@ -142,7 +162,8 @@ GanttSubTarget.propTypes = {
         title: PropTypes.string,
         type: PropTypes.string,
         startDate: PropTypes.string,
-        dueDate: PropTypes.string
+        dueDate: PropTypes.string,
+        deliverableIds: PropTypes.array
     }).isRequired,
     defaultOpen: PropTypes.bool,
 }

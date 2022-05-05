@@ -3,7 +3,7 @@ import { GanttSubTargetList } from './index'
 
 describe('<GanttSubTargetList />', () => {
 
-    const subtargets = [{ id: 1, title: 'one' }]
+    const subtargets = [{ id: 1, title: 'one', portfolioId: 1 }]
     const selectTargetsByIdsMock = useModuleMock('Redux/Targets/selectors', 'selectTargetsByIds')
 
     test('should render', () => {
