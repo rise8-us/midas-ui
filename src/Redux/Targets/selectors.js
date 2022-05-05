@@ -5,7 +5,8 @@ export const selectTargetById = (state, id) => {
         startDate: '',
         dueDate: '',
         portfolioId: null,
-        deliverableIds: []
+        deliverableIds: [],
+        epicIds: []
     }
 }
 

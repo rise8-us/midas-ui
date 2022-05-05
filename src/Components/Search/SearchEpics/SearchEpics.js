@@ -5,9 +5,9 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestFetchSearchEpics } from 'Redux/Epics/actions'
 
-export default function SearchEpics({
-    onChange, defaultSearchTerms, excludeClosed, textFieldProps, ...autoCompleteProps
-}) {
+export default function SearchEpics(props) {
+    const { onChange, defaultSearchTerms, excludeClosed, textFieldProps, excludeIds, ...autoCompleteProps } = props
+
     const dispatch = useDispatch()
 
     const products = useSelector(state => state.products)
@@ -50,16 +50,16 @@ export default function SearchEpics({
             onTextFieldChange = {onTextFieldChange}
             groupBy = {(option) => option.productName}
             getOptionLabel = {(option) => option.title}
-            options = {options}
+            options = {options.filter(option => !excludeIds.includes(option.id))}
             textFieldProps = {{
                 margin: 'dense',
                 ...textFieldProps
             }}
-            renderOption = {(props, option) => (
-                <li {...props} key = {option.id}>
+            renderOption = {(optionProps, option) =>
+                <li {...optionProps} key = {option.id}>
                     {option.title}
                 </li>
-            )}
+            }
             filterOptions = {(opts, params) => {
                 return opts.filter(option =>
                     option.title?.toUpperCase().includes(params.inputValue?.toUpperCase()) ||
@@ -73,6 +73,7 @@ export default function SearchEpics({
 SearchEpics.propTypes = {
     defaultSearchTerms: PropTypes.string,
     excludeClosed: PropTypes.bool,
+    excludeIds: PropTypes.arrayOf(PropTypes.number),
     onChange: PropTypes.func.isRequired,
     textFieldProps: PropTypes.shape({
         label: PropTypes.string,
@@ -85,6 +86,7 @@ SearchEpics.propTypes = {
 SearchEpics.defaultProps = {
     defaultSearchTerms: null,
     excludeClosed: false,
+    excludeIds: [],
     textFieldProps: {
         label: '',
         placeholder: 'Link epics by title or product name',

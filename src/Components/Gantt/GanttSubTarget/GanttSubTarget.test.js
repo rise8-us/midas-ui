@@ -14,10 +14,8 @@ describe('<GanttSubTarget />', () => {
         startDate: '2022-01-01',
         description: 'These are the details',
         portfolioId: 1,
-        deliverables: [{
-            id: 2,
-            capabilityId: 3
-        }]
+        deliverableIds: [2],
+        epicIds: []
     }
 
     const selectPortfolioPagePermissionMock =
@@ -61,10 +59,8 @@ describe('<GanttSubTarget />', () => {
                     startDate: '2022-01-01',
                     description: 'These are the details',
                     portfolioId: 1,
-                    deliverables: [{
-                        id: 2,
-                        capabilityId: 3
-                    }]
+                    deliverableIds: [2],
+                    epicIds: []
                 }
             }
         )

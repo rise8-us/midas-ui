@@ -1,7 +1,7 @@
 export const selectDeliverableById = (state, id) =>
     state.deliverables[id] ?? { children: [] }
 
-export const selectDeliverablesById = (state, ids) => {
+export const selectDeliverablesByIds = (state, ids) => {
     const deliverables = state.deliverables
 
     return Object.values(deliverables)

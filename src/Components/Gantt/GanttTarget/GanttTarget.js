@@ -51,12 +51,28 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
 }))
 
 export default function GanttTarget({ target }) {
-    const dispatch = useDispatch()
-
     const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
-    const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
+
+    const dispatch = useDispatch()
     const ref = useRef()
+
+    const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
+
+    const [open, setOpen] = useState(false)
+    const [hover, setHover] = useState(false)
+    const [horizontalOpen, setHorizontalOpen] = useState(false)
+    const [widthBool, setWidthBool] = useState(false)
+
+    const transitionStyles = {
+        minWidth: horizontalOpen ? '50vw' : '106px',
+        transition: widthBool ? 'none' : 'min-width 800ms'
+    }
+
+    const handleHover = {
+        onMouseEnter: () => setHover(true),
+        onMouseLeave: () => setHover(false)
+    }
 
     const updateTarget = (e) => {
         e.stopPropagation()
@@ -84,14 +100,6 @@ export default function GanttTarget({ target }) {
         }))
     }
 
-    const [open, setOpen] = useState(false)
-    const [hover, setHover] = useState(false)
-    const [horizontalOpen, setHorizontalOpen] = useState(false)
-    const [widthBool, setWidthBool] = useState(false)
-
-    const transitionStyles = {
-        minWidth: horizontalOpen ? '50vw' : '106px',
-        transition: widthBool ? 'none' : 'min-width 800ms' }
 
     const expandButtonHandler = () => {
         if (!open && !widthBool) {
@@ -112,7 +120,7 @@ export default function GanttTarget({ target }) {
     return (
         <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles}>
             <Tooltip open = {hover && !open} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
-                <StyledHeader onMouseEnter = {() => setHover(true)} onMouseLeave = {() => setHover(false)}>
+                <StyledHeader {...handleHover}>
                     <div style = {{ maxWidth: 'calc(100% - 30px)' }}>
                         <GanttEntryHeader title = {title} dateRange = {dateString} />
                     </div>
@@ -169,7 +177,7 @@ export default function GanttTarget({ target }) {
                         </div>
                     </div>
                 }
-                <GanttSubTargetList ids = {childrenIds} />
+                <GanttSubTargetList ids = {childrenIds}/>
             </Collapse>
         </StyledDiv>
     )
