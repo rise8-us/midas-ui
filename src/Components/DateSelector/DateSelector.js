@@ -9,7 +9,7 @@ import FormatErrors from 'Utilities/FormatErrors'
 
 export default function DateSelector({
     clearable, disableUnderline, hasEdit, initialValue, inputFormat, minDate, onAccept,
-    placeholder, variant, errors, ...datePickerProps }) {
+    placeholder, variant, errors, required, ...datePickerProps }) {
 
     const [value, setValue] = useState(initialValue)
 
@@ -57,6 +57,7 @@ export default function DateSelector({
                             ...params.inputProps,
                             style: { padding: 0 }
                         }}
+                        required = {required}
                     />
                 }
             />
@@ -74,8 +75,9 @@ DateSelector.propTypes = {
     minDate: PropTypes.string,
     onAccept: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
+    required: PropTypes.bool,
     revertOnEmpty: PropTypes.bool,
-    variant: PropTypes.oneOf(['filled', 'outlined'])
+    variant: PropTypes.oneOf(['filled', 'outlined']),
 }
 
 DateSelector.defaultProps = {
@@ -87,6 +89,7 @@ DateSelector.defaultProps = {
     inputFormat: 'MM/dd/yyyy',
     minDate: null,
     placeholder: 'mm/dd/yyyy',
+    required: false,
     revertOnEmpty: false,
-    variant: undefined
+    variant: undefined,
 }

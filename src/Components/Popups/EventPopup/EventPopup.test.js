@@ -22,7 +22,6 @@ describe('<EventPopup />', () => {
     const submitCreateEventMock = useModuleMock('Redux/Events/actions', 'requestCreateEvent')
     const submitUpdateEventMock = useModuleMock('Redux/Events/actions', 'requestUpdateEvent')
     const getEventByIdMock = useModuleMock('Redux/Events/selectors', 'selectEventById')
-    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
 
     const returnedFoundEvent = {
         id: 4,
@@ -61,7 +60,6 @@ describe('<EventPopup />', () => {
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         getEventByIdMock.mockReturnValue(returnedNewEvent)
-        selectUserLoggedInMock.mockReturnValue({ id: 42 })
     })
 
     test('should render properly', () => {
@@ -100,7 +98,7 @@ describe('<EventPopup />', () => {
             dueDate: '',
             portfolioId: 1,
             location: '',
-            organizerIds: [42],
+            organizerIds: [],
             attendeeIds: []
         })
     })
@@ -113,12 +111,16 @@ describe('<EventPopup />', () => {
             .getByRole('textbox')
         const descriptionInput = within(screen.getByTestId('EventPopup__input-description'))
             .getByRole('textbox')
+        const locationInput = within(screen.getByTestId('EventPopup__input-location'))
+            .getByRole('textbox')
 
-        userEvent.clear(descriptionInput)
         userEvent.clear(titleInput)
+        userEvent.clear(descriptionInput)
+        userEvent.clear(locationInput)
 
-        userEvent.type(descriptionInput, updatedData.description)
         userEvent.type(titleInput, updatedData.title)
+        userEvent.type(descriptionInput, updatedData.description)
+        userEvent.type(locationInput, updatedData.location)
 
         fireEvent.click(screen.getByText('submit'))
 

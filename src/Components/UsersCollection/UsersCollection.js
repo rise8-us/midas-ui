@@ -1,5 +1,5 @@
 import { HighlightOff } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { IconButton, Typography } from '@mui/material'
 import { SearchUsers } from 'Components/Search/SearchUsers'
 import { Table } from 'Components/Table'
 import PropTypes from 'prop-types'
@@ -15,11 +15,24 @@ const DivTableContainer = styled('div')(({ theme }) => ({
     maxHeight: '300px',
 }))
 
+const StyledFieldset = styled('fieldset')(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(1),
+    padding: theme.spacing(1),
+    marginTop: theme.spacing(2),
+}))
+
+const StyledLegend = styled('legend')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: '12px'
+}))
+
 const generateTeamUsersQuery = (userIds) => {
     return userIds.map(id => `id:${id}`).join(' OR ')
 }
 
-const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTestId }) => {
+export default function UsersCollection(props) {
+    const { userIds, setUserIds, placeholderValue, title, dataTestId, userListPosition } = props
     const dispatch = useDispatch()
 
     const users = useSelector((state) => selectUsersByIds(state, userIds))
@@ -27,7 +40,7 @@ const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTes
 
     const buildRows = () => {
         return users.map((user) => ({
-            data: [user.username, user.displayName, buildActions(user.id)],
+            data: [user.displayName ? user.displayName : user.username, buildActions(user.id)],
             properties: {
                 strikeThrough: false,
             },
@@ -71,48 +84,63 @@ const UsersCollection = ({ userIds, setUserIds, placeholderValue, title, dataTes
         )
     }
 
+    const getTableContainer = () => {
+        return users.length === 0
+            ? <Typography
+                variant = 'body2'
+                fontStyle = 'italic'
+                color = 'secondary'
+                fontWeight = 'bold'
+                padding = '14px 8px'
+            >
+                {`No ${title} added`}
+            </Typography>
+            : <DivTableContainer>
+                <Table
+                    columns = {['username', '']}
+                    rows = {buildRows()}
+                    tableWidth = '100%'
+                    disableHeaders
+                    disableRowDividers = {true}
+                    data-testid = 'UserCollection__table'
+                />
+            </DivTableContainer>
+    }
+
     return (
-        <>
+        <StyledFieldset>
+            {title && <StyledLegend>{title}</StyledLegend>}
+            {userListPosition === 'top' && getTableContainer()}
             <SearchUsers
                 data-testid = {dataTestId}
                 onChange = {(_e, values) => {
                     values && addUser(values.id)
                 }}
-                title = {title}
+                title = ''
                 placeholder = {placeholderValue}
                 style = {{
-                    marginTop: '8px',
-                    marginBottom: '24px',
+                    padding: '0 8px'
                 }}
                 error = {error}
+                clearOnSelect
             />
-            <DivTableContainer>
-                <Table
-                    columns = {['username', 'display name', '']}
-                    rows = {buildRows()}
-                    tableWidth = '100%'
-                    disableHeaders
-                    disableRowDividers = {true}
-                    stickyHeader = {true}
-                    data-testid = 'TeamUsers__Table'
-                />
-            </DivTableContainer>
-        </>
+            {userListPosition === 'bottom' && getTableContainer()}
+        </StyledFieldset>
     )
 }
 
+UsersCollection.propTypes = {
+    dataTestId: PropTypes.string,
+    placeholderValue: PropTypes.string,
+    setUserIds: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    userIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+    userListPosition: PropTypes.string
+}
+
 UsersCollection.defaultProps = {
+    dataTestId: '',
     placeholderValue: '',
     title: '',
-    dataTestId: ''
+    userListPosition: 'bottom'
 }
-
-UsersCollection.propTypes = {
-    userIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-    setUserIds: PropTypes.func.isRequired,
-    placeholderValue: PropTypes.string,
-    title: PropTypes.string,
-    dataTestId: PropTypes.string
-}
-
-export default UsersCollection

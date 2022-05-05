@@ -114,6 +114,7 @@ function TargetPopup({ id, portfolioId }) {
                         onAccept = {(value) => handleChange('startDate', value)}
                         hasEdit = {true}
                         errors = {startDateError}
+                        required
                     />
                     <DateSelector
                         label = 'Due Date'
@@ -122,6 +123,7 @@ function TargetPopup({ id, portfolioId }) {
                         onAccept = {(value) => handleChange('dueDate', value)}
                         hasEdit = {formValues.startDate ? true : false}
                         errors = {dueDateError}
+                        required
                     />
                 </Box>
             </Box>

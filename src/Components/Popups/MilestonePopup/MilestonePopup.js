@@ -89,6 +89,7 @@ function MilestonePopup({ id, portfolioId }) {
                         onAccept = {(value) => handleChange('dueDate', value)}
                         hasEdit = {true}
                         errors = {dueDateError}
+                        required
                     />
                 </Box>
             </Box>

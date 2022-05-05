@@ -15,7 +15,7 @@ export default function HrefText({ href, text, ...typographyProps }) {
             target = '_blank'
             rel = 'noopener noreferrer'
             underline = 'hover'
-            data-testid = 'HrefTitle__link'
+            data-testid = 'HrefText__link'
         >
             <StyledTypography {...typographyProps}>
                 {text}
