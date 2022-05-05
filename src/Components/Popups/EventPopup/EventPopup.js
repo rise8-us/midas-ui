@@ -6,7 +6,6 @@ import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import { useMemo, useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { requestCreateEvent, requestUpdateEvent } from 'Redux/Events/actions'
 import EventConstants from 'Redux/Events/constants'
@@ -22,12 +21,11 @@ const initDetails = (create) => {
         request: (data) => create ? requestCreateEvent(data) : requestUpdateEvent(data)
     }
 }
+
 function EventPopup({ id, portfolioId }) {
     const dispatch = useDispatch()
     const event = useSelector(state => selectEventById(state, id))
     const context = initDetails(event.id === undefined)
-
-    const userLoggedIn = useSelector(selectUserLoggedIn)
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const titleError = useMemo(() => errors.filter(error => error.includes('title')), [errors])
@@ -62,9 +60,7 @@ function EventPopup({ id, portfolioId }) {
             startDate: formValues.startDate,
             dueDate: formValues.dueDate,
             location: formValues.location,
-            organizerIds: context.isCreate
-                ? [...(new Set([...formValues.organizerIds, userLoggedIn.id]))]
-                : formValues.organizerIds,
+            organizerIds: formValues.organizerIds,
             attendeeIds: formValues.attendeeIds,
         }))
     }
@@ -108,6 +104,7 @@ function EventPopup({ id, portfolioId }) {
                         onAccept = {(value) => handleChange('startDate', value)}
                         hasEdit = {true}
                         errors = {startDateError}
+                        required
                     />
                     <DateSelector
                         label = 'Due Date'
@@ -116,27 +113,35 @@ function EventPopup({ id, portfolioId }) {
                         onAccept = {(value) => handleChange('dueDate', value)}
                         hasEdit = {true}
                         errors = {dueDateError}
+                        required
                     />
                 </Box>
                 <UsersCollection
                     userIds = {formValues.organizerIds}
                     setUserIds = {(value) => handleChange('organizerIds', value)}
-                    placeholderValue = 'Add another organizer...'
+                    placeholderValue = 'Add organizer...'
+                    userListPosition = 'top'
+                    title = 'Organizers'
                 />
                 <UsersCollection
                     userIds = {formValues.attendeeIds}
                     setUserIds = {(value) => handleChange('attendeeIds', value)}
-                    placeholderValue = 'Add another attendee...'
+                    placeholderValue = 'Add guest...'
+                    userListPosition = 'top'
+                    title = 'Guests'
                 />
             </Box>
         </Popup>
     )
 }
+
 EventPopup.propTypes = {
     id: PropTypes.number,
     portfolioId: PropTypes.number.isRequired
 }
+
 EventPopup.defaultProps = {
     id: undefined
 }
+
 export default EventPopup

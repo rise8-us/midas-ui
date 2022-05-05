@@ -7,12 +7,12 @@ describe('<HrefText />', () => {
         render(<HrefText text = 'foo' href = 'bar'/>)
 
         expect(screen.getByText('foo')).toBeInTheDocument()
-        expect(screen.getByTestId('HrefTitle__link')).toHaveAttribute('href', 'bar')
+        expect(screen.getByTestId('HrefText__link')).toHaveAttribute('href', 'bar')
     })
 
     test('should render with no href', () => {
         render(<HrefText text = 'foo'/>)
 
-        expect(screen.queryByTestId('HrefTitle__link')).not.toBeInTheDocument()
+        expect(screen.queryByTestId('HrefText__link')).not.toBeInTheDocument()
     })
 })

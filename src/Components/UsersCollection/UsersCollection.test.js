@@ -20,7 +20,7 @@ describe('<UsersCollection />', () => {
     const userMock1 = {
         id: 1,
         username: 'user1',
-        displayName: 'bro1'
+        displayName: ''
     }
 
     const userMock2 = {
@@ -41,8 +41,6 @@ describe('<UsersCollection />', () => {
         render(<UsersCollection userIds = {[1, 2]} setUserIds = {setUserIdsMock} />)
 
         expect(screen.getByText('user1')).toBeInTheDocument()
-        expect(screen.getByText('bro1')).toBeInTheDocument()
-        expect(screen.getByText('user2')).toBeInTheDocument()
         expect(screen.getByText('sis1')).toBeInTheDocument()
     })
 

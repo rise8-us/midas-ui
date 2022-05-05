@@ -33,6 +33,7 @@ const displayOnSearchAdornment = (displayOnSearch, onFocus, icon) => {
 }
 
 function SearchBar({
+    clearOnSelect,
     disableUnderline,
     displayOnSearch,
     getOptionLabel,
@@ -73,12 +74,16 @@ function SearchBar({
     }, [debouncedSearchTerm])
 
     const handleOnChange = (event, values, reason) => {
+        clearOnSelect && setSearchTerm('')
         onChange(event, values, reason)
     }
 
     return (
         <StyledAutocomplete
             {...autoCompleteProps}
+            blurOnSelect = {clearOnSelect}
+            clearOnBlur = {clearOnSelect}
+            inputValue = {clearOnSelect ? searchTerm : undefined}
             growfrom = {growFrom}
             growto = {growTo}
             loading = {(showLoading && isLoading) || loading}
@@ -114,6 +119,7 @@ function SearchBar({
 }
 
 SearchBar.propTypes = {
+    clearOnSelect: PropTypes.bool,
     disableUnderline: PropTypes.bool,
     displayOnSearch: PropTypes.bool,
     getOptionLabel: PropTypes.func,
@@ -140,6 +146,7 @@ SearchBar.propTypes = {
 }
 
 SearchBar.defaultProps = {
+    clearOnSelect: false,
     disableUnderline: false,
     displayOnSearch: true,
     getOptionLabel: (value) => value,
