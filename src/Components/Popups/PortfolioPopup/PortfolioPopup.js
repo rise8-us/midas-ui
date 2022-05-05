@@ -131,6 +131,7 @@ function PortfolioPopup({ id }) {
                 />
                 <Autocomplete
                     value = {sourceControl}
+                    isOptionEqualToValue = {(option, value) => option.id === value.id}
                     onChange = {(_e, values) => setSourceControl(values)}
                     options = {allSourceControls}
                     getOptionLabel = {(option) => option.name}
