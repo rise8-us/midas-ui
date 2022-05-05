@@ -1,24 +1,24 @@
 import { DeleteOutline, ExpandMore } from '@mui/icons-material'
-import { Button, Collapse, Grow, IconButton } from '@mui/material'
+import { Button, Collapse, Grow, IconButton, Stack } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
-import { selectDeliverablesById } from 'Redux/Deliverables/selectors'
+import { selectDeliverablesByIds } from 'Redux/Deliverables/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget, requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
+import { GanttEpicsList } from '../GanttEpicsList'
 import { GanttRequirements } from '../GanttRequirements'
 
 const StyledDiv = styled('div')(({ theme }) => ({
-    borderRadius: '6px',
+    borderRadius: theme.spacing(1),
     color: theme.palette.gantt.subtarget.dark.text,
     background: theme.palette.gantt.subtarget.dark.background,
     padding: theme.spacing(1),
-    minWidth: '106px',
 }))
 
 const StyledHeader = styled('div')(() => ({
@@ -33,6 +33,7 @@ const StyledHeader = styled('div')(() => ({
 
 const StyledButton = styled(Button)(() => ({
     background: '#0071bc',
+    maxHeight: '40px',
     margin: '8px 0px',
     '&:hover': {
         background: '#3e94cf'
@@ -40,11 +41,16 @@ const StyledButton = styled(Button)(() => ({
 }))
 
 export default function GanttSubTarget({ target, defaultOpen }) {
+    const { id, portfolioId, title, deliverableIds, epicIds } = target
+
     const dispatch = useDispatch()
-    const { id, portfolioId, title, deliverableIds } = target
+
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
-    const deliverables = useSelector(state => selectDeliverablesById(state, deliverableIds))
+    const deliverables = useSelector(state => selectDeliverablesByIds(state, deliverableIds))
+
+    const [open, setOpen] = useState(defaultOpen)
+    const [hover, setHover] = useState(false)
 
     const deleteTarget = () => {
         dispatch(openPopup(TargetConstants.DELETE_TARGET, 'DeletePopup', {
@@ -56,13 +62,6 @@ export default function GanttSubTarget({ target, defaultOpen }) {
         }))
     }
 
-    const associateReq = () => {
-        dispatch(openPopup(
-            TargetConstants.UPDATE_TARGET,
-            'AssociateRequirementsPopup',
-            { id, capabilities, target }))
-    }
-
     const updateTitle = (newTitle) => {
         dispatch(requestUpdateTarget({
             ...target,
@@ -70,9 +69,36 @@ export default function GanttSubTarget({ target, defaultOpen }) {
         }))
     }
 
-    const [open, setOpen] = useState(defaultOpen)
-    const [hover, setHover] = useState(false)
+    const onClickAssociateRequirements = () => {
+        dispatch(openPopup(
+            TargetConstants.UPDATE_TARGET,
+            'AssociateRequirementsPopup',
+            { id, capabilities, target }))
+    }
 
+    const onClickAssociateEpics = () => {
+
+        const onSelectEpic = (newEpic) => {
+            dispatch(requestUpdateTarget({
+                ...target,
+                epicIds: [...epicIds, newEpic.id]
+            }))
+        }
+
+        dispatch(openPopup('AssociateEpics', 'AssociateEpicsPopup', {
+            onSelect: onSelectEpic,
+            subtitle: title,
+            title: 'Add Epics to subtarget',
+            excludeIds: epicIds
+        }))
+    }
+
+    const handleEpicDelete = (epicIdToRemove) => {
+        dispatch(requestUpdateTarget({
+            ...target,
+            epicIds: epicIds.filter(epicId => epicId !== epicIdToRemove)
+        }))
+    }
 
     return (
         <StyledDiv>
@@ -121,51 +147,50 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     />
                 </IconButton>
             </StyledHeader>
-            <Collapse
-                in = {open}
-                collapsedSize = {0}
-            >
+            <Collapse in = {open} collapsedSize = {0}>
                 {permissions.edit &&
-                    <div>
+                    <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                         <StyledButton
                             data-testid = 'GanttSubTarget__associate-req'
-                            onClick = {associateReq}
-                            color = 'secondary'
+                            onClick = {onClickAssociateRequirements}
                             variant = 'contained'
-                            style = {{ marginRight: '8px' }}
                         >
-                            Associate Req
+                            Associate Requirement
                         </StyledButton>
                         <StyledButton
-                            color = 'secondary'
+                            onClick = {onClickAssociateEpics}
                             variant = 'contained'
-                            style = {{ display: 'none' }}
                         >
                             Associate Epic
                         </StyledButton>
-                    </div>
+                    </Stack>
                 }
-                <GanttRequirements
-                    id = {id}
-                    portfolioId = {portfolioId}
-                    deliverables = {deliverables}
-                    target = {target}/>
+                <Stack spacing = {1}>
+                    <GanttRequirements
+                        id = {id}
+                        portfolioId = {portfolioId}
+                        deliverables = {deliverables}
+                        target = {target}
+                    />
+                    <GanttEpicsList ids = {epicIds} onDeleteClick = {handleEpicDelete}/>
+                </Stack>
             </Collapse>
         </StyledDiv>
     )
 }
 
 GanttSubTarget.propTypes = {
+    defaultOpen: PropTypes.bool,
     target: PropTypes.shape({
+        deliverableIds: PropTypes.arrayOf(PropTypes.number),
+        dueDate: PropTypes.string,
+        epicIds: PropTypes.arrayOf(PropTypes.number),
         id: PropTypes.number,
         portfolioId: PropTypes.number,
+        startDate: PropTypes.string,
         title: PropTypes.string,
         type: PropTypes.string,
-        startDate: PropTypes.string,
-        dueDate: PropTypes.string,
-        deliverableIds: PropTypes.array
     }).isRequired,
-    defaultOpen: PropTypes.bool,
 }
 
 GanttSubTarget.defaultProps = {

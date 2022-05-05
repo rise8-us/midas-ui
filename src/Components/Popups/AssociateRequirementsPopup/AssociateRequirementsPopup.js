@@ -9,14 +9,24 @@ import { requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 
 function AssociateRequirementsPopup({ id, capabilities, target }) {
+    const { title, startDate, dueDate, description, epicIds } = target
+
     const dispatch = useDispatch()
+
     const [deliverableIds, setDeliverableIds] = useState(target.deliverableIds)
-    const { title, startDate, dueDate } = target
+
     const onClose = () => dispatch(closePopup(TargetConstants.UPDATE_TARGET))
 
     const onSubmit = () => {
-        const update = { id, title, startDate, dueDate, deliverableIds }
-        dispatch(requestUpdateTarget(update))
+        dispatch(requestUpdateTarget({
+            deliverableIds,
+            description,
+            dueDate,
+            epicIds,
+            id,
+            startDate,
+            title,
+        }))
     }
 
     const onCheckboxChange = (deliverableId) => {
@@ -70,13 +80,15 @@ AssociateRequirementsPopup.propTypes = {
     id: PropTypes.number,
     capabilities: PropTypes.any.isRequired,
     target: PropTypes.shape({
+        deliverableIds: PropTypes.arrayOf(PropTypes.number),
+        description: PropTypes.string,
+        dueDate: PropTypes.string,
+        epicIds: PropTypes.arrayOf(PropTypes.number),
         id: PropTypes.number,
         portfolioId: PropTypes.number,
+        startDate: PropTypes.string,
         title: PropTypes.string,
         type: PropTypes.string,
-        startDate: PropTypes.string,
-        dueDate: PropTypes.string,
-        deliverableIds: PropTypes.array
     }).isRequired
 }
 

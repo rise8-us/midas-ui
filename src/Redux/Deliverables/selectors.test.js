@@ -46,4 +46,8 @@ describe('Deliverable selectors', () => {
     test('selectDeliverableByParentId', () => {
         expect(selectors.selectDeliverableByParentId(mockState, 2)).toHaveLength(1)
     })
+
+    test('selectDeliverablesByIds', () => {
+        expect(selectors.selectDeliverablesByIds(mockState, [2, 3])).toHaveLength(2)
+    })
 })

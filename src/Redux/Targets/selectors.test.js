@@ -13,7 +13,9 @@ const newTarget = {
     description: '',
     startDate: '',
     dueDate: '',
-    portfolioId: null
+    portfolioId: null,
+    deliverableIds: [],
+    epicIds: []
 }
 
 describe('Target selectors', () => {

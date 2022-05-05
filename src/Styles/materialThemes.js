@@ -50,7 +50,7 @@ const theme = createTheme({
                     text: '#fff'
                 }
             },
-            requirements: {
+            association: {
                 dark: {
                     background: '#00213D',
                     text: '#fff'

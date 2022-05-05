@@ -1,5 +1,5 @@
 import { Edit } from '@mui/icons-material'
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import { IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilitiesByIds } from 'Redux/Capabilities/selectors'
@@ -9,18 +9,15 @@ import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 
 const StyledDiv = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    borderRadius: '6px',
-    color: theme.palette.gantt.requirements.dark.text,
-    background: theme.palette.gantt.requirements.dark.background,
+    borderRadius: theme.spacing(1),
+    color: theme.palette.gantt.association.dark.text,
+    background: theme.palette.gantt.association.dark.background,
     padding: theme.spacing(1),
-    marginTop: '8px',
-    minWidth: '106px',
 }))
 
 export default function GanttRequirements({ id, deliverables, portfolioId, target }) {
     const dispatch = useDispatch()
+
     const visibleCapabilityIds = [...new Set(deliverables?.map(item => item.capabilityId))]
     const capabilities = useSelector(state => selectCapabilitiesByIds(state, visibleCapabilityIds))
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
@@ -29,14 +26,17 @@ export default function GanttRequirements({ id, deliverables, portfolioId, targe
         dispatch(openPopup(
             TargetConstants.UPDATE_TARGET,
             'AssociateRequirementsPopup',
-            { id, capabilities: capabilities, target }))
+            { id, capabilities: capabilities, target }
+        ))
     }
+
+    if (deliverables.length === 0) return null
 
     return (
         <StyledDiv>
-            <div>
-                {capabilities?.map((capability, index) => {
-                    return (
+            <Stack direction = 'row' alignItems = 'center' justifyContent = 'space-between'>
+                <Stack spacing = {1}>
+                    {capabilities?.map((capability, index) =>
                         <Tooltip
                             key = {index}
                             arrow
@@ -44,30 +44,29 @@ export default function GanttRequirements({ id, deliverables, portfolioId, targe
                             data-testid = 'GanttRequirements__tooltip'
                             title = {deliverables.map((deliverable, index2) => {
                                 if (deliverable.capabilityId === capability.id) {
-                                    return (<Typography key = {index2}
-                                        data-testid = {`GanttRequirements__deliverable-${index2}`}
-                                        style = {{ margin: '8px' }}>
-                                        {deliverable.title}
-                                    </Typography>)
+                                    return (
+                                        <Typography
+                                            key = {index2}
+                                            data-testid = {`GanttRequirements__deliverable-${index2}`}
+                                            margin = {1}
+                                        >
+                                            {deliverable.title}
+                                        </Typography>
+                                    )
                                 }
                             })}>
                             <Typography data-testid = 'GanttRequirements__title'>
                                 {capability.title}
                             </Typography>
                         </Tooltip>
-                    )
-                })}
-            </div>
-            {permissions.edit &&
-                <IconButton
-                    sx = {{ display: 'inline' }}
-                    title = 'edit'
-                    color = 'secondary'
-                    onClick = {handleEditCapability}
-                    size = 'small'
-                >
-                    <Edit />
-                </IconButton>}
+                    )}
+                </Stack>
+                {permissions.edit &&
+                    <IconButton title = 'edit' onClick = {handleEditCapability}>
+                        <Edit fontSize = 'small'/>
+                    </IconButton>
+                }
+            </Stack>
         </StyledDiv>
     )
 }
