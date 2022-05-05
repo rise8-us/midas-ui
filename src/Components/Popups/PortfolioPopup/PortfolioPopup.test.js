@@ -6,12 +6,13 @@ import {
     screen,
     useDispatchMock,
     useModuleMock,
-    userEvent
+    userEvent,
+    waitFor
 } from 'Utilities/test-utils'
 import { PortfolioPopup } from './index'
 
-jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange }) {
-    return mockSearchUsersComponent({ title, onChange })
+jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ title, onChange, value }) {
+    return mockSearchUsersComponent({ title, onChange, value: value ?? '' })
 })
 
 jest.mock('Components/UsersCollection/UsersCollection', () => function testing({ title, setUserIds }) {
@@ -28,6 +29,7 @@ describe('<PortfolioPopup />', () => {
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
     const selectAvailableProductsMock = useModuleMock('Redux/Products/selectors', 'selectAvailableProducts')
     const selectSourceControlsMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControls')
+    const selectedSourceControlMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControlById')
     const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
 
     const returnedTags = [
@@ -44,7 +46,8 @@ describe('<PortfolioPopup />', () => {
 
     const returnedGitlabServers = [
         { id: 23, name: 'IL9 Ultra Max Super Mega Security' },
-        { id: 24, name: 'IL7 Beyond Top Secret' }
+        { id: 24, name: 'IL7 Beyond Top Secret' },
+        { id: 0, name: 'test name' }
     ]
 
     const returnedFoundPortfolio = {
@@ -72,6 +75,7 @@ describe('<PortfolioPopup />', () => {
         selectAvailableProductsMock.mockReturnValue(returnedProducts)
         selectSourceControlsMock.mockReturnValue(returnedGitlabServers)
         selectUsersByIdsMock.mockReturnValue([])
+        selectedSourceControlMock.mockReturnValue({})
         useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
     })
 
@@ -123,9 +127,12 @@ describe('<PortfolioPopup />', () => {
     })
 
     test('should call onSubmit for updatePortfolio', async() => {
-        useDispatchMock().mockResolvedValue({ type: '/', payload: { id: 42, username: 'pm' } })
-        const newFoundPorfolio = { ...returnedFoundPortfolio, products: [] }
+        waitFor(() => {
+            useDispatchMock().mockResolvedValue({ type: '/', payload: { id: 42, username: 'pm' } })
+        })
+        const newFoundPorfolio = { ...returnedFoundPortfolio, products: [], personnel: { ownerId: 1 } }
         selectPortfolioByIdMock.mockReturnValue(newFoundPorfolio)
+        selectedSourceControlMock.mockReturnValue({ id: 0, name: 'test name' })
 
         render(<PortfolioPopup id = {4} />)
 
@@ -208,4 +215,5 @@ describe('<PortfolioPopup />', () => {
             }
         })
     })
+
 })

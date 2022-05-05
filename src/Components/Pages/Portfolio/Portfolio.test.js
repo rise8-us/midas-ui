@@ -10,9 +10,12 @@ jest.mock('Components/EntriesContainer/EntriesContainer',
 describe('<Portfolio />', () => {
 
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
+    const selectPortfolioPagePermissionMock =
+        useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
 
     beforeEach(() => {
         selectPortfolioByIdMock.mockReturnValue({ name: 'foo' })
+        selectPortfolioPagePermissionMock.mockReturnValue({})
     })
 
     test('should render', () => {
@@ -21,6 +24,14 @@ describe('<Portfolio />', () => {
         expect(screen.getByText('foo')).toBeInTheDocument()
         expect(screen.getByText('objectives')).toBeInTheDocument()
         expect(screen.getByText('requirements')).toBeInTheDocument()
+    })
+
+    test('should render blank', () => {
+        selectPortfolioByIdMock.mockReturnValue({})
+
+        renderWithRouter(<Portfolio />)
+
+        expect(screen.getByTestId('Portfolio__name-loading')).toBeInTheDocument()
     })
 
     test('should render Gantt tab', () => {
@@ -36,4 +47,23 @@ describe('<Portfolio />', () => {
         fireEvent.click(screen.getByText('requirements'))
         expect(screen.getByText('RequirementsTab')).toBeInTheDocument()
     })
+
+    test('should handle action icons with permissions', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+
+        renderWithRouter(<Portfolio />)
+
+        fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+        expect(screen.getByTitle('unlocked')).toBeInTheDocument()
+    })
+
+    test('should handle actions icons without permissions', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: false })
+
+        renderWithRouter(<Portfolio />)
+
+        fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+        expect(screen.getByTitle('locked')).toBeInTheDocument()
+    })
+
 })
