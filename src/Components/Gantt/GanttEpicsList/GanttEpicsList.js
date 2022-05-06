@@ -26,7 +26,7 @@ export default function GanttEpicsList({ onDeleteClick, ids }) {
                         name = {epic.name}
                         title = {epic.title}
                         webUrl = {epic.webUrl}
-                        onDelete = {() => onDeleteClick(epic.id)}
+                        onDelete = {typeof onDeleteClick === 'function' ? () => onDeleteClick(epic.id) : undefined}
                     />
                 </div>
             )}
@@ -35,10 +35,11 @@ export default function GanttEpicsList({ onDeleteClick, ids }) {
 }
 
 GanttEpicsList.propTypes = {
-    onDeleteClick: PropTypes.func.isRequired,
-    ids: PropTypes.arrayOf(PropTypes.number)
+    ids: PropTypes.arrayOf(PropTypes.number),
+    onDeleteClick: PropTypes.func,
 }
 
 GanttEpicsList.defaultProps = {
-    ids: []
+    ids: [],
+    onDeleteClick: undefined
 }

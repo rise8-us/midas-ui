@@ -172,7 +172,10 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                         deliverables = {deliverables}
                         target = {target}
                     />
-                    <GanttEpicsList ids = {epicIds} onDeleteClick = {handleEpicDelete}/>
+                    <GanttEpicsList
+                        ids = {epicIds}
+                        onDeleteClick = {permissions.edit ? handleEpicDelete : undefined}
+                    />
                 </Stack>
             </Collapse>
         </StyledDiv>

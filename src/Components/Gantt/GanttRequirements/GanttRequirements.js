@@ -57,13 +57,18 @@ export default function GanttRequirements({ id, deliverables, portfolioId, targe
                                         )
                                     }
                                 })}>
-                                <Typography data-testid = 'GanttRequirements__title'>
-                                    {capability.title + ' - ' +
-                                    deliverableCount + '/' + capability.deliverableIds.length}
-                                </Typography>
+                                <Stack direction = 'row' spacing = {1}>
+                                    <Typography data-testid = 'GanttRequirements__title'>
+                                        {capability.title}
+                                    </Typography>
+                                    <Typography>-</Typography>
+                                    <Typography data-testid = 'GanttRequirements__capability-count'>
+                                        {deliverableCount + '/' + capability.deliverableIds.length}
+                                    </Typography>
+                                </Stack>
                             </Tooltip>
-                        )}
-                    )}
+                        )
+                    })}
                 </Stack>
                 {permissions.edit &&
                     <IconButton title = 'edit' onClick = {handleEditCapability}>
