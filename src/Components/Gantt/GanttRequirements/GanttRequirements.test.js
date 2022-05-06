@@ -42,12 +42,12 @@ describe('<GanttRequirements />', () => {
     })
 
     test('should render', () => {
-        render(<GanttRequirements id = {1} deliverables = {foundDeliverables} portfolioId = {2}/>)
+        render(<GanttRequirements id = {1} deliverables = {foundDeliverables} portfolioId = {2} target = {{}}/>)
         expect(screen.getByTestId('GanttRequirements__title')).toBeInTheDocument()
     })
 
     test('should show deliverables on hover', async() => {
-        render(<GanttRequirements id = {1} deliverables = {foundDeliverables} portfolioId = {2}/>)
+        render(<GanttRequirements id = {1} deliverables = {foundDeliverables} portfolioId = {2} target = {{}}/>)
         userEvent.hover(await screen.findByTestId('GanttRequirements__title'))
         expect(await screen.findByTestId('GanttRequirements__deliverable-0')).toBeInTheDocument()
     })
