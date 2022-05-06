@@ -39,7 +39,7 @@ function AutoSaveTextField({
     const [value, setValue] = useState(initialValue)
 
     const [hasHover, setHasHover] = useState(false)
-    const titleLengthError = useMemo(() => value.length > maxLength)
+    const titleLengthError = useMemo(() => value?.length > maxLength)
     const showCharCount = maxLength > 0
 
     const onChange = (event) => {
