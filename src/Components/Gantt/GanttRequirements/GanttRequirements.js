@@ -31,34 +31,38 @@ export default function GanttRequirements({ id, deliverables, portfolioId, targe
     }
 
     if (deliverables.length === 0) return null
-
     return (
         <StyledDiv>
             <Stack direction = 'row' alignItems = 'center' justifyContent = 'space-between'>
                 <Stack spacing = {1}>
-                    {capabilities?.map((capability, index) =>
-                        <Tooltip
-                            key = {index}
-                            arrow
-                            followCursor
-                            data-testid = 'GanttRequirements__tooltip'
-                            title = {deliverables.map((deliverable, index2) => {
-                                if (deliverable.capabilityId === capability.id) {
-                                    return (
-                                        <Typography
-                                            key = {index2}
-                                            data-testid = {`GanttRequirements__deliverable-${index2}`}
-                                            margin = {1}
-                                        >
-                                            {deliverable.title}
-                                        </Typography>
-                                    )
-                                }
-                            })}>
-                            <Typography data-testid = 'GanttRequirements__title'>
-                                {capability.title}
-                            </Typography>
-                        </Tooltip>
+                    {capabilities?.map((capability, index) => {
+                        let deliverableCount = 0
+                        return (
+                            <Tooltip
+                                key = {index}
+                                arrow
+                                followCursor
+                                data-testid = 'GanttRequirements__tooltip'
+                                title = {deliverables.map((deliverable, index2) => {
+                                    if (deliverable.capabilityId === capability.id) {
+                                        deliverableCount++
+                                        return (
+                                            <Typography
+                                                key = {index2}
+                                                data-testid = {`GanttRequirements__deliverable-${index2}`}
+                                                margin = {1}
+                                            >
+                                                {deliverable.title}
+                                            </Typography>
+                                        )
+                                    }
+                                })}>
+                                <Typography data-testid = 'GanttRequirements__title'>
+                                    {capability.title + ' - ' +
+                                    deliverableCount + '/' + capability.deliverableIds.length}
+                                </Typography>
+                            </Tooltip>
+                        )}
                     )}
                 </Stack>
                 {permissions.edit &&
