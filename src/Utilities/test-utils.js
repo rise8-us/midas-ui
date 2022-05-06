@@ -80,19 +80,23 @@ export function mockUsersCollectionComponent({ setUserIds, ...everythingElse }) 
     )
 }
 
-export function mockSearchEpicsComponent({ onChange, ...everythingElse }) {
+export function mockSearchEpicsComponent({ onChange, defaultSearchTerms, excludeIds, ...everythingElse }) {
     return (
-        <input
-            title = 'searchEpicsMock'
-            onChange = {e => onChange(e, [{
-                id: 20,
-                title: 'epic title',
-                epidId: 10,
-                productId: 11
-            }], 'selectOption')}
-            placeholder = 'Link epics by title or product name'
-            {...everythingElse}
-        />
+        <>
+            <input
+                title = 'searchEpicsMock'
+                onChange = {e => onChange(e, [{
+                    id: 20,
+                    title: 'epic title',
+                    epidId: 10,
+                    productId: 11
+                }], 'selectOption')}
+                placeholder = 'Link epics by title or product name'
+                {...everythingElse}
+            />
+            <div>defaultSearchTerms: {defaultSearchTerms}</div>
+            <div>excludeIds: {excludeIds}</div>
+        </>
     )
 }
 

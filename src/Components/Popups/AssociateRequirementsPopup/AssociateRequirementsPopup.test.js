@@ -1,7 +1,6 @@
 import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { AssociateRequirementsPopup } from './index'
 
-
 describe('<AssociateRequirementsPopup />', () => {
 
     const selectDeliverablesByCapabilityIdMock =

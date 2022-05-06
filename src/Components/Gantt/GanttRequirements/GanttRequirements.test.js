@@ -35,6 +35,13 @@ describe('<GanttRequirements />', () => {
         }
     ]
 
+    const defaultProps = {
+        id: 1,
+        deliverables: foundDeliverables,
+        portfolioId: 2,
+        target: {}
+    }
+
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
@@ -42,13 +49,16 @@ describe('<GanttRequirements />', () => {
     })
 
     test('should render', () => {
-        render(<GanttRequirements id = {1} deliverables = {foundDeliverables} portfolioId = {2} target = {{}}/>)
-        expect(screen.getByTestId('GanttRequirements__title')).toBeInTheDocument()
+        render(<GanttRequirements {...defaultProps}/>)
+
+        expect(screen.getByText('capability')).toBeInTheDocument()
     })
 
     test('should show deliverables on hover', async() => {
-        render(<GanttRequirements id = {1} deliverables = {foundDeliverables} portfolioId = {2} target = {{}}/>)
-        userEvent.hover(await screen.findByTestId('GanttRequirements__title'))
+        render(<GanttRequirements {...defaultProps}/>)
+
+        userEvent.hover(await screen.findByText('capability'))
+
         expect(await screen.findByTestId('GanttRequirements__deliverable-0')).toBeInTheDocument()
     })
 })

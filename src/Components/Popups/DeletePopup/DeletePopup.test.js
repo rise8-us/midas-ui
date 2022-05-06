@@ -45,7 +45,7 @@ describe('<DeletePopup />', () => {
     })
 
     test('should close popup', () => {
-        render(<DeletePopup 
+        render(<DeletePopup
             id = {mockItemToDelete.id}
             title = {mockItemToDelete.title}
             type = {mockItemToDelete.type}
