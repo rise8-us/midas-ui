@@ -1,4 +1,4 @@
-import { sortArrayAlphabetically, sortArrayByStartDate } from './sorting'
+import { sortArrayAlphabetically, sortArrayByDateAndTitle, sortArrayByStartDate } from './sorting'
 
 describe('sorting', () => {
     test('sortArrayAlphabetically', () => {
@@ -42,16 +42,32 @@ describe('sorting', () => {
     test('sortArrayByStartDateAndTitle', () => {
         const unsorted = [
             { startDate: new Date(2022, 1, 1) },
-            { startDate: new Date(2020, 1, 1), title: '2' },
-            { startDate: new Date(2020, 1, 1), title: '1' },
+            { startDate: new Date(2019, 1, 1), title: 'v2 O6' },
+            { startDate: new Date(2020, 1, 1), title: 'v1 O3' },
+            { startDate: new Date(2020, 1, 1), title: 'v1 O2' },
+            { startDate: new Date(2020, 1, 1), title: 'v21 O3' },
+            { startDate: new Date(2020, 1, 1), title: 'v2 O4' },
+            { startDate: new Date(2020, 1, 1), title: 'v1 O1' },
+            { startDate: new Date(2023, 1, 1), title: 'v99 O99' },
+            { startDate: new Date(2022, 1, 1), title: 'No version number' },
+            { startDate: new Date(2024, 1, 1), title: 'AAA000' },
+            { startDate: new Date(2020, 1, 1), title: 'v10 O1' },
         ]
 
         const sorted = [
-            { startDate: new Date(2020, 1, 1), title: '1' },
-            { startDate: new Date(2020, 1, 1), title: '2' },
+            { startDate: new Date(2019, 1, 1), title: 'v2 O6' },
+            { startDate: new Date(2020, 1, 1), title: 'v1 O1' },
+            { startDate: new Date(2020, 1, 1), title: 'v1 O2' },
+            { startDate: new Date(2020, 1, 1), title: 'v1 O3' },
+            { startDate: new Date(2020, 1, 1), title: 'v2 O4' },
+            { startDate: new Date(2020, 1, 1), title: 'v10 O1' },
+            { startDate: new Date(2020, 1, 1), title: 'v21 O3' },
+            { startDate: new Date(2022, 1, 1), title: 'No version number' },
             { startDate: new Date(2022, 1, 1) },
+            { startDate: new Date(2023, 1, 1), title: 'v99 O99' },
+            { startDate: new Date(2024, 1, 1), title: 'AAA000' }
         ]
 
-        expect([...unsorted].sort(sortArrayByStartDate)).toEqual(sorted)
+        expect([...unsorted].sort(sortArrayByDateAndTitle)).toEqual(sorted)
     })
 })
