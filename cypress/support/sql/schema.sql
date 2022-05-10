@@ -3,6 +3,7 @@
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DELIMITER ;;
 
@@ -70,10 +71,28 @@ CREATE TABLE `capability` (
   `is_archived` bit(1) DEFAULT b'0',
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `reference_id` int DEFAULT NULL,
-  `mission_thread_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `mission_thread_id` (`mission_thread_id`),
-  CONSTRAINT `capability_ibfk_1` FOREIGN KEY (`mission_thread_id`) REFERENCES `mission_thread` (`id`)
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `capability_deliverable`;
+CREATE TABLE `capability_deliverable` (
+  `capability_id` bigint NOT NULL,
+  `deliverable_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `capability_mission_thread`;
+CREATE TABLE `capability_mission_thread` (
+  `capability_id` bigint NOT NULL,
+  `mission_thread_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `capability_performance_measure`;
+CREATE TABLE `capability_performance_measure` (
+  `capability_id` bigint NOT NULL,
+  `performance_measure_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -169,17 +188,11 @@ CREATE TABLE `deliverable` (
   `position` int DEFAULT NULL,
   `parent_id` bigint DEFAULT NULL,
   `product_id` bigint DEFAULT NULL,
-  `performance_measure_id` bigint DEFAULT NULL,
-  `capability_id` bigint DEFAULT NULL,
   `assigned_to_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `performance_measure_id` (`performance_measure_id`),
   KEY `parent_id` (`parent_id`),
-  KEY `capability_id` (`capability_id`),
   KEY `product_id` (`product_id`),
-  CONSTRAINT `deliverable_ibfk_1` FOREIGN KEY (`performance_measure_id`) REFERENCES `performance_measure` (`id`),
   CONSTRAINT `deliverable_ibfk_2` FOREIGN KEY (`parent_id`) REFERENCES `deliverable` (`id`),
-  CONSTRAINT `deliverable_ibfk_3` FOREIGN KEY (`capability_id`) REFERENCES `capability` (`id`),
   CONSTRAINT `deliverable_ibfk_4` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -252,6 +265,92 @@ CREATE TABLE `flyway_schema_history` (
   `success` tinyint(1) NOT NULL,
   PRIMARY KEY (`installed_rank`),
   KEY `flyway_schema_history_s_idx` (`success`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_event`;
+CREATE TABLE `gantt_event` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_date` date DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `title` varchar(280) NOT NULL,
+  `description` text,
+  `location` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_event_user_attendee`;
+CREATE TABLE `gantt_event_user_attendee` (
+  `event_id` bigint NOT NULL,
+  `user_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_event_user_organizer`;
+CREATE TABLE `gantt_event_user_organizer` (
+  `event_id` bigint NOT NULL,
+  `user_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_milestone`;
+CREATE TABLE `gantt_milestone` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `due_date` date DEFAULT NULL,
+  `title` varchar(280) NOT NULL,
+  `description` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_portfolio_event`;
+CREATE TABLE `gantt_portfolio_event` (
+  `portfolio_id` bigint NOT NULL,
+  `event_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_portfolio_milestone`;
+CREATE TABLE `gantt_portfolio_milestone` (
+  `portfolio_id` bigint NOT NULL,
+  `milestone_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_portfolio_target`;
+CREATE TABLE `gantt_portfolio_target` (
+  `portfolio_id` bigint NOT NULL,
+  `target_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_target`;
+CREATE TABLE `gantt_target` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_date` date DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `title` varchar(280) NOT NULL,
+  `description` text,
+  `parent_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_target_deliverables`;
+CREATE TABLE `gantt_target_deliverables` (
+  `target_id` bigint NOT NULL,
+  `deliverable_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_target_gitlab_epic`;
+CREATE TABLE `gantt_target_gitlab_epic` (
+  `target_id` bigint NOT NULL,
+  `epic_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -338,10 +437,14 @@ CREATE TABLE `performance_measure` (
   `is_archived` bit(1) DEFAULT b'0',
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `reference_id` int DEFAULT NULL,
-  `capability_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `capability_id` (`capability_id`),
-  CONSTRAINT `performance_measure_ibfk_1` FOREIGN KEY (`capability_id`) REFERENCES `capability` (`id`)
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `performance_measure_deliverable`;
+CREATE TABLE `performance_measure_deliverable` (
+  `performance_measure_id` bigint NOT NULL,
+  `deliverable_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -400,6 +503,13 @@ CREATE TABLE `portfolio` (
   PRIMARY KEY (`id`),
   KEY `source_control_id` (`source_control_id`),
   CONSTRAINT `portfolio_ibfk_1` FOREIGN KEY (`source_control_id`) REFERENCES `source_control` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `portfolio_capability`;
+CREATE TABLE `portfolio_capability` (
+  `portfolio_id` bigint NOT NULL,
+  `capability_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -593,4 +703,4 @@ CREATE TABLE `user_team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2022-03-28 22:18:34
+-- 2022-05-06 15:40:20
