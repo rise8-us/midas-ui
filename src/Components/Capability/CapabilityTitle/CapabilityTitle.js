@@ -69,7 +69,10 @@ export default function CapabilityTitle({
                             <>
                                 {showDelete &&
                                     <Grow in = {hover}>
-                                        <IconButton onClick = {deleteCapability}>
+                                        <IconButton
+                                            onClick = {deleteCapability}
+                                            data-testid = 'CapabilityTitle__delete-icon'
+                                        >
                                             <DeleteOutline fontSize = 'small' color = 'secondary'/>
                                         </IconButton>
                                     </Grow>

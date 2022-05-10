@@ -77,7 +77,7 @@ This project is a ReactJS SPA that focuses on being a dashboard to see, through 
 
 > Tests located in the `e2e` folder require the API server to be running locally because they test the entire workflow. There should be no mocking of API responses because we are configuring the database to a specific state before each spec to test a workflow. Each `.spec` should be able to be tested independently and, should it fail, the `.spec` should not affect other test files.
 
-**NOTE** If the API database schema (tables/columns/etc.) is altered, an updated schema will need to be acquired and pasted into `/cypress/support/sql/schema.sql`. Getting the schema can be done by exporting the database from [adminer](http://localhost:8181/?server=db&username=localDBUser&db=appDB&dump=) without the data.
+**NOTE** If the API database schema (tables/columns/etc.) is altered, an updated schema will need to be acquired and pasted into `/cypress/support/sql/schema.sql`. Getting the schema can be done by exporting the database from [adminer](http://localhost:8181/?server=db&username=localDBUser&db=midas_db&dump=) without the data.
 
 #### Local setup
 
