@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { generateChartFormat, setDateByViewBy } from 'Utilities/ganttHelpers'
 import { GanttActionBar } from '../GanttActionBar'
 import { GanttBody } from '../GanttBody'
@@ -30,11 +30,17 @@ export default function GanttChart({
     }
 
     let rangeStart = new Date(startDate.getTime())
-    setDateByViewBy[viewBy](rangeStart, -leadingColumns)
     let rangeEnd = new Date(rangeStart.getTime())
-    setDateByViewBy[viewBy](rangeEnd, scope)
 
     const [dateRange, setDateRange] = useState([rangeStart, rangeEnd])
+
+    useEffect(() => {
+        setDateByViewBy[viewBy](rangeStart, -leadingColumns)
+        rangeEnd = new Date(rangeStart.getTime())
+        setDateByViewBy[viewBy](rangeEnd, scope)
+
+        setDateRange([rangeStart, rangeEnd])
+    }, [viewBy, scope, leadingColumns])
 
     const augmentedSetDateRange = (direction) => {
         let newRangeStart = dateRange[0]

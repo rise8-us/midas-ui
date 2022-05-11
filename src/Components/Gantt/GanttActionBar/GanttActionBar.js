@@ -17,7 +17,8 @@ export default function GanttActionBar(props) {
         backgroundColor,
         display: 'flex',
         alignItems: 'center',
-        border: `1px solid ${borderColor}`
+        border: `1px solid ${borderColor}`,
+        overflow: 'hidden'
     }
 
     const componentName = buttonComponent?.render?.name ?? buttonComponent
