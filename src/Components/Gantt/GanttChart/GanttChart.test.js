@@ -44,4 +44,5 @@ describe('<GanttChart />', () => {
         userEvent.click(screen.getByTestId('GanttActionBar__button-right-button'))
         expect(screen.getByText('outside of range right')).toBeInTheDocument()
     })
+
 })

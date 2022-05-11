@@ -5,8 +5,9 @@ import GanttAddNewItem from 'Components/Gantt/GanttAddNewItem/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
 import { GanttTarget } from 'Components/Gantt/GanttTarget'
+import GanttView from 'Components/Gantt/GanttView/GanttView'
 import PropTypes from 'prop-types'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { requestSearchEvents } from 'Redux/Events/actions'
@@ -57,6 +58,8 @@ export default function EntriesContainer({ portfolioId }) {
         }
     }
 
+    const [option, setOption] = useState({})
+
     return (
         <GanttChart
             startDate = {dateStart}
@@ -71,7 +74,8 @@ export default function EntriesContainer({ portfolioId }) {
                     style: { minWidth: '34px', borderRadius: 0, borderRight: '1px solid black' },
                     size: 'small'
                 },
-                additionalActions: permissions.edit ? <GanttAddNewItem portfolioId = {portfolioId} /> : null
+                additionalActions: permissions.edit ?
+                    <GanttAddNewItem portfolioId = {portfolioId} /> : <GanttView onChange = {setOption}/>
             }}
             chartBackgroundColor = {theme.palette.background.paper}
             headerStyles = {{
@@ -81,8 +85,9 @@ export default function EntriesContainer({ portfolioId }) {
                 marginBlock: 'unset'
             }}
             todayColor = {theme.palette.primary.main}
-            scope = {6}
-            leadingColumns = {2}
+            scope = {option.scope ?? 6}
+            leadingColumns = {option.leadingColumns ?? 2}
+            viewBy = {option.viewBy ?? 'month'}
         />
     )
 }
