@@ -9,6 +9,7 @@ describe('<GanttAssociatedEpic />', () => {
         expect(screen.getByText('name')).toBeInTheDocument()
         expect(screen.getByText('-')).toBeInTheDocument()
         expect(screen.getByText('title')).toBeInTheDocument()
+        expect(screen.getByTestId('GanttAssociatedEpic__epic-progress')).toBeInTheDocument()
     })
 
     test('should render with no name', () => {

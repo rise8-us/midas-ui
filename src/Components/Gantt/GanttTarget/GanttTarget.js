@@ -1,14 +1,17 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
-import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Collapse, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
+import { selectEpicIdsByTargetIds } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
+import { getTotalWeights, normalise, roundedPercent } from 'Utilities/progressHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttSubTargetList } from '../GanttSubTargetList'
@@ -58,6 +61,10 @@ export default function GanttTarget({ target }) {
     const ref = useRef()
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
+    const epicIds = useSelector(state => selectEpicIdsByTargetIds(state, childrenIds))
+    const epics = useSelector(state => selectEpicsByIds(state, epicIds))
+
+    const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
 
     const [open, setOpen] = useState(false)
     const [hover, setHover] = useState(false)
@@ -119,6 +126,29 @@ export default function GanttTarget({ target }) {
 
     return (
         <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles}>
+            {epics.length > 0 &&
+                <Tooltip
+                    followCursor
+                    disableInteractive
+                    title = {roundedPercent(totalCompletedWeight, totalWeight)}
+                >
+                    <Box display = 'flex' alignItems = 'center'>
+                        <Typography
+                            variant = 'body2'
+                            color = 'text.secondary'
+                            minWidth = {35}>
+                            {Math.floor(normalise(totalCompletedWeight, totalWeight)) + '%'}
+                        </Typography>
+                        <Box width = '100%' marginLeft = {1}>
+                            <LinearProgress
+                                variant = 'determinate'
+                                value = {normalise(totalCompletedWeight, totalWeight)}
+                                color = 'primary'
+                                data-testid = 'GanttTarget__target-progress'
+                            />
+                        </Box>
+                    </Box>
+                </Tooltip>}
             <Tooltip open = {hover && !open} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
                 <StyledHeader {...handleHover}>
                     <div style = {{ maxWidth: 'calc(100% - 30px)' }}>

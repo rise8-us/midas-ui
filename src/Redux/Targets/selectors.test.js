@@ -2,9 +2,9 @@ import * as selectors from './selectors'
 
 const mockState = {
     targets: {
-        4: { id: 4, portfolioId: 1, parentId: null },
-        5: { id: 5, portfolioId: 1, parentId: null },
-        6: { id: 6, portfolioId: 2, parentId: null },
+        4: { id: 4, portfolioId: 1, parentId: null, epicIds: [] },
+        5: { id: 5, portfolioId: 1, parentId: null, epicIds: [] },
+        6: { id: 6, portfolioId: 2, parentId: null, epicIds: [1, 2] },
     }
 }
 
@@ -44,12 +44,20 @@ describe('Target selectors', () => {
 
     test('selectTargetsByIds - returns proper array', () => {
         expect(selectors.selectTargetsByIds(mockState, [4, 5])).toEqual([
-            { id: 4, portfolioId: 1, parentId: null },
-            { id: 5, portfolioId: 1, parentId: null }
+            { id: 4, portfolioId: 1, parentId: null, epicIds: [] },
+            { id: 5, portfolioId: 1, parentId: null, epicIds: [] }
         ])
     })
 
     test('selectTargetsByIds - returns empty array', () => {
         expect(selectors.selectTargetsByIds(mockState, [])).toHaveLength(0)
+    })
+
+    test('selectEpicIdsByTargetIds - returns empty array', () => {
+        expect(selectors.selectEpicIdsByTargetIds(mockState, [])).toHaveLength(0)
+    })
+
+    test('selectEpicIdsByTargetIds - returns proper array', () => {
+        expect(selectors.selectEpicIdsByTargetIds(mockState, [4, 5, 6])).toEqual([1, 2])
     })
 })
