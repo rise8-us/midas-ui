@@ -1,6 +1,4 @@
-import {
-    act, fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
-} from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { StrategiesContainer } from './index'
 
 jest.mock('Components/Cards/OGSM/StrategyCard/StrategyCard',
@@ -25,16 +23,13 @@ describe('<StrategiesContainer />', () => {
         expect(screen.getAllByText('StrategyCard')).toHaveLength(2)
     })
 
-    test('should call dispatch to create strategy', () => {
+    test('should call dispatch to create strategy', async() => {
         useDispatchMock().mockResolvedValue({ type: '' })
 
         render(<StrategiesContainer productId = {23} parentId = {1} hasEdit/>)
 
-        act(() => {
-            fireEvent.click(screen.getByTestId('StrategiesContainer__icon-add'))
-        })
-
-        waitForElementToBeRemoved(screen.getByTestId('StrategiesContainer__loading'))
+        userEvent.click(screen.getByTestId('AddItem__icon-button'))
+        await screen.findByTestId('AddItem__spinner')
 
         expect(requestCreateAssertionMock).toHaveBeenCalledWith({
             parentId: 1,

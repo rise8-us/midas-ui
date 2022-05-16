@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, waitFor } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
 import { AssertionHeader } from './index'
 
 describe('<AssertionHeader>', () => {
@@ -35,10 +35,7 @@ describe('<AssertionHeader>', () => {
         const onCreateMock = jest.fn()
 
         render(<AssertionHeader productId = {1} onCreate = {onCreateMock} hasEdit/>)
-
-        fireEvent.click(screen.getByLabelText('Add new OGSM'))
-
-        expect(await screen.findByTestId('AssertionHeader__icon-add')).toBeInTheDocument()
+        userEvent.click(screen.getByTestId('AddItem__icon-button'))
 
         expect(requestCreateAssertionMock).toHaveBeenCalledWith(newOGSM)
         await waitFor(() => { expect(onCreateMock).toBeCalled() })
