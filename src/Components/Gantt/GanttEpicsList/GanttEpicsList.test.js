@@ -6,9 +6,9 @@ describe('<GanttEpicsList />', () => {
     const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
 
     const foundEpics = [
-        { id: 1, name: 'alpha', title: 'foo' },
-        { id: 2, name: 'bravo', title: 'foo' },
-        { id: 3, name: 'charlie', title: 'foo' },
+        { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 },
+        { id: 2, name: 'bravo', title: 'foo', totalWeight: 0, completedWeight: 0 },
+        { id: 3, name: 'charlie', title: 'foo', totalWeight: 0, completedWeight: 0 },
     ]
 
     beforeEach(() => {

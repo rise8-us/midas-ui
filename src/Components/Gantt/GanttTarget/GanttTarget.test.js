@@ -10,7 +10,7 @@ describe('<GanttTarget />', () => {
         startDate: '2022-06-01',
         description: 'These are the details',
         childrenIds: [],
-        portfolioId: 1
+        portfolioId: 1,
     }
 
     const newSubTarget = {
@@ -21,13 +21,19 @@ describe('<GanttTarget />', () => {
         startDate: '2022-06-01',
     }
 
+    const foundEpics = [
+        { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 }
+    ]
+
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
+    const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
         selectPortfolioPagePermissionMock.mockReturnValue({})
+        selectEpicsByIdsMock.mockReturnValue([])
         openPopupMock.mockReset()
     })
 
@@ -35,6 +41,7 @@ describe('<GanttTarget />', () => {
         render(<GanttTarget target = {target}/>)
 
         expect(screen.getByText('This is the target title')).toBeInTheDocument()
+        expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
     })
 
     test('should handle onEditClick', () => {
@@ -90,5 +97,14 @@ describe('<GanttTarget />', () => {
         userEvent.click(screen.getByTestId('GanttTarget__createSubTarget_button'))
 
         expect(requestCreateTargetMock).toHaveBeenCalledWith(newSubTarget)
+    })
+
+    test('should show progress bar', () => {
+        selectEpicsByIdsMock.mockReturnValue(foundEpics)
+
+        render(<GanttTarget target = {target}/>)
+
+        expect(screen.getByTestId('GanttTarget__target-progress')).toBeInTheDocument()
+
     })
 })

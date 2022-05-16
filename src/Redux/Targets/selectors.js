@@ -24,3 +24,9 @@ export const selectTargetsByIds = (state, ids) => {
     return Object.values(targets)
         .filter(target => ids.includes(target.id))
 }
+
+export const selectEpicIdsByTargetIds = (state, ids) => {
+    const targets = selectTargetsByIds(state, ids)
+
+    return targets.reduce((accumulator, target) => [...accumulator, ...target.epicIds], [])
+}

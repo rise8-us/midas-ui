@@ -6,6 +6,7 @@ describe('<GanttSubTarget />', () => {
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const selectCapabilitiesByPortfolioIdMock = useModuleMock('Redux/Capabilities/selectors',
         'selectCapabilitiesByPortfolioId')
+    const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
 
     const subtargetWithReqs = {
         id: 1,
@@ -18,6 +19,10 @@ describe('<GanttSubTarget />', () => {
         epicIds: []
     }
 
+    const foundEpics = [
+        { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 }
+    ]
+
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
 
@@ -28,6 +33,7 @@ describe('<GanttSubTarget />', () => {
             id: 3,
             title: 'capability test'
         }])
+        selectEpicsByIdsMock.mockReturnValue([])
     })
 
     test('should render', () => {
@@ -35,6 +41,7 @@ describe('<GanttSubTarget />', () => {
 
         expect(screen.getByTitle('This is the subTarget title')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttSubTarget__associate-req')).not.toBeInTheDocument()
+        expect(screen.getByText('No Epics linked')).toBeInTheDocument()
     })
 
     test('associate req button', () => {
@@ -64,6 +71,14 @@ describe('<GanttSubTarget />', () => {
                 }
             }
         )
+    })
+
+    test('should show progress bar', () => {
+        selectEpicsByIdsMock.mockReturnValue(foundEpics)
+
+        render(<GanttSubTarget target = {subtargetWithReqs}/>)
+
+        expect(screen.getByTestId('GanttSubtarget__subtarget-progress')).toBeInTheDocument()
     })
 
 })

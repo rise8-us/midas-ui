@@ -8,6 +8,7 @@ import { requestDeleteDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById } from 'Redux/Deliverables/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { styled } from 'Styles/materialThemes'
+import { normalise, roundedPercent } from 'Utilities/progressHelpers'
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     '&:hover': {
@@ -20,10 +21,6 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
         color: theme.palette.primary.main
     }
 }))
-
-const normalise = (value, target) => isNaN(value) || isNaN(target) ? 0 : (value / target) * 100
-
-const roundedPercent = (value, target) => (Math.round(normalise(value, target) * 100) / 100) + '% completed'
 
 export default function DeliverableWorkEntry({ id, hasEdit }) {
     const dispatch = useDispatch()
