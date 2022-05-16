@@ -49,7 +49,12 @@ function UserRoles({ editable, user }) {
                     Assigned Roles
                 </Typography>
                 {editable && (
-                    <Button onClick = {updateUserRoles} color = 'primary' variant = 'outlined'>
+                    <Button
+                        onClick = {updateUserRoles}
+                        color = 'primary'
+                        variant = 'outlined'
+                        data-testid = 'UserRoles__button-save'
+                    >
                         save
                     </Button>
                 )}
@@ -78,6 +83,7 @@ function UserRoles({ editable, user }) {
                                 variant = 'h6'
                                 color = 'text.primary'
                                 style = {{ paddingLeft: '15px' }}
+                                data-testid = {`UserRoles__role-${entry[0]}`}
                             >
                                 {entry[0]}
                             </Typography>
