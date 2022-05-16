@@ -1,9 +1,10 @@
-import { AddCircleOutline, BarChart } from '@mui/icons-material'
-import { CircularProgress, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material'
+import { BarChart } from '@mui/icons-material'
+import { Grid, Stack, Typography } from '@mui/material'
+import { AddItem } from 'Components/AddItem'
 import { MeasureCard } from 'Components/Cards/OGSM/MeasureCard'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateMeasure, requestSearchMeasures } from 'Redux/Measures/actions'
 import { selectMeasureIdsByAssertionId } from 'Redux/Measures/selectors'
@@ -12,19 +13,18 @@ export default function MeasuresContainer({ assertionId, hasEdit }) {
 
     const dispatch = useDispatch()
 
-    const [adding, setAdding] = useState(false)
-
     const measureIds = useSelector((state) => selectMeasureIdsByAssertionId(state, assertionId))
 
     const handleAddNewMeasure = () => {
-        setAdding(true)
-        dispatch(requestCreateMeasure({
-            value: 0,
-            target: 1,
-            text: 'Enter new measure here...',
-            assertionId,
-            completionType: 'BINARY'
-        })).then(() => setAdding(false))
+        return Promise.resolve(
+            dispatch(requestCreateMeasure({
+                value: 0,
+                target: 1,
+                text: 'Enter new measure here...',
+                assertionId,
+                completionType: 'BINARY'
+            }))
+        )
     }
 
     useEffect(() => {
@@ -39,22 +39,10 @@ export default function MeasuresContainer({ assertionId, hasEdit }) {
                 </Grid>
                 {hasEdit &&
                     <Grid item>
-                        <Tooltip
-                            arrow
+                        <AddItem
+                            onClick = {handleAddNewMeasure}
                             title = {Tooltips.MEASURE_NEW_ENTRY}
-                        >
-                            <IconButton
-                                color = 'primary'
-                                disabled = {adding}
-                                size = 'small'
-                                onClick = {handleAddNewMeasure}
-                            >
-                                { adding
-                                    ? <CircularProgress size = '1.25rem' data-testid = 'MeasuresContainer__loading'/>
-                                    : <AddCircleOutline fontSize = 'small' data-testid = 'MeasuresContainer__icon-add'/>
-                                }
-                            </IconButton>
-                        </Tooltip>
+                        />
                     </Grid>
                 }
             </Grid>

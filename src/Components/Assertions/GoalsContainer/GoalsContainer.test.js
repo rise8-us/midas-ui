@@ -1,6 +1,4 @@
-import {
-    act, fireEvent, render, screen, useDispatchMock, useModuleMock, waitForElementToBeRemoved
-} from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GoalsContainer } from './index'
 
 jest.mock('Components/Cards/OGSM/MeasureCard/MeasureCard',
@@ -22,16 +20,14 @@ describe('<GoalsContainer />', () => {
         expect(screen.getByText('GoalCard')).toBeInTheDocument()
     })
 
-    test('should call dispatch to create goal', () => {
-        useDispatchMock().mockResolvedValue({ type: '' })
+    test('should call dispatch to create goal', async() => {
+        requestCreateMeasureMock.mockReturnValue({ type: '/', payload: {} })
+        useDispatchMock().mockResolvedValue({ data: {} })
 
         render(<GoalsContainer assertionId = {2} hasEdit/>)
 
-        act(() => {
-            fireEvent.click(screen.getByTestId('GoalsContainer__icon-add'))
-        })
-
-        waitForElementToBeRemoved(screen.getByTestId('GoalsContainer__loading'))
+        userEvent.click(screen.getByTestId('AddItem__icon-button'))
+        await screen.findByTestId('AddItem__spinner')
 
         expect(requestCreateMeasureMock).toHaveBeenCalledTimes(1)
     })

@@ -1,9 +1,8 @@
-import { AddCircleOutline } from '@mui/icons-material'
-import { CircularProgress, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { AddItem } from 'Components/AddItem'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestCreateAssertion } from 'Redux/Assertions/actions'
 
@@ -23,11 +22,7 @@ const defaultMeasureData = (type) => ({
 function AssertionHeader({ productId, hasEdit, onCreate }) {
     const dispatch = useDispatch()
 
-    const [adding, setAdding] = useState(false)
-
     const handleAddNewOGSM = () => {
-        setAdding(true)
-
         const newOGSM = {
             ...defaultAssertionData('objective', productId),
             children: [{
@@ -42,11 +37,12 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
             }]
         }
 
-        dispatch(requestCreateAssertion(newOGSM))
-            .then(unwrapResult).then(() => {
-                setAdding(false)
-                onCreate()
-            })
+        return Promise.resolve(
+            dispatch(requestCreateAssertion(newOGSM))
+                .then(unwrapResult).then(() => {
+                    onCreate()
+                })
+        )
     }
 
     return (
@@ -67,19 +63,10 @@ function AssertionHeader({ productId, hasEdit, onCreate }) {
                 </Grid>
                 <Grid item>
                     {hasEdit &&
-                        <Tooltip title = {Tooltips.OGSM_NEW_ENTRY} arrow>
-                            <IconButton
-                                color = 'primary'
-                                disabled = {adding}
-                                size = 'small'
+                            <AddItem
                                 onClick = {handleAddNewOGSM}
-                            >
-                                { adding
-                                    ? <CircularProgress size = '1.25rem' />
-                                    : <AddCircleOutline fontSize = 'small' data-testid = 'AssertionHeader__icon-add'/>
-                                }
-                            </IconButton>
-                        </Tooltip>
+                                title = {Tooltips.OGSM_NEW_ENTRY}
+                            />
                     }
                 </Grid>
             </Grid>
