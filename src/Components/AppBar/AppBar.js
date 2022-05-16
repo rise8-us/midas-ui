@@ -152,6 +152,7 @@ function AppBar() {
                         onClick = {() => history.push('/admin')}
                         size = 'small'
                         title = 'admin'
+                        data-testid = 'AppBar__admin-button'
                     >
                         <Gavel />
                     </IconButton>
@@ -164,6 +165,7 @@ function AppBar() {
                         onClick = {() => history.push('/account')}
                         title = 'account'
                         endIcon = {<AccountCircle/>}
+                        data-testid = 'AppBar__account-button'
                     >
                         {user.displayName}
                     </Button>

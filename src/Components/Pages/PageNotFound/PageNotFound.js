@@ -12,6 +12,7 @@ function PageNotFound() {
                     sx = {{
                         m: 'auto 0 auto auto'
                     }}
+                    data-testid = 'PageNotFound'
                 >
                     This is not the page you are looking for.
                 </Typography>
