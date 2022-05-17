@@ -40,7 +40,7 @@ export default function GanttChart({
         setDateByViewBy[viewBy](rangeEnd, scope)
 
         setDateRange([rangeStart, rangeEnd])
-    }, [viewBy, scope, leadingColumns])
+    }, [viewBy, scope, leadingColumns, startDate])
 
     const augmentedSetDateRange = (direction) => {
         let newRangeStart = dateRange[0]

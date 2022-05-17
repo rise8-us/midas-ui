@@ -43,9 +43,7 @@ export default function EntriesContainer({ portfolioId }) {
         ...targets.filter(t => t.parentId === null).sort(sortArrayByDateAndTitle),
     ]
 
-    let dateStart = new Date()
-    dateStart.setDate(1)
-    dateStart.setHours(0, 0, 0)
+    const [dateStart, setDateStart] = useState(new Date())
 
     const renderComponent = (entry) => {
         switch (entry.type) {
@@ -58,7 +56,19 @@ export default function EntriesContainer({ portfolioId }) {
         }
     }
 
-    const [option, setOption] = useState({})
+    const [option, setOption] = useState({ title: '6M', viewBy: 'month', scope: 6, leadingColumns: 2 })
+
+    useEffect(() => {
+        const newDateStart = new Date()
+        newDateStart.setDate(1)
+        newDateStart.setHours(0, 0, 0)
+
+        if (option.viewBy === 'year') {
+            newDateStart.setMonth(0)
+        }
+
+        setDateStart(newDateStart)
+    }, [option])
 
     return (
         <GanttChart
@@ -85,9 +95,9 @@ export default function EntriesContainer({ portfolioId }) {
                 marginBlock: 'unset'
             }}
             todayColor = {theme.palette.primary.main}
-            scope = {option.scope ?? 6}
-            leadingColumns = {option.leadingColumns ?? 2}
-            viewBy = {option.viewBy ?? 'month'}
+            scope = {option.scope}
+            leadingColumns = {option.leadingColumns}
+            viewBy = {option.viewBy}
         />
     )
 }
