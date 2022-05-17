@@ -50,14 +50,21 @@ describe('<TargetPopup />', () => {
     })
 
     test('should render properly', () => {
-
-        render(<TargetPopup id = {4} portfolioId = {1}/>)
+        render(<TargetPopup portfolioId = {1}/>)
 
         expect(screen.getByText('Create Target')).toBeInTheDocument()
         expect(screen.getByTestId('TargetPopup__input-title')).toBeInTheDocument()
         expect(screen.getByTestId('TargetPopup__input-description')).toBeInTheDocument()
         expect(screen.getByText('Start Date')).toBeInTheDocument()
         expect(screen.getByText('Due Date')).toBeInTheDocument()
+    })
+
+    test('should render with disabledDates and title', () => {
+        render(<TargetPopup id = {4} portfolioId = {1} disableDates title = 'foo'/>)
+
+        expect(screen.getByText('foo')).toBeInTheDocument()
+        expect(screen.queryByText('Start Date')).not.toBeInTheDocument()
+        expect(screen.queryByText('Due Date')).not.toBeInTheDocument()
     })
 
     test('should display error messages', () => {
