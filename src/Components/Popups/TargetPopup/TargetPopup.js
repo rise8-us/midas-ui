@@ -22,7 +22,7 @@ const initDetails = (create) => {
     }
 }
 
-function TargetPopup({ id, portfolioId }) {
+function TargetPopup({ disableDates, id, portfolioId, title }) {
     const dispatch = useDispatch()
 
     const target = useSelector(state => selectTargetById(state, id))
@@ -37,7 +37,7 @@ function TargetPopup({ id, portfolioId }) {
 
     const [formValues, formDispatch] = useReducer(useFormReducer, {
         title: target.title,
-        description: target.description,
+        description: target.description ?? '',
         startDate: target.startDate,
         dueDate: target.dueDate
     })
@@ -81,7 +81,7 @@ function TargetPopup({ id, portfolioId }) {
 
     return (
         <Popup
-            title = {context.title}
+            title = {title ?? context.title}
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
@@ -107,37 +107,43 @@ function TargetPopup({ id, portfolioId }) {
                     margin = 'dense'
                     multiline
                 />
-                <Box display = 'flex' justifyContent = 'space-between' paddingTop = '32px'>
-                    <DateSelector
-                        label = 'Start Date'
-                        initialValue = {getDateInDisplayOrder(formValues.startDate)}
-                        onAccept = {(value) => handleChange('startDate', value)}
-                        hasEdit = {true}
-                        errors = {startDateError}
-                        required
-                    />
-                    <DateSelector
-                        label = 'Due Date'
-                        minDate = {target.startDate}
-                        initialValue = {getDateInDisplayOrder(formValues.dueDate)}
-                        onAccept = {(value) => handleChange('dueDate', value)}
-                        hasEdit = {formValues.startDate ? true : false}
-                        errors = {dueDateError}
-                        required
-                    />
-                </Box>
+                {!disableDates &&
+                    <Box display = 'flex' justifyContent = 'space-between' paddingTop = '32px'>
+                        <DateSelector
+                            label = 'Start Date'
+                            initialValue = {getDateInDisplayOrder(formValues.startDate)}
+                            onAccept = {(value) => handleChange('startDate', value)}
+                            hasEdit = {true}
+                            errors = {startDateError}
+                            required
+                        />
+                        <DateSelector
+                            label = 'Due Date'
+                            minDate = {target.startDate}
+                            initialValue = {getDateInDisplayOrder(formValues.dueDate)}
+                            onAccept = {(value) => handleChange('dueDate', value)}
+                            hasEdit = {formValues.startDate ? true : false}
+                            errors = {dueDateError}
+                            required
+                        />
+                    </Box>
+                }
             </Box>
         </Popup>
     )
 }
 
 TargetPopup.propTypes = {
+    disableDates: PropTypes.bool,
     id: PropTypes.number,
-    portfolioId: PropTypes.number.isRequired
+    portfolioId: PropTypes.number.isRequired,
+    title: PropTypes.string,
 }
 
 TargetPopup.defaultProps = {
-    id: undefined
+    disableDates: false,
+    id: undefined,
+    title: undefined
 }
 
 export default TargetPopup

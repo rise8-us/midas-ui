@@ -1,4 +1,4 @@
-import { DeleteOutline, ExpandMore } from '@mui/icons-material'
+import { DeleteOutline, Edit, ExpandMore } from '@mui/icons-material'
 import { Box, Button, Collapse, Grow, IconButton, LinearProgress, Stack, Tooltip, Typography } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
@@ -105,6 +105,16 @@ export default function GanttSubTarget({ target, defaultOpen }) {
         }))
     }
 
+    const updateSubtarget = (e) => {
+        e.stopPropagation()
+        dispatch(openPopup(TargetConstants.UPDATE_TARGET, 'TargetPopup', {
+            disableDates: true,
+            id,
+            portfolioId,
+            title: 'Subtarget'
+        }))
+    }
+
     return (
         <StyledDiv>
             {epics.length > 0 ?
@@ -144,7 +154,8 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     maxLength = {280}
                     inputProps = {{
                         style: {
-                            textOverflow: 'ellipsis'
+                            textOverflow: 'ellipsis',
+                            fontWeight: 'bold'
                         }
                     }}
                     style = {{
@@ -153,13 +164,22 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     InputProps = {{
                         endAdornment: (permissions.edit &&
                             <Grow in = {hover}>
-                                <IconButton
-                                    onClick = {deleteTarget}
-                                    data-testid = 'GanttActionButtons__delete'
-                                    size = 'small'
-                                >
-                                    <DeleteOutline fontSize = 'small' color = 'inherit' htmlColor = 'white' />
-                                </IconButton>
+                                <div style = {{ display: 'flex' }}>
+                                    <IconButton
+                                        onClick = {updateSubtarget}
+                                        data-testid = 'GanttActionButtons__edit'
+                                        size = 'small'
+                                    >
+                                        <Edit fontSize = 'small' color = 'inherit' htmlColor = 'white' />
+                                    </IconButton>
+                                    <IconButton
+                                        onClick = {deleteTarget}
+                                        data-testid = 'GanttActionButtons__delete'
+                                        size = 'small'
+                                    >
+                                        <DeleteOutline fontSize = 'small' color = 'inherit' htmlColor = 'white' />
+                                    </IconButton>
+                                </div>
                             </Grow>
                         )
                     }}
@@ -179,24 +199,27 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                 </IconButton>
             </StyledHeader>
             <Collapse in = {open} collapsedSize = {0}>
-                {permissions.edit &&
-                    <Stack direction = 'row' spacing = {1} alignItems = 'center'>
-                        <StyledButton
-                            data-testid = 'GanttSubTarget__associate-req'
-                            onClick = {onClickAssociateRequirements}
-                            variant = 'contained'
-                        >
-                            Associate Requirement
-                        </StyledButton>
-                        <StyledButton
-                            onClick = {onClickAssociateEpics}
-                            variant = 'contained'
-                        >
-                            Associate Epic
-                        </StyledButton>
-                    </Stack>
-                }
                 <Stack spacing = {1}>
+                    <Typography color = 'text.secondary' variant = 'body2'>
+                        {target.description ? target.description : 'No Description set.'}
+                    </Typography>
+                    {permissions.edit &&
+                        <Stack direction = 'row' spacing = {1} alignItems = 'center'>
+                            <StyledButton
+                                data-testid = 'GanttSubTarget__associate-req'
+                                onClick = {onClickAssociateRequirements}
+                                variant = 'contained'
+                            >
+                                Associate Requirement
+                            </StyledButton>
+                            <StyledButton
+                                onClick = {onClickAssociateEpics}
+                                variant = 'contained'
+                            >
+                                Associate Epic
+                            </StyledButton>
+                        </Stack>
+                    }
                     <GanttRequirements
                         id = {id}
                         portfolioId = {portfolioId}
@@ -217,6 +240,7 @@ GanttSubTarget.propTypes = {
     defaultOpen: PropTypes.bool,
     target: PropTypes.shape({
         deliverableIds: PropTypes.arrayOf(PropTypes.number),
+        description: PropTypes.string,
         dueDate: PropTypes.string,
         epicIds: PropTypes.arrayOf(PropTypes.number),
         id: PropTypes.number,

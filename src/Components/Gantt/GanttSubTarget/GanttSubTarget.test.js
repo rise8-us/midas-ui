@@ -42,6 +42,13 @@ describe('<GanttSubTarget />', () => {
         expect(screen.getByTitle('This is the subTarget title')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttSubTarget__associate-req')).not.toBeInTheDocument()
         expect(screen.getByText('No Epics linked')).toBeInTheDocument()
+        expect(screen.getByText('These are the details')).toBeInTheDocument()
+    })
+
+    test('should render with no description', () => {
+        render(<GanttSubTarget target = {{ ...subtargetWithReqs, description: null }}/>)
+
+        expect(screen.getByText('No Description set.')).toBeInTheDocument()
     })
 
     test('associate req button', () => {
