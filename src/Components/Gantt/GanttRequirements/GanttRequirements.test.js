@@ -6,10 +6,16 @@ describe('<GanttRequirements />', () => {
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
 
-    const selectCapabilitiesByIdsMock =
-        useModuleMock('Redux/Capabilities/selectors', 'selectCapabilitiesByIds')
+    const selectCapabilityByIdMock =
+        useModuleMock('Redux/Capabilities/selectors', 'selectCapabilityById')
 
-    const foundDeliverables = [
+    const selectDeliverablesByIdsMock =
+        useModuleMock('Redux/Deliverables/selectors', 'selectDeliverablesByIds')
+
+    const selectDeliverablesByCapabilityIdMock =
+        useModuleMock('Redux/Deliverables/selectors', 'selectDeliverablesByCapabilityId')
+
+    const allDeliverables = [
         {
             id: 2,
             title: 'Deliverable 1.1',
@@ -27,25 +33,36 @@ describe('<GanttRequirements />', () => {
         }
     ]
 
-    const foundCapabilities = [
+    const selectedDeliverables = [
         {
-            id: 1,
-            title: 'capability',
-            deliverableIds: [2, 3]
+            id: 2,
+            title: 'Deliverable 1.1',
+            capabilityId: 1
+        },
+        {
+            id: 3,
+            title: 'Deliverable 1.2',
+            capabilityId: 1
         }
     ]
 
-    const defaultProps = {
+    const foundCapability = {
         id: 1,
-        deliverables: foundDeliverables,
-        portfolioId: 2,
-        target: {}
+        title: 'capability',
+        deliverableIds: [2, 3]
+    }
+
+    const defaultProps = {
+        deliverableIds: [2, 3],
+        capabilityId: 2,
     }
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
-        selectCapabilitiesByIdsMock.mockReturnValue(foundCapabilities)
+        selectCapabilityByIdMock.mockReturnValue(foundCapability)
+        selectDeliverablesByCapabilityIdMock.mockReturnValue(allDeliverables)
+        selectDeliverablesByIdsMock.mockReturnValue(selectedDeliverables)
     })
 
     test('should render', () => {

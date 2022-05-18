@@ -43,7 +43,7 @@ export default function Portfolio() {
         if (Array.isArray(portfolio?.capabilities)) {
             portfolio.capabilities.forEach(capability => dispatch(setCapability(capability)))
         }
-    }, [portfolio])
+    }, [JSON.stringify(portfolio)])
 
     return (
         <Page>

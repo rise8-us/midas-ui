@@ -1,102 +1,51 @@
-import { Edit } from '@mui/icons-material'
-import { IconButton, Stack, Tooltip, Typography } from '@mui/material'
+import { Stack, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectCapabilitiesByIds } from 'Redux/Capabilities/selectors'
-import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
-import { openPopup } from 'Redux/Popups/actions'
-import TargetConstants from 'Redux/Targets/constants'
-import { styled } from 'Styles/materialThemes'
+import { useSelector } from 'react-redux'
+import { selectCapabilityById } from 'Redux/Capabilities/selectors'
+import { selectDeliverablesByCapabilityId, selectDeliverablesByIds } from 'Redux/Deliverables/selectors'
 
-const StyledDiv = styled('div')(({ theme }) => ({
-    borderRadius: theme.spacing(1),
-    color: theme.palette.gantt.association.dark.text,
-    background: theme.palette.gantt.association.dark.background,
-    padding: theme.spacing(1),
-}))
+export default function GanttRequirements({ capabilityId, deliverableIds }) {
 
-export default function GanttRequirements({ id, deliverables, portfolioId, target }) {
-    const dispatch = useDispatch()
+    const selectedDeliverables = useSelector(state => selectDeliverablesByIds(state, deliverableIds))
+    const allDeliverables = useSelector(state => selectDeliverablesByCapabilityId(state, capabilityId))
+    const capability = useSelector(state => selectCapabilityById(state, capabilityId))
+    const capabilityDeliverables = selectedDeliverables.filter(d => d.capabilityId === capability.id)
 
-    const visibleCapabilityIds = [...new Set(deliverables?.map(item => item.capabilityId))]
-    const capabilities = useSelector(state => selectCapabilitiesByIds(state, visibleCapabilityIds))
-    const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
-
-    const handleEditCapability = () => {
-        dispatch(openPopup(
-            TargetConstants.UPDATE_TARGET,
-            'AssociateRequirementsPopup',
-            { id, capabilities: capabilities, target }
-        ))
-    }
-
-    if (deliverables.length === 0) return null
     return (
-        <StyledDiv>
-            <Stack direction = 'row' alignItems = 'center' justifyContent = 'space-between'>
-                <Stack spacing = {1}>
-                    {capabilities?.map((capability, index) => {
-                        let deliverableCount = 0
-                        return (
-                            <Tooltip
-                                key = {index}
-                                arrow
-                                followCursor
-                                data-testid = 'GanttRequirements__tooltip'
-                                title = {deliverables.map((deliverable, index2) => {
-                                    if (deliverable.capabilityId === capability.id) {
-                                        deliverableCount++
-                                        return (
-                                            <Typography
-                                                key = {index2}
-                                                data-testid = {`GanttRequirements__deliverable-${index2}`}
-                                                margin = {1}
-                                            >
-                                                {deliverable.title}
-                                            </Typography>
-                                        )
-                                    }
-                                })}>
-                                <Stack direction = 'row' spacing = {1}>
-                                    <Typography data-testid = 'GanttRequirements__title'>
-                                        {capability.title}
-                                    </Typography>
-                                    <Typography>-</Typography>
-                                    <Typography data-testid = 'GanttRequirements__capability-count'>
-                                        {deliverableCount + '/' + capability.deliverableIds.length}
-                                    </Typography>
-                                </Stack>
-                            </Tooltip>
-                        )
-                    })}
-                </Stack>
-                {permissions.edit &&
-                    <IconButton title = 'edit' onClick = {handleEditCapability}>
-                        <Edit fontSize = 'small'/>
-                    </IconButton>
-                }
+        <Tooltip
+            arrow
+            followCursor
+            data-testid = 'GanttRequirements__tooltip'
+            title = {capabilityDeliverables.map((deliverable, index) => {
+                return (
+                    <Typography
+                        key = {index}
+                        data-testid = {`GanttRequirements__deliverable-${index}`}
+                        margin = {1}
+                    >
+                        {deliverable.title}
+                    </Typography>
+                )
+            })}
+        >
+            <Stack direction = 'row' spacing = {1}>
+                <Typography>
+                    {capability.title}
+                </Typography>
+                <Typography>-</Typography>
+                <Typography data-testid = 'GanttRequirements__capability-count'>
+                    {capabilityDeliverables.length + '/' + allDeliverables.length}
+                </Typography>
             </Stack>
-        </StyledDiv>
+        </Tooltip>
     )
 }
 
 GanttRequirements.propTypes = {
-    id: PropTypes.number.isRequired,
-    deliverables: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number,
-        title: PropTypes.string,
-        parentId: PropTypes.number,
-        capabilityId: PropTypes.number,
-        isArchived: PropTypes.bool,
-    })).isRequired,
-    portfolioId: PropTypes.number.isRequired,
-    target: PropTypes.shape({
-        id: PropTypes.number,
-        portfolioId: PropTypes.number,
-        title: PropTypes.string,
-        type: PropTypes.string,
-        startDate: PropTypes.string,
-        dueDate: PropTypes.string,
-        deliverableIds: PropTypes.array
-    }).isRequired
+    capabilityId: PropTypes.number.isRequired,
+    deliverableIds: PropTypes.arrayOf(PropTypes.number)
+}
+
+GanttRequirements.defaultProps = {
+    deliverableIds: []
 }
