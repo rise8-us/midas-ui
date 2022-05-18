@@ -16,7 +16,8 @@ describe('<GanttSubTarget />', () => {
         description: 'These are the details',
         portfolioId: 1,
         deliverableIds: [2],
-        epicIds: []
+        epicIds: [],
+        isPriority: false
     }
 
     const foundEpics = [
@@ -43,12 +44,13 @@ describe('<GanttSubTarget />', () => {
         expect(screen.queryByTestId('GanttSubTarget__associate-req')).not.toBeInTheDocument()
         expect(screen.getByText('No Epics linked')).toBeInTheDocument()
         expect(screen.getByText('These are the details')).toBeInTheDocument()
+        expect(screen.queryByTestId('GanttSubTarget__priority')).not.toBeInTheDocument()
     })
 
     test('should render with no description', () => {
         render(<GanttSubTarget target = {{ ...subtargetWithReqs, description: null }}/>)
 
-        expect(screen.getByText('No Description set.')).toBeInTheDocument()
+        expect(screen.queryByTestId('GanttSubTarget__description')).not.toBeInTheDocument()
     })
 
     test('associate req button', () => {
@@ -74,7 +76,8 @@ describe('<GanttSubTarget />', () => {
                     description: 'These are the details',
                     portfolioId: 1,
                     deliverableIds: [2],
-                    epicIds: []
+                    epicIds: [],
+                    isPriority: false
                 }
             }
         )
@@ -88,4 +91,16 @@ describe('<GanttSubTarget />', () => {
         expect(screen.getByTestId('GanttSubtarget__subtarget-progress')).toBeInTheDocument()
     })
 
+    test('should show with priority', () => {
+        render(<GanttSubTarget target = {{ ...subtargetWithReqs, isPriority: true }} />)
+
+        expect(screen.getByTestId('GanttSubTarget__priority')).toBeInTheDocument()
+    })
+
+    test('should show priority button on edit', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+        render(<GanttSubTarget target = {subtargetWithReqs} />)
+
+        expect(screen.getByTestId('GanttSubTarget__priority')).toBeInTheDocument()
+    })
 })

@@ -1,5 +1,8 @@
-import { DeleteOutline, Edit, ExpandMore } from '@mui/icons-material'
-import { Box, Button, Collapse, Grow, IconButton, LinearProgress, Stack, Tooltip, Typography } from '@mui/material'
+import { DeleteOutline, Diamond, Edit, ExpandMore } from '@mui/icons-material'
+import {
+    Box, Button, CircularProgress, Collapse, Grow, IconButton,
+    LinearProgress, Stack, Tooltip, Typography
+} from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
@@ -41,8 +44,14 @@ const StyledButton = styled(Button)(() => ({
     }
 }))
 
+const getPrioritySettings = (isPriority) => ({
+    color: !isPriority ? 'secondary' : undefined,
+    htmlColor: isPriority ? 'orange' : 'inherit',
+    title: isPriority ? 'Priority Item' : 'Not Priority Item',
+})
+
 export default function GanttSubTarget({ target, defaultOpen }) {
-    const { id, portfolioId, title, deliverableIds, epicIds } = target
+    const { id, portfolioId, title, deliverableIds, epicIds, isPriority } = target
 
     const dispatch = useDispatch()
 
@@ -51,9 +60,11 @@ export default function GanttSubTarget({ target, defaultOpen }) {
     const epics = useSelector(state => selectEpicsByIds(state, epicIds))
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
+    const prioritySettings = getPrioritySettings(isPriority)
 
     const [open, setOpen] = useState(defaultOpen)
     const [hover, setHover] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const deleteTarget = () => {
         dispatch(openPopup(TargetConstants.DELETE_TARGET, 'DeletePopup', {
@@ -70,6 +81,16 @@ export default function GanttSubTarget({ target, defaultOpen }) {
             ...target,
             title: newTitle,
         }))
+    }
+
+    const updateIsPriority = () => {
+        setLoading(true)
+        dispatch(requestUpdateTarget({
+            ...target,
+            isPriority: !isPriority
+        })).then(() => {
+            setLoading(false)
+        })
     }
 
     const onClickAssociateRequirements = () => {
@@ -150,6 +171,28 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                 :
                 <Typography variant = 'body2' color = 'text.secondary'>No Epics linked</Typography>}
             <StyledHeader>
+                {(permissions.edit || isPriority) &&
+                    <Tooltip disableInteractive title = {prioritySettings.title}>
+                        <div style = {{ cursor: !permissions.edit ? 'default' : 'pointer' }}>
+                            <IconButton
+                                disabled = {!permissions.edit || loading}
+                                onClick = {updateIsPriority}
+                                data-testid = 'GanttSubTarget__priority'
+                                size = 'medium'
+                            >
+                                {loading ?
+                                    <CircularProgress size = {24} />
+                                    :
+                                    <Diamond
+                                        fontSize = 'medium'
+                                        color = {prioritySettings.color}
+                                        htmlColor = {prioritySettings.htmlColor}
+                                    />
+                                }
+                            </IconButton>
+                        </div>
+                    </Tooltip>
+                }
                 <AutoSaveTextField
                     canEdit = {permissions.edit}
                     initialValue = {title}
@@ -206,9 +249,15 @@ export default function GanttSubTarget({ target, defaultOpen }) {
             </StyledHeader>
             <Collapse in = {open} collapsedSize = {0}>
                 <Stack spacing = {1}>
-                    <Typography color = 'text.secondary' variant = 'body2'>
-                        {target.description ? target.description : 'No Description set.'}
-                    </Typography>
+                    {target.description &&
+                        <Typography
+                            color = 'text.secondary'
+                            variant = 'body2'
+                            data-testid = 'GanttSubTarget__description'
+                        >
+                            {target.description}
+                        </Typography>
+                    }
                     {permissions.edit &&
                         <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                             <StyledButton
@@ -254,6 +303,7 @@ GanttSubTarget.propTypes = {
         startDate: PropTypes.string,
         title: PropTypes.string,
         type: PropTypes.string,
+        isPriority: PropTypes.bool
     }).isRequired,
 }
 
