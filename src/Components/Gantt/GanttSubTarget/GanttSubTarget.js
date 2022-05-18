@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
-import { selectDeliverablesByIds } from 'Redux/Deliverables/selectors'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
@@ -14,7 +13,7 @@ import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { getTotalWeights, normalise, roundedPercent } from 'Utilities/progressHelpers'
 import { GanttEpicsList } from '../GanttEpicsList'
-import { GanttRequirements } from '../GanttRequirements'
+import { GanttRequirementsList } from '../GanttRequirementsList'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(1),
@@ -49,7 +48,6 @@ export default function GanttSubTarget({ target, defaultOpen }) {
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
-    const deliverables = useSelector(state => selectDeliverablesByIds(state, deliverableIds))
     const epics = useSelector(state => selectEpicsByIds(state, epicIds))
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
@@ -113,6 +111,14 @@ export default function GanttSubTarget({ target, defaultOpen }) {
             portfolioId,
             title: 'Subtarget'
         }))
+    }
+
+    const handleEditCapability = () => {
+        dispatch(openPopup(
+            TargetConstants.UPDATE_TARGET,
+            'AssociateRequirementsPopup',
+            { id, capabilities: capabilities, target }
+        ))
     }
 
     return (
@@ -220,11 +226,11 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                             </StyledButton>
                         </Stack>
                     }
-                    <GanttRequirements
-                        id = {id}
+                    <GanttRequirementsList
+                        handleEditCapability = {permissions.edit ? handleEditCapability : undefined}
                         portfolioId = {portfolioId}
-                        deliverables = {deliverables}
-                        target = {target}
+                        capabilities = {capabilities}
+                        deliverableIds = {deliverableIds}
                     />
                     <GanttEpicsList
                         ids = {epicIds}

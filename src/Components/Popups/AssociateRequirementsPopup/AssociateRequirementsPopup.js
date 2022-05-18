@@ -55,14 +55,16 @@ function AssociateRequirementsPopup({ id, capabilities, target }) {
                             {allDeliverables.length === 0 ? (<Typography>
                             No Deliverables for {capability.title}</Typography>) :
                                 allDeliverables.map((deliverable, index2) => (
-                                    <div style = {{ display: 'flex', alignItems: 'flex-start' }}
+                                    <div style = {{ display: 'flex', alignItems: 'center' }}
                                         key = {index2}>
                                         <Checkbox checked = {deliverableIds?.includes(deliverable.id)}
                                             onChange = {() => onCheckboxChange(deliverable.id)}
                                             data-testid = {'AssociateRequirementsPopup__checkbox-' +
                                             `${index2}`}
                                         />
-                                        <Typography>
+                                        <Typography
+                                            style = {{ display: 'flex', cursor: 'pointer' }}
+                                            onClick = {() => onCheckboxChange(deliverable.id)}>
                                             {deliverable.title}
                                         </Typography>
                                     </div>
