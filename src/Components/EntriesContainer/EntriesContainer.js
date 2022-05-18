@@ -1,11 +1,12 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import { Button, useTheme } from '@mui/material'
 import { GanttChart } from 'Components/Gantt'
-import GanttAddNewItem from 'Components/Gantt/GanttAddNewItem/GanttAddNewItem'
+import { GanttAddNewItem } from 'Components/Gantt/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
+import { GanttExpandAllTargets } from 'Components/Gantt/GanttExpandAllTargets'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
 import { GanttTarget } from 'Components/Gantt/GanttTarget'
-import GanttView from 'Components/Gantt/GanttView/GanttView'
+import { GanttView } from 'Components/Gantt/GanttView'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -44,11 +45,39 @@ export default function EntriesContainer({ portfolioId }) {
     ]
 
     const [dateStart, setDateStart] = useState(new Date())
+    const [option, setOption] = useState({ title: '6M', viewBy: 'month', scope: 6, leadingColumns: 2 })
+    const [expandedState, setExpandedState] = useState({ allExpanded: false })
+
+    const handleExpandOrCollapseAll = () => {
+        let allCollapsed = {}
+        if (expandedState.allExpanded) {
+            Object.keys(expandedState).forEach(key => {
+                allCollapsed[key] = false
+            })
+        } else {
+            Object.keys(expandedState).forEach(key => {
+                allCollapsed[key] = true
+            })
+        }
+        setExpandedState(allCollapsed)
+    }
+
+    const handleExpandOrCollapse = (id, value) => {
+        let newState = { ...expandedState }
+        newState[id] = value
+        newState.allExpanded = !Object.entries(newState)
+            .some(([key, val]) => key !== 'allExpanded' && val === false)
+        setExpandedState(newState)
+    }
 
     const renderComponent = (entry) => {
         switch (entry.type) {
         case 'target':
-            return <GanttTarget target = {entry}/>
+            return <GanttTarget
+                target = {entry}
+                isExpanded = {expandedState[entry.id] ?? false}
+                setIsExpanded = {handleExpandOrCollapse}
+            />
         case 'milestone':
             return <GanttMilestone milestone = {entry}/>
         case 'event':
@@ -56,7 +85,17 @@ export default function EntriesContainer({ portfolioId }) {
         }
     }
 
-    const [option, setOption] = useState({ title: '6M', viewBy: 'month', scope: 6, leadingColumns: 2 })
+    const onEntriesFilter = (filteredEntries) => {
+        let init = {}
+        filteredEntries.map(item => {
+            if (item.type === 'target' && expandedState[item.id] === undefined)
+                init[item.id] = false
+            else if (item.type === 'target')
+                init[item.id] = expandedState[item.id]
+        })
+        setTimeout(() => setExpandedState(prev => ({ ...init, allExpanded: prev.allExpanded })), 0)
+        return filteredEntries
+    }
 
     useEffect(() => {
         const newDateStart = new Date()
@@ -75,6 +114,7 @@ export default function EntriesContainer({ portfolioId }) {
             startDate = {dateStart}
             maxHeight = 'calc(100vh - 280px)'
             entries = {entries}
+            onEntriesFilter = {onEntriesFilter}
             renderComponent = {renderComponent}
             actionBar = {{
                 navLeftIcon: <ChevronLeft size = 'small' />,
@@ -85,7 +125,14 @@ export default function EntriesContainer({ portfolioId }) {
                     size: 'small'
                 },
                 additionalActions: permissions.edit ?
-                    <GanttAddNewItem portfolioId = {portfolioId} /> : <GanttView onChange = {setOption}/>
+                    <GanttAddNewItem portfolioId = {portfolioId} /> :
+                    <>
+                        <GanttView onChange = {setOption}/>
+                        <GanttExpandAllTargets
+                            expandAllTargets = {handleExpandOrCollapseAll}
+                            allExpanded = {expandedState.allExpanded}
+                        />
+                    </>
             }}
             chartBackgroundColor = {theme.palette.background.paper}
             headerStyles = {{

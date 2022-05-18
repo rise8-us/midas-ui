@@ -17,8 +17,7 @@ const StyledDiv = styled('div')(() => ({
     justifyContent: 'center',
     minWidth: '80px',
     padding: '8px',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+    marginLeft: 'auto'
 }))
 
 export default function GanttView({ onChange }) {

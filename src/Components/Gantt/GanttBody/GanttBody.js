@@ -1,6 +1,4 @@
 import PropTypes from 'prop-types'
-import { useMemo } from 'react'
-import { dateRangeFilter } from 'Utilities/dateHelpers'
 import { cellStyles, createIndexedRowsFromData, rowStyles } from 'Utilities/ganttHelpers'
 import { GanttDividerBar } from '../GanttDividerBar'
 import { GanttEntry } from '../GanttEntry'
@@ -13,7 +11,6 @@ export default function GanttBody({
     defaultRowHeight,
     defaultRowSpacing,
     entries,
-    onEntriesFilter,
     renderComponent,
     todayColor,
 }) {
@@ -26,10 +23,7 @@ export default function GanttBody({
         }
     }
 
-    const inRangeEntries = useMemo(() => {
-        const indexedRows = createIndexedRowsFromData(entries?.filter(entry => dateRangeFilter(entry, dateRange)))
-        return onEntriesFilter(indexedRows, dateRange)
-    }, [JSON.stringify(entries), JSON.stringify(dateRange)])
+    const indexedEntries = createIndexedRowsFromData(entries)
 
     const containerStyles = {
         ...rowStyles(chartBackgroundColor, borderColor),
@@ -57,7 +51,7 @@ export default function GanttBody({
             </div>
             <GanttDividerBar dateRange = {dateRange} color = {todayColor}/>
             <div {...entryWrapperProps}>
-                {Object.entries(inRangeEntries).map(row => (
+                {Object.entries(indexedEntries).map(row => (
                     <div style = {rowStyling} key = {row}>
                         {row[1].map((entry, index) => (
                             <GanttEntry
@@ -93,7 +87,6 @@ GanttBody.propTypes = {
         startDate: PropTypes.string,
         dueDate: PropTypes.string.isRequired,
     })),
-    onEntriesFilter: PropTypes.func,
     renderComponent: PropTypes.func.isRequired,
     todayColor: PropTypes.string.isRequired
 }
@@ -108,5 +101,4 @@ GanttBody.defaultProps = {
         dueDate: null,
         startDate: null,
     }],
-    onEntriesFilter: (entries) => entries,
 }

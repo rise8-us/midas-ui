@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { dateRangeFilter } from 'Utilities/dateHelpers'
 import { generateChartFormat, setDateByViewBy } from 'Utilities/ganttHelpers'
 import { GanttActionBar } from '../GanttActionBar'
 import { GanttBody } from '../GanttBody'
@@ -52,6 +53,11 @@ export default function GanttChart({
         setDateRange([newRangeStart, newRangeEnd])
     }
 
+    const inRangeEntries = useMemo(() => {
+        const filteredEntries = entries?.filter(entry => dateRangeFilter(entry, dateRange))
+        return onEntriesFilter(filteredEntries, dateRange)
+    }, [JSON.stringify(entries), JSON.stringify(dateRange)])
+
     const chartFormat = generateChartFormat(dateRange[0], viewBy, scope)
 
     return (
@@ -73,7 +79,7 @@ export default function GanttChart({
                     borderColor = {borderColor}
                     style = {headerStyles}
                 />
-                {entries.length > 0 &&
+                {inRangeEntries.length > 0 &&
                     <GanttBody
                         borderColor = {borderColor}
                         chartBackgroundColor = {chartBackgroundColor}
@@ -81,9 +87,8 @@ export default function GanttChart({
                         dateRange = {dateRange}
                         defaultRowHeight =  {defaultRowHeight}
                         defaultRowSpacing = {defaultRowSpacing}
-                        entries = {entries}
+                        entries = {inRangeEntries}
                         maxHeight = {maxHeight}
-                        onEntriesFilter = {onEntriesFilter}
                         renderComponent = {renderComponent}
                         todayColor = {todayColor}
                     />
