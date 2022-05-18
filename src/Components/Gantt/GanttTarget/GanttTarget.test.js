@@ -1,3 +1,4 @@
+import { wait } from '@testing-library/user-event/dist/utils'
 import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttTarget } from './index'
 
@@ -80,11 +81,13 @@ describe('<GanttTarget />', () => {
     })
 
     test('should render description after expansion', async() => {
-        render(<GanttTarget target = {target}/>)
+        const testExpand = jest.fn()
+        render(<GanttTarget target = {target} setIsExpanded = {testExpand}/>)
 
         userEvent.click(screen.getByTestId('GanttTarget__expandButton_closed'))
-
-        expect(await screen.findByTestId('GanttTarget__expandButton_open')).toBeInTheDocument
+        wait(800).then(() => {
+            expect(testExpand).toBeCalledTimes(1)
+        })
     })
 
     test('should send request to add SubTarget', () => {

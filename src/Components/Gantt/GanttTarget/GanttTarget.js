@@ -53,7 +53,7 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
     marginRight: theme.spacing(-1)
 }))
 
-export default function GanttTarget({ target }) {
+export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
     const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
 
@@ -66,7 +66,6 @@ export default function GanttTarget({ target }) {
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
 
-    const [open, setOpen] = useState(false)
     const [hover, setHover] = useState(false)
     const [horizontalOpen, setHorizontalOpen] = useState(false)
     const [widthBool, setWidthBool] = useState(false)
@@ -107,14 +106,13 @@ export default function GanttTarget({ target }) {
         }))
     }
 
-
     const expandButtonHandler = () => {
-        if (!open && !widthBool) {
+        if (!isExpanded && !widthBool) {
             setHorizontalOpen(prev => !prev)
-            setTimeout(() => setOpen(prev => !prev), 800)
+            setTimeout(() => setIsExpanded(id, true), 800)
         } else {
             setHorizontalOpen(prev => !prev)
-            setOpen(prev => !prev)
+            setIsExpanded(id, !isExpanded)
         }
     }
 
@@ -123,6 +121,10 @@ export default function GanttTarget({ target }) {
             setWidthBool(true)
         }
     }, [])
+
+    useEffect(() => {
+        setHorizontalOpen(isExpanded)
+    }, [isExpanded])
 
     return (
         <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles}>
@@ -149,7 +151,7 @@ export default function GanttTarget({ target }) {
                         </Box>
                     </Box>
                 </Tooltip>}
-            <Tooltip open = {hover && !open} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
+            <Tooltip open = {hover && !isExpanded} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
                 <StyledHeader {...handleHover}>
                     <div style = {{ maxWidth: 'calc(100% - 30px)' }}>
                         <GanttEntryHeader title = {title} dateRange = {dateString} />
@@ -158,18 +160,18 @@ export default function GanttTarget({ target }) {
                         <IconButton style = {{ display: 'none', maxHeight: '40px' }}>
                             <KeyboardDoubleArrowDown
                                 style = {{
-                                    transform: `rotate(${open ? 180 : 0}deg)`,
+                                    transform: `rotate(${isExpanded ? 180 : 0}deg)`,
                                     transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
                                 }}
                             />
                         </IconButton>
                         <StyledExpandButton
-                            data-testid = {'GanttTarget__expandButton_' + (open ? 'open' : 'closed')}
+                            data-testid = {'GanttTarget__expandButton_' + (isExpanded ? 'open' : 'closed')}
                             onClick = {expandButtonHandler}
                         >
                             <ExpandMore
                                 style = {{
-                                    transform: `rotate(${open ? 180 : 0}deg)`,
+                                    transform: `rotate(${isExpanded ? 180 : 0}deg)`,
                                     transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
                                 }}
                             />
@@ -178,7 +180,7 @@ export default function GanttTarget({ target }) {
                 </StyledHeader>
             </Tooltip>
             <Collapse
-                in = {open}
+                in = {isExpanded}
                 collapsedSize = {0}
                 easing = {'cubic-bezier(1,-0.01, 0.69, 1.01)'}
             >
@@ -223,5 +225,12 @@ GanttTarget.propTypes = {
         startDate: PropTypes.string,
         dueDate: PropTypes.string,
         childrenIds: PropTypes.arrayOf(PropTypes.number)
-    }).isRequired
+    }).isRequired,
+    isExpanded: PropTypes.bool,
+    setIsExpanded: PropTypes.func,
+}
+
+GanttTarget.defaultProps = {
+    isExpanded: false,
+    setIsExpanded: e => e
 }
