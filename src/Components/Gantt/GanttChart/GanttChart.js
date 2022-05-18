@@ -15,6 +15,7 @@ export default function GanttChart({
     headerStyles,
     leadingColumns,
     maxHeight,
+    onEntriesFilter,
     renderComponent,
     scope,
     startDate,
@@ -56,14 +57,14 @@ export default function GanttChart({
     return (
         <div style = {{ width: '100%' }}>
             <GanttActionBar
-                navLeftIcon = {actionBar.navLeftIcon}
-                navRightIcon = {actionBar.navRightIcon}
+                additionalActions = {actionBar.additionalActions}
+                backgroundColor = {chartBackgroundColor}
+                borderColor = {borderColor}
                 buttonComponent = {actionBar.buttonComponent}
                 buttonProps = {actionBar.buttonProps}
+                navLeftIcon = {actionBar.navLeftIcon}
+                navRightIcon = {actionBar.navRightIcon}
                 setDateRange = {augmentedSetDateRange}
-                borderColor = {borderColor}
-                backgroundColor = {chartBackgroundColor}
-                additionalActions = {actionBar.additionalActions}
             />
             <div style = {chartStyle}>
                 <GanttHeader
@@ -74,16 +75,17 @@ export default function GanttChart({
                 />
                 {entries.length > 0 &&
                     <GanttBody
-                        entries = {entries}
-                        maxHeight = {maxHeight}
-                        dateRange = {dateRange}
-                        columns = {chartFormat}
-                        chartBackgroundColor = {chartBackgroundColor}
                         borderColor = {borderColor}
-                        renderComponent = {renderComponent}
-                        todayColor = {todayColor}
+                        chartBackgroundColor = {chartBackgroundColor}
+                        columns = {chartFormat}
+                        dateRange = {dateRange}
                         defaultRowHeight =  {defaultRowHeight}
                         defaultRowSpacing = {defaultRowSpacing}
+                        entries = {entries}
+                        maxHeight = {maxHeight}
+                        onEntriesFilter = {onEntriesFilter}
+                        renderComponent = {renderComponent}
+                        todayColor = {todayColor}
                     />
                 }
             </div>
@@ -113,6 +115,7 @@ GanttChart.propTypes = {
     headerStyles: PropTypes.shape({}),
     leadingColumns: PropTypes.number,
     maxHeight: PropTypes.string.isRequired,
+    onEntriesFilter: PropTypes.func,
     renderComponent: PropTypes.func,
     scope: PropTypes.number,
     startDate: PropTypes.instanceOf(Date).isRequired,
@@ -128,6 +131,7 @@ GanttChart.defaultProps = {
     defaultRowSpacing: undefined,
     headerStyles: {},
     leadingColumns: 0,
+    onEntriesFilter: (entries) => entries,
     renderComponent: (entry) => (
         <div
             data-testid = 'GanttEntry__defaultEntryWrapper'
