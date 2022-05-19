@@ -7,6 +7,7 @@ import EventConstants from 'Redux/Events/constants'
 import MilestoneConstants from 'Redux/Milestones/constants'
 import { openPopup } from 'Redux/Popups/actions'
 import TargetConstants from 'Redux/Targets/constants'
+import WinConstants from 'Redux/Wins/constants'
 
 export default function GanttAddNewItem({ portfolioId }) {
 
@@ -18,6 +19,8 @@ export default function GanttAddNewItem({ portfolioId }) {
         dispatch(openPopup(EventConstants.CREATE_EVENT, 'EventPopup', { portfolioId: portfolioId }))
     const createTarget = () =>
         dispatch(openPopup(TargetConstants.CREATE_TARGET, 'TargetPopup', { portfolioId: portfolioId }))
+    const createWin = () =>
+        dispatch(openPopup(WinConstants.CREATE_WIN, 'WinPopup', { portfolioId: portfolioId }))
 
     const addCompButtons = [
         {
@@ -29,6 +32,9 @@ export default function GanttAddNewItem({ portfolioId }) {
         }, {
             text: 'Target',
             onClick: createTarget
+        }, {
+            text: 'Win',
+            onClick: createWin
         }
     ]
 
