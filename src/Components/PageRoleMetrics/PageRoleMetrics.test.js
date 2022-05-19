@@ -1,13 +1,13 @@
 import { render, screen, useModuleMock } from 'Utilities/test-utils'
-import { ProductRoleMetrics } from './index'
+import { PageRoleMetrics } from './index'
 
-describe('<ProductRoleMetrics />', () => {
+describe('<PageRoleMetrics />', () => {
     const selectTotalRoleCountByUserIdsMock = useModuleMock('Redux/Users/selectors', 'selectTotalRoleCountByUserIds')
 
     test('should render', () => {
         selectTotalRoleCountByUserIdsMock.mockReturnValue({ unassigned: [1, 2, 3], fooBar: [1, 2, 3, 4] })
 
-        render(<ProductRoleMetrics ids = {[1, 2]} />)
+        render(<PageRoleMetrics ids = {[1, 2]} />)
 
         expect(screen.getByText('Non-team Viewers:')).toBeInTheDocument()
         expect(screen.getByText('2')).toBeInTheDocument()

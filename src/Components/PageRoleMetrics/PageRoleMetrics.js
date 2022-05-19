@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { selectTotalRoleCountByUserIds } from 'Redux/Users/selectors'
 import { camelToCapitalCase } from 'Utilities/caseConversions'
 
-export default function ProductRoleMetrics({ ids }) {
+export default function PageRoleMetrics({ ids }) {
     const totalRoleCounts = useSelector(state => selectTotalRoleCountByUserIds(state, ids))
 
     return (
@@ -30,6 +30,6 @@ export default function ProductRoleMetrics({ ids }) {
     )
 }
 
-ProductRoleMetrics.propTypes = {
+PageRoleMetrics.propTypes = {
     ids: PropTypes.arrayOf(PropTypes.number).isRequired
 }

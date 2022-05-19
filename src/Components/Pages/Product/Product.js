@@ -3,7 +3,7 @@ import { Divider, Grid, Grow, IconButton, Tab, Tabs } from '@mui/material'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
-import { ProductMetrics } from 'Components/Tabs/PageMetrics'
+import { PageMetrics } from 'Components/Tabs/PageMetrics'
 import { ProductPageOverview } from 'Components/Tabs/ProductPageOverview'
 import { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -151,7 +151,7 @@ function Product() {
                                 }
                                 { value === 'metrics' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <ProductMetrics id = {id}/>
+                                        <PageMetrics id = {id} type = 'product'/>
                                     </Suspense>
                                 }
                             </div>

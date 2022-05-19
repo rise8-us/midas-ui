@@ -7,6 +7,9 @@ jest.mock('Components/Tabs/ProjectsTab/ProjectsTab',
 jest.mock('Components/Tabs/AssertionsTab/AssertionsTab',
     () => function testing() { return (<div>AssertionsTab</div>) })
 
+jest.mock('Components/Tabs/PageMetrics/PageMetrics',
+    () => function testing() { return (<div>MetricsTab</div>) })
+
 jest.mock('Components/ProductOnePager/ProductRoadmap/ProductRoadmap',
     () => function testing() { return (<div>ProductRoadmap</div>) })
 
@@ -73,6 +76,13 @@ describe('<Product>', () => {
 
         fireEvent.click(screen.getByText(/objectives/i))
         expect(screen.getByText('AssertionsTab')).toBeInTheDocument()
+    })
+
+    test('should render metrics tab', () => {
+        renderWithRouter(<Product />)
+
+        fireEvent.click(screen.getByText(/metrics/i))
+        expect(screen.getByText('MetricsTab')).toBeInTheDocument()
     })
 
     test('should handle action icons', () => {
