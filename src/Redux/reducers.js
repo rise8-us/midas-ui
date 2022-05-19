@@ -30,6 +30,7 @@ import tagReducer from './Tags/reducer'
 import targetReducer from './Targets/reducer'
 import teamReducer from './Teams/reducer'
 import userReducer from './Users/reducer'
+import winReducer from './Wins/reducer'
 
 export const rootReducer = combineReducers({
     app: appSettingsReducer,
@@ -62,5 +63,6 @@ export const rootReducer = combineReducers({
     tags: tagReducer,
     targets: targetReducer,
     teams: teamReducer,
-    users: userReducer
+    users: userReducer,
+    wins: winReducer
 })

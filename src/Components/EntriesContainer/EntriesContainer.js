@@ -7,6 +7,7 @@ import { GanttExpandAllTargets } from 'Components/Gantt/GanttExpandAllTargets'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
 import { GanttTarget } from 'Components/Gantt/GanttTarget'
 import { GanttView } from 'Components/Gantt/GanttView'
+import { GanttWin } from 'Components/Gantt/GanttWin'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,6 +19,8 @@ import { selectMilestonesByPortfolioId } from 'Redux/Milestones/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { requestSearchTargets } from 'Redux/Targets/actions'
 import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
+import { requestSearchWins } from 'Redux/Wins/actions'
+import { selectWinsByPortfolioId } from 'Redux/Wins/selectors'
 import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
 export default function EntriesContainer({ portfolioId }) {
@@ -29,18 +32,21 @@ export default function EntriesContainer({ portfolioId }) {
 
     useEffect(() => {
         dispatch(requestSearchMilestones(searchValue))
+        dispatch(requestSearchWins(searchValue))
         dispatch(requestSearchEvents(searchValue))
         dispatch(requestSearchTargets(searchValue + ' AND parent.id:~'))
         dispatch(requestSearchDeliverables('capability.' + searchValue))
     }, [])
 
     const milestones = useSelector(state => selectMilestonesByPortfolioId(state, portfolioId))
+    const wins = useSelector(state => selectWinsByPortfolioId(state, portfolioId))
     const events = useSelector(state => selectEventsByPortfolioId(state, portfolioId))
     const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
     const entries = [
         ...milestones,
         ...events,
+        ...wins,
         ...targets.filter(t => t.parentId === null).sort(sortArrayByDateAndTitle),
     ]
 
@@ -80,6 +86,8 @@ export default function EntriesContainer({ portfolioId }) {
             />
         case 'milestone':
             return <GanttMilestone milestone = {entry}/>
+        case 'win':
+            return <GanttWin win = {entry}/>
         case 'event':
             return <GanttEvent event = {entry}/>
         }

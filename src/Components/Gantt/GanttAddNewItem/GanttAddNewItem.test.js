@@ -1,6 +1,7 @@
 import EventConstants from 'Redux/Events/constants'
 import MilestoneConstants from 'Redux/Milestones/constants'
 import TargetConstants from 'Redux/Targets/constants'
+import WinConstants from 'Redux/Wins/constants'
 import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttAddNewItem } from './index'
 
@@ -42,6 +43,17 @@ describe('<GanttAddNewItem />', () => {
 
         expect(openPopupMock).toHaveBeenCalledWith(
             TargetConstants.CREATE_TARGET, 'TargetPopup', { portfolioId: 0 }
+        )
+    })
+
+    test('create new win', () => {
+        render(<GanttAddNewItem portfolioId = {0} />)
+
+        userEvent.click(screen.getByTestId('GanttAddNewItem__button'))
+        userEvent.click(screen.getByText('Win'))
+
+        expect(openPopupMock).toHaveBeenCalledWith(
+            WinConstants.CREATE_WIN, 'WinPopup', { portfolioId: 0 }
         )
     })
 })
