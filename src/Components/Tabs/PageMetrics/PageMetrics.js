@@ -1,10 +1,11 @@
 import { Divider, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { ProductRoleMetrics } from 'Components/ProductRoleMetrics'
+import { PageRoleMetrics } from 'Components/PageRoleMetrics'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestSearchPageMetrics } from 'Redux/AppMetrics/actions'
+import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { selectTeamById } from 'Redux/Teams/selectors'
 import { requestFindUserBy } from 'Redux/Users/actions'
@@ -18,14 +19,23 @@ const excludeUserIds = (userIds, excludeIds) => {
     return userIds.filter(uId => !excludeIds.includes(uId))
 }
 
-function ProductMetrics({ id }) {
+export default function PageMetrics({ id, type }) {
 
     const dispatch = useDispatch()
 
-    const product = useSelector(state => selectProductById(state, id))
-    const team = useSelector(state => selectTeamById(state, product?.personnel?.teamIds[0]))
-    const users = useSelector(state => state.users)
+    let pageItem = {}
 
+    switch (type) {
+    case 'product':
+        pageItem = useSelector(state => selectProductById(state, id))
+        break
+    case 'portfolio':
+        pageItem = useSelector(state => selectPortfolioById(state, id))
+        break
+    }
+
+    const team = useSelector(state => selectTeamById(state, pageItem?.personnel?.teamIds[0]))
+    const users = useSelector(state => state.users)
     const [uniqueViews, setUniqueViews] = useState([])
 
     useEffect(() => {
@@ -38,7 +48,7 @@ function ProductMetrics({ id }) {
                 const visitorIds = new Set()
                 response.map(entry => {
                     Object.entries(entry?.pageViews).map(([key, value]) => {
-                        if (key.includes(`products/${id}`, 0)) {
+                        if (key.includes(`${type}s/${id}`, 0)) {
                             value.forEach(uId => {
                                 visitorIds.add(uId)
                             })
@@ -60,7 +70,7 @@ function ProductMetrics({ id }) {
         }
     }, [uniqueViews])
 
-    const usersOnTheTeam = [...team.userIds, product.ownerId]
+    const usersOnTheTeam = [...team.userIds, pageItem.personnel?.ownerId]
     const filteredPeopleIds = uniqueViews?.length > 0 ? excludeUserIds(uniqueViews, usersOnTheTeam) : []
 
     return (
@@ -70,14 +80,13 @@ function ProductMetrics({ id }) {
             </Typography>
             <Stack marginLeft = {3} maxWidth = '344px'>
                 <Divider sx = {{ marginY: 1 }}/>
-                <ProductRoleMetrics ids = {filteredPeopleIds}/>
+                <PageRoleMetrics ids = {filteredPeopleIds} />
             </Stack>
         </>
     )
 }
 
-ProductMetrics.propTypes = {
+PageMetrics.propTypes = {
     id: PropTypes.number.isRequired,
+    type: PropTypes.oneOf(['product', 'portfoio']).isRequired
 }
-
-export default ProductMetrics

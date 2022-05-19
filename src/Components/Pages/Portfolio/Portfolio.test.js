@@ -7,6 +7,9 @@ jest.mock('Components/Portfolio/PortfolioCapabilities/PortfolioCapabilities',
 jest.mock('Components/EntriesContainer/EntriesContainer',
     () => function testing() { return (<div>ObjectivesTab</div>) })
 
+jest.mock('Components/Tabs/PageMetrics/PageMetrics',
+    () => function testing() { return (<div>MetricsTab</div>) })
+
 describe('<Portfolio />', () => {
 
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
@@ -46,6 +49,13 @@ describe('<Portfolio />', () => {
 
         fireEvent.click(screen.getByText('requirements'))
         expect(screen.getByText('RequirementsTab')).toBeInTheDocument()
+    })
+
+    test('should render metrics tab', async() => {
+        renderWithRouter(<Portfolio />)
+
+        fireEvent.click(screen.getByText('metrics'))
+        expect(screen.getByText('MetricsTab')).toBeInTheDocument()
     })
 
     test('should handle action icons with permissions', () => {

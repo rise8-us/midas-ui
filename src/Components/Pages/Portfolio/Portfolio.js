@@ -3,6 +3,7 @@ import { Box, Divider, Grid, IconButton, Skeleton, Tab, Tabs, Typography } from 
 import EntriesContainer from 'Components/EntriesContainer/EntriesContainer'
 import { Page } from 'Components/Page'
 import { PortfolioCapabilities } from 'Components/Portfolio/PortfolioCapabilities'
+import { PageMetrics } from 'Components/Tabs/PageMetrics/'
 import { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
@@ -89,6 +90,11 @@ export default function Portfolio() {
                                 value = 'requirements'
                                 data-testid = 'Portfolio__requirements'
                             />
+                            <Tab
+                                label = 'metrics'
+                                value = 'metrics'
+                                data-testid = 'Portfolio__metrics'
+                            />
                         </Tabs>
                         <Divider variant = 'fullWidth' />
                     </Grid>
@@ -102,6 +108,11 @@ export default function Portfolio() {
                             { value === 'requirements' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
                                     <PortfolioCapabilities portfolioId = {id}/>
+                                </Suspense>
+                            }
+                            { value === 'metrics' &&
+                                <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
+                                    <PageMetrics id = {id} type = 'portfolio'/>
                                 </Suspense>
                             }
                         </Box>

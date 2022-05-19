@@ -1,2 +1,1 @@
-export { default as ProductMetrics } from './ProductMetrics'
-
+export { default as PageMetrics } from './PageMetrics'
