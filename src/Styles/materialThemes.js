@@ -28,13 +28,21 @@ const theme = createTheme({
         gantt: {
             milestone: {
                 dark: {
-                    background: '#981B1E',
+                    background: '#8A191B',
+                    text: '#fff'
+                },
+                light: {
+                    background: '#B35758',
                     text: '#fff'
                 }
             },
             event: {
                 dark: {
-                    background: '#4C2C92',
+                    background: '#442783',
+                    text: '#fff'
+                },
+                light: {
+                    background: '#594A9C',
                     text: '#fff'
                 }
             },

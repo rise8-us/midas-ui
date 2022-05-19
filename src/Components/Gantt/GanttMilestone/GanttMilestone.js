@@ -12,7 +12,7 @@ import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttTooltip } from '../GanttTooltip'
 
 const MilestoneFlagPole = styled('div')(({ theme }) => ({
-    position: 'sticky',
+    position: 'absolute',
     width: '3px',
     height: `calc(100% + ${theme.spacing(1)})`,
     background: theme.palette.gantt.milestone.dark.background,
@@ -26,13 +26,13 @@ const MilestoneFlag = styled('div')(({ theme }) => ({
     display: 'flex',
     left: '3px',
     justifyContent: 'center',
-    color: theme.palette.gantt.milestone.dark.text,
+    color: theme.palette.gantt.milestone.light.text,
     alignItems: 'center',
     width: 'fit-content',
     textAlign: 'left',
     maxWidth: 'calc(100vw - 48px - 76vw)',
     flexWrap: 'nowrap',
-    background: theme.palette.gantt.milestone.dark.background,
+    background: theme.palette.gantt.milestone.light.background,
     padding: theme.spacing(0, 1),
     borderRadius: theme.spacing(1),
     borderTopLeftRadius: 0,
