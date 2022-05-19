@@ -76,7 +76,7 @@ export default function EntriesContainer({ portfolioId }) {
         setExpandedState(newState)
     }
 
-    const renderComponent = (entry) => {
+    const renderComponent = (entry, dateRange) => {
         switch (entry.type) {
         case 'target':
             return <GanttTarget
@@ -89,7 +89,7 @@ export default function EntriesContainer({ portfolioId }) {
         case 'win':
             return <GanttWin win = {entry}/>
         case 'event':
-            return <GanttEvent event = {entry}/>
+            return <GanttEvent event = {entry} dateRange = {dateRange}/>
         }
     }
 

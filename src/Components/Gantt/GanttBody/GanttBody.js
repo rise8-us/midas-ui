@@ -62,7 +62,7 @@ export default function GanttBody({
                                 enableFullHeight = {entry.enableFullHeight}
                                 style = {entry.style}
                             >
-                                {renderComponent(entry)}
+                                {renderComponent(entry, dateRange)}
                             </GanttEntry>
                         ))}
                     </div>
