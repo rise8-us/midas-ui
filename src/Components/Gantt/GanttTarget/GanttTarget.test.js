@@ -108,6 +108,19 @@ describe('<GanttTarget />', () => {
         render(<GanttTarget target = {target}/>)
 
         expect(screen.getByTestId('GanttTarget__target-progress')).toBeInTheDocument()
+    })
+
+    test('should expand all', () => {
+        render(<GanttTarget target = {target}/>)
+
+        userEvent.click(screen.getByTestId('GanttTarget__expandAllButton_closed'))
+        wait(800).then(() => {
+            expect(screen.getByTestId('GanttTarget__expandAllButton_open')).toBeInTheDocument()
+            expect(screen.getByTestId('GanttTarget__expandButton_open')).toBeInTheDocument()
+
+            userEvent.click(screen.getByTestId('GanttTarget__expandAllButton_open'))
+            expect(screen.getByTestId('GanttTarget__expandAllButton_closed')).toBeInTheDocument()
+        })
 
     })
 })

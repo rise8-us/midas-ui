@@ -5,7 +5,7 @@ import {
 } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
@@ -141,6 +141,10 @@ export default function GanttSubTarget({ target, defaultOpen }) {
             { id, capabilities: capabilities, target }
         ))
     }
+
+    useEffect(() => {
+        setOpen(defaultOpen)
+    }, [defaultOpen])
 
     return (
         <StyledDiv>

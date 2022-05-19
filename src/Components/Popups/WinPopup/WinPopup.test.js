@@ -50,9 +50,9 @@ describe('<WinPopup />', () => {
         render(<WinPopup id = {4} portfolioId = {1}/>)
 
         expect(screen.getByText('Create Win')).toBeInTheDocument()
-        expect(screen.getByTestId('WinPopup__input-title')).toBeInTheDocument()
-        expect(screen.getByTestId('WinPopup__input-description')).toBeInTheDocument()
-        expect(screen.getByText('Due Date')).toBeInTheDocument()
+        expect(screen.getByText('Title')).toBeInTheDocument()
+        expect(screen.getByText('Description')).toBeInTheDocument()
+        expect(screen.getByText('Date')).toBeInTheDocument()
     })
 
     test('should display error messages', () => {
