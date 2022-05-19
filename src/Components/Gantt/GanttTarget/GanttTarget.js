@@ -53,6 +53,17 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
     marginRight: theme.spacing(-1)
 }))
 
+const getTransitionStyles = (horizontalOpen, widthBool) => ({
+    minWidth: horizontalOpen ? '50vw' : '106px',
+    transition: widthBool ? 'none' : 'min-width 800ms'
+})
+
+const getExpandProperties = (open) => ({
+    transform: open ? 180 : 0,
+    testid: open ? 'open' : 'closed',
+    tooltip: !open ? 'Expand' : 'Collapse',
+})
+
 export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
     const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
@@ -66,18 +77,19 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
 
+    const [openAll, setOpenAll] = useState(false)
     const [hover, setHover] = useState(false)
     const [horizontalOpen, setHorizontalOpen] = useState(false)
     const [widthBool, setWidthBool] = useState(false)
 
-    const transitionStyles = {
-        minWidth: horizontalOpen ? '50vw' : '106px',
-        transition: widthBool ? 'none' : 'min-width 800ms'
-    }
-
     const handleHover = {
         onMouseEnter: () => setHover(true),
         onMouseLeave: () => setHover(false)
+    }
+
+    const handleExpandHover = {
+        onMouseEnter: () => setHover(false),
+        onMouseLeave: () => setHover(true)
     }
 
     const updateTarget = (e) => {
@@ -107,12 +119,18 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
     }
 
     const expandButtonHandler = () => {
-        if (!isExpanded && !widthBool) {
-            setHorizontalOpen(prev => !prev)
-            setTimeout(() => setIsExpanded(id, true), 800)
+        setHorizontalOpen(prev => !prev)
+        setIsExpanded(id, !isExpanded)
+        setOpenAll(false)
+    }
+
+    const expandAllButtonHandler = () => {
+        if (!openAll && isExpanded) {
+            setOpenAll(true)
         } else {
             setHorizontalOpen(prev => !prev)
             setIsExpanded(id, !isExpanded)
+            setOpenAll(prev => !prev)
         }
     }
 
@@ -127,7 +145,11 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
     }, [isExpanded])
 
     return (
-        <StyledDiv data-testid = {'GanttTarget__container_' + id} ref = {ref} style = {transitionStyles}>
+        <StyledDiv
+            data-testid = {'GanttTarget__container_' + id}
+            ref = {ref}
+            style = {getTransitionStyles(horizontalOpen, widthBool)}
+        >
             {epics.length > 0 &&
                 <Tooltip
                     followCursor
@@ -151,38 +173,59 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
                         </Box>
                     </Box>
                 </Tooltip>}
-            <Tooltip open = {hover && !isExpanded} title = {<GanttTargetTooltip target = {target}/>} arrow followCursor>
+            <Tooltip
+                open = {hover && !isExpanded}
+                title = {<GanttTargetTooltip target = {target}/>}
+                arrow
+                followCursor
+            >
                 <StyledHeader {...handleHover}>
-                    <div style = {{ maxWidth: 'calc(100% - 30px)' }}>
+                    <div style = {{ maxWidth: 'calc(100% - 60px)' }}>
                         <GanttEntryHeader title = {title} dateRange = {dateString} />
                     </div>
-                    <div>
-                        <IconButton style = {{ display: 'none', maxHeight: '40px' }}>
-                            <KeyboardDoubleArrowDown
-                                style = {{
-                                    transform: `rotate(${isExpanded ? 180 : 0}deg)`,
-                                    transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-                                }}
-                            />
-                        </IconButton>
-                        <StyledExpandButton
-                            data-testid = {'GanttTarget__expandButton_' + (isExpanded ? 'open' : 'closed')}
-                            onClick = {expandButtonHandler}
+                    <div {...handleExpandHover} style = {{ display: 'flex' }}>
+                        <Tooltip
+                            disableInteractive
+                            title = {getExpandProperties(isExpanded).tooltip}
                         >
-                            <ExpandMore
-                                style = {{
-                                    transform: `rotate(${isExpanded ? 180 : 0}deg)`,
-                                    transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-                                }}
-                            />
-                        </StyledExpandButton>
+                            <StyledExpandButton
+                                data-testid = {'GanttTarget__expandButton_' + getExpandProperties(isExpanded).testid}
+                                onClick = {expandButtonHandler}
+                                style = {{ marginRight: 0 }}
+                                size = 'small'
+                            >
+                                <ExpandMore
+                                    style = {{
+                                        transform: `rotate(${getExpandProperties(isExpanded).transform}deg)`,
+                                        transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                    }}
+                                />
+                            </StyledExpandButton>
+                        </Tooltip>
+                        <Tooltip
+                            disableInteractive
+                            title = {getExpandProperties(openAll).tooltip + ' All'}
+                        >
+                            <StyledExpandButton
+                                data-testid = {'GanttTarget__expandAllButton_' + getExpandProperties(openAll).testid}
+                                onClick = {expandAllButtonHandler}
+                                size = 'small'
+                            >
+                                <KeyboardDoubleArrowDown
+                                    style = {{
+                                        transform: `rotate(${getExpandProperties(openAll).transform}deg)`,
+                                        transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+                                    }}
+                                />
+                            </StyledExpandButton>
+                        </Tooltip>
                     </div>
                 </StyledHeader>
             </Tooltip>
             <Collapse
                 in = {isExpanded}
                 collapsedSize = {0}
-                easing = {'cubic-bezier(1,-0.01, 0.69, 1.01)'}
+                easing = {'cubic-bezier(1, -0.01, 0.69, 1.01)'}
             >
                 <Typography
                     margin = '8px'
@@ -209,7 +252,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
                         </div>
                     </div>
                 }
-                <GanttSubTargetList ids = {childrenIds}/>
+                <GanttSubTargetList ids = {childrenIds} defaultAllOpen = {openAll} />
             </Collapse>
         </StyledDiv>
     )
