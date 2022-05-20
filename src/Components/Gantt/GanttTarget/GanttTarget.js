@@ -1,5 +1,5 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
-import { Box, Button, Collapse, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material'
+import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,9 +11,10 @@ import TargetConstants from 'Redux/Targets/constants'
 import { selectEpicIdsByTargetIds } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 import { parseDate } from 'Utilities/ganttHelpers'
-import { getTotalWeights, normalise, roundedPercent } from 'Utilities/progressHelpers'
+import { getTotalWeights } from 'Utilities/progressHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
+import { GanttProgressBar } from '../GanttProgressBar'
 import { GanttSubTargetList } from '../GanttSubTargetList'
 import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
@@ -151,28 +152,12 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
             style = {getTransitionStyles(horizontalOpen, widthBool)}
         >
             {epics.length > 0 &&
-                <Tooltip
-                    followCursor
-                    disableInteractive
-                    title = {roundedPercent(totalCompletedWeight, totalWeight)}
-                >
-                    <Box display = 'flex' alignItems = 'center'>
-                        <Typography
-                            variant = 'body2'
-                            color = 'text.secondary'
-                            minWidth = {35}>
-                            {Math.floor(normalise(totalCompletedWeight, totalWeight)) + '%'}
-                        </Typography>
-                        <Box width = '100%' marginLeft = {1}>
-                            <LinearProgress
-                                variant = 'determinate'
-                                value = {normalise(totalCompletedWeight, totalWeight)}
-                                color = 'primary'
-                                data-testid = 'GanttTarget__target-progress'
-                            />
-                        </Box>
-                    </Box>
-                </Tooltip>}
+                <GanttProgressBar
+                    currentValue = {totalCompletedWeight}
+                    targetValue = {totalWeight}
+                    dataTestId = 'GanttTarget__target-progress'
+                />
+            }
             <Tooltip
                 open = {hover && !isExpanded}
                 title = {<GanttTargetTooltip target = {target}/>}

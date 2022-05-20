@@ -1,8 +1,5 @@
 import { DeleteOutline, Diamond, Edit, ExpandMore } from '@mui/icons-material'
-import {
-    Box, Button, CircularProgress, Collapse, Grow, IconButton,
-    LinearProgress, Stack, Tooltip, Typography
-} from '@mui/material'
+import { Button, CircularProgress, Collapse, Grow, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
@@ -14,8 +11,9 @@ import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget, requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
-import { getTotalWeights, normalise, roundedPercent } from 'Utilities/progressHelpers'
+import { getTotalWeights } from 'Utilities/progressHelpers'
 import { GanttEpicsList } from '../GanttEpicsList'
+import { GanttProgressBar } from '../GanttProgressBar'
 import { GanttRequirementsList } from '../GanttRequirementsList'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -149,29 +147,11 @@ export default function GanttSubTarget({ target, defaultOpen }) {
     return (
         <StyledDiv>
             {epics.length > 0 ?
-                <Tooltip
-                    followCursor
-                    disableInteractive
-                    title = {roundedPercent(totalCompletedWeight, totalWeight)}
-                >
-                    <Box display = 'flex' alignItems = 'center'>
-                        <Typography
-                            variant = 'body2'
-                            color = 'text.secondary'
-                            minWidth = {35}
-                        >
-                            {Math.floor(normalise(totalCompletedWeight, totalWeight)) + '%'}
-                        </Typography>
-                        <Box width = '100%' marginLeft = {1}>
-                            <LinearProgress
-                                variant = 'determinate'
-                                value = {normalise(totalCompletedWeight, totalWeight)}
-                                color = 'primary'
-                                data-testid = 'GanttSubtarget__subtarget-progress'
-                            />
-                        </Box>
-                    </Box>
-                </Tooltip>
+                <GanttProgressBar
+                    currentValue = {totalCompletedWeight}
+                    targetValue = {totalWeight}
+                    dataTestId = 'GanttSubtarget__subtarget-progress'
+                />
                 :
                 <Typography variant = 'body2' color = 'text.secondary'>No Epics linked</Typography>}
             <StyledHeader>
@@ -279,12 +259,14 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                             </StyledButton>
                         </Stack>
                     }
-                    <GanttRequirementsList
-                        handleEditCapability = {permissions.edit ? handleEditCapability : undefined}
-                        portfolioId = {portfolioId}
-                        capabilities = {capabilities}
-                        deliverableIds = {deliverableIds}
-                    />
+                    {deliverableIds.length > 0 &&
+                        <GanttRequirementsList
+                            handleEditCapability = {permissions.edit ? handleEditCapability : undefined}
+                            portfolioId = {portfolioId}
+                            capabilities = {capabilities}
+                            deliverableIds = {deliverableIds}
+                        />
+                    }
                     <GanttEpicsList
                         ids = {epicIds}
                         onDeleteClick = {permissions.edit ? handleEpicDelete : undefined}

@@ -1,9 +1,9 @@
 import { DeleteOutlined } from '@mui/icons-material'
-import { Box, IconButton, LinearProgress, Stack, Tooltip, Typography } from '@mui/material'
+import { IconButton, Stack, Typography } from '@mui/material'
 import { HrefText } from 'Components/HrefText'
 import PropTypes from 'prop-types'
 import { styled } from 'Styles/materialThemes'
-import { normalise, roundedPercent } from 'Utilities/progressHelpers'
+import { GanttProgressBar } from '../GanttProgressBar'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(1),
@@ -19,29 +19,11 @@ const StyledHrefText = styled(HrefText)(({ theme }) => ({
 export default function GanttAssociatedEpic({ name, title, webUrl, onDelete, totalWeight, completedWeight }) {
     return (
         <StyledDiv>
-            <Tooltip
-                followCursor
-                disableInteractive
-                title = {roundedPercent(completedWeight, totalWeight)}
-            >
-                <Box display = 'flex' alignItems = 'center'>
-                    <Typography
-                        variant = 'body2'
-                        color = 'text.secondary'
-                        minWidth = {35}
-                    >
-                        {Math.floor(normalise(completedWeight, totalWeight)) + '%'}
-                    </Typography>
-                    <Box width = '100%' marginLeft = {1}>
-                        <LinearProgress
-                            variant = 'determinate'
-                            value = {normalise(completedWeight, totalWeight)}
-                            color = 'primary'
-                            data-testid = 'GanttAssociatedEpic__epic-progress'
-                        />
-                    </Box>
-                </Box>
-            </Tooltip>
+            <GanttProgressBar
+                currentValue = {completedWeight}
+                targetValue = {totalWeight}
+                dataTestId = 'GanttAssociatedEpic__epic-progress'
+            />
             <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                 {name &&
                     <>
@@ -61,18 +43,18 @@ export default function GanttAssociatedEpic({ name, title, webUrl, onDelete, tot
 }
 
 GanttAssociatedEpic.propTypes = {
+    completedWeight: PropTypes.number,
     name: PropTypes.string,
     onDelete: PropTypes.func,
     title: PropTypes.string.isRequired,
-    webUrl: PropTypes.string,
     totalWeight: PropTypes.number,
-    completedWeight: PropTypes.number,
+    webUrl: PropTypes.string,
 }
 
 GanttAssociatedEpic.defaultProps = {
+    completedWeight: 0,
     name: undefined,
     onDelete: undefined,
-    webUrl: undefined,
     totalWeight: 0,
-    completedWeight: 0,
+    webUrl: undefined,
 }
