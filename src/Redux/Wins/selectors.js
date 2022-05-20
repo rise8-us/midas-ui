@@ -15,7 +15,7 @@ export const selectWinsByPortfolioId = (state, portfolioId) => {
         .map(win => ({
             ...win,
             type: 'win',
-            row: 2,
+            row: 1,
             style: { width: 0, marginLeft: '-12px' }
         }))
 }

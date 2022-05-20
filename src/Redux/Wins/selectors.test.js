@@ -36,7 +36,7 @@ describe('Win selectors', () => {
         expect(selectors.selectWinsByPortfolioId(mockState, 2)).toEqual([{
             ...mockState.wins[6],
             type: 'win',
-            row: 2,
+            row: 1,
             style: {
                 width: 0,
                 marginLeft: '-12px'
