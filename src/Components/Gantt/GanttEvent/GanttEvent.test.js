@@ -15,6 +15,11 @@ describe('<GanttEvent />', () => {
         attendeeIds: []
     }
 
+    const dateRange = [
+        new Date('2021-01-01'),
+        new Date('2021-06-31'),
+    ]
+
     const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
@@ -22,7 +27,7 @@ describe('<GanttEvent />', () => {
         useModuleMock('Redux/Popups/actions', 'openPopup')
 
     test('should render', () => {
-        render(<GanttEvent event = {event}/>)
+        render(<GanttEvent event = {event} dateRange = {dateRange}/>)
 
         expect(screen.getByText('This is the event title')).toBeInTheDocument()
     })
@@ -32,7 +37,7 @@ describe('<GanttEvent />', () => {
         selectUsersByIdsMock.mockReturnValue([])
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        render(<GanttEvent event = {event}/>)
+        render(<GanttEvent event = {event} dateRange = {dateRange}/>)
 
         userEvent.hover(screen.getByText('This is the event title'))
         userEvent.click(await screen.findByTestId('EditIcon'))
@@ -49,7 +54,7 @@ describe('<GanttEvent />', () => {
         selectUsersByIdsMock.mockReturnValue([])
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        render(<GanttEvent event = {event}/>)
+        render(<GanttEvent event = {event} dateRange = {dateRange}/>)
 
         userEvent.hover(screen.getByText('This is the event title'))
         userEvent.click(await screen.findByTestId('DeleteOutlineIcon'))
