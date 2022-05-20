@@ -42,7 +42,6 @@ export default function GanttWin({ win }) {
                 title = {
                     <GanttTooltip
                         dateRange = {parseStringToDate(dueDate).toDateString()}
-                        description = {win.description}
                         win = {win}
                         onDeleteClick = {deleteWin}
                         onEditClick = {updateWin}
@@ -62,7 +61,6 @@ GanttWin.propTypes = {
         id: PropTypes.number,
         portfolioId: PropTypes.number,
         title: PropTypes.string,
-        description: PropTypes.string,
         type: PropTypes.string,
         dueDate: PropTypes.string,
     }).isRequired

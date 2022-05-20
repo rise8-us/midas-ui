@@ -33,7 +33,6 @@ export default function WinPopup({ id, portfolioId }) {
 
     const [formValues, formDispatch] = useReducer(useFormReducer, {
         title: win.title,
-        description: win.description,
         dueDate: win.dueDate
     })
 
@@ -50,8 +49,8 @@ export default function WinPopup({ id, portfolioId }) {
         dispatch(context.request({
             ...win,
             title: formValues.title,
-            description: formValues.description,
             dueDate: formValues.dueDate,
+            description: '',
             portfolioId: portfolioId
         }))
     }
@@ -72,14 +71,6 @@ export default function WinPopup({ id, portfolioId }) {
                     helperText = { titleError[0] ?? 'Please enter a valid title' }
                     margin = 'dense'
                     required
-                />
-                <TextField
-                    label = 'Description'
-                    data-testid = 'WinPopup__input-description'
-                    value = { formValues.description }
-                    onChange = {(e) => handleChange('description', e.target.value)}
-                    margin = 'dense'
-                    multiline
                 />
                 <Box display = 'flex' justifyContent = 'flex-start' paddingTop = '40px'>
                     <DateSelector

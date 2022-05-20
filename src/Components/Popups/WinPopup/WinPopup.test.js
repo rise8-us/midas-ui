@@ -22,7 +22,7 @@ describe('<WinPopup />', () => {
     const returnedFoundWin = {
         id: 4,
         title: 'My Win',
-        description: 'Description',
+        description: '',
         dueDate: '2022-01-07',
         portfolioId: 1
     }
@@ -36,7 +36,7 @@ describe('<WinPopup />', () => {
 
     const updatedData = {
         title: 'foobar',
-        description: 'sassafras',
+        description: '',
         dueDate: '2022-01-07',
         portfolioId: 1
     }
@@ -51,7 +51,6 @@ describe('<WinPopup />', () => {
 
         expect(screen.getByText('Create Win')).toBeInTheDocument()
         expect(screen.getByText('Title')).toBeInTheDocument()
-        expect(screen.getByText('Description')).toBeInTheDocument()
         expect(screen.getByText('Date')).toBeInTheDocument()
     })
 
@@ -71,7 +70,7 @@ describe('<WinPopup />', () => {
     test('should call onSubmit for createWin', () => {
         const createData = {
             title: 'This is a title',
-            description: 'This is a description',
+            description: '',
             dueDate: '',
             portfolioId: 1
         }
@@ -79,11 +78,8 @@ describe('<WinPopup />', () => {
 
         const titleInput = within(screen.getByTestId('WinPopup__input-title'))
             .getByRole('textbox')
-        const descriptionInput = within(screen.getByTestId('WinPopup__input-description'))
-            .getByRole('textbox')
 
         userEvent.type(titleInput, createData.title)
-        userEvent.type(descriptionInput, createData.description)
         fireEvent.click(screen.getByText('submit'))
 
         expect(submitCreateWinMock).toHaveBeenCalledWith({ ...createData })
@@ -94,12 +90,9 @@ describe('<WinPopup />', () => {
         render(<WinPopup id = {4} portfolioId = {1} />)
 
         const titleInput = screen.getByDisplayValue('My Win')
-        const descriptionInput = screen.getByDisplayValue('Description')
 
-        userEvent.clear(descriptionInput)
         userEvent.clear(titleInput)
 
-        userEvent.type(descriptionInput, updatedData.description)
         userEvent.type(titleInput, updatedData.title)
 
         fireEvent.click(screen.getByText('submit'))

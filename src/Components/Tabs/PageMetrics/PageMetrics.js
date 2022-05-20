@@ -88,5 +88,5 @@ export default function PageMetrics({ id, type }) {
 
 PageMetrics.propTypes = {
     id: PropTypes.number.isRequired,
-    type: PropTypes.oneOf(['product', 'portfoio']).isRequired
+    type: PropTypes.oneOf(['product', 'portfolio']).isRequired
 }

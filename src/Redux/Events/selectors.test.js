@@ -40,7 +40,7 @@ describe('Event selectors', () => {
         expect(selectors.selectEventsByPortfolioId(mockState, 2)).toEqual([{
             ...mockState.events[6],
             type: 'event',
-            row: 1,
+            row: 2,
             style: { width: 0 }
         }])
     })
