@@ -4,6 +4,7 @@ import { GanttChart } from 'Components/Gantt'
 import { GanttAddNewItem } from 'Components/Gantt/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
 import { GanttExpandAllTargets } from 'Components/Gantt/GanttExpandAllTargets'
+import { GanttFilter } from 'Components/Gantt/GanttFilter'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
 import { GanttTarget } from 'Components/Gantt/GanttTarget'
 import { GanttView } from 'Components/Gantt/GanttView'
@@ -43,16 +44,16 @@ export default function EntriesContainer({ portfolioId }) {
     const events = useSelector(state => selectEventsByPortfolioId(state, portfolioId))
     const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
+    const [dateStart, setDateStart] = useState(new Date())
+    const [option, setOption] = useState({ title: '6M', viewBy: 'month', scope: 6, leadingColumns: 2 })
+    const [expandedState, setExpandedState] = useState({ allExpanded: false })
+
     const entries = [
         ...milestones,
         ...events,
         ...wins,
         ...targets.filter(t => t.parentId === null).sort(sortArrayByDateAndTitle),
     ]
-
-    const [dateStart, setDateStart] = useState(new Date())
-    const [option, setOption] = useState({ title: '6M', viewBy: 'month', scope: 6, leadingColumns: 2 })
-    const [expandedState, setExpandedState] = useState({ allExpanded: false })
 
     const handleExpandOrCollapseAll = () => {
         let allCollapsed = {}
@@ -140,6 +141,7 @@ export default function EntriesContainer({ portfolioId }) {
                             expandAllTargets = {handleExpandOrCollapseAll}
                             allExpanded = {expandedState.allExpanded}
                         />
+                        <GanttFilter />
                     </>
             }}
             chartBackgroundColor = {theme.palette.background.paper}

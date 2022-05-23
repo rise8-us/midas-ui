@@ -7,11 +7,12 @@ const StyledDiv = styled('div')(() => ({
     cursor: 'pointer',
     display: 'flex',
     height: '32px',
-    justifyContent: 'right',
     width: '136px',
-    marginRight: 0,
+    justifyContent: 'right',
     padding: '8px',
-    marginLeft: 'auto',
+    borderRight: '1px solid black',
+    marginRight: 0,
+    marginLeft: 'auto'
 }))
 
 export default function GanttExpandAllTargets({ expandAllTargets, allExpanded }) {
