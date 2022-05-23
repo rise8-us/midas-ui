@@ -1,4 +1,4 @@
-import reducer, { setAppBarFilterString, setHomePageFilterString } from './reducer'
+import reducer, { setAppBarFilterString, setHomePageFilterString, setTargetFilters } from './reducer'
 
 const initialState = {
     appBar: {
@@ -6,6 +6,9 @@ const initialState = {
     },
     homePage: {
         filterString: ''
+    },
+    targetFilters: {
+        isPriority: false
     }
 }
 
@@ -25,4 +28,11 @@ test('should set appBar filter string', () => {
     const state = actions.reduce(reducer, initialState)
 
     expect(state.appBar.filterString).toEqual('appBar')
+})
+
+test('should set target filter', () => {
+    const actions = [{ type: setTargetFilters, payload: { isPriority: true } }]
+    const state = actions.reduce(reducer, initialState)
+
+    expect(state.targetFilters.isPriority).toEqual(true)
 })

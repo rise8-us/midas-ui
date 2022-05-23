@@ -1,9 +1,8 @@
 import { Box, Checkbox, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
 
-export default function TooltipOptions({ title, width, onChange, multiple, options }) {
-
+const TooltipOptions = forwardRef(({ title, width, onChange, multiple, options }, ref) => {
     const [state, setState] = useState(
         options.reduce((currentState, nextItem) => {
             return {
@@ -26,7 +25,7 @@ export default function TooltipOptions({ title, width, onChange, multiple, optio
     }
 
     return (
-        <Stack width = {width} data-testid = 'TooltipOptions__wrap'>
+        <Stack width = {width} data-testid = 'TooltipOptions__wrap' ref = {ref}>
             { title &&
                 <Box display = 'flex' alignItems = 'center' justifyContent = 'start'>
                     <Typography color = 'secondary'>{title}</Typography>
@@ -51,7 +50,9 @@ export default function TooltipOptions({ title, width, onChange, multiple, optio
             ))}
         </Stack>
     )
-}
+})
+
+TooltipOptions.displayName = 'TooltipOptions'
 
 TooltipOptions.propTypes = {
     title: PropTypes.string,
@@ -70,3 +71,5 @@ TooltipOptions.defaultProps = {
     multiple: false,
     width: '140px'
 }
+
+export default TooltipOptions

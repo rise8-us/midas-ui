@@ -8,6 +8,9 @@ const filtersSlice = createSlice({
         },
         homePage: {
             filterString: ''
+        },
+        targetFilters: {
+            isPriority: false
         }
     },
     reducers: {
@@ -16,6 +19,9 @@ const filtersSlice = createSlice({
         },
         setAppBarFilterString: (state, action) => {
             state.appBar.filterString = action.payload
+        },
+        setTargetFilters: (state, action) => {
+            state.targetFilters.isPriority = action.payload.isPriority
         }
     },
     extraReducers: {
@@ -25,6 +31,7 @@ const filtersSlice = createSlice({
 export const {
     setAppBarFilterString,
     setHomePageFilterString,
+    setTargetFilters
 } = filtersSlice.actions
 
 export default filtersSlice.reducer

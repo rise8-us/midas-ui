@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 
-export const DateTextField = React.forwardRef(({ inputProps, onChange, ...textFieldProps }, ref) =>  {
+export const DateTextField = React.forwardRef(({ inputProps, onChange, ...textFieldProps }, ref) => {
     const [hover, setHover] = useState(false)
 
     return (

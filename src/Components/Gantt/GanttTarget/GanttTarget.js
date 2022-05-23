@@ -239,7 +239,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
                         </div>
                     </div>
                 }
-                <GanttSubTargetList ids = {childrenIds} defaultAllOpen = {openAll} />
+                <GanttSubTargetList ids = {childrenIds} defaultAllOpen = {openAll}/>
             </Collapse>
         </StyledDiv>
     )
