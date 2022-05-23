@@ -8,7 +8,7 @@ import { buildOrQueryByIds } from 'Utilities/requests'
 import { sortArrayAlphabetically } from 'Utilities/sorting'
 import { GanttAssociatedEpic } from '../GanttAssociatedEpic'
 
-export default function GanttEpicsList({ onDeleteClick, ids }) {
+export default function GanttEpicsList({ onDeleteClick, ids, startDate, dueDate }) {
     const dispatch = useDispatch()
 
     const epics = useSelector(state => selectEpicsByIds(state, ids))
@@ -29,6 +29,8 @@ export default function GanttEpicsList({ onDeleteClick, ids }) {
                         totalWeight = {epic.totalWeight}
                         completedWeight = {epic.completedWeight}
                         onDelete = {typeof onDeleteClick === 'function' ? () => onDeleteClick(epic.id) : undefined}
+                        startDate = {startDate}
+                        dueDate = {dueDate}
                     />
                 </div>
             )}
@@ -39,6 +41,8 @@ export default function GanttEpicsList({ onDeleteClick, ids }) {
 GanttEpicsList.propTypes = {
     ids: PropTypes.arrayOf(PropTypes.number),
     onDeleteClick: PropTypes.func,
+    startDate: PropTypes.string.isRequired,
+    dueDate: PropTypes.string.isRequired,
 }
 
 GanttEpicsList.defaultProps = {
