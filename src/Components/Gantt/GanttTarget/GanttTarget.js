@@ -155,6 +155,8 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
                 <GanttProgressBar
                     currentValue = {totalCompletedWeight}
                     targetValue = {totalWeight}
+                    startDate = {startDate}
+                    endDate = {dueDate}
                     dataTestId = 'GanttTarget__target-progress'
                 />
             }

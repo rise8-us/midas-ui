@@ -16,12 +16,17 @@ const StyledHrefText = styled(HrefText)(({ theme }) => ({
     color: theme.palette.gantt.association.dark.text,
 }))
 
-export default function GanttAssociatedEpic({ name, title, webUrl, onDelete, totalWeight, completedWeight }) {
+export default function GanttAssociatedEpic(props) {
+
+    const { name, title, webUrl, onDelete, totalWeight, completedWeight, startDate, dueDate } = props
+
     return (
         <StyledDiv>
             <GanttProgressBar
                 currentValue = {completedWeight}
                 targetValue = {totalWeight}
+                startDate = {startDate}
+                endDate = {dueDate}
                 dataTestId = 'GanttAssociatedEpic__epic-progress'
             />
             <Stack direction = 'row' spacing = {1} alignItems = 'center'>
@@ -49,6 +54,8 @@ GanttAssociatedEpic.propTypes = {
     title: PropTypes.string.isRequired,
     totalWeight: PropTypes.number,
     webUrl: PropTypes.string,
+    startDate: PropTypes.string.isRequired,
+    dueDate: PropTypes.string.isRequired,
 }
 
 GanttAssociatedEpic.defaultProps = {

@@ -49,7 +49,7 @@ const getPrioritySettings = (isPriority) => ({
 })
 
 export default function GanttSubTarget({ target, defaultOpen }) {
-    const { id, portfolioId, title, deliverableIds, epicIds, isPriority } = target
+    const { id, portfolioId, title, deliverableIds, epicIds, isPriority, startDate, dueDate } = target
 
     const dispatch = useDispatch()
 
@@ -150,6 +150,8 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                 <GanttProgressBar
                     currentValue = {totalCompletedWeight}
                     targetValue = {totalWeight}
+                    startDate = {startDate}
+                    endDate = {dueDate}
                     dataTestId = 'GanttSubtarget__subtarget-progress'
                 />
                 :
@@ -270,6 +272,8 @@ export default function GanttSubTarget({ target, defaultOpen }) {
                     <GanttEpicsList
                         ids = {epicIds}
                         onDeleteClick = {permissions.edit ? handleEpicDelete : undefined}
+                        startDate = {startDate}
+                        dueDate = {dueDate}
                     />
                 </Stack>
             </Collapse>
