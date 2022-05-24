@@ -1,7 +1,7 @@
 import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { GanttSubTargetList } from './index'
 
-jest.mock('components/gantt/GanttSubTarget/GanttSubTarget', () => function testing({ id }) {
+jest.mock('Components/Gantt/GanttSubTarget/GanttSubTarget', () => function testing({ id }) {
     return <div>{id}</div>
 })
 
