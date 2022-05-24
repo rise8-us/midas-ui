@@ -28,7 +28,6 @@ export default function GanttSubTargetList({ ids, defaultAllOpen }) {
                 <GanttSubTarget
                     key = {index}
                     id = {subtarget.id}
-                    target = {subtarget}
                     defaultOpen = {defaultAllOpen}
                 />
             )}

@@ -18,11 +18,25 @@ export const requestFetchEpicsByProductId = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+export const requestFetchEpicsByPortfolioId = createAsyncThunk(
+    Constants.FETCH_BY_PORTFOLIO,
+    async(id, { rejectWithValue }) => {
+        const request = { endpoint: `/api/epics?search=portfolio.id:${id}`, method: 'GET', body: {} }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
 
 export const requestSyncEpicsByProductId = createAsyncThunk(
-    Constants.SYNC_EPICS,
+    Constants.SYNC_EPICS_PRODUCT,
     async(id, { rejectWithValue }) => {
-        const request = { endpoint: `/api/epics/all/${id}`, method: 'GET', body: {} }
+        const request = { endpoint: `/api/epics/all/product/${id}`, method: 'GET', body: {} }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
+export const requestSyncEpicsByPortfolioId = createAsyncThunk(
+    Constants.SYNC_EPICS_PORTFOLIO,
+    async(id, { rejectWithValue }) => {
+        const request = { endpoint: `/api/epics/all/portfolio/${id}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

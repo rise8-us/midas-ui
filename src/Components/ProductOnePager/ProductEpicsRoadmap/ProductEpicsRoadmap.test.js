@@ -1,5 +1,10 @@
 import {
-    fireEvent, render, screen, selectRoadmapStatusesMock, useDispatchMock, useModuleMock
+    mockSyncRequest,
+    render,
+    screen,
+    selectRoadmapStatusesMock,
+    useDispatchMock,
+    useModuleMock
 } from 'Utilities/test-utils'
 import { ProductEpicsRoadmap } from './index'
 import { sortProductEpics } from './ProductEpicsRoadmap'
@@ -7,10 +12,13 @@ import { sortProductEpics } from './ProductEpicsRoadmap'
 jest.mock('Components/Epics/RoadmapEpic/RoadmapEpic',
     () => function testing() { return (<div>RoadmapEpic</div>) })
 
+jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
+    return mockSyncRequest()
+})
+
 describe('<ProductEpicsRoadmap />', () => {
 
     const selectEpicsByProductIdMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByProductId')
-    const requestSyncEpicsByProductIdMock = useModuleMock('Redux/Epics/actions', 'requestSyncEpicsByProductId')
 
     const epics = [
         {
@@ -51,17 +59,7 @@ describe('<ProductEpicsRoadmap />', () => {
         expect(renderedEpics[1].title == 'closed 2')
         expect(renderedEpics[2].title == 'opened')
 
-        expect(screen.queryByTestId('ProductEpicsRoadmap__button-sync')).not.toBeInTheDocument()
-    })
-
-    test('should call requestSyncEpicsByProductId', () => {
-        requestSyncEpicsByProductIdMock.mockReturnValue({})
-
-        render(<ProductEpicsRoadmap productId = {1} hasEdit = {true}/>)
-
-        fireEvent.click(screen.getByTestId('ProductEpicsRoadmap__button-sync'))
-
-        expect(requestSyncEpicsByProductIdMock).toHaveBeenCalled()
+        expect(screen.queryByTestId('mockSyncRequest__sync-button')).not.toBeInTheDocument()
     })
 
     describe('sortProductEpics', () => {
@@ -77,5 +75,11 @@ describe('<ProductEpicsRoadmap />', () => {
 
             expect(sortProductEpics([epics[0], { ...epics[0], startDate: null }])).toEqual(correctOrder)
         })
+    })
+
+    test('sync icon is visible', () => {
+        render(<ProductEpicsRoadmap productId = {1} hasEdit = {true} />)
+
+        expect(screen.getByTestId('mockSyncRequest__sync-button')).toBeInTheDocument()
     })
 })

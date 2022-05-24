@@ -1,5 +1,5 @@
 import { Divider, Grid } from '@mui/material'
-import AbmsLogo from 'Assets/ABMSAppsLogo.svg'
+import DashboardLogo from 'Assets/dashboardLogo.svg'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { BlockerList } from 'Components/BlockerList'
 import { DashboardCard } from 'Components/Cards'
@@ -177,7 +177,7 @@ function Dashboard() {
                                     <Grid item alignSelf = 'center'>
                                         <PieChart
                                             data = {scopedData}
-                                            label = {<img src = {AbmsLogo} style = {{ width: '100px' }} />}
+                                            label = {<img src = {DashboardLogo} style = {{ width: '100px' }} />}
                                         />
                                     </Grid>
                                     <Grid container item direction = 'column' paddingY = '12px'>

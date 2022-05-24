@@ -1,5 +1,17 @@
-import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    fireEvent,
+    mockSyncRequest,
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
+} from 'Utilities/test-utils'
 import { ProductConfigurationFields } from './index'
+
+jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
+    return mockSyncRequest()
+})
 
 describe('<ProductConfigurationFields />', () => {
     jest.setTimeout(60000)
@@ -50,8 +62,10 @@ describe('<ProductConfigurationFields />', () => {
     const selectProjectsByProductIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectsByProductId')
     const selectProjectsWithNoProductIdMock = useModuleMock('Redux/Projects/selectors', 'selectProjectsWithNoProductId')
     const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
+    const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
 
     beforeEach(() => {
+        selectProductByIdMock.mockReturnValue(product)
         selectRoadmapTypesMock.mockReturnValue(allRoadmapTypes)
         selectAllTeamsMock.mockReturnValue(allTeams)
         selectSourceControlByIdMock.mockReturnValue({})
@@ -163,6 +177,14 @@ describe('<ProductConfigurationFields />', () => {
 
         expect(screen.getByTestId('ProductConfigurationFields__project-tag-0'))
             .toHaveStyle('textDecorationLine: line-through')
+    })
+
+    test('sync icon is visible', () => {
+        selectProductByIdMock.mockReturnValue({ ...product })
+
+        render(<ProductConfigurationFields product = {product} />)
+
+        expect(screen.getByTestId('mockSyncRequest__sync-button')).toBeInTheDocument()
     })
 
 })

@@ -39,12 +39,7 @@ describe('<AssociatedEpicsPopup />', () => {
         render(<AssociatedEpicsPopup onSelect = {onSelectMock} />)
         userEvent.type(screen.getByTitle('searchEpicsMock'), 'a')
 
-        expect(onSelectMock).toHaveBeenCalledWith({
-            id: 20,
-            title: 'epic title',
-            epidId: 10,
-            productId: 11
-        })
+        expect(onSelectMock).toHaveBeenCalledWith([20])
     })
 
 })

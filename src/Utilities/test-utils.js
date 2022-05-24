@@ -100,6 +100,10 @@ export function mockSearchEpicsComponent({ onChange, defaultSearchTerms, exclude
     )
 }
 
+export function mockSyncRequest() {
+    return (<div data-testid = 'mockSyncRequest__sync-button'/>)
+}
+
 export function mockProductConfigurationFields(props) {
     return (
         <>
