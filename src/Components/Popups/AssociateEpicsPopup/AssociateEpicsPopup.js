@@ -1,13 +1,20 @@
 import { Popup } from 'Components/Popup'
 import { SearchEpics } from 'Components/Search'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { closePopup } from 'Redux/Popups/actions'
+import { selectTargetById } from 'Redux/Targets/selectors'
 
-export default function AssociateEpicsPopup({ excludeIds, title, subtitle, searchCriteria, onSelect }) {
+export default function AssociateEpicsPopup({ targetId, title, subtitle, searchCriteria, onSelect }) {
     const dispatch = useDispatch()
 
+    const target = useSelector(state => selectTargetById(state, targetId))
     const onClose = () => dispatch(closePopup('AssociateEpics'))
+
+    const handleOnSelect = (_e, values) => {
+        const newEpic = values[0]
+        onSelect([...target.epicIds, newEpic.id])
+    }
 
     return (
         <Popup
@@ -20,23 +27,22 @@ export default function AssociateEpicsPopup({ excludeIds, title, subtitle, searc
         >
             <SearchEpics
                 defaultSearchTerms = {searchCriteria}
-                onChange = {(_e, values) => onSelect(values[0])}
-                excludeIds = {excludeIds}
+                onChange = {handleOnSelect}
+                excludeIds = {target.epicIds}
             />
         </Popup>
     )
 }
 
 AssociateEpicsPopup.propTypes = {
-    excludeIds: PropTypes.arrayOf(PropTypes.number),
     onSelect: PropTypes.func.isRequired,
     searchCriteria: PropTypes.string,
     subtitle: PropTypes.string,
+    targetId: PropTypes.number.isRequired,
     title: PropTypes.string,
 }
 
 AssociateEpicsPopup.defaultProps = {
-    excludeIds: [],
     searchCriteria: undefined,
     subtitle: undefined,
     title: 'Add Epics',

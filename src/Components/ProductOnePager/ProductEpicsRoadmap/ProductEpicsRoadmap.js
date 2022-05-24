@@ -1,11 +1,11 @@
-import { Sync } from '@mui/icons-material'
-import { Grid, IconButton, Tooltip } from '@mui/material'
+import { Grid } from '@mui/material'
 import { RoadmapEpic } from 'Components/Epics/RoadmapEpic'
 import { ProductRoadmapHeader } from 'Components/ProductOnePager'
+import { SyncRequest } from 'Components/SyncRequest'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { requestSyncEpicsByProductId } from 'Redux/Epics/actions'
 import { selectEpicsByProductId } from 'Redux/Epics/selectors'
 
@@ -22,14 +22,8 @@ export const sortProductEpics = (productEpics) => {
 }
 
 function ProductEpicsRoadmap({ productId, hasEdit }) {
-
-    const dispatch = useDispatch()
-
     const productEpics = useSelector(state => selectEpicsByProductId(state, productId))
-
     const sortedEpics = useMemo(() => sortProductEpics(productEpics), [productEpics])
-
-    const syncEpics = () => dispatch(requestSyncEpicsByProductId(productId))
 
     return (
         <Grid container spacing = {2} direction = 'column'>
@@ -37,16 +31,11 @@ function ProductEpicsRoadmap({ productId, hasEdit }) {
                 <ProductRoadmapHeader
                     hasEdit = {hasEdit}
                     action = {
-                        <Tooltip title = {Tooltips.EPICS_ROADMAP_SYNC} placement = 'top' arrow>
-                            <IconButton
-                                color = 'secondary'
-                                size = 'small'
-                                data-testid = 'ProductEpicsRoadmap__button-sync'
-                                onClick = {syncEpics}
-                            >
-                                <Sync />
-                            </IconButton>
-                        </Tooltip>
+                        <SyncRequest
+                            id = {productId}
+                            request = {requestSyncEpicsByProductId}
+                            tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
+                        />
                     }
                 />
             </Grid>

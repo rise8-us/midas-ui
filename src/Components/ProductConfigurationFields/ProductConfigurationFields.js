@@ -2,11 +2,14 @@ import { Chip, Stack, TextField } from '@mui/material'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { SearchTeams } from 'Components/Search/SearchTeams'
+import { SyncRequest } from 'Components/SyncRequest'
 import { TagDropdown } from 'Components/TagDropdown'
+import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRoadmapTypes } from 'Redux/AppSettings/selectors'
+import { requestSyncEpicsByProductId } from 'Redux/Epics/actions'
 import { requestCreateProject } from 'Redux/Projects/actions'
 import { selectProjectsByProductId, selectProjectsWithNoProductId } from 'Redux/Projects/selectors'
 import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
@@ -172,6 +175,14 @@ export default function ProductConfigurationFields({
                 inputProps = {{
                     'data-testid': 'ProductConfigurationFields__input-gitlabGroupId',
                 }}
+                InputProps = {{
+                    endAdornment: (
+                        <SyncRequest
+                            id = {product.id}
+                            request = {requestSyncEpicsByProductId}
+                            tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
+                        />
+                    ) }}
                 value = {gitlabGroupId ?? ''}
                 onChange = {(e) => setGitlabGroupId(e.target.value)}
                 error = {searchErrors(errors, 'Gitlab').length > 0}

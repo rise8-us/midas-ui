@@ -7,6 +7,7 @@ describe('<GanttSubTarget />', () => {
     const selectCapabilitiesByPortfolioIdMock = useModuleMock('Redux/Capabilities/selectors',
         'selectCapabilitiesByPortfolioId')
     const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
+    const selectTargetByIdMock = useModuleMock('Redux/Targets/selectors', 'selectTargetById')
 
     const subtargetWithReqs = {
         id: 1,
@@ -29,6 +30,7 @@ describe('<GanttSubTarget />', () => {
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({})
+        selectTargetByIdMock.mockReturnValue(subtargetWithReqs)
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: false })
         selectCapabilitiesByPortfolioIdMock.mockReturnValue([{
             id: 3,
@@ -38,7 +40,7 @@ describe('<GanttSubTarget />', () => {
     })
 
     test('should render', () => {
-        render(<GanttSubTarget target = {subtargetWithReqs}/>)
+        render(<GanttSubTarget id = {1}/>)
 
         expect(screen.getByTitle('This is the subTarget title')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttSubTarget__associate-req')).not.toBeInTheDocument()
@@ -48,7 +50,9 @@ describe('<GanttSubTarget />', () => {
     })
 
     test('should render with no description', () => {
-        render(<GanttSubTarget target = {{ ...subtargetWithReqs, description: null }}/>)
+        selectTargetByIdMock.mockReturnValue({ ...subtargetWithReqs, description: null })
+
+        render(<GanttSubTarget id = {1}/>)
 
         expect(screen.queryByTestId('GanttSubTarget__description')).not.toBeInTheDocument()
     })
@@ -56,7 +60,7 @@ describe('<GanttSubTarget />', () => {
     test('associate req button', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        render(<GanttSubTarget target = {subtargetWithReqs} />)
+        render(<GanttSubTarget id = {1} />)
 
         userEvent.click(screen.getByTestId('GanttSubTarget__associate-req'))
         expect(openPopupMock).toBeCalledWith(
@@ -86,20 +90,22 @@ describe('<GanttSubTarget />', () => {
     test('should show progress bar', () => {
         selectEpicsByIdsMock.mockReturnValue(foundEpics)
 
-        render(<GanttSubTarget target = {subtargetWithReqs}/>)
+        render(<GanttSubTarget id = {1}/>)
 
         expect(screen.getByTestId('GanttSubtarget__subtarget-progress')).toBeInTheDocument()
     })
 
     test('should show with priority', () => {
-        render(<GanttSubTarget target = {{ ...subtargetWithReqs, isPriority: true }} />)
+        selectTargetByIdMock.mockReturnValue({ ...subtargetWithReqs, isPriority: true })
+
+        render(<GanttSubTarget id = {1} />)
 
         expect(screen.getByTestId('GanttSubTarget__priority')).toBeInTheDocument()
     })
 
     test('should show priority button on edit', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
-        render(<GanttSubTarget target = {subtargetWithReqs} />)
+        render(<GanttSubTarget id = {1} />)
 
         expect(screen.getByTestId('GanttSubTarget__priority')).toBeInTheDocument()
     })

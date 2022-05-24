@@ -10,6 +10,7 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget, requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
+import { selectTargetById } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 import { getTotalWeights } from 'Utilities/progressHelpers'
 import { GanttEpicsList } from '../GanttEpicsList'
@@ -48,10 +49,11 @@ const getPrioritySettings = (isPriority) => ({
     title: isPriority ? 'Priority Item' : 'Not Priority Item',
 })
 
-export default function GanttSubTarget({ target, defaultOpen }) {
-    const { id, portfolioId, title, deliverableIds, epicIds, isPriority, startDate, dueDate } = target
-
+export default function GanttSubTarget({ id, defaultOpen }) {
     const dispatch = useDispatch()
+
+    const target = useSelector(state => selectTargetById(state, id))
+    const { portfolioId, title, deliverableIds, epicIds, isPriority, startDate, dueDate } = target
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
@@ -100,10 +102,10 @@ export default function GanttSubTarget({ target, defaultOpen }) {
 
     const onClickAssociateEpics = () => {
 
-        const onSelectEpic = (newEpic) => {
+        const onSelectEpic = (newEpicIds) => {
             dispatch(requestUpdateTarget({
                 ...target,
-                epicIds: [...epicIds, newEpic.id]
+                epicIds: [...newEpicIds]
             }))
         }
 
@@ -111,7 +113,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
             onSelect: onSelectEpic,
             subtitle: title,
             title: 'Add Epics to subtarget',
-            excludeIds: epicIds
+            targetId: id
         }))
     }
 
@@ -283,18 +285,7 @@ export default function GanttSubTarget({ target, defaultOpen }) {
 
 GanttSubTarget.propTypes = {
     defaultOpen: PropTypes.bool,
-    target: PropTypes.shape({
-        deliverableIds: PropTypes.arrayOf(PropTypes.number),
-        description: PropTypes.string,
-        dueDate: PropTypes.string,
-        epicIds: PropTypes.arrayOf(PropTypes.number),
-        id: PropTypes.number,
-        portfolioId: PropTypes.number,
-        startDate: PropTypes.string,
-        title: PropTypes.string,
-        type: PropTypes.string,
-        isPriority: PropTypes.bool
-    }).isRequired,
+    id: PropTypes.number.isRequired
 }
 
 GanttSubTarget.defaultProps = {

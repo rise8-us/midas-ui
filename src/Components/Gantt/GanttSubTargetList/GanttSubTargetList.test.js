@@ -1,6 +1,10 @@
 import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { GanttSubTargetList } from './index'
 
+jest.mock('components/gantt/GanttSubTarget/GanttSubTarget', () => function testing({ id }) {
+    return <div>{id}</div>
+})
+
 describe('<GanttSubTargetList />', () => {
 
     const subtargets = [{
@@ -20,6 +24,6 @@ describe('<GanttSubTargetList />', () => {
 
         render(<GanttSubTargetList ids = {[1]}/>)
 
-        expect(screen.getByDisplayValue('one')).toBeInTheDocument()
+        expect(screen.getByText('1')).toBeInTheDocument()
     })
 })

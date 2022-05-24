@@ -1,6 +1,7 @@
 import {
     fireEvent,
     mockSearchUsersComponent,
+    mockSyncRequest,
     mockUsersCollectionComponent,
     render,
     screen,
@@ -17,6 +18,10 @@ jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ 
 
 jest.mock('Components/UsersCollection/UsersCollection', () => function testing({ title, setUserIds }) {
     return mockUsersCollectionComponent({ title, setUserIds })
+})
+
+jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
+    return mockSyncRequest()
 })
 
 describe('<PortfolioPopup />', () => {
@@ -216,4 +221,11 @@ describe('<PortfolioPopup />', () => {
         })
     })
 
+    test('sync icon is visible', () => {
+        selectPortfolioByIdMock.mockReturnValue({ ...returnedFoundPortfolio, sourceControlId: 1, gitlabGroupId: 1 })
+
+        render(<PortfolioPopup id = {4} />)
+
+        expect(screen.getByTestId('mockSyncRequest__sync-button')).toBeInTheDocument()
+    })
 })
