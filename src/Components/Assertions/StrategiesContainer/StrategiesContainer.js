@@ -39,7 +39,7 @@ export default function StrategiesContainer({ parentId, productId, hasEdit }) {
                         <Typography variant = 'h6' color = 'secondary'>Strategies</Typography>
                     </Grid>
                     {hasEdit &&
-                        <Grid item>
+                        <Grid item data-testid = 'StrategiesContainer__add-item'>
                             <AddItem
                                 onClick = {handleAddNewStrategy}
                                 title = {Tooltips.STRATEGY_NEW_ENTRY}

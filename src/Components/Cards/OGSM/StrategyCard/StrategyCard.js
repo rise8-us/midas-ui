@@ -97,11 +97,13 @@ function StrategyCard({ id, hasEdit }) {
                                 canEdit = {hasEdit}
                                 onSave = {(v) => updateStrategy('text', v)}
                                 fullWidth
+                                title = {strategy.text}
                                 inputProps = {{
                                     style: {
                                         textOverflow: 'ellipsis'
                                     }
                                 }}
+                                data-testid = {`StrategyCard__title-input-${id}`}
                             />
                         </Grid>
                         <Grid item>
@@ -136,6 +138,7 @@ function StrategyCard({ id, hasEdit }) {
                                         title = 'delete'
                                         size = 'small'
                                         onClick = {onDeleteClick}
+                                        data-testid = {`StrategyCard__delete-icon-${id}`}
                                     >
                                         <Delete />
                                     </IconButton>

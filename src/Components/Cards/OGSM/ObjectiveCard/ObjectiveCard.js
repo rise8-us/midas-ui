@@ -100,6 +100,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                         <Grid container wrap = 'nowrap'>
                                             <Grid item flexGrow = {1}>
                                                 <AutoSaveTextFieldTitle
+                                                    dataTestId = 'ObjectiveCard__objective-title'
                                                     canEdit = {hasEdit}
                                                     initialValue = {objective.text}
                                                     onSave = {(v) => updateObjective('text', v)}
@@ -207,6 +208,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                         title = 'delete'
                                         size = 'small'
                                         onClick = {onDeleteClick}
+                                        data-testid = {`ObjectiveCard__delete-icon-${id}`}
                                     >
                                         <Delete />
                                     </IconButton>

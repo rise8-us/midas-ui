@@ -19,7 +19,7 @@ describe('Delete a capability', () => {
         cy.get('[data-testid=CapabilityTitle]').trigger('mouseover')
         cy.get('[data-testid=CapabilityTitle__delete-icon]').click()
 
-        // cy.get('[data-testid=CapabilityTitle]').should('not.exist')
+        cy.get('[data-testid=CapabilityTitle]').should('not.exist')
         
         cy.wait('@deleteApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)

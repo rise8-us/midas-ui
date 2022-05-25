@@ -2,7 +2,7 @@ describe('Updates own account', () => {
 
     before(() => {
         cy.initDB()
-        cy.loadSqlFiles(['e2e/Account/insert-users.sql'])
+        cy.loadSqlFiles(['e2e/UsersTab/insert-users.sql'])
         cy.intercept({
             method: 'GET',
             url: 'http://localhost:8000/api/assertions*',
