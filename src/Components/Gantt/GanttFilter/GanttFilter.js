@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { setTargetFilters } from 'Redux/Filters/reducer'
 
 const filterOptions = [{
-    title: 'Only Prioritized Subtargets',
+    title: 'Priority Items',
     value: 'isPriority',
     checked: false
 }]
