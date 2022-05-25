@@ -8,9 +8,10 @@ describe('<GanttFilter />', () => {
 
         render(<GanttFilter />)
 
-        expect(screen.getByTestId('FilterListIcon')).toBeInTheDocument()
         userEvent.click(screen.getByTestId('FilterListIcon'))
         userEvent.click(screen.getByTestId('TooltipOptions__checkbox-0'))
+
         expect(await screen.findByTestId('CheckBoxIcon')).toBeInTheDocument()
     })
+
 })
