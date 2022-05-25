@@ -8,7 +8,6 @@ describe('Create a deliverable', () => {
         cy.intercept({
             method: 'POST',
             url: 'http://localhost:8000/api/deliverables',
-            
           }).as('apiCheck')
     })
 

@@ -19,15 +19,14 @@ describe('Delete a deliverable', () => {
         cy.get('[data-testid=AutoSaveTextField__input]').within(() => {
             cy.get('input').type('a new deliverable').type('{enter}')
         })
+        
         cy.get('[data-testid="a new deliverable"]').trigger('mouseover')
-        cy.get('[data-testid="a new deliverable"]').parent().within(() => {
-            cy.get('button').click()
-        })
-
-        cy.get('[data-testid="a new deliverable"]').should('not.exist')
+        cy.get('[data-testid=DraggableRow__button-delete').click()
 
         cy.wait('@deleteApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
         })
+
+        cy.get('[data-testid="a new deliverable"]').should('not.exist')
     })
 })

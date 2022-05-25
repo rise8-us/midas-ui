@@ -1,3 +1,4 @@
-export { CapabilityDescription } from './CapabilityDescription'
-export { CapabilityTitle } from './CapabilityTitle'
-export { NoCapabilitiesOptions } from './NoCapabilitiesOptions'
+export { CapabilityDescription } from './CapabilityDescription/index'
+export { CapabilityTitle } from './CapabilityTitle/index'
+export { NoCapabilitiesOptions } from './NoCapabilitiesOptions/index'
+

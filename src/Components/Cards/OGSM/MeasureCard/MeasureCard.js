@@ -112,6 +112,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                             title = {measure.text}
                             fullWidth
                             multiline
+                            data-testid = {`MeasureCard__title-input-${id}`}
                         />
                     </Grid>
                     <Grid item marginTop = '3px'>
@@ -140,6 +141,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                                     title = 'delete'
                                     size = 'small'
                                     onClick = {onDeleteClick}
+                                    data-testid = {`MeasureCard__delete-icon-${id}`}
                                 >
                                     <Delete />
                                 </IconButton>

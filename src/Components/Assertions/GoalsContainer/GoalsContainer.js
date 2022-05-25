@@ -38,7 +38,7 @@ export default function GoalsContainer({ assertionId, hasEdit }) {
                     <Grid item alignSelf = 'baseline'>
                         <Typography variant = 'h6' color = 'secondary'>Goals</Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item data-testid = 'GoalsContainer__add-item'>
                         {hasEdit &&
                             <AddItem
                                 onClick = {handleAddNewGoal}

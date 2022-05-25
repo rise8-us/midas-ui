@@ -38,7 +38,7 @@ export default function MeasuresContainer({ assertionId, hasEdit }) {
                     <Typography variant = 'h6' color = 'secondary'>Measures</Typography>
                 </Grid>
                 {hasEdit &&
-                    <Grid item>
+                    <Grid item data-testid = 'MeasuresContainer__add-item'>
                         <AddItem
                             onClick = {handleAddNewMeasure}
                             title = {Tooltips.MEASURE_NEW_ENTRY}

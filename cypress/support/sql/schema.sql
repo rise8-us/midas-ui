@@ -217,9 +217,12 @@ CREATE TABLE `epic` (
   `total_weight` bigint NOT NULL DEFAULT '0',
   `completed_weight` bigint NOT NULL DEFAULT '0',
   `product_id` bigint DEFAULT NULL,
+  `portfolio_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
-  CONSTRAINT `epic_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+  KEY `portfolio_id` (`portfolio_id`),
+  CONSTRAINT `epic_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `epic_ibfk_2` FOREIGN KEY (`portfolio_id`) REFERENCES `portfolio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -327,6 +330,13 @@ CREATE TABLE `gantt_portfolio_target` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+DROP TABLE IF EXISTS `gantt_portfolio_win`;
+CREATE TABLE `gantt_portfolio_win` (
+  `portfolio_id` bigint NOT NULL,
+  `win_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 DROP TABLE IF EXISTS `gantt_target`;
 CREATE TABLE `gantt_target` (
   `id` bigint NOT NULL,
@@ -336,6 +346,7 @@ CREATE TABLE `gantt_target` (
   `title` varchar(280) NOT NULL,
   `description` text,
   `parent_id` bigint DEFAULT NULL,
+  `is_priority` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -351,6 +362,17 @@ DROP TABLE IF EXISTS `gantt_target_gitlab_epic`;
 CREATE TABLE `gantt_target_gitlab_epic` (
   `target_id` bigint NOT NULL,
   `epic_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `gantt_win`;
+CREATE TABLE `gantt_win` (
+  `id` bigint NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `due_date` date DEFAULT NULL,
+  `title` varchar(120) NOT NULL,
+  `description` text,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -703,4 +725,4 @@ CREATE TABLE `user_team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2022-05-06 15:40:20
+-- 2022-05-25 15:16:49
