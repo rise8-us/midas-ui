@@ -61,7 +61,7 @@ export default function GanttChart({
     const chartFormat = generateChartFormat(dateRange[0], viewBy, scope)
 
     return (
-        <div style = {{ width: '100%' }}>
+        <div style = {{ width: '100%' }} className = 'ganttContainer'>
             <GanttActionBar
                 additionalActions = {actionBar.additionalActions}
                 backgroundColor = {chartBackgroundColor}
@@ -72,7 +72,7 @@ export default function GanttChart({
                 navRightIcon = {actionBar.navRightIcon}
                 setDateRange = {augmentedSetDateRange}
             />
-            <div style = {chartStyle}>
+            <div className = 'ganttChart' style = {chartStyle}>
                 <GanttHeader
                     columns = {chartFormat}
                     chartBackgroundColor = {chartBackgroundColor}

@@ -39,7 +39,6 @@ describe('Win selectors', () => {
             row: 1,
             style: {
                 width: 0,
-                marginLeft: '-12px'
             }
         }])
     })
