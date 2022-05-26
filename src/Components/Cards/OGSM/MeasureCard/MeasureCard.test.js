@@ -25,6 +25,7 @@ describe('<MeasureCard />', () => {
     const measure = {
         id: 1,
         text: 'Text',
+        status: 'NOT_STARTED',
         assertionId: 2,
         comments: [],
         children: [],
@@ -160,6 +161,51 @@ describe('<MeasureCard />', () => {
 
         fireEvent.click(screen.getByTitle('comment'))
         expect(requestSearchCommentsMock).toHaveBeenCalledTimes(1)
+    })
+
+    test('should be blocked', () => {
+        const measureBlocked = {
+            ...measure,
+            status: 'BLOCKED',
+            completion: { ...measure.completion, dueDate: '2022-03-03', startDate: '2022-03-01' }
+        }
+
+        selectMeasureByIdMock.mockReturnValue(measureBlocked)
+        render(<MeasureCard id = {measureBlocked.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByText('onChangeProp'))
+        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
+            ...measureBlocked,
+            completion: {
+                ...measureBlocked.completion,
+                foo: 'bar'
+            }
+        })
+    })
+
+    test('should be on track', () => {
+        const today = new Date()
+        const measureOnTrack = {
+            ...measure,
+            status: 'ON_TRACK',
+            completion: {
+                ...measure.completion,
+                dueDate: (new Date(today.setDate(today.getDate() + 1))).toDateString(),
+                startDate: '2022-03-01'
+            }
+        }
+
+        selectMeasureByIdMock.mockReturnValue(measureOnTrack)
+        render(<MeasureCard id = {measureOnTrack.id} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByText('onChangeProp'))
+        expect(requestUpdateMeasureMock).toHaveBeenCalledWith({
+            ...measureOnTrack,
+            completion: {
+                ...measureOnTrack.completion,
+                foo: 'bar'
+            }
+        })
     })
 
 })

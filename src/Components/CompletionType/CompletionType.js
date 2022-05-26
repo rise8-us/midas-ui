@@ -147,7 +147,7 @@ function ValueType({ type, inputValue, onChange, disabled, max }) {
     const isChecked = () => inputValue === 1 ? true : false
 
     return [types.NUMBER, types.MONEY, types.PERCENTAGE].includes(type)
-        ? <Grid item xs = 'auto'>
+        ? <Grid item xs = 'auto' data-testid = {`CompletionType__value-${type}`}>
             <TypeTextField
                 disabled = {disabled}
                 inputValue = {inputValue}
@@ -164,7 +164,7 @@ function ValueType({ type, inputValue, onChange, disabled, max }) {
                     <Typography variant = 'caption' color = 'secondary'>Complete</Typography>
                 </label>
             </Grid>
-            <Grid item>
+            <Grid item data-testid = 'CompletionType__checkbox-button'>
                 <Checkbox
                     id = 'toggle'
                     disabled = {disabled}
@@ -203,7 +203,7 @@ function AutomatedType({ type, completion, onChange }) {
     }
 }
 
-export default function CompletionType({ completion,  hasEdit, onChange }) {
+export default function CompletionType({ completion, hasEdit, onChange }) {
     const completionTypes = useSelector(selectCompletionTypes)
 
     const [renderedOption, setRenderedOption] = useState(completionTypes[completion?.completionType] ?? null)
@@ -277,7 +277,8 @@ CompletionType.propTypes = {
     completion: PropTypes.shape({
         value: PropTypes.number,
         target: PropTypes.number,
-        completionType: PropTypes.string
+        completionType: PropTypes.string,
+        id: PropTypes.number,
     }).isRequired,
     hasEdit: PropTypes.bool,
     onChange: PropTypes.func.isRequired

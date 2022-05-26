@@ -17,12 +17,12 @@ describe('update strategy', () => {
 
         cy.intercept({
             method: 'PUT',
-            url: 'http://localhost:8000/api/assertions/11',
+            url: 'http://localhost:8000/api/assertions/12',
         }).as('updateApiCheck')
 
         cy.intercept({
             method: 'DELETE',
-            url: 'http://localhost:8000/api/assertions/11',
+            url: 'http://localhost:8000/api/assertions/12',
         }).as('deleteApiCheck')
     })
 
@@ -35,11 +35,11 @@ describe('update strategy', () => {
             expect(interception.response.body.text).to.equal('Enter new strategy here...')
         })
 
-        cy.get('[data-testId=StrategyCard__title-input-11]').should('exist')
+        cy.get('[data-testId=StrategyCard__title-input-12]').should('exist')
     })
 
     it('should update strategy', () => {
-        cy.clickAndType('"StrategyCard__title-input-11"', 'updated strategy')
+        cy.clickAndType('"StrategyCard__title-input-12"', 'updated strategy')
 
         cy.get('[data-testId="Product__objectives"]').click()
 
@@ -50,7 +50,7 @@ describe('update strategy', () => {
     })
 
     it('should delete strategy', () => {
-        cy.get('[data-testId="StrategyCard__delete-icon-11"]').click()
+        cy.get('[data-testId="StrategyCard__delete-icon-12"]').click()
 
         cy.get('[data-testId="Popup__button-submit"]').click()
 
