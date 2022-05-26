@@ -27,14 +27,14 @@ export default function GanttAddNewItem({ portfolioId }) {
             text: 'Milestone',
             onClick: createMilestone
         }, {
+            text: 'Win',
+            onClick: createWin
+        }, {
             text: 'Event',
             onClick: createEvent
         }, {
             text: 'Target',
             onClick: createTarget
-        }, {
-            text: 'Win',
-            onClick: createWin
         }
     ]
 

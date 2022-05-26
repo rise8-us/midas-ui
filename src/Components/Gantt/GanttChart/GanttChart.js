@@ -13,6 +13,7 @@ export default function GanttChart({
     defaultRowHeight,
     defaultRowSpacing,
     entries,
+    fillUndefinedRowsWithLikeTypes,
     headerStyles,
     leadingColumns,
     maxHeight,
@@ -25,7 +26,7 @@ export default function GanttChart({
 }) {
     const chartStyle = {
         position: 'relative',
-        overflowY: 'auto',
+        overflowY: 'overlay',
         overflowX: 'hidden',
         maxHeight: maxHeight,
         background: chartBackgroundColor,
@@ -88,6 +89,7 @@ export default function GanttChart({
                         defaultRowHeight =  {defaultRowHeight}
                         defaultRowSpacing = {defaultRowSpacing}
                         entries = {inRangeEntries}
+                        fillUndefinedRowsWithLikeTypes = {fillUndefinedRowsWithLikeTypes}
                         maxHeight = {maxHeight}
                         renderComponent = {renderComponent}
                         todayColor = {todayColor}
@@ -117,6 +119,7 @@ GanttChart.propTypes = {
             dueDate: PropTypes.string
         })
     ).isRequired,
+    fillUndefinedRowsWithLikeTypes: PropTypes.bool,
     headerStyles: PropTypes.shape({}),
     leadingColumns: PropTypes.number,
     maxHeight: PropTypes.string.isRequired,
@@ -134,6 +137,7 @@ GanttChart.defaultProps = {
     chartBackgroundColor: '#bdbdbd',
     defaultRowHeight: undefined,
     defaultRowSpacing: undefined,
+    fillUndefinedRowsWithLikeTypes: false,
     headerStyles: {},
     leadingColumns: 0,
     onEntriesFilter: (entries) => entries,

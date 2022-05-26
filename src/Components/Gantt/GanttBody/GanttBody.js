@@ -11,6 +11,7 @@ export default function GanttBody({
     defaultRowHeight,
     defaultRowSpacing,
     entries,
+    fillUndefinedRowsWithLikeTypes,
     renderComponent,
     todayColor,
 }) {
@@ -23,7 +24,7 @@ export default function GanttBody({
         }
     }
 
-    const indexedEntries = createIndexedRowsFromData(entries)
+    const indexedEntries = createIndexedRowsFromData(entries, fillUndefinedRowsWithLikeTypes)
 
     const containerStyles = {
         ...rowStyles(chartBackgroundColor, borderColor),
@@ -87,6 +88,7 @@ GanttBody.propTypes = {
         startDate: PropTypes.string,
         dueDate: PropTypes.string.isRequired,
     })),
+    fillUndefinedRowsWithLikeTypes: PropTypes.bool,
     renderComponent: PropTypes.func.isRequired,
     todayColor: PropTypes.string.isRequired
 }
@@ -101,4 +103,5 @@ GanttBody.defaultProps = {
         dueDate: null,
         startDate: null,
     }],
+    fillUndefinedRowsWithLikeTypes: false,
 }

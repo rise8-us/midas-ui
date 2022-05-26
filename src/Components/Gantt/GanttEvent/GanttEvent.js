@@ -63,7 +63,7 @@ export default function GanttEvent({ event, dateRange }) {
         }))
     }
 
-    const minWidth = useMemo(() => `calc(${duration}vw - ${duration * .48}px)`, [duration])
+    const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 48}px)`, [duration])
 
     const eventDurationStyle = {
         position: 'absolute',

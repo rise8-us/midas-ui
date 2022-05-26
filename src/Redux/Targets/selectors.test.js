@@ -38,7 +38,8 @@ describe('Target selectors', () => {
     test('selectTargetsByPortfolioId - maps properly', () => {
         expect(selectors.selectTargetsByPortfolioId(mockState, 2)).toEqual([{
             ...mockState.targets[6],
-            type: 'target'
+            type: 'target',
+            style: { width: 0 }
         }])
     })
 

@@ -154,44 +154,109 @@ export const parseDate = (startDate, endDate) => {
 
 const isWholeNumber = (num) => num !== null && num !== undefined && num >= 0
 
-const enterUndefinedRowIntoAvailableSlot = (entry, indexedEntries) => {
-    const indexedEntriesKeyArray = Object.keys(indexedEntries)
-
-    if (indexedEntriesKeyArray.length === 0) {
-        indexedEntries[0] = [entry]
-        return
-    }
-
-    if (indexedEntriesKeyArray.length - 1 === parseInt(indexedEntriesKeyArray.at(-1))) {
-        indexedEntries[indexedEntriesKeyArray.length] = [entry]
-        return
-    }
-
-    indexedEntriesKeyArray.every((key, index) => {
-        if (parseInt(key) !== index) {
-            indexedEntries[index] = [entry]
-            return false
+const handleRowfulEntries = (rowfulEntries, indexedEntries) => {
+    for (const rowfulEntry of rowfulEntries) {
+        if (indexedEntries[rowfulEntry.row]?.length > 0) {
+            indexedEntries[rowfulEntry.row].push(rowfulEntry)
+        } else {
+            indexedEntries[rowfulEntry.row] = [rowfulEntry]
         }
-        return true
-    })
+    }
+    return indexedEntries
 }
 
-export const createIndexedRowsFromData = (entries) => {
-    let indexedEntries = {}
+const getFirstAvailableRowId = (indexedEntries) => {
+    let startingIndex = 0
+    const indexedEntriesKeyArray = Object.keys(indexedEntries)
 
-    const rowfulEntries = entries.filter(x => x.row !== undefined).sort((a, b) => a.row - b.row)
-    const rowlessEntries = entries.filter(x => x.row === undefined)
-    const sortedEntries = rowfulEntries.concat(rowlessEntries)
+    if (indexedEntriesKeyArray.length - 1 === parseInt(indexedEntriesKeyArray.at(-1))) {
+        startingIndex = indexedEntriesKeyArray.length
+    } else {
+        indexedEntriesKeyArray.every((key, index) => {
+            if (parseInt(key) !== index) {
+                startingIndex = index
+                return false
+            }
+            return true
+        })
+    }
+    return startingIndex
+}
 
-    for (const entry of sortedEntries) {
-        if (!isWholeNumber(entry?.row)) {
-            enterUndefinedRowIntoAvailableSlot(entry, indexedEntries)
-        } else if (indexedEntries[entry?.row]?.length > 0) {
-            indexedEntries[entry.row].push(entry)
-        } else {
-            indexedEntries[entry?.row] = [entry]
+const findAvailableRow = (startDate, dueDate, startingRowCount, rowsObject, exclusionRows) => {
+    const rowCount = Object.keys(rowsObject).length + startingRowCount
+
+    for (let i = startingRowCount; i < rowCount; i++) {
+        if (!exclusionRows.includes(i) && startDate > rowsObject[i]) {
+            rowsObject[i] = dueDate
+            return i
         }
     }
 
+    const nextAvailableIndex = rowCount + exclusionRows.filter(n => n <= rowCount).length
+
+    rowsObject[nextAvailableIndex] = dueDate
+    return nextAvailableIndex
+}
+
+const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefinedRowsWithLikeTypes) => {
+    for (const type of Object.keys(rowlessEntriesByType)) {
+
+        if (fillUndefinedRowsWithLikeTypes) {
+            const rowAvailability = {}
+            const startingRow = getFirstAvailableRowId(indexedEntries)
+            rowAvailability[startingRow] = 0
+            const existingFilledRows = Object.keys(indexedEntries)
+                .filter(key => parseInt(key) > startingRow)
+                .map(numberAsString => parseInt(numberAsString))
+
+            const entriesSortedByDueDate = rowlessEntriesByType[type]
+                .sort((prev, next) => {
+                    const prevDueDate = dateHelpers.parseStringToDate(prev.dueDate).getTime()
+                    const nextDueDate = dateHelpers.parseStringToDate(next.dueDate).getTime()
+                    return prevDueDate - nextDueDate
+                })
+
+            for (const entry of entriesSortedByDueDate) {
+                const rowWithAvailability = findAvailableRow(
+                    dateHelpers.parseStringToDate(entry.startDate),
+                    dateHelpers.parseStringToDate(entry.dueDate),
+                    startingRow,
+                    rowAvailability,
+                    existingFilledRows
+                )
+
+                if (indexedEntries[rowWithAvailability]?.length > 0) indexedEntries[rowWithAvailability].push(entry)
+                else indexedEntries[rowWithAvailability] = [entry]
+            }
+        } else {
+            for (const entry of rowlessEntriesByType[type]) {
+                const rowNumber = getFirstAvailableRowId(indexedEntries)
+                indexedEntries[rowNumber] = [entry]
+            }
+        }
+    }
     return indexedEntries
+}
+
+export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeTypes = false) => {
+    let indexedEntries = {}
+
+    const sortedEntries = entries.reduce((acc, entry) => {
+        isWholeNumber(entry.row) ? acc.rowful.push(entry) : acc.rowless.push(entry)
+        return acc
+    }, { rowful: [], rowless: [] })
+
+    const rowfulEntries = sortedEntries.rowful.sort((a, b) => a.row - b.row)
+    const rowlessEntriesByType = sortedEntries.rowless
+        .reduce((acc, entry) => {
+            const { type } = entry
+
+            if (acc[type]?.length > 0) acc[type].push(entry)
+            else acc[type] = [entry]
+            return acc
+        }, {})
+
+    indexedEntries = handleRowfulEntries(rowfulEntries, indexedEntries)
+    return handleRowlessEntries(indexedEntries, rowlessEntriesByType, fillUndefinedRowsWithLikeTypes)
 }

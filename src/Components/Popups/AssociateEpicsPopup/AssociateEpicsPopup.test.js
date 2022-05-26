@@ -17,7 +17,7 @@ describe('<AssociatedEpicsPopup />', () => {
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
 
     test('should render properly', () => {
-        render(<AssociatedEpicsPopup onSelect = {jest.fn}/>)
+        render(<AssociatedEpicsPopup onSelect = {jest.fn} targetId = {0}/>)
 
         expect(screen.getByText('Add Epics')).toBeInTheDocument()
         expect(screen.getByText('close')).toBeInTheDocument()
@@ -27,7 +27,7 @@ describe('<AssociatedEpicsPopup />', () => {
     test('should close popup', () => {
         useDispatchMock().mockReturnValue({})
 
-        render(<AssociatedEpicsPopup onSelect = {jest.fn} />)
+        render(<AssociatedEpicsPopup onSelect = {jest.fn} targetId = {0}/>)
         fireEvent.click(screen.getByTestId('Popup__button-close'))
 
         expect(closePopupMock).toHaveBeenCalled()
@@ -36,7 +36,7 @@ describe('<AssociatedEpicsPopup />', () => {
     test('should handle onSelect', () => {
         const onSelectMock = jest.fn()
 
-        render(<AssociatedEpicsPopup onSelect = {onSelectMock} />)
+        render(<AssociatedEpicsPopup onSelect = {onSelectMock} targetId = {0}/>)
         userEvent.type(screen.getByTitle('searchEpicsMock'), 'a')
 
         expect(onSelectMock).toHaveBeenCalledWith([20])

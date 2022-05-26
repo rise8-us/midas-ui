@@ -15,7 +15,7 @@ export const selectTargetsByPortfolioId = (state, portfolioId) => {
 
     return Object.values(targets)
         .filter(target => target.portfolioId === portfolioId)
-        .map(target => ({ ...target, type: 'target' }))
+        .map(target => ({ ...target, type: 'target', style: { width: 0 } }))
 }
 
 export const selectTargetsByIds = (state, ids) => {

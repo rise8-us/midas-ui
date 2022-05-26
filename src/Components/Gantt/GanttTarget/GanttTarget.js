@@ -1,7 +1,7 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
 import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
@@ -10,6 +10,7 @@ import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { selectEpicIdsByTargetIds } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
+import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { getTotalWeights } from 'Utilities/progressHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
@@ -54,9 +55,9 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
     marginRight: theme.spacing(-1)
 }))
 
-const getTransitionStyles = (horizontalOpen, widthBool) => ({
-    minWidth: horizontalOpen ? '50vw' : '106px',
-    transition: widthBool ? 'none' : 'min-width 800ms'
+const getTransitionStyles = (horizontalOpen, shouldNotGrowHorizantally, defaultMinWidth) => ({
+    minWidth: horizontalOpen && !shouldNotGrowHorizantally ? '50vw' : defaultMinWidth ?? '106px',
+    transition: shouldNotGrowHorizantally ? 'none' : 'min-width 800ms'
 })
 
 const getExpandProperties = (open) => ({
@@ -65,12 +66,18 @@ const getExpandProperties = (open) => ({
     tooltip: !open ? 'Expand' : 'Collapse',
 })
 
-export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
+export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRange }) {
+    const dispatch = useDispatch()
+    const ref = useRef()
+
     const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
 
-    const dispatch = useDispatch()
-    const ref = useRef()
+    const start = parseStringToDate(startDate)
+    const due = parseStringToDate(dueDate)
+    const duration = calculatePosition([start, due], dateRange)[1]
+
+    const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 48}px)`, [duration])
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const epicIds = useSelector(state => selectEpicIdsByTargetIds(state, childrenIds))
@@ -81,7 +88,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
     const [openAll, setOpenAll] = useState(false)
     const [hover, setHover] = useState(false)
     const [horizontalOpen, setHorizontalOpen] = useState(false)
-    const [widthBool, setWidthBool] = useState(false)
+    const [shouldNotGrowHorizantally, setShouldNotGrowHorizantally] = useState(false)
 
     const handleHover = {
         onMouseEnter: () => setHover(true),
@@ -137,7 +144,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
 
     useEffect(() => {
         if (ref.current.clientWidth > (window.innerWidth / 2)) {
-            setWidthBool(true)
+            setShouldNotGrowHorizantally(true)
         }
     }, [])
 
@@ -149,7 +156,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded }) {
         <StyledDiv
             data-testid = {'GanttTarget__container_' + id}
             ref = {ref}
-            style = {getTransitionStyles(horizontalOpen, widthBool)}
+            style = {getTransitionStyles(horizontalOpen, shouldNotGrowHorizantally, minWidth)}
         >
             {epics.length > 0 &&
                 <GanttProgressBar
@@ -258,6 +265,7 @@ GanttTarget.propTypes = {
     }).isRequired,
     isExpanded: PropTypes.bool,
     setIsExpanded: PropTypes.func,
+    dateRange: PropTypes.array.isRequired
 }
 
 GanttTarget.defaultProps = {
