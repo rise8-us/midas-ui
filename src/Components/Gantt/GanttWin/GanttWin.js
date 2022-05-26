@@ -12,7 +12,8 @@ import { GanttTooltip } from '../GanttTooltip'
 
 const StyledDiv = styled('div')(() => ({
     margin: 'auto',
-    textAlign: 'center'
+    textAlign: 'center',
+    transform: 'translateX(-16.5px)'
 }))
 
 export default function GanttWin({ win }) {
