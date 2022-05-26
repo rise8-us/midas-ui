@@ -26,6 +26,11 @@ describe('<GanttTarget />', () => {
         { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 }
     ]
 
+    const defaultProps = {
+        target,
+        dateRange: [new Date(), new Date()]
+    }
+
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
@@ -39,7 +44,7 @@ describe('<GanttTarget />', () => {
     })
 
     test('should render', () => {
-        render(<GanttTarget target = {target}/>)
+        render(<GanttTarget {...defaultProps}/>)
 
         expect(screen.getByText('This is the target title')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
@@ -48,7 +53,7 @@ describe('<GanttTarget />', () => {
     test('should handle onEditClick', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        render(<GanttTarget target = {target}/>)
+        render(<GanttTarget {...defaultProps}/>)
 
         userEvent.click(screen.getByTestId('GanttActionButtons__edit'))
         expect(openPopupMock).toHaveBeenCalledWith(
@@ -64,7 +69,7 @@ describe('<GanttTarget />', () => {
     test('should handle onDeleteClick', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
-        render(<GanttTarget target = {target}/>)
+        render(<GanttTarget {...defaultProps}/>)
 
         userEvent.click(screen.getByTestId('GanttActionButtons__delete'))
 
@@ -82,7 +87,7 @@ describe('<GanttTarget />', () => {
 
     test('should render description after expansion', async() => {
         const testExpand = jest.fn()
-        render(<GanttTarget target = {target} setIsExpanded = {testExpand}/>)
+        render(<GanttTarget {...defaultProps} setIsExpanded = {testExpand}/>)
 
         userEvent.click(screen.getByTestId('GanttTarget__expandButton_closed'))
         wait(800).then(() => {
@@ -95,7 +100,7 @@ describe('<GanttTarget />', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
         useDispatchMock()
 
-        render(<GanttTarget target = {target}/>)
+        render(<GanttTarget {...defaultProps}/>)
 
         userEvent.click(screen.getByTestId('GanttTarget__createSubTarget_button'))
 
@@ -105,13 +110,13 @@ describe('<GanttTarget />', () => {
     test('should show progress bar', () => {
         selectEpicsByIdsMock.mockReturnValue(foundEpics)
 
-        render(<GanttTarget target = {target}/>)
+        render(<GanttTarget {...defaultProps}/>)
 
         expect(screen.getByTestId('GanttTarget__target-progress')).toBeInTheDocument()
     })
 
     test('should expand all', () => {
-        render(<GanttTarget target = {target}/>)
+        render(<GanttTarget {...defaultProps}/>)
 
         userEvent.click(screen.getByTestId('GanttTarget__expandAllButton_closed'))
         wait(800).then(() => {

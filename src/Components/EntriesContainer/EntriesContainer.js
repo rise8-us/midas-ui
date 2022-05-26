@@ -84,6 +84,7 @@ export default function EntriesContainer({ portfolioId }) {
                 target = {entry}
                 isExpanded = {expandedState[entry.id] ?? false}
                 setIsExpanded = {handleExpandOrCollapse}
+                dateRange = {dateRange}
             />
         case 'milestone':
             return <GanttMilestone milestone = {entry}/>
@@ -94,15 +95,19 @@ export default function EntriesContainer({ portfolioId }) {
         }
     }
 
-    const onEntriesFilter = (filteredEntries) => {
+    const handleExpandAll = (entriesToMap) => {
         let init = {}
-        filteredEntries.map(item => {
+        entriesToMap.map(item => {
             if (item.type === 'target' && expandedState[item.id] === undefined)
                 init[item.id] = false
             else if (item.type === 'target')
                 init[item.id] = expandedState[item.id]
         })
         setTimeout(() => setExpandedState(prev => ({ ...init, allExpanded: prev.allExpanded })), 0)
+    }
+
+    const onEntriesFilter = (filteredEntries) => {
+        handleExpandAll(filteredEntries)
         return filteredEntries
     }
 
@@ -125,6 +130,7 @@ export default function EntriesContainer({ portfolioId }) {
             entries = {entries}
             onEntriesFilter = {onEntriesFilter}
             renderComponent = {renderComponent}
+            fillUndefinedRowsWithLikeTypes
             actionBar = {{
                 navLeftIcon: <ChevronLeft size = 'small' />,
                 navRightIcon: <ChevronRight size = 'small' />,
