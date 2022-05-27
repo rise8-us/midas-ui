@@ -1,5 +1,5 @@
 import { LockOpenOutlined, LockOutlined, Settings } from '@mui/icons-material'
-import { Divider, Grid, Grow, IconButton, Tab, Tabs } from '@mui/material'
+import { Divider, Grid, Grow, IconButton, Tab, Tabs, Tooltip } from '@mui/material'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
@@ -72,12 +72,17 @@ function Product() {
                                         data-testid = 'ProductPage__icon-inline-edit'
                                         onClick = {() => setPageLock(prev => !prev)}
                                         color = 'secondary'
-                                        size = 'large'>
-                                        {pageLock ?
-                                            <LockOutlined
-                                                title = 'locked'/> :
-                                            <LockOpenOutlined title = 'unlocked'/>
-                                        }
+                                    >
+                                        <Tooltip title = {pageLock ? 'Click to edit' : 'Click to stop editing'}>
+                                            {pageLock ?
+                                                <LockOutlined title = 'locked' fontSize = 'medium' color = 'primary'/> :
+                                                <LockOpenOutlined
+                                                    title = 'unlocked'
+                                                    fontSize = 'medium'
+                                                    color = 'primary'
+                                                />
+                                            }
+                                        </Tooltip>
                                     </IconButton>
                                 }
                                 <Grow in = {hasEdit} >

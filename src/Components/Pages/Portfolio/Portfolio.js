@@ -1,5 +1,5 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
-import { Box, Divider, Grid, IconButton, Skeleton, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Divider, Grid, IconButton, Skeleton, Tab, Tabs, Tooltip, Typography } from '@mui/material'
 import EntriesContainer from 'Components/EntriesContainer/EntriesContainer'
 import { Page } from 'Components/Page'
 import { PortfolioCapabilities } from 'Components/Portfolio/PortfolioCapabilities'
@@ -62,17 +62,18 @@ export default function Portfolio() {
                             }
                         </Typography>
                     </Grid>
-                    <Grid item alignSelf = 'center'>
+                    <Grid item alignSelf = 'end'>
                         {portfolio.name && isAuthorized &&
                             <IconButton
                                 onClick = {updatePageEdit}
                                 data-testid = 'Portfolio__button-edit'
-                                size = 'large'
                             >
-                                {pagePermissions.edit
-                                    ? <LockOpenOutlined fontSize = 'small' title = 'unlocked'/>
-                                    : <LockOutlined fontSize = 'small' title = 'locked' color = 'secondary'/>
-                                }
+                                <Tooltip title = {pagePermissions.edit ? 'Click to stop editing' : 'Click to edit'}>
+                                    {pagePermissions.edit
+                                        ? <LockOpenOutlined fontSize = 'medium' title = 'unlocked' color = 'primary'/>
+                                        : <LockOutlined fontSize = 'medium' title = 'locked' color = 'primary'/>
+                                    }
+                                </Tooltip>
                             </IconButton>
                         }
                     </Grid>
