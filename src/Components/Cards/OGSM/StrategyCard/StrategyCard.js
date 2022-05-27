@@ -113,7 +113,7 @@ function StrategyCard({ id, hasEdit }) {
                                 onUserChange = {v => updateStrategy('assignedPersonId', v.id ?? null)}
                             />
                         </Grid>
-                        <Grid item marginTop = '6px'>
+                        <Grid item marginTop = '6px' data-testid = {`StrategyCard__status-selector-${id}`}>
                             <StatusSelectorChip
                                 statusName = {strategy.status}
                                 onEditProps = {{ id: id, type: 'assertion' }}

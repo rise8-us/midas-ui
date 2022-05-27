@@ -124,7 +124,7 @@ function ObjectiveCard({ id, hasEdit }) {
                                                         updateObjective('assignedPersonId', v.id ?? null)}
                                                 />
                                             </Grid>
-                                            <Grid item>
+                                            <Grid item data-testid = {`ObjectiveCard__status-selector-${id}`}>
                                                 <StatusSelectorChip
                                                     statusName = {objective.status}
                                                     onEditProps = {{ id: id, type: 'assertion' }}

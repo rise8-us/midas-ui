@@ -5,7 +5,7 @@ describe('update goal', () => {
         cy.addLocalUserAsAdmin()
         cy.loadSqlFiles(['e2e/OGSMs/insert-portfolio.sql','e2e/OGSMs/insert-objective.sql'])
 
-        cy.visit('localhost:3000/products/5/objectives')
+        cy.visit('localhost:3000/products/5/overview')
         cy.get('[data-testId=LockOutlinedIcon]', { timeout: 10000 }).should('be.visible')
     })
 
@@ -17,17 +17,18 @@ describe('update goal', () => {
 
         cy.intercept({
             method: 'PUT',
-            url: 'http://localhost:8000/api/measures/12',
+            url: 'http://localhost:8000/api/measures/5',
         }).as('updateApiCheck')
 
         cy.intercept({
             method: 'DELETE',
-            url: 'http://localhost:8000/api/measures/12',
+            url: 'http://localhost:8000/api/measures/5',
         }).as('deleteApiCheck')
     })
 
     it('should create new goal', () => {
         cy.get('[data-testId="LockOutlinedIcon"]').click()
+        cy.get('[data-testId=Product__objectives]').click()
         cy.get('[data-testId=GoalsContainer__add-item]').click()
 
         cy.wait('@createApiCheck').then((interception) => {
@@ -39,7 +40,7 @@ describe('update goal', () => {
     })
 
     it('should update goal', () => {
-        cy.clickAndType('"MeasureCard__title-input-12"', 'updated goal')
+        cy.clickAndType('"MeasureCard__title-input-5"', 'updated goal')
 
         cy.get('[data-testId="Product__objectives"]').click()
 
@@ -50,7 +51,7 @@ describe('update goal', () => {
     })
 
     it('should delete goal', () => {
-        cy.get('[data-testId="MeasureCard__delete-icon-12"]').click()
+        cy.get('[data-testId="MeasureCard__delete-icon-5"]').click()
 
         cy.get('[data-testId="Popup__button-submit"]').click()
 

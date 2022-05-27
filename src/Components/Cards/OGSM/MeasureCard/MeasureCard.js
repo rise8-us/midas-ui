@@ -36,6 +36,18 @@ const displayCompletedAt = (dateTime) => {
     )
 }
 
+const determineStatusByValue = (data, origStatus) => {
+    if (data.value === 0 && data.startDate === null) {
+        return 'NOT_STARTED'
+    } else if (data.value !== data.target && data.dueDate !== null && new Date(data.dueDate) < new Date()) {
+        return 'BLOCKED'
+    } else if (data.value === 0 && data.startDate !== null) {
+        return 'ON_TRACK'
+    } else {
+        return origStatus
+    }
+}
+
 export default function MeasureCard({ id, hasEdit, icon }) {
     const dispatch = useDispatch()
     const collapse = useRef(null)
@@ -84,6 +96,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     const updateMeasureCompletion = (data) => {
         dispatch(requestUpdateMeasure({
             ...measure,
+            status: determineStatusByValue({ ...measure.completion, ...data }, measure.status),
             completion: {
                 ...measure.completion,
                 ...data
@@ -96,7 +109,13 @@ export default function MeasureCard({ id, hasEdit, icon }) {
             ref = {collapse}
             onExpanded = {setExpanded}
             header = {
-                <Grid container wrap = 'nowrap' columnGap = {1} padding = {1} flexGrow = {1}>
+                <Grid
+                    container
+                    wrap = 'nowrap'
+                    columnGap = {1}
+                    padding = {1}
+                    flexGrow = {1}
+                >
                     <Grid
                         item
                         sx = {{ display: { xs: 'none', sm: 'flex' } }}
@@ -169,7 +188,13 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                 />
             }
         >
-            <Grid container justifyContent = 'space-between' marginBottom = {2} paddingX = {2}>
+            <Grid
+                container
+                justifyContent = 'space-between'
+                marginBottom = {2}
+                paddingX = {2}
+                data-testid = {`MeasureCard__collapsable-card-${id}`}
+            >
                 <Grid item xs = {12}>
                     {hasEdit &&
                         <Stack spacing = {1} paddingBottom = {1}>
@@ -183,7 +208,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                     }
                 </Grid>
                 <Grid item container justifyContent = 'space-around'>
-                    <Grid item width = '96px'>
+                    <Grid item width = '96px' data-testid = {`MeasureCard__start-date-${id}`}>
                         <DateSelector
                             label = 'Start Date'
                             initialValue = {getDateInDisplayOrder(measure?.completion?.startDate)}
@@ -191,7 +216,7 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                             hasEdit = {isManualOption(measure.completion.completionType) && hasEdit}
                         />
                     </Grid>
-                    <Grid item width = '96px'>
+                    <Grid item width = '96px' data-testid = {`MeasureCard__due-date-${id}`}>
                         <DateSelector
                             label = 'Due Date'
                             minDate = {measure.completion.startDate}
