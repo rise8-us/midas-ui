@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material'
+import { Stack, TextField } from '@mui/material'
 import { DateSelector } from 'Components/DateSelector'
 import { Popup } from 'Components/Popup'
 import { UsersCollection } from 'Components/UsersCollection'
@@ -71,7 +71,7 @@ function EventPopup({ id, portfolioId }) {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' flexDirection = 'column'>
+            <Stack spacing = {1}>
                 <TextField
                     label = 'Title'
                     data-testid = 'EventPopup__input-title'
@@ -97,7 +97,7 @@ function EventPopup({ id, portfolioId }) {
                     multiline
                     fullWidth
                 />
-                <Box display = 'flex' justifyContent = 'space-between' paddingTop = '24px'>
+                <Stack spacing = {2} direction = 'row' paddingTop = '8px'>
                     <DateSelector
                         label = 'Start Date'
                         initialValue = {getDateInDisplayOrder(formValues.startDate)}
@@ -105,6 +105,7 @@ function EventPopup({ id, portfolioId }) {
                         hasEdit = {true}
                         errors = {startDateError}
                         required
+                        fullWidth
                     />
                     <DateSelector
                         label = 'Due Date'
@@ -114,8 +115,9 @@ function EventPopup({ id, portfolioId }) {
                         hasEdit = {true}
                         errors = {dueDateError}
                         required
+                        fullWidth
                     />
-                </Box>
+                </Stack>
                 <UsersCollection
                     userIds = {formValues.organizerIds}
                     setUserIds = {(value) => handleChange('organizerIds', value)}
@@ -130,7 +132,7 @@ function EventPopup({ id, portfolioId }) {
                     userListPosition = 'top'
                     title = 'Guests'
                 />
-            </Box>
+            </Stack>
         </Popup>
     )
 }

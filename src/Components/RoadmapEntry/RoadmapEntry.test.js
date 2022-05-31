@@ -37,7 +37,7 @@ describe('<RoadmapEntry />', () => {
 
         expect(screen.getByDisplayValue('title')).toBeInTheDocument()
         expect(screen.getByDisplayValue('description')).toBeInTheDocument()
-        expect(screen.getByDisplayValue(/Aug 2021/i)).toBeInTheDocument()
+        expect(screen.getByText(/Aug 2021/i)).toBeInTheDocument()
     })
 
     test('should update roadmap title', () => {
@@ -51,10 +51,9 @@ describe('<RoadmapEntry />', () => {
     test('should update roadmap date', () => {
         render(<RoadmapEntry id = {3} hasEdit/>)
 
-        fireEvent.click(screen.getByDisplayValue(/Aug 2021/i))
-        fireEvent.click(screen.getByLabelText('Next month'))
+        fireEvent.click(screen.getByText(/Aug 2021/i))
+        fireEvent.click(screen.getByTestId('ArrowRightIcon'))
         fireEvent.click(screen.getByLabelText('Sep 1, 2021'))
-        fireEvent.click(screen.getByText('OK'))
 
         expect(requestUpdateRoadmapMock).toBeCalledWith({ ...roadmapEntry, dueDate: '2021-09-01' })
     })

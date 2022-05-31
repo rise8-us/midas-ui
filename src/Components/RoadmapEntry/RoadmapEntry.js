@@ -243,7 +243,7 @@ function RoadmapEntry({ id, hasEdit }) {
                             <Grid item
                                 minWidth = '100px'
                                 marginRight = '100%'
-                                marginTop = '-2px'
+                                marginTop = '-4px'
                                 onClick = {() => setHover(false)}
                             >
                                 <DateSelector
@@ -253,9 +253,7 @@ function RoadmapEntry({ id, hasEdit }) {
                                     initialValue = {getDateInDisplayOrder(date)}
                                     inputFormat = 'MMM yyyy'
                                     onAccept = {(v) => updateRoadmapEntry('dueDate', v)}
-                                    InputProps = {{
-                                        style: { ...theme.typography.h6 }
-                                    }}
+                                    variant = {'h6'}
                                 />
                             </Grid>
                         </>
