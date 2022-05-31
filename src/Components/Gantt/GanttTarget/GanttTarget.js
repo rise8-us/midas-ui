@@ -1,8 +1,10 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
 import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
+import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { requestFetchSearchEpics } from 'Redux/Epics/actions'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
@@ -13,6 +15,7 @@ import { styled } from 'Styles/materialThemes'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { getTotalWeights } from 'Utilities/progressHelpers'
+import { buildOrQueryByIds } from 'Utilities/requests'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttProgressBar } from '../GanttProgressBar'
@@ -81,6 +84,13 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRan
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const epicIds = useSelector(state => selectEpicIdsByTargetIds(state, childrenIds))
+
+    const debouncedEpicIds = useDebounce(epicIds, 100)
+
+    useEffect(() => {
+        debouncedEpicIds.length > 0 && dispatch(requestFetchSearchEpics(buildOrQueryByIds(debouncedEpicIds)))
+    }, [JSON.stringify(debouncedEpicIds)])
+
     const epics = useSelector(state => selectEpicsByIds(state, epicIds))
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
