@@ -64,7 +64,7 @@ describe('<Portfolio />', () => {
         renderWithRouter(<Portfolio />)
 
         fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
-        expect(screen.getByTitle('unlocked')).toBeInTheDocument()
+        expect(screen.getByTestId('LockOpenOutlinedIcon')).toBeInTheDocument()
     })
 
     test('should handle actions icons without permissions', () => {
@@ -73,7 +73,7 @@ describe('<Portfolio />', () => {
         renderWithRouter(<Portfolio />)
 
         fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
-        expect(screen.getByTitle('locked')).toBeInTheDocument()
+        expect(screen.getByTestId('LockOutlinedIcon')).toBeInTheDocument()
     })
 
 })

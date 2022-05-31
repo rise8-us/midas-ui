@@ -75,9 +75,8 @@ function Product() {
                                     >
                                         <Tooltip title = {pageLock ? 'Click to edit' : 'Click to stop editing'}>
                                             {pageLock ?
-                                                <LockOutlined title = 'locked' fontSize = 'medium' color = 'primary'/> :
+                                                <LockOutlined fontSize = 'medium' color = 'primary'/> :
                                                 <LockOpenOutlined
-                                                    title = 'unlocked'
                                                     fontSize = 'medium'
                                                     color = 'primary'
                                                 />
