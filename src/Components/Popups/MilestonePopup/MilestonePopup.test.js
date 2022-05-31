@@ -53,7 +53,7 @@ describe('<MilestonePopup />', () => {
         expect(screen.getByText('Create Milestone')).toBeInTheDocument()
         expect(screen.getByTestId('MilestonePopup__input-title')).toBeInTheDocument()
         expect(screen.getByTestId('MilestonePopup__input-description')).toBeInTheDocument()
-        expect(screen.getByText('Due Date')).toBeInTheDocument()
+        expect(screen.getByText('Due Date*')).toBeInTheDocument()
     })
 
     test('should display error messages', () => {

@@ -55,8 +55,8 @@ describe('<TargetPopup />', () => {
         expect(screen.getByText('Create Target')).toBeInTheDocument()
         expect(screen.getByTestId('TargetPopup__input-title')).toBeInTheDocument()
         expect(screen.getByTestId('TargetPopup__input-description')).toBeInTheDocument()
-        expect(screen.getByText('Start Date')).toBeInTheDocument()
-        expect(screen.getByText('Due Date')).toBeInTheDocument()
+        expect(screen.getByText('Start Date*')).toBeInTheDocument()
+        expect(screen.getByText('Due Date*')).toBeInTheDocument()
     })
 
     test('should render with disabledDates and title', () => {

@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, TextField } from '@mui/material'
+import { ClickAwayListener, Stack, TextField } from '@mui/material'
 import { DateSelector } from 'Components/DateSelector'
 import { Popup } from 'Components/Popup'
 import useFormReducer from 'Hooks/useFormReducer'
@@ -85,7 +85,7 @@ function TargetPopup({ disableDates, id, portfolioId, title }) {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' flexDirection = 'column'>
+            <Stack display = 'flex' flexDirection = 'column'>
                 <ClickAwayListener onClickAway = {onClickAway}>
                     <TextField
                         label = 'Title'
@@ -108,7 +108,7 @@ function TargetPopup({ disableDates, id, portfolioId, title }) {
                     multiline
                 />
                 {!disableDates &&
-                    <Box display = 'flex' justifyContent = 'space-between' paddingTop = '32px'>
+                    <Stack spacing = {1} direction = 'row' paddingTop = '32px'>
                         <DateSelector
                             label = 'Start Date'
                             initialValue = {getDateInDisplayOrder(formValues.startDate)}
@@ -116,6 +116,7 @@ function TargetPopup({ disableDates, id, portfolioId, title }) {
                             hasEdit = {true}
                             errors = {startDateError}
                             required
+                            fullWidth
                         />
                         <DateSelector
                             label = 'Due Date'
@@ -125,10 +126,11 @@ function TargetPopup({ disableDates, id, portfolioId, title }) {
                             hasEdit = {formValues.startDate ? true : false}
                             errors = {dueDateError}
                             required
+                            fullWidth
                         />
-                    </Box>
+                    </Stack>
                 }
-            </Box>
+            </Stack>
         </Popup>
     )
 }

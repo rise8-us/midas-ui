@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material'
+import { Stack, TextField } from '@mui/material'
 import { DateSelector } from 'Components/DateSelector'
 import { Popup } from 'Components/Popup'
 import useFormReducer from 'Hooks/useFormReducer'
@@ -62,15 +62,14 @@ function MilestonePopup({ id, portfolioId }) {
             onClose = {onClose}
             onSubmit = {onSubmit}
         >
-            <Box display = 'flex' flexDirection = 'column'>
+            <Stack spacing = {2}>
                 <TextField
                     label = 'Title'
                     data-testid = 'MilestonePopup__input-title'
                     value = { formValues.title }
                     onChange = {(e) => handleChange('title', e.target.value)}
                     error = { titleError.length > 0 }
-                    helperText = { titleError[0] ?? 'Please enter a valid title' }
-                    margin = 'dense'
+                    helperText = { titleError[0] ?? '' }
                     required
                 />
                 <TextField
@@ -78,21 +77,19 @@ function MilestonePopup({ id, portfolioId }) {
                     data-testid = 'MilestonePopup__input-description'
                     value = { formValues.description }
                     onChange = {(e) => handleChange('description', e.target.value)}
-                    margin = 'dense'
                     multiline
                 />
-                <Box display = 'flex' justifyContent = 'flex-start' paddingTop = '40px'>
-                    <DateSelector
-                        label = 'Due Date'
-                        minDate = {milestone.startDate}
-                        initialValue = {getDateInDisplayOrder(formValues.dueDate)}
-                        onAccept = {(value) => handleChange('dueDate', value)}
-                        hasEdit = {true}
-                        errors = {dueDateError}
-                        required
-                    />
-                </Box>
-            </Box>
+                <DateSelector
+                    label = 'Due Date'
+                    minDate = {milestone.startDate}
+                    initialValue = {getDateInDisplayOrder(formValues.dueDate)}
+                    onAccept = {(value) => handleChange('dueDate', value)}
+                    hasEdit = {true}
+                    errors = {dueDateError}
+                    required
+                    fullWidth
+                />
+            </Stack>
         </Popup>
     )
 }
