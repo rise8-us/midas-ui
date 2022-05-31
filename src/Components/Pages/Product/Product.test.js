@@ -91,7 +91,7 @@ describe('<Product>', () => {
         fireEvent.click(screen.getByTestId('ProductPage__icon-inline-edit'))
         fireEvent.click(screen.getByTestId('ProductPage__icon-popup-edit'))
 
-        expect(screen.getByTitle('unlocked')).toBeInTheDocument()
+        expect(screen.getByTestId('LockOpenOutlinedIcon')).toBeInTheDocument()
         expect(openPopupMock).toHaveBeenCalled()
     })
 

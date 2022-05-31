@@ -70,8 +70,8 @@ export default function Portfolio() {
                             >
                                 <Tooltip title = {pagePermissions.edit ? 'Click to stop editing' : 'Click to edit'}>
                                     {pagePermissions.edit
-                                        ? <LockOpenOutlined fontSize = 'medium' title = 'unlocked' color = 'primary'/>
-                                        : <LockOutlined fontSize = 'medium' title = 'locked' color = 'primary'/>
+                                        ? <LockOpenOutlined fontSize = 'medium' color = 'primary'/>
+                                        : <LockOutlined fontSize = 'medium' color = 'primary'/>
                                     }
                                 </Tooltip>
                             </IconButton>
