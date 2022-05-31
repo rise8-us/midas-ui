@@ -1,5 +1,6 @@
 import { Box, Collapse, Divider, Stack, Typography } from '@mui/material'
 import { DeliverableWorkList } from 'Components/Deliverables'
+import { DeliverablesViewTargets } from 'Components/DeliverablesViewTargets'
 import { SearchEpics } from 'Components/Search'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
@@ -7,12 +8,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestCreateDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById, selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
+import { selectTargetsByIds } from 'Redux/Targets/selectors'
 
 export default function DeliverablesView({ hasEdit, selectedDeliverableId, portfolioId }) {
     const dispatch = useDispatch()
 
     const deliverable = useSelector(state => selectDeliverableById(state, selectedDeliverableId))
     const children = useSelector(state => selectDeliverableByParentId(state, selectedDeliverableId))
+    const subtargets = useSelector(state => selectTargetsByIds(state, deliverable.targetIds ?? []))
+    const targetIds = subtargets?.map(s => s.parentId).filter((val, index, self) => self.indexOf(val) === index)
 
     const epicIds = useMemo(() => children.map(c => c.completion.gitlabEpic?.id), [children])
 
@@ -58,12 +62,20 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
             <Stack direction = 'row' justifyContent = 'space-between'>
                 <Typography variant = 'subtitle1' color = 'grey.400'>{deliverable?.title?.toUpperCase()}</Typography>
             </Stack>
-            <Divider/>
             <Box>
                 <Typography paddingY = {1}>
                     <b>{progress}%</b> of currently scoped work is complete.
                 </Typography>
             </Box>
+            <Divider/>
+            <Stack>
+                {targetIds.map((targetId, index) => (
+                    <DeliverablesViewTargets
+                        key = {index}
+                        targetId = {targetId}
+                        subtargets = {subtargets.filter(subtarget => subtarget.parentId === targetId)}/>
+                ))}
+            </Stack>
             <Collapse in = {hasEdit} collapsedSize = {0}>
                 <div style = {{ height: '32px', width: '100%' }}>
                     {hasEdit &&
