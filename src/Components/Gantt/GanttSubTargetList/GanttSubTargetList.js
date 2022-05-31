@@ -1,4 +1,5 @@
 import { Stack } from '@mui/material'
+import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,9 +19,11 @@ export default function GanttSubTargetList({ ids, defaultAllOpen }) {
         .filter(t => targetFilters.isPriority ? t.isPriority === targetFilters.isPriority : true)
     const subtargetsSorted = sortArrayAlphabetically(subtargetsFiltered, 'title')
 
+    const debouncedSubtargetList = useDebounce(ids, 100)
+
     useEffect(() => {
-        dispatch(requestSearchTargets(buildOrQueryByIds(ids)))
-    }, [JSON.stringify(ids)])
+        debouncedSubtargetList.length > 0 && dispatch(requestSearchTargets(buildOrQueryByIds(debouncedSubtargetList)))
+    }, [JSON.stringify(debouncedSubtargetList)])
 
     return (
         <Stack spacing = {1}>

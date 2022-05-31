@@ -1,22 +1,13 @@
 
 import PropTypes from 'prop-types'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { requestFetchSearchEpics } from 'Redux/Epics/actions'
+import { useSelector } from 'react-redux'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
-import { buildOrQueryByIds } from 'Utilities/requests'
 import { sortArrayAlphabetically } from 'Utilities/sorting'
 import { GanttAssociatedEpic } from '../GanttAssociatedEpic'
 
 export default function GanttEpicsList({ onDeleteClick, ids, startDate, dueDate }) {
-    const dispatch = useDispatch()
-
     const epics = useSelector(state => selectEpicsByIds(state, ids))
     const epicsSorted = sortArrayAlphabetically(epics, 'name')
-
-    useEffect(() => {
-        dispatch(requestFetchSearchEpics(buildOrQueryByIds(ids)))
-    }, [JSON.stringify(ids)])
 
     return (
         <>

@@ -1,4 +1,4 @@
-import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { render, screen, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttEpicsList } from './index'
 
 describe('<GanttEpicsList />', () => {
@@ -15,7 +15,6 @@ describe('<GanttEpicsList />', () => {
     ]
 
     beforeEach(() => {
-        useDispatchMock().mockResolvedValue({})
         selectEpicsByIdsMock.mockReturnValue(foundEpics)
     })
 
