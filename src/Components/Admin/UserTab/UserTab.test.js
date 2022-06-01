@@ -1,16 +1,13 @@
-import { act, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor } from 'Utilities/test-utils'
+import {
+    act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
+} from 'Utilities/test-utils'
 import { UserTab } from './index'
-
-jest.mock('Components/UserRoles/UserRoles',
-    () => (function testing() { return (<div>UserRoles test</div>) }))
-
-jest.mock('Components/UserSettings/UserSettings',
-    () => (function testing() { return (<div>UserSettings test</div>) }))
 
 describe('<UserTab />', () => {
     jest.setTimeout(15000)
 
     const selectUserByIdMock = useModuleMock('Redux/Users/selectors', 'selectUserById')
+    const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
     beforeEach(() => {
         selectUserByIdMock.mockReturnValue({})
@@ -53,24 +50,16 @@ describe('<UserTab />', () => {
 
         const { rerender } = render(<UserTab />)
 
-        expect(screen.queryByText('baby yoda')).not.toBeInTheDocument()
-        const element = screen.getByTestId('UserTab__search-input')
-        userEvent.type(element, 'yoda')
+        userEvent.type(screen.getByTestId('UserTab__search-input'), 'yoda')
 
         selectUserByIdMock.mockReturnValue(user)
         rerender(<UserTab />)
 
         expect(await screen.findByText('baby yoda')).toBeInTheDocument()
 
-        userEvent.click(screen.getByTestId('Table__row'))
+        fireEvent.click(screen.getByTestId('Table__row'))
 
-        expect(screen.getByText('UserRoles test')).toBeInTheDocument()
-        expect(screen.getByText('UserSettings test')).toBeInTheDocument()
-
-        userEvent.click(screen.queryByDisplayValue('yoda'))
-        userEvent.clear(screen.queryByDisplayValue('yoda'))
-        expect(screen.queryByDisplayValue('yoda')).not.toBeInTheDocument()
-
+        expect(openPopupMock).toHaveBeenCalledWith('users/update', 'UserPopup', { 'id': 42 })
     })
 
 })
