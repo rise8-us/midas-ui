@@ -23,8 +23,7 @@ describe('<AppBar />', () => {
     test('should render no authd user', () => {
         selectUserLoggedInMock.mockReturnValue({})
 
-        renderWithRouter(<AppBar />,
-            { history })
+        renderWithRouter(<AppBar />, { history })
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
         expect(screen.queryByTitle('Dashboard')).not.toBeInTheDocument()

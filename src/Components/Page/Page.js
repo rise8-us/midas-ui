@@ -9,7 +9,7 @@ const DivStyled = styled('div')(({ theme }) => ({
     position: 'fixed',
     top: '68px',
     paddingBottom: '24px',
-    overflowY: 'scroll',
+    overflowY: 'overlay',
     overflowX: 'hidden',
     height: 'calc(100vh - 88px)',
     width: '100vw',
