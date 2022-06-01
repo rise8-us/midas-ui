@@ -2,15 +2,16 @@ import { Search } from '@mui/icons-material'
 import { Stack } from '@mui/material'
 import { SearchUsers } from 'Components/Search'
 import { Table } from 'Components/Table'
+import PropTypes from 'prop-types'
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { openPopup } from 'Redux/Popups/actions'
 import userConstants from 'Redux/Users/constants'
 import { styled } from 'Styles/materialThemes'
 
-const StyledSearchUsers = styled(SearchUsers)(({ theme }) => ({
+const StyledSearchUsers = styled(SearchUsers)(({ theme, top }) => ({
     position: 'sticky',
-    top: '68px',
+    top: top + 'px',
     boxShadow: '0 0 10px black',
     height: 48,
     borderRadius: theme.spacing(1),
@@ -19,7 +20,7 @@ const StyledSearchUsers = styled(SearchUsers)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper
 }))
 
-function UserTab() {
+export default function UserTab({ offsetTop }) {
     const dispatch = useDispatch()
 
     const [results, setResults] = useState([])
@@ -38,10 +39,11 @@ function UserTab() {
     }
 
     return (
-        <Stack spacing = {1} m = {t => t.spacing(9, 3, 1, 3)}>
+        <Stack spacing = {1} m = {[2, 3, 1, 3]}>
             <StyledSearchUsers
                 onDataReturn = {data => setResults(data ?? [])}
                 title = ''
+                top = {offsetTop}
                 growFrom = '30%'
                 growTo = '60%'
                 placeholder = 'Search…'
@@ -59,14 +61,22 @@ function UserTab() {
                     }}
                 />}
             />
-            <Table
-                columns = {['id', 'username', 'email', 'display name']}
-                rows = {buildRows()}
-                onRowClick = {updateUser}
-                tableWidth = '100%'
-            />
+            <div>
+                <Table
+                    columns = {['id', 'username', 'email', 'display name']}
+                    rows = {buildRows()}
+                    onRowClick = {updateUser}
+                    tableWidth = '100%'
+                />
+            </div>
         </Stack>
     )
 }
 
-export default UserTab
+UserTab.propTypes = {
+    offsetTop: PropTypes.number
+}
+
+UserTab.defaultProps = {
+    offsetTop: 0
+}

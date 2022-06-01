@@ -1,36 +1,37 @@
 import { Tab, Tabs } from '@mui/material'
 import { Page } from 'Components/Page'
-import React, { Suspense, useState } from 'react'
+import { lazy, Suspense, useRef, useState } from 'react'
 import { styled } from 'Styles/materialThemes'
 
-const UserTab = React.lazy(() => import('Components/Admin/UserTab/UserTab'))
-const TeamsTab = React.lazy(() => import('Components/Admin/TeamsTab/TeamsTab'))
-const ProjectsTab = React.lazy(() => import('Components/Admin/ProjectsTab/ProjectsTab'))
-const ProductsTab = React.lazy(() => import('Components/Admin/ProductsTab/ProductsTab'))
-const PortfoliosTab = React.lazy(() => import('Components/Admin/PortfoliosTab/PortfoliosTab'))
-const SourceControlTab = React.lazy(() => import('Components/Admin/SourceControlTab/SourceControlTab'))
-const DatabaseTab = React.lazy(() => import('Components/Admin/DatabaseTab/DatabaseTab'))
+const UserTab = lazy(() => import('Components/Admin/UserTab/UserTab'))
+const TeamsTab = lazy(() => import('Components/Admin/TeamsTab/TeamsTab'))
+const ProjectsTab = lazy(() => import('Components/Admin/ProjectsTab/ProjectsTab'))
+const ProductsTab = lazy(() => import('Components/Admin/ProductsTab/ProductsTab'))
+const PortfoliosTab = lazy(() => import('Components/Admin/PortfoliosTab/PortfoliosTab'))
+const SourceControlTab = lazy(() => import('Components/Admin/SourceControlTab/SourceControlTab'))
+const DatabaseTab = lazy(() => import('Components/Admin/DatabaseTab/DatabaseTab'))
 
 const TabsStyled = styled(Tabs)(({ theme }) => ({
-    position: 'absolute',
-    top: '68px',
+    position: 'sticky',
+    top: '0px',
     zIndex: 100,
-    width: '100%',
     boxShadow: '0 0 6px 0 #000',
     backgroundColor: theme.palette.background.default
 }))
 
 function Admin() {
     const [value, setValue] = useState('users')
+    const tabRef = useRef()
 
     const handleChange = (_e, newValue) => setValue(newValue)
 
     return (
-        <>
+        <Page>
             <TabsStyled
                 value = {value}
                 onChange = {handleChange}
                 variant = 'fullWidth'
+                ref = {tabRef}
             >
                 <Tab label = 'users' value = 'users' data-testid = 'Admin__users'/>
                 <Tab label = 'teams' value = 'teams' data-testid = 'Admin__teams'/>
@@ -48,32 +49,30 @@ function Admin() {
                     data-testid = 'Admin__database'
                 />
             </TabsStyled>
-            <Page>
-                <div style = {{ marginTop: '48px' }}>
-                    { value === 'users' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><UserTab/></Suspense>
-                    }
-                    { value === 'teams' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><TeamsTab/></Suspense>
-                    }
-                    { value === 'projects' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProjectsTab/></Suspense>
-                    }
-                    { value === 'products' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProductsTab/></Suspense>
-                    }
-                    { value === 'portfolios' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><PortfoliosTab/></Suspense>
-                    }
-                    { value === 'source Controls' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><SourceControlTab/></Suspense>
-                    }
-                    { value === 'database' &&
-                        <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><DatabaseTab/></Suspense>
-                    }
-                </div>
-            </Page>
-        </>
+            { value === 'users' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}>
+                    <UserTab offsetTop = {tabRef?.current?.offsetHeight + 16}/>
+                </Suspense>
+            }
+            { value === 'teams' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><TeamsTab/></Suspense>
+            }
+            { value === 'projects' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProjectsTab/></Suspense>
+            }
+            { value === 'products' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProductsTab/></Suspense>
+            }
+            { value === 'portfolios' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><PortfoliosTab/></Suspense>
+            }
+            { value === 'source Controls' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><SourceControlTab/></Suspense>
+            }
+            { value === 'database' &&
+                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><DatabaseTab/></Suspense>
+            }
+        </Page>
     )
 }
 

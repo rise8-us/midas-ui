@@ -1,11 +1,14 @@
+import { createMemoryHistory } from 'history'
 import { fireEvent, renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
 import { Portfolio } from './index'
+
+const history = createMemoryHistory()
 
 jest.mock('Components/Portfolio/PortfolioCapabilities/PortfolioCapabilities',
     () => function testing() { return (<div>RequirementsTab</div>) })
 
 jest.mock('Components/EntriesContainer/EntriesContainer',
-    () => function testing() { return (<div>ObjectivesTab</div>) })
+    () => function testing() { return (<div>RoadmapTab</div>) })
 
 jest.mock('Components/Tabs/PageMetrics/PageMetrics',
     () => function testing() { return (<div>MetricsTab</div>) })
@@ -25,7 +28,7 @@ describe('<Portfolio />', () => {
         renderWithRouter(<Portfolio />)
 
         expect(screen.getByText('foo')).toBeInTheDocument()
-        expect(screen.getByText('objectives')).toBeInTheDocument()
+        expect(screen.getByText('roadmap')).toBeInTheDocument()
         expect(screen.getByText('requirements')).toBeInTheDocument()
     })
 
@@ -40,30 +43,30 @@ describe('<Portfolio />', () => {
     test('should render Gantt tab', () => {
         renderWithRouter(<Portfolio />)
 
-        fireEvent.click(screen.getByText('objectives'))
-        expect(screen.getByText('ObjectivesTab')).toBeInTheDocument()
+        fireEvent.click(screen.getByText('roadmap'))
+        expect(screen.getByText('RoadmapTab')).toBeInTheDocument()
     })
 
     test('should render capabilities tab', () => {
-        renderWithRouter(<Portfolio />)
-
+        renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
         fireEvent.click(screen.getByText('requirements'))
-        expect(screen.getByText('RequirementsTab')).toBeInTheDocument()
+
+        expect(history.location.pathname).toEqual('/portfolios/91/requirements')
     })
 
     test('should render metrics tab', async() => {
-        renderWithRouter(<Portfolio />)
-
+        renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
         fireEvent.click(screen.getByText('metrics'))
-        expect(screen.getByText('MetricsTab')).toBeInTheDocument()
+
+        expect(history.location.pathname).toEqual('/portfolios/91/metrics')
     })
 
     test('should handle action icons with permissions', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
         renderWithRouter(<Portfolio />)
-
         fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+
         expect(screen.getByTestId('LockOpenOutlinedIcon')).toBeInTheDocument()
     })
 
@@ -71,8 +74,8 @@ describe('<Portfolio />', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: false })
 
         renderWithRouter(<Portfolio />)
-
         fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+
         expect(screen.getByTestId('LockOutlinedIcon')).toBeInTheDocument()
     })
 

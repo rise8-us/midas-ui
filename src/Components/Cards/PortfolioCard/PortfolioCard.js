@@ -1,5 +1,5 @@
 import { Edit } from '@mui/icons-material'
-import { Box, Card, CardContent, CardHeader, Divider, IconButton, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CardHeader, Divider, IconButton, Stack, Typography } from '@mui/material'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
 import { useLayoutEffect, useRef } from 'react'
@@ -80,6 +80,17 @@ function PortfolioCard({ id }) {
                 }
                 style = {{ paddingBottom: 0 }}
             />
+            <Stack direction = 'row' spacing = {1} margin = {2} marginBottom = {0}>
+                {['roadmap', 'requirements', 'metrics'].map((page, index) =>
+                    <Button
+                        onClick = {() => history.push(`/portfolios/${portfolio.id}/${page}`)}
+                        variant = 'outlined'
+                        key = {index}
+                    >
+                        {page}
+                    </Button>
+                )}
+            </Stack>
             <CardContent>
                 {portfolio.products?.length > 0 ? (
                     <>

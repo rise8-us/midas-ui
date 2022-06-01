@@ -4,9 +4,9 @@ import EntriesContainer from 'Components/EntriesContainer/EntriesContainer'
 import { Page } from 'Components/Page'
 import { PortfolioCapabilities } from 'Components/Portfolio/PortfolioCapabilities'
 import { PageMetrics } from 'Components/Tabs/PageMetrics/'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { setCapability } from 'Redux/Capabilities/reducer'
 import { setPortfolioPagePermission } from 'Redux/PageAccess/reducer'
@@ -16,11 +16,10 @@ import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 const isOwnerOrAdmin = (userId, personnel) => personnel?.ownerId === userId || personnel?.adminIds?.includes(userId)
 
 export default function Portfolio() {
+    const history = useHistory()
     const dispatch = useDispatch()
-    const { portfolioId } = useParams()
+    const { portfolioId, portfolioTab } = useParams()
     const id = parseInt(portfolioId)
-
-    const [value, setValue] = useState('objectives')
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
@@ -28,7 +27,7 @@ export default function Portfolio() {
     const isAuthorized = isOwnerOrAdmin(userLoggedIn.id, portfolio?.personnel) || userLoggedIn.isAdmin
 
     const handleChange = (_e, newValue) => {
-        setValue(newValue)
+        history.push(`/portfolios/${id}/${newValue}`)
     }
 
     const updatePageEdit = () => {
@@ -80,11 +79,11 @@ export default function Portfolio() {
                 </Grid>
                 <Grid container item direction = 'column'>
                     <Grid item>
-                        <Tabs value = {value} onChange = {handleChange}>
+                        <Tabs value = {portfolioTab ?? 'roadmap'} onChange = {handleChange}>
                             <Tab
-                                label = 'objectives'
-                                value = 'objectives'
-                                data-testid = 'Portfolio__objectives'
+                                label = 'roadmap'
+                                value = 'roadmap'
+                                data-testid = 'Portfolio__roadmap'
                             />
                             <Tab
                                 label = 'requirements'
@@ -101,17 +100,17 @@ export default function Portfolio() {
                     </Grid>
                     <Grid item>
                         <Box paddingY = {3}>
-                            { value === 'objectives' &&
+                            {(portfolioTab === 'roadmap' || portfolioTab === undefined) &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
                                     <EntriesContainer portfolioId = {id}/>
                                 </Suspense>
                             }
-                            { value === 'requirements' &&
+                            {portfolioTab === 'requirements' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
                                     <PortfolioCapabilities portfolioId = {id}/>
                                 </Suspense>
                             }
-                            { value === 'metrics' &&
+                            {portfolioTab === 'metrics' &&
                                 <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
                                     <PageMetrics id = {id} type = 'portfolio'/>
                                 </Suspense>
