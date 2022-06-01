@@ -31,11 +31,11 @@ function App() {
                 <PopupManager />
                 <SnackbarManager />
                 <Switch>
-                    <Route exact path = '/'><Redirect to = '/dashboard'/></Route>
+                    <Route exact path = '/'><Redirect to = '/portfolios'/></Route>
                     <Route exact path = '/account' component = {Pages.Account} />
                     <Route exact path = '/dashboard' component = {Pages.Dashboard} />
-                    <Route exact path = '/home'><Redirect to = '/dashboard'/></Route>
                     <Route exact path = '/portfolios' component = {Pages.Portfolios} />
+                    <Route exact path = '/home'><Redirect to = '/portfolios'/></Route>
                     <Route exact path = '/portfolios/:portfolioId' component = {Pages.Portfolio} />
                     <Route exact path = '/products' component = {Pages.Products} />
                     <Route exact path = '/products/:productId' component = {Pages.Product} />

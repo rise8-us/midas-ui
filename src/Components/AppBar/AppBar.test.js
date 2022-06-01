@@ -27,7 +27,7 @@ describe('<AppBar />', () => {
             { history })
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
-        expect(screen.getByText('Dashboard')).toBeInTheDocument()
+        expect(screen.queryByTitle('Dashboard')).not.toBeInTheDocument()
         expect(screen.getByText('Projects')).toBeInTheDocument()
         expect(screen.getByText('Products')).toBeInTheDocument()
         expect(screen.getByText('Portfolios')).toBeInTheDocument()
@@ -73,7 +73,7 @@ describe('<AppBar />', () => {
         renderWithRouter(<AppBar />, { history })
 
         fireEvent.click(screen.getByTestId('AppBar__logo'))
-        expect(history.location.pathname).toEqual('/dashboard')
+        expect(history.location.pathname).toEqual('/portfolios')
 
         fireEvent.click(screen.getByTitle('tags'))
         expect(history.location.pathname).toEqual('/tags')
@@ -85,9 +85,6 @@ describe('<AppBar />', () => {
         expect(history.location.pathname).toEqual('/account')
 
         // Page links
-
-        fireEvent.click(screen.getByText('Dashboard'))
-        expect(history.location.pathname).toEqual('/dashboard')
 
         fireEvent.click(screen.getByText('Projects'))
         expect(history.location.pathname).toEqual('/projects')

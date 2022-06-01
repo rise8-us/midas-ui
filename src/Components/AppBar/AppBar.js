@@ -46,21 +46,18 @@ function AppBar() {
     const currentPage = getRoot()
     const user = useSelector(selectUserLoggedIn)
 
-    const goHome = () => history.push('/dashboard')
+    const goHome = () => history.push('/portfolios')
 
     const pages = [
         {
-            text: 'Dashboard',
-            onClick: () => history.push('/dashboard')
-        }, {
-            text: 'Projects',
-            onClick: () => history.push('/projects')
+            text: 'Portfolios',
+            onClick: () => history.push('/portfolios')
         }, {
             text: 'Products',
             onClick: () => history.push('/products')
         }, {
-            text: 'Portfolios',
-            onClick: () => history.push('/portfolios')
+            text: 'Projects',
+            onClick: () => history.push('/projects')
         }
     ]
 
