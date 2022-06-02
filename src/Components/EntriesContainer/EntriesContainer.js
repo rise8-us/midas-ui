@@ -12,6 +12,7 @@ import { GanttWin } from 'Components/Gantt/GanttWin'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectPortfolioPageViewSetting } from 'Redux/AppSettings/selectors'
 import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { requestSearchEvents } from 'Redux/Events/actions'
 import { selectEventsByPortfolioId } from 'Redux/Events/selectors'
@@ -45,7 +46,7 @@ export default function EntriesContainer({ portfolioId }) {
     const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
     const [dateStart, setDateStart] = useState(new Date())
-    const [option, setOption] = useState({ title: '6M', viewBy: 'month', scope: 6, leadingColumns: 2 })
+    const view = useSelector(state => selectPortfolioPageViewSetting(state, portfolioId))
     const [expandedState, setExpandedState] = useState({ allExpanded: false })
 
     const entries = [
@@ -116,12 +117,12 @@ export default function EntriesContainer({ portfolioId }) {
         newDateStart.setDate(1)
         newDateStart.setHours(0, 0, 0)
 
-        if (option.viewBy === 'year') {
+        if (view?.viewBy === 'year') {
             newDateStart.setMonth(0)
         }
 
         setDateStart(newDateStart)
-    }, [option])
+    }, [JSON.stringify(view)])
 
     return (
         <GanttChart
@@ -142,7 +143,7 @@ export default function EntriesContainer({ portfolioId }) {
                 additionalActions: permissions.edit ?
                     <GanttAddNewItem portfolioId = {portfolioId} /> :
                     <>
-                        <GanttView onChange = {setOption}/>
+                        <GanttView portfolioId = {portfolioId}/>
                         <GanttExpandAllTargets
                             expandAllTargets = {handleExpandOrCollapseAll}
                             allExpanded = {expandedState.allExpanded}
@@ -158,9 +159,9 @@ export default function EntriesContainer({ portfolioId }) {
                 marginBlock: 'unset'
             }}
             todayColor = {theme.palette.primary.main}
-            scope = {option.scope}
-            leadingColumns = {option.leadingColumns}
-            viewBy = {option.viewBy}
+            scope = {view?.scope}
+            leadingColumns = {view?.leadingColumns}
+            viewBy = {view?.viewBy}
         />
     )
 }

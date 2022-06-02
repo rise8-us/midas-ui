@@ -33,7 +33,8 @@ describe('AppSettings selectors', () => {
             },
             portfolioPage: {
                 1: {
-                    selectedDeliverableId: 2
+                    selectedDeliverableId: 2,
+                    view: 'foo'
                 }
             }
         }
@@ -87,6 +88,23 @@ describe('AppSettings selectors', () => {
     })
 
     test('should return portfolioPage settings', () => {
-        expect(selectors.selectPortfolioPageSettings(mockState, 1)).toEqual({ selectedDeliverableId: 2 })
+        expect(selectors.selectPortfolioPageSettings(mockState, 1)).toEqual({
+            selectedDeliverableId: 2,
+            view: 'foo'
+        })
+    })
+
+    test('should return portfolioPage view setting', () => {
+        expect(selectors.selectPortfolioPageViewSetting(mockState, 1))
+            .toEqual('foo')
+    })
+
+    test('should return portfolioPage view setting - default', () => {
+        expect(selectors.selectPortfolioPageViewSetting(mockState, 2)).toEqual({
+            title: '6M',
+            viewBy: 'month',
+            scope: 6,
+            leadingColumns: 2
+        })
     })
 })

@@ -20,7 +20,7 @@ const appSettingsSlice = createSlice({
         tagTypes: [],
         pageScrollY: 0,
         initialized: false,
-        portfolioPage: { }
+        portfolioPage: {}
     },
     reducers: {
         setAssertionComment: (state, action) => {
@@ -48,6 +48,16 @@ const appSettingsSlice = createSlice({
                     selectedDeliverableId: currentSettings.selectedDeliverableId !== selectedDeliverableId
                         ? selectedDeliverableId : null,
                     ...settings
+                }
+            }
+        },
+        setPortfolioPageSetting: (state, action) => {
+            const { id, settingName, settingValue } = action.payload
+
+            if (id > 0) {
+                state.portfolioPage[id] = {
+                    ...state.portfolioPage[id],
+                    [settingName]: settingValue
                 }
             }
         }
@@ -91,7 +101,7 @@ const appSettingsSlice = createSlice({
 })
 
 export const {
-    toggleNavBar, setAssertionComment, setPageScrollY, setInitialized, setPortfolioPageSettings
+    toggleNavBar, setAssertionComment, setPageScrollY, setInitialized, setPortfolioPageSettings, setPortfolioPageSetting
 } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer
