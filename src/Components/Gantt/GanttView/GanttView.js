@@ -1,6 +1,8 @@
 import { alpha, Button } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPortfolioPageSetting } from 'Redux/AppSettings/reducer'
+import { selectPortfolioPageViewSetting } from 'Redux/AppSettings/selectors'
 import { styled } from 'Styles/materialThemes'
 
 const options = [
@@ -20,12 +22,13 @@ const StyledDiv = styled('div')(() => ({
     marginLeft: 'auto'
 }))
 
-export default function GanttView({ onChange }) {
-    const [view, setView] = useState(options[0])
+export default function GanttView({ portfolioId }) {
+    const dispatch = useDispatch()
 
-    const handleChange = (option) => {
-        onChange(option)
-        setView(option)
+    const view = useSelector(state => selectPortfolioPageViewSetting(state, portfolioId))
+
+    const handleChange = (value) => {
+        dispatch(setPortfolioPageSetting({ id: portfolioId, settingName: 'view', settingValue: value }))
     }
 
     return (
@@ -50,5 +53,5 @@ export default function GanttView({ onChange }) {
 }
 
 GanttView.propTypes = {
-    onChange: PropTypes.func.isRequired
+    portfolioId: PropTypes.number.isRequired
 }

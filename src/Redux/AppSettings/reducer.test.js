@@ -1,5 +1,5 @@
 import { requestFetchInit } from '../Init/actions'
-import reducer, { setAssertionComment, setInitialized, setPageScrollY, setPortfolioPageSettings } from './reducer'
+import reducer, * as setters from './reducer'
 
 const mockStore = {
     assertionCommentId: null,
@@ -29,7 +29,7 @@ test('should handle setAssertionComment', () => {
     const payload = { type: 'foo', assertionId: 1, deletedAssertionId: null }
 
     expect(
-        reducer(mockStore, { type: setAssertionComment.type, payload: payload })
+        reducer(mockStore, { type: setters.setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
         assertionCommentId: 1,
@@ -41,7 +41,7 @@ test('should set setAssertionComment to null', () => {
     const payload = { assertionId: 2, deletedAssertionId: null }
 
     expect(
-        reducer({ ...mockStore, assertionCommentId: 2 }, { type: setAssertionComment.type, payload: payload })
+        reducer({ ...mockStore, assertionCommentId: 2 }, { type: setters.setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
         assertionCommentId: null,
@@ -53,7 +53,7 @@ test('should set setAssertionComment to null on deletedAssertionId', () => {
     const payload = { assertionId: null, deletedAssertionId: 2 }
 
     expect(
-        reducer(mockStore, { type: setAssertionComment.type, payload: payload })
+        reducer(mockStore, { type: setters.setAssertionComment.type, payload: payload })
     ).toEqual({
         ...mockStore,
         assertionCommentId: null,
@@ -63,7 +63,7 @@ test('should set setAssertionComment to null on deletedAssertionId', () => {
 
 test('should handle pageScrollY', () => {
     expect(
-        reducer(mockStore, { type: setPageScrollY.type, payload: 42 })
+        reducer(mockStore, { type: setters.setPageScrollY.type, payload: 42 })
     ).toEqual({
         ...mockStore,
         pageScrollY: 42
@@ -72,27 +72,48 @@ test('should handle pageScrollY', () => {
 
 test('should handle setInitialized', () => {
     expect(
-        reducer(mockStore, { type: setInitialized.type, payload: true })
+        reducer(mockStore, { type: setters.setInitialized.type, payload: true })
     ).toEqual({
         ...mockStore,
         initialized: true
     })
 })
 
-describe('should handle setPortfolioPageSetting', () => {
+describe('should handle setPortfolioPageSettings', () => {
     const payload = { id: 1, selectedDeliverableId: 2 }
 
     test('should set selectedDeliverableId to null', () => {
         const mockState = { ...mockStore, portfolioPage: { 1: { selectedDeliverableId: 2 } } }
 
-        expect(reducer(mockState, { type: setPortfolioPageSettings.type, payload: payload }))
+        expect(reducer(mockState, { type: setters.setPortfolioPageSettings.type, payload: payload }))
             .toEqual({ ...mockStore, portfolioPage: { 1: { selectedDeliverableId: null } } })
     })
 
     test('should set selectedDeliverableId to 2', () => {
-        expect(reducer(mockStore, { type: setPortfolioPageSettings.type, payload: payload }))
+        expect(reducer(mockStore, { type: setters.setPortfolioPageSettings.type, payload: payload }))
             .toEqual({ ...mockStore, portfolioPage: { 1: { selectedDeliverableId: 2 } } })
     })
+})
+
+test('should handle setPortfolioPageSetting (singular) - with existing state', () => {
+    const payload = { id: 1, settingName: 'isExpanded', settingValue: false }
+    const mockState = { ...mockStore, portfolioPage: { 1: { selectedDeliverableId: 2 } } }
+
+    expect(reducer(mockState, { type: setters.setPortfolioPageSetting.type, payload: payload }))
+        .toEqual({ ...mockStore, portfolioPage: { 1: { selectedDeliverableId: 2, isExpanded: false } } })
+})
+
+test('should handle setPortfolioPageSetting (singular) - with no state', () => {
+    const payload = { id: 1, settingName: 'foo', settingValue: 'bar' }
+    const mockState = { ...mockStore, portfolioPage: { 10: { selectedDeliverableId: 2 } } }
+
+    expect(reducer(mockState, { type: setters.setPortfolioPageSetting.type, payload: payload }))
+        .toEqual({ ...mockStore,
+            portfolioPage: {
+                1: { foo: 'bar' },
+                10: { selectedDeliverableId: 2 }
+            }
+        })
 })
 
 test('sets init info', () => {

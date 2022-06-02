@@ -8,7 +8,7 @@ export default function GanttDividerBar({ dateRange, color }) {
     const sxDivider = {
         top: '0px',
         position: 'absolute',
-        left: `calc(${dividerPosition}% + 3px)`,
+        left: `calc(${dividerPosition}% - 5px)`,
         height: '100%',
         width: '3px',
         background: color,

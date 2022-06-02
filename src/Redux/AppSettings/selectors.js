@@ -29,3 +29,16 @@ export const selectPortfolioPageSettings = (state, id) => {
         selectedDeliverableId: null
     }
 }
+
+export const selectPortfolioPageSetting = (state, id, setting) => {
+    return state.app.portfolioPage[id]?.[setting]
+}
+
+export const selectPortfolioPageViewSetting = (state, id) => {
+    return selectPortfolioPageSetting(state, id, 'view') ?? {
+        title: '6M',
+        viewBy: 'month',
+        scope: 6,
+        leadingColumns: 2
+    }
+}
