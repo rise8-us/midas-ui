@@ -1,36 +1,36 @@
 import { Button } from '@mui/material'
 import PropTypes from 'prop-types'
-import { styled } from 'Styles/materialThemes'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPortfolioPageSettingExpandAll } from 'Redux/AppSettings/reducer'
+import { selectPortfolioPageSettingAllExpanded } from 'Redux/AppSettings/selectors'
 
-const StyledDiv = styled('div')(() => ({
-    alignItems: 'right',
-    cursor: 'pointer',
+const divStyle = {
     display: 'flex',
     height: '32px',
-    width: '136px',
+    minWidth: '130px',
     justifyContent: 'right',
-    padding: '8px',
     borderRight: '1px solid black',
-    marginRight: 0,
     marginLeft: 'auto'
-}))
+}
 
-export default function GanttExpandAllTargets({ expandAllTargets, allExpanded }) {
+export default function GanttExpandAllTargets({ portfolioId }) {
+    const dispatch = useDispatch()
+
+    const allExpanded = useSelector(state => selectPortfolioPageSettingAllExpanded(state, portfolioId))
+
+    const handleOnClick = () => {
+        dispatch(setPortfolioPageSettingExpandAll({ portfolioId, isExpanded: !allExpanded }))
+    }
 
     return (
-        <StyledDiv>
-            <Button onClick = {expandAllTargets} data-testid = 'GanttExpandAllTargets__button'>
-                {allExpanded ? 'Collapse all' : 'Expand all'}
+        <div style = {divStyle}>
+            <Button onClick = {handleOnClick} fullWidth>
+                {allExpanded ? 'collapse all' : 'expand all'}
             </Button>
-        </StyledDiv>
+        </div>
     )
 }
 
 GanttExpandAllTargets.propTypes = {
-    expandAllTargets: PropTypes.func.isRequired,
-    allExpanded: PropTypes.bool
-}
-
-GanttExpandAllTargets.defaultProps = {
-    allExpanded: false
+    portfolioId: PropTypes.number.isRequired
 }

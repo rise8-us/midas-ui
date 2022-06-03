@@ -34,7 +34,11 @@ describe('AppSettings selectors', () => {
             portfolioPage: {
                 1: {
                     selectedDeliverableId: 2,
-                    view: 'foo'
+                    view: 'foo',
+                    expanded: {
+                        2: true,
+                        allExpanded: true
+                    }
                 }
             }
         }
@@ -90,21 +94,45 @@ describe('AppSettings selectors', () => {
     test('should return portfolioPage settings', () => {
         expect(selectors.selectPortfolioPageSettings(mockState, 1)).toEqual({
             selectedDeliverableId: 2,
-            view: 'foo'
+            view: 'foo',
+            expanded: {
+                2: true,
+                allExpanded: true
+            }
         })
     })
 
     test('should return portfolioPage view setting', () => {
-        expect(selectors.selectPortfolioPageViewSetting(mockState, 1))
+        expect(selectors.selectPortfolioPageSettingView(mockState, 1))
             .toEqual('foo')
     })
 
     test('should return portfolioPage view setting - default', () => {
-        expect(selectors.selectPortfolioPageViewSetting(mockState, 2)).toEqual({
+        expect(selectors.selectPortfolioPageSettingView(mockState, 2)).toEqual({
             title: '6M',
             viewBy: 'month',
             scope: 6,
             leadingColumns: 2
         })
+    })
+
+    test('should return portfolioPage all expanded setting - when null', () => {
+        expect(selectors.selectPortfolioPageSettingAllExpanded(mockState, 2))
+            .toEqual(false)
+    })
+
+    test('should return portfolioPage all expanded setting', () => {
+        expect(selectors.selectPortfolioPageSettingAllExpanded(mockState, 1))
+            .toEqual(true)
+    })
+
+    test('should return portfolioPage target id expanded setting - when null', () => {
+        expect(selectors.selectPortfolioPageSettingTargetIdExpanded(mockState, 1, 3))
+            .toEqual(false)
+    })
+
+    test('should return portfolioPage target id expanded setting', () => {
+        expect(selectors.selectPortfolioPageSettingTargetIdExpanded(mockState, 1, 2))
+            .toEqual(true)
     })
 })

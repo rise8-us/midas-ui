@@ -1,4 +1,4 @@
-import { DeleteOutline, Diamond, Edit, ExpandMore } from '@mui/icons-material'
+import { DeleteOutline, Edit, ExpandMore, StarRounded } from '@mui/icons-material'
 import { Button, CircularProgress, Collapse, Grow, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import PropTypes from 'prop-types'
@@ -44,8 +44,7 @@ const StyledButton = styled(Button)(() => ({
 }))
 
 const getPrioritySettings = (isPriority) => ({
-    color: !isPriority ? 'secondary' : undefined,
-    htmlColor: isPriority ? 'orange' : 'inherit',
+    color: !isPriority ? 'secondary' : 'primary',
     title: isPriority ? 'Priority Item' : 'Not Priority Item',
 })
 
@@ -171,7 +170,7 @@ export default function GanttSubTarget({ id, defaultOpen }) {
                                 {loading ?
                                     <CircularProgress size = {24} />
                                     :
-                                    <Diamond
+                                    <StarRounded
                                         fontSize = 'medium'
                                         color = {prioritySettings.color}
                                         htmlColor = {prioritySettings.htmlColor}

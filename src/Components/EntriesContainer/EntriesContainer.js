@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import { Button, useTheme } from '@mui/material'
+import { unwrapResult } from '@reduxjs/toolkit'
 import { GanttChart } from 'Components/Gantt'
 import { GanttAddNewItem } from 'Components/Gantt/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
@@ -12,8 +13,10 @@ import { GanttWin } from 'Components/Gantt/GanttWin'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectPortfolioPageViewSetting } from 'Redux/AppSettings/selectors'
+import { setPortfolioPageSetting } from 'Redux/AppSettings/reducer'
+import { selectPortfolioPageSettingExpanded, selectPortfolioPageSettingView } from 'Redux/AppSettings/selectors'
 import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
+import { requestFetchSearchEpics } from 'Redux/Epics/actions'
 import { requestSearchEvents } from 'Redux/Events/actions'
 import { selectEventsByPortfolioId } from 'Redux/Events/selectors'
 import { requestSearchMilestones } from 'Redux/Milestones/actions'
@@ -23,6 +26,7 @@ import { requestSearchTargets } from 'Redux/Targets/actions'
 import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
 import { requestSearchWins } from 'Redux/Wins/actions'
 import { selectWinsByPortfolioId } from 'Redux/Wins/selectors'
+import { buildOrQueryByIds } from 'Utilities/requests'
 import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
 export default function EntriesContainer({ portfolioId }) {
@@ -37,6 +41,20 @@ export default function EntriesContainer({ portfolioId }) {
         dispatch(requestSearchWins(searchValue))
         dispatch(requestSearchEvents(searchValue))
         dispatch(requestSearchTargets(searchValue + ' AND parent.id:~'))
+            .then(unwrapResult).then(data => {
+                const ids = data.reduce((acc, entry) => ({
+                    epicIds: acc.epicIds.concat(entry.epicIds),
+                    subtargetIds: acc.subtargetIds.concat(entry.childrenIds)
+                }), { epicIds: [], subtargetIds: [] })
+
+                dispatch(requestSearchTargets(buildOrQueryByIds(ids.subtargetIds)))
+                    .then(unwrapResult).then(moreData => {
+                        const eIds = moreData.reduce((acc, entry) => {
+                            return acc.concat(entry.epicIds)
+                        }, [])
+                        dispatch(requestFetchSearchEpics(buildOrQueryByIds(eIds.concat(ids.epicIds))))
+                    })
+            })
         dispatch(requestSearchDeliverables('capability.' + searchValue))
     }, [])
 
@@ -46,8 +64,8 @@ export default function EntriesContainer({ portfolioId }) {
     const targets = useSelector(state => selectTargetsByPortfolioId(state, portfolioId))
 
     const [dateStart, setDateStart] = useState(new Date())
-    const view = useSelector(state => selectPortfolioPageViewSetting(state, portfolioId))
-    const [expandedState, setExpandedState] = useState({ allExpanded: false })
+    const view = useSelector(state => selectPortfolioPageSettingView(state, portfolioId))
+    const expandedState = useSelector(state => selectPortfolioPageSettingExpanded(state, portfolioId))
 
     const entries = [
         ...milestones,
@@ -56,37 +74,10 @@ export default function EntriesContainer({ portfolioId }) {
         ...targets.filter(t => t.parentId === null).sort(sortArrayByDateAndTitle),
     ]
 
-    const handleExpandOrCollapseAll = () => {
-        let allCollapsed = {}
-        if (expandedState.allExpanded) {
-            Object.keys(expandedState).forEach(key => {
-                allCollapsed[key] = false
-            })
-        } else {
-            Object.keys(expandedState).forEach(key => {
-                allCollapsed[key] = true
-            })
-        }
-        setExpandedState(allCollapsed)
-    }
-
-    const handleExpandOrCollapse = (id, value) => {
-        let newState = { ...expandedState }
-        newState[id] = value
-        newState.allExpanded = !Object.entries(newState)
-            .some(([key, val]) => key !== 'allExpanded' && val === false)
-        setExpandedState(newState)
-    }
-
     const renderComponent = (entry, dateRange) => {
         switch (entry.type) {
         case 'target':
-            return <GanttTarget
-                target = {entry}
-                isExpanded = {expandedState[entry.id] ?? false}
-                setIsExpanded = {handleExpandOrCollapse}
-                dateRange = {dateRange}
-            />
+            return <GanttTarget target = {entry} dateRange = {dateRange}/>
         case 'milestone':
             return <GanttMilestone milestone = {entry}/>
         case 'win':
@@ -97,14 +88,16 @@ export default function EntriesContainer({ portfolioId }) {
     }
 
     const handleExpandAll = (entriesToMap) => {
-        let init = {}
-        entriesToMap.map(item => {
-            if (item.type === 'target' && expandedState[item.id] === undefined)
-                init[item.id] = false
-            else if (item.type === 'target')
-                init[item.id] = expandedState[item.id]
-        })
-        setTimeout(() => setExpandedState(prev => ({ ...init, allExpanded: prev.allExpanded })), 0)
+        const init = entriesToMap.filter(entry => entry.type === 'target').reduce((acc, entry) => {
+            return {
+                ...acc,
+                [entry.id]: expandedState[entry.id] ?? false
+            }
+        }, { allExpanded: expandedState.allExpanded })
+
+        setTimeout(() => {
+            dispatch(setPortfolioPageSetting({ id: portfolioId, settingName: 'expanded', settingValue: init }))
+        }, 0)
     }
 
     const onEntriesFilter = (filteredEntries) => {
@@ -117,9 +110,7 @@ export default function EntriesContainer({ portfolioId }) {
         newDateStart.setDate(1)
         newDateStart.setHours(0, 0, 0)
 
-        if (view?.viewBy === 'year') {
-            newDateStart.setMonth(0)
-        }
+        view?.viewBy === 'year' && newDateStart.setMonth(0)
 
         setDateStart(newDateStart)
     }, [JSON.stringify(view)])
@@ -144,10 +135,7 @@ export default function EntriesContainer({ portfolioId }) {
                     <GanttAddNewItem portfolioId = {portfolioId} /> :
                     <>
                         <GanttView portfolioId = {portfolioId}/>
-                        <GanttExpandAllTargets
-                            expandAllTargets = {handleExpandOrCollapseAll}
-                            allExpanded = {expandedState.allExpanded}
-                        />
+                        <GanttExpandAllTargets portfolioId = {portfolioId}/>
                         <GanttFilter />
                     </>
             }}

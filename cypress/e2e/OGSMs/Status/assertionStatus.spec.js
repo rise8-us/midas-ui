@@ -29,11 +29,11 @@ describe('update status of strategy', () => {
         cy.get('[data-testId=MeasureCard__collapsable-card-6]').within(() => {
             cy.get('[type="checkbox"]').check()
         })
-  
+
         cy.wait('@updateMeasureApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.status).to.equal('COMPLETED')
-        }) 
+        })
 
         cy.get('[data-testID=StrategyCard__status-selector-8').contains('Complete').should('exist')
     })
@@ -45,11 +45,11 @@ describe('update status of strategy', () => {
         cy.get('[data-testId=MeasureCard__collapsable-card-5]').within(() => {
             cy.get('[type="checkbox"]').check()
         })
-  
+
         cy.wait('@updateGoalApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.status).to.equal('COMPLETED')
-        }) 
+        })
 
         cy.get('[data-testID=ObjectiveCard__status-selector-7').contains('Complete').should('exist')
     })

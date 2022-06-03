@@ -55,9 +55,11 @@ export default function GanttFilter() {
             }
         >
             <Button
-                style = {{ minWidth: '34px', borderRadius: 0, borderRight: '1px solid black' }}
-                onClick = {() => setIsOpen(prev => !prev)}>
-                <FilterList fontSize = 'small'/>
+                style = {{ minWidth: '34px',  height: '32px', borderRadius: 0, borderRight: '1px solid black' }}
+                onClick = {() => setIsOpen(prev => !prev)}
+                endIcon = {<FilterList fontSize = 'small'/>}
+            >
+                filter
             </Button>
         </Tooltip>
     )
