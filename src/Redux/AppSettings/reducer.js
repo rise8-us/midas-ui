@@ -42,24 +42,57 @@ const appSettingsSlice = createSlice({
 
             const currentSettings = state.portfolioPage[id] ?? {}
 
-            if (id > 0) {
+            id > 0 && (
                 state.portfolioPage[id] = {
                     ...state.portfolioPage[id],
                     selectedDeliverableId: currentSettings.selectedDeliverableId !== selectedDeliverableId
                         ? selectedDeliverableId : null,
                     ...settings
                 }
-            }
+            )
         },
         setPortfolioPageSetting: (state, action) => {
             const { id, settingName, settingValue } = action.payload
 
-            if (id > 0) {
+            id > 0 && (
                 state.portfolioPage[id] = {
                     ...state.portfolioPage[id],
                     [settingName]: settingValue
                 }
+            )
+        },
+        setPortfolioPageSettingExpandAll: (state, action) => {
+            const { portfolioId, isExpanded } = action.payload
+
+            const updateState = () => {
+                const existingState = { ...state.portfolioPage[portfolioId]?.expanded }
+                const newState = Object.keys(existingState).reduce((acc, next) => ({
+                    ...acc,
+                    [next]: isExpanded
+                }), { allExpanded: isExpanded })
+
+                state.portfolioPage[portfolioId] = {
+                    ...state.portfolioPage[portfolioId],
+                    expanded: newState
+                }
             }
+            portfolioId > 0 && updateState()
+        },
+        setPortfolioPageSettingTargetIdExpand: (state, action) => {
+            const { portfolioId, id, isExpanded } = action.payload
+
+            portfolioId > 0 && (
+                state.portfolioPage[portfolioId] = {
+                    ...state.portfolioPage[portfolioId],
+                    expanded: {
+                        ...state.portfolioPage[portfolioId]?.expanded,
+                        [id]: isExpanded,
+                        allExpanded: !Object.entries(state.portfolioPage[portfolioId].expanded)
+                            .filter(entry => entry[0] !== 'allExpanded' && entry[0] !== id.toString())
+                            .some(entry => !entry[1]) && isExpanded
+                    }
+                }
+            )
         }
     },
     extraReducers: {
@@ -101,7 +134,14 @@ const appSettingsSlice = createSlice({
 })
 
 export const {
-    toggleNavBar, setAssertionComment, setPageScrollY, setInitialized, setPortfolioPageSettings, setPortfolioPageSetting
+    toggleNavBar,
+    setAssertionComment,
+    setPageScrollY,
+    setInitialized,
+    setPortfolioPageSettings,
+    setPortfolioPageSetting,
+    setPortfolioPageSettingExpandAll,
+    setPortfolioPageSettingTargetIdExpand
 } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer

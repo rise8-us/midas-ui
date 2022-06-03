@@ -34,7 +34,7 @@ export const selectPortfolioPageSetting = (state, id, setting) => {
     return state.app.portfolioPage[id]?.[setting]
 }
 
-export const selectPortfolioPageViewSetting = (state, id) => {
+export const selectPortfolioPageSettingView = (state, id) => {
     return selectPortfolioPageSetting(state, id, 'view') ?? {
         title: '6M',
         viewBy: 'month',
@@ -42,3 +42,15 @@ export const selectPortfolioPageViewSetting = (state, id) => {
         leadingColumns: 2
     }
 }
+
+export const selectPortfolioPageSettingExpanded = (state, id) => {
+    return selectPortfolioPageSetting(state, id, 'expanded') ?? {
+        allExpanded: false
+    }
+}
+
+export const selectPortfolioPageSettingAllExpanded = (state, id) =>
+    state.app.portfolioPage[id]?.expanded?.allExpanded ?? false
+
+export const selectPortfolioPageSettingTargetIdExpanded = (state, portfolioId, id) =>
+    state.app.portfolioPage[portfolioId]?.expanded?.[id] ?? false

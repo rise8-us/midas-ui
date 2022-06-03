@@ -116,6 +116,48 @@ test('should handle setPortfolioPageSetting (singular) - with no state', () => {
         })
 })
 
+describe('should handle setPortfolioSettingExpandAll', () => {
+    const payload = { portfolioId: 1, isExpanded: true }
+
+    test('should set allExpanded to true', () => {
+        const mockState = { ...mockStore, portfolioPage: { 1: { expanded: { allExpanded: false, 2: false } } } }
+
+        expect(reducer(mockState, { type: setters.setPortfolioPageSettingExpandAll.type, payload: payload }))
+            .toEqual({ ...mockStore, portfolioPage: { 1: { expanded: { allExpanded: true, 2: true } } } })
+    })
+
+    test('should set allExpanded to false', () => {
+        expect(reducer(mockStore, {
+            type: setters.setPortfolioPageSettingExpandAll.type,
+            payload: { portfolioId: 1, isExpanded: false }
+        }))
+            .toEqual({ ...mockStore, portfolioPage: { 1: { expanded: { allExpanded: false } } } })
+    })
+})
+
+describe('should handle setPortfolioSettingTargetIdExpand', () => {
+    const mockState = {
+        ...mockStore,
+        portfolioPage: { 1: { expanded: { allExpanded: false, 2: false, 3: true } } }
+    }
+
+    test('should set target id expanded to false', () => {
+        expect(reducer(mockState, {
+            type: setters.setPortfolioPageSettingTargetIdExpand.type,
+            payload: { portfolioId: 1, id: 3, isExpanded: false }
+        }))
+            .toEqual({ ...mockState, portfolioPage: { 1: { expanded: { allExpanded: false, 2: false, 3: false } } } })
+    })
+
+    test('should set everything to true', () => {
+        expect(reducer(mockState, {
+            type: setters.setPortfolioPageSettingTargetIdExpand.type,
+            payload: { portfolioId: 1, id: 2, isExpanded: true }
+        }))
+            .toEqual({ ...mockState, portfolioPage: { 1: { expanded: { allExpanded: true, 2: true, 3: true } } } })
+    })
+})
+
 test('sets init info', () => {
     const initResponse = {
         roles: [{

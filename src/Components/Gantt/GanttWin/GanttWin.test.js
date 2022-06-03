@@ -22,7 +22,7 @@ describe('<GanttWin />', () => {
 
         render(<GanttWin win = {win}/>)
 
-        expect(screen.getByTestId('StarIcon')).toBeInTheDocument()
+        expect(screen.getByTestId('EmojiEventsIcon')).toBeInTheDocument()
     })
 
     test('should handle onEditClick', async() => {
@@ -31,7 +31,7 @@ describe('<GanttWin />', () => {
 
         render(<GanttWin win = {win}/>)
 
-        userEvent.hover(screen.getByTestId('StarIcon'))
+        userEvent.hover(screen.getByTestId('EmojiEventsIcon'))
         userEvent.click(await screen.findByTestId('EditIcon'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
@@ -47,7 +47,7 @@ describe('<GanttWin />', () => {
 
         render(<GanttWin win = {win}/>)
 
-        userEvent.hover(screen.getByTestId('StarIcon'))
+        userEvent.hover(screen.getByTestId('EmojiEventsIcon'))
         userEvent.click(await screen.findByTestId('DeleteOutlineIcon'))
 
         expect(openPopupMock).toHaveBeenCalledWith(

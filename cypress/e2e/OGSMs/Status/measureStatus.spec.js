@@ -55,11 +55,11 @@ describe('update status of measure', () => {
         pickDate(currentDay, lastDayOfMonth)
 
         cy.get('.MuiButton-root').contains('OK').click()
-    
+
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.status).to.equal('ON_TRACK')
-        })        
+        })
     })
 
     it('should be blocked status', () => {
@@ -78,11 +78,11 @@ describe('update status of measure', () => {
         pickDate(currentDay, null)
 
         cy.get('.MuiButton-root').contains('OK').click()
-  
+
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.status).to.equal('BLOCKED')
-        })     
+        })
     })
 
     it('should be not started when dates are removed and value is 0', () => {
@@ -110,14 +110,14 @@ describe('update status of measure', () => {
         cy.get('[data-testId=MeasureCard__collapsable-card-5]').within(() => {
             cy.get('[type="checkbox"]').check()
         })
-  
+
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.status).to.equal('COMPLETED')
-        })    
+        })
 
         cy.wait(2000)
-        
+
         cy.get('[data-testId=MeasureCard__collapsable-card-5]').within(() => {
             cy.get('[type="checkbox"]').uncheck()
         })
@@ -131,15 +131,15 @@ describe('update status of measure', () => {
         cy.get('[data-testId=MeasureCard__collapsable-card-5]').within(() => {
             cy.get('[data-testId=ArrowDropDownIcon]', {timeout: 10000}).click()
         })
-        
+
         cy.contains('Number').click()
         cy.wait('@updateApiCheck')
         cy.clickAndType('CompletionType__value-NUMBER', '{backspace}1')
-       
+
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
             expect(interception.response.body.status).to.equal('COMPLETED')
-        })       
+        })
     })
 
 })

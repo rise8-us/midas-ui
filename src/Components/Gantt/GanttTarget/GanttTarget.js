@@ -1,10 +1,10 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
 import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
-import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestFetchSearchEpics } from 'Redux/Epics/actions'
+import { setPortfolioPageSettingTargetIdExpand } from 'Redux/AppSettings/reducer'
+import { selectPortfolioPageSettingTargetIdExpanded } from 'Redux/AppSettings/selectors'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
@@ -15,7 +15,6 @@ import { styled } from 'Styles/materialThemes'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { getTotalWeights } from 'Utilities/progressHelpers'
-import { buildOrQueryByIds } from 'Utilities/requests'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttProgressBar } from '../GanttProgressBar'
@@ -69,7 +68,7 @@ const getExpandProperties = (open) => ({
     tooltip: !open ? 'Expand' : 'Collapse',
 })
 
-export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRange }) {
+export default function GanttTarget({ target, dateRange }) {
     const dispatch = useDispatch()
     const ref = useRef()
 
@@ -80,16 +79,11 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRan
     const due = parseStringToDate(dueDate)
     const duration = calculatePosition([start, due], dateRange)[1]
 
-    const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 48}px)`, [duration])
+    const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 48}px)`, [JSON.stringify(duration)])
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const epicIds = useSelector(state => selectEpicIdsByTargetIds(state, childrenIds))
-
-    const debouncedEpicIds = useDebounce(epicIds, 100)
-
-    useEffect(() => {
-        debouncedEpicIds.length > 0 && dispatch(requestFetchSearchEpics(buildOrQueryByIds(debouncedEpicIds)))
-    }, [JSON.stringify(debouncedEpicIds)])
+    const isExpanded = useSelector(state => selectPortfolioPageSettingTargetIdExpanded(state, portfolioId, id))
 
     const epics = useSelector(state => selectEpicsByIds(state, epicIds))
 
@@ -138,7 +132,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRan
 
     const expandButtonHandler = () => {
         setHorizontalOpen(prev => !prev)
-        setIsExpanded(id, !isExpanded)
+        setExpanded()
         setOpenAll(false)
     }
 
@@ -147,9 +141,13 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRan
             setOpenAll(true)
         } else {
             setHorizontalOpen(prev => !prev)
-            setIsExpanded(id, !isExpanded)
+            setExpanded()
             setOpenAll(prev => !prev)
         }
+    }
+
+    const setExpanded = () => {
+        dispatch(setPortfolioPageSettingTargetIdExpand({ portfolioId, id, isExpanded: !isExpanded }))
     }
 
     useEffect(() => {
@@ -160,7 +158,7 @@ export default function GanttTarget({ target, isExpanded, setIsExpanded, dateRan
 
     useEffect(() => {
         setHorizontalOpen(isExpanded)
-    }, [isExpanded])
+    }, [JSON.stringify(isExpanded)])
 
     return (
         <StyledDiv
@@ -273,12 +271,5 @@ GanttTarget.propTypes = {
         dueDate: PropTypes.string,
         childrenIds: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
-    isExpanded: PropTypes.bool,
-    setIsExpanded: PropTypes.func,
     dateRange: PropTypes.array.isRequired
-}
-
-GanttTarget.defaultProps = {
-    isExpanded: false,
-    setIsExpanded: e => e
 }

@@ -1,14 +1,35 @@
-import { render, screen, userEvent } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttExpandAllTargets } from './index'
 
 describe('<GanttExpandAllTargets />', () => {
 
-    test('should render', () => {
-        const expandAll = jest.fn()
+    const setPortfolioPageSettingExpandAllMock =
+        useModuleMock('Redux/AppSettings/reducer', 'setPortfolioPageSettingExpandAll')
+    const selectPortfolioPageSettingAllExpandedMock =
+        useModuleMock('Redux/AppSettings/selectors', 'selectPortfolioPageSettingAllExpanded')
 
-        render(<GanttExpandAllTargets expandAllTargets = {expandAll} allExpanded = {false}/>)
+    beforeEach(() => {
+        useDispatchMock().mockReturnValue()
+    })
 
-        userEvent.click(screen.getByTestId('GanttExpandAllTargets__button'))
-        expect(expandAll).toBeCalledTimes(1)
+    test('should render - expanded', () => {
+        selectPortfolioPageSettingAllExpandedMock.mockReturnValue(false)
+
+        render(<GanttExpandAllTargets portfolioId = {0}/>)
+        userEvent.click(screen.getByText('expand all'))
+
+        expect(setPortfolioPageSettingExpandAllMock).toHaveBeenCalledWith({
+            portfolioId: 0,
+            isExpanded: true
+        })
+        expect(screen.getByText('expand all')).toBeInTheDocument()
+    })
+
+    test('should render - collapsed', () => {
+        selectPortfolioPageSettingAllExpandedMock.mockReturnValue(true)
+
+        render(<GanttExpandAllTargets portfolioId = {0}/>)
+
+        expect(screen.getByText('collapse all')).toBeInTheDocument()
     })
 })

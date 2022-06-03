@@ -1,4 +1,4 @@
-import StarIcon from '@mui/icons-material/Star'
+import { EmojiEvents } from '@mui/icons-material'
 import { Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,7 +13,7 @@ import { GanttTooltip } from '../GanttTooltip'
 const StyledDiv = styled('div')(() => ({
     margin: 'auto',
     textAlign: 'center',
-    transform: 'translateX(-16.5px)'
+    transform: 'translateX(-14.5px)',
 }))
 
 export default function GanttWin({ win }) {
@@ -51,7 +51,7 @@ export default function GanttWin({ win }) {
                     />
                 }
             >
-                <StarIcon fontSize = 'large' color = 'primary'/>
+                <EmojiEvents style = {{ fontSize: '1.85rem' }} color = 'primary'/>
             </Tooltip>
         </StyledDiv>
     )
