@@ -29,6 +29,8 @@ import { selectWinsByPortfolioId } from 'Redux/Wins/selectors'
 import { buildOrQueryByIds } from 'Utilities/requests'
 import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
+const CHUNK_SIZE = 35
+
 export default function EntriesContainer({ portfolioId }) {
 
     const dispatch = useDispatch()
@@ -47,13 +49,27 @@ export default function EntriesContainer({ portfolioId }) {
                     subtargetIds: acc.subtargetIds.concat(entry.childrenIds)
                 }), { epicIds: [], subtargetIds: [] })
 
-                dispatch(requestSearchTargets(buildOrQueryByIds(ids.subtargetIds)))
-                    .then(unwrapResult).then(moreData => {
-                        const eIds = moreData.reduce((acc, entry) => {
-                            return acc.concat(entry.epicIds)
-                        }, [])
-                        dispatch(requestFetchSearchEpics(buildOrQueryByIds(eIds.concat(ids.epicIds))))
-                    })
+                const promises = []
+                for (let i = 0; i < Math.ceil(ids.subtargetIds.length / CHUNK_SIZE); i++) {
+                    const idsChunk = ids.subtargetIds.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
+                    promises.push(dispatch(requestSearchTargets(buildOrQueryByIds(idsChunk))))
+                }
+
+                Promise.allSettled(promises).then(subtargetResponseChunks => {
+                    const epicIds = subtargetResponseChunks.reduce((acc, entry) => {
+                        return acc.concat(entry?.value?.payload?.reduce((total, resp) => {
+                            return total.concat(resp.epicIds)
+                        }, []))
+                    }, [])
+
+                    const epicIdsTotal = epicIds.concat(ids.epicIds)
+
+                    for (let i = 0; i < Math.ceil(epicIdsTotal.length / CHUNK_SIZE); i++) {
+                        dispatch(requestFetchSearchEpics(buildOrQueryByIds(
+                            epicIdsTotal.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
+                        )))
+                    }
+                })
             })
         dispatch(requestSearchDeliverables('capability.' + searchValue))
     }, [])
