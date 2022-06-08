@@ -1,6 +1,7 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
-import { Box, Divider, Grid, IconButton, Skeleton, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import { Box, Divider, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material'
 import EntriesContainer from 'Components/EntriesContainer/EntriesContainer'
+import { GanttPortfolioNote } from 'Components/Gantt/GanttPortfolioNote'
 import { Page } from 'Components/Page'
 import { PortfolioCapabilities } from 'Components/Portfolio/PortfolioCapabilities'
 import { PageMetrics } from 'Components/Tabs/PageMetrics/'
@@ -47,78 +48,61 @@ export default function Portfolio() {
 
     return (
         <Page>
-            <Grid container direction = 'column' paddingX = {3}>
-                <Grid container item>
-                    <Grid item xs = 'auto'>
-                        <Typography variant = 'h3'>
-                            {
-                                portfolio?.name ??
-                                <Skeleton
-                                    height = '56px'
-                                    width = '300px'
-                                    data-testid = 'Portfolio__name-loading'
-                                />
-                            }
-                        </Typography>
-                    </Grid>
-                    <Grid item alignSelf = 'end'>
-                        {portfolio.name && isAuthorized &&
-                            <IconButton
-                                onClick = {updatePageEdit}
-                                data-testid = 'Portfolio__button-edit'
-                            >
-                                <Tooltip title = {pagePermissions.edit ? 'Click to stop editing' : 'Click to edit'}>
+            <Stack paddingX = {2}>
+                <Stack direction = 'row' spacing = {1} alignItems = 'end'>
+                    <Typography variant = 'h3'>
+                        {portfolio.name}
+                    </Typography>
+                    <div>
+                        {isAuthorized &&
+                            <Tooltip title = {pagePermissions.edit ? 'Click to stop editing' : 'Click to edit'}>
+                                <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
                                     {pagePermissions.edit
                                         ? <LockOpenOutlined fontSize = 'medium' color = 'primary'/>
                                         : <LockOutlined fontSize = 'medium' color = 'primary'/>
                                     }
-                                </Tooltip>
-                            </IconButton>
+                                </IconButton>
+                            </Tooltip>
                         }
-                    </Grid>
-                </Grid>
-                <Grid container item direction = 'column'>
-                    <Grid item>
-                        <Tabs value = {portfolioTab ?? 'roadmap'} onChange = {handleChange}>
-                            <Tab
-                                label = 'roadmap'
-                                value = 'roadmap'
-                                data-testid = 'Portfolio__roadmap'
-                            />
-                            <Tab
-                                label = 'requirements'
-                                value = 'requirements'
-                                data-testid = 'Portfolio__requirements'
-                            />
-                            <Tab
-                                label = 'metrics'
-                                value = 'metrics'
-                                data-testid = 'Portfolio__metrics'
-                            />
-                        </Tabs>
-                        <Divider variant = 'fullWidth' />
-                    </Grid>
-                    <Grid item>
-                        <Box paddingY = {3}>
-                            {(portfolioTab === 'roadmap' || portfolioTab === undefined) &&
-                                <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    <EntriesContainer portfolioId = {id}/>
-                                </Suspense>
-                            }
-                            {portfolioTab === 'requirements' &&
-                                <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    <PortfolioCapabilities portfolioId = {id}/>
-                                </Suspense>
-                            }
-                            {portfolioTab === 'metrics' &&
-                                <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                                    <PageMetrics id = {id} type = 'portfolio'/>
-                                </Suspense>
-                            }
-                        </Box>
-                    </Grid>
-                </Grid>
-            </Grid>
+                    </div>
+                </Stack>
+                <Tabs value = {portfolioTab ?? 'roadmap'} onChange = {handleChange}>
+                    <Tab
+                        label = 'roadmap'
+                        value = 'roadmap'
+                        data-testid = 'Portfolio__roadmap'
+                    />
+                    <Tab
+                        label = 'requirements'
+                        value = 'requirements'
+                        data-testid = 'Portfolio__requirements'
+                    />
+                    <Tab
+                        label = 'metrics'
+                        value = 'metrics'
+                        data-testid = 'Portfolio__metrics'
+                    />
+                </Tabs>
+                <Divider variant = 'fullWidth' />
+                <Box paddingY = {3}>
+                    {(portfolioTab === 'roadmap' || portfolioTab === undefined) &&
+                        <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
+                            <GanttPortfolioNote id = {id}/>
+                            <EntriesContainer portfolioId = {id}/>
+                        </Suspense>
+                    }
+                    {portfolioTab === 'requirements' &&
+                        <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
+                            <PortfolioCapabilities portfolioId = {id}/>
+                        </Suspense>
+                    }
+                    {portfolioTab === 'metrics' &&
+                        <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
+                            <PageMetrics id = {id} type = 'portfolio'/>
+                        </Suspense>
+                    }
+                </Box>
+            </Stack>
         </Page>
     )
 }

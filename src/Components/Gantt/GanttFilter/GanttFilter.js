@@ -1,4 +1,4 @@
-import { FilterList } from '@mui/icons-material'
+import { Tune } from '@mui/icons-material'
 import { Button, ClickAwayListener, Tooltip } from '@mui/material'
 import { TooltipOptions } from 'Components/TooltipOptions'
 import { useEffect, useState } from 'react'
@@ -55,9 +55,15 @@ export default function GanttFilter() {
             }
         >
             <Button
-                style = {{ minWidth: '34px',  height: '32px', borderRadius: 0, borderRight: '1px solid black' }}
+                style = {{
+                    minWidth: '34px',
+                    height: '32px',
+                    borderRadius: 0,
+                    borderRight: '1px solid black',
+                    padding: '12px'
+                }}
                 onClick = {() => setIsOpen(prev => !prev)}
-                endIcon = {<FilterList fontSize = 'small'/>}
+                endIcon = {<Tune fontSize = 'small'/>}
             >
                 filter
             </Button>

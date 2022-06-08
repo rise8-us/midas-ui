@@ -32,14 +32,6 @@ describe('<Portfolio />', () => {
         expect(screen.getByText('requirements')).toBeInTheDocument()
     })
 
-    test('should render blank', () => {
-        selectPortfolioByIdMock.mockReturnValue({})
-
-        renderWithRouter(<Portfolio />)
-
-        expect(screen.getByTestId('Portfolio__name-loading')).toBeInTheDocument()
-    })
-
     test('should render Gantt tab', () => {
         renderWithRouter(<Portfolio />)
 
