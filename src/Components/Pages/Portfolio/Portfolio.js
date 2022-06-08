@@ -1,5 +1,6 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import { Box, Divider, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import { GanttPortfolioNote } from 'Components/Gantt/GanttPortfolioNote'
 import { Page } from 'Components/Page'
 import { PageMetrics } from 'Components/Tabs/PageMetrics'
 import * as PortfolioTab from 'Components/Tabs/PortfolioPage'
@@ -86,6 +87,7 @@ export default function Portfolio() {
                 <Box paddingY = {3}>
                     {(portfolioTab === 'roadmap' || portfolioTab === undefined) &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
+                            <GanttPortfolioNote id = {id}/>
                             <PortfolioTab.PortfolioRoadmap portfolioId = {id}/>
                         </Suspense>
                     }
