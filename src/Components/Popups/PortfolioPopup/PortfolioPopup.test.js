@@ -1,5 +1,6 @@
 import {
     fireEvent,
+    mockDateSelector,
     mockSearchUsersComponent,
     mockSyncRequest,
     mockUsersCollectionComponent,
@@ -23,6 +24,8 @@ jest.mock('Components/UsersCollection/UsersCollection', () => function testing({
 jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
     return mockSyncRequest()
 })
+
+jest.mock('Components/DateSelector/DateSelector', () => function testing(props) { return mockDateSelector(props) })
 
 describe('<PortfolioPopup />', () => {
     jest.setTimeout(20000)
@@ -61,6 +64,8 @@ describe('<PortfolioPopup />', () => {
         products: [returnedProducts[0]],
         description: 'New Portfolio',
         isArchived: false,
+        sprintStartDate: '2022-05-09',
+        sprintDurationInDays: 28,
         personnel: {
             teamIds: [],
             ownerId: null,
@@ -72,6 +77,8 @@ describe('<PortfolioPopup />', () => {
         name: '',
         description: '',
         products: [],
+        sprintStartDate: '2022-06-09',
+        sprintDurationInDays: 7
     }
 
     beforeEach(() => {
@@ -108,6 +115,8 @@ describe('<PortfolioPopup />', () => {
             description: '',
             products: [],
             gitlabGroupId: '',
+            sprintStartDate: '2022-06-09',
+            sprintDurationInDays: 7,
             sourceControlId: null,
             productIds: [],
             personnel: {
@@ -144,17 +153,23 @@ describe('<PortfolioPopup />', () => {
         const name = 'My Edited Portfolio'
         const description = 'New description'
         const gitlabGroupId = '123'
+        const newDuration = '85'
 
         const nameInput = screen.getByTestId('PortfolioPopup__input-name')
         const descriptionInput = screen.getByTestId('PortfolioPopup__input-description')
         const gitlabGroupIdInput = screen.getByTestId('PortfolioPopup__input-gitlabGroupId')
+        const sprintDurationInDays = screen.getByTestId('PortfolioPopup__input-sprint-duration')
 
         userEvent.clear(descriptionInput)
         userEvent.clear(nameInput)
+        userEvent.clear(sprintDurationInDays)
 
         userEvent.type(descriptionInput, description)
         userEvent.type(nameInput, name)
         userEvent.type(gitlabGroupIdInput, gitlabGroupId)
+        userEvent.type(sprintDurationInDays, newDuration)
+
+        fireEvent.blur(screen.getByDisplayValue('05-09-2022'))
 
         fireEvent.click(screen.getAllByTitle(/open/i)[0])
         fireEvent.click(screen.getByText('IL7 Beyond Top Secret'))
@@ -169,6 +184,8 @@ describe('<PortfolioPopup />', () => {
             name,
             description,
             gitlabGroupId: '123',
+            sprintDurationInDays: '85',
+            sprintStartDate: '2021-04-20',
             sourceControlId: 24,
             productIds: [21],
             personnel: {

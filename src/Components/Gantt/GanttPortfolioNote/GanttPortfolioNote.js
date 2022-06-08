@@ -94,16 +94,18 @@ export default function GanttPortfolioNote({ id }) {
                                 'Modified By: ' + (ganttNoteModifiedBy?.displayName ?? ganttNoteModifiedBy?.username)
                             }
                         >
-                            {ganttNoteModifiedAt &&
-                                <Typography
-                                    color = 'secondary'
-                                    variant = 'caption'
-                                    display = 'inline'
-                                    data-testid = 'GanttPortfolioNote__last-edited'
-                                >
-                                    (edited: <i>{format(new Date(ganttNoteModifiedAt), 'PPPppp')}</i>)
-                                </Typography>
-                            }
+                            <div style = {{ display: 'inline' }}>
+                                {ganttNoteModifiedAt &&
+                                    <Typography
+                                        color = 'secondary'
+                                        variant = 'caption'
+                                        display = 'inline'
+                                        data-testid = 'GanttPortfolioNote__last-edited'
+                                    >
+                                        (edited: <i>{format(new Date(ganttNoteModifiedAt), 'PPPppp')}</i>)
+                                    </Typography>
+                                }
+                            </div>
                         </Tooltip>
                     </span>
                 }

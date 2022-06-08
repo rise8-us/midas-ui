@@ -1,5 +1,6 @@
 import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { DateSelector } from 'Components/DateSelector'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
 import { SyncRequest } from 'Components/SyncRequest'
@@ -19,6 +20,7 @@ import { selectAvailableProducts } from 'Redux/Products/selectors'
 import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
 import { requestFindUserBy } from 'Redux/Users/actions'
 import { styled } from 'Styles/materialThemes'
+import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 import FormatErrors from 'Utilities/FormatErrors'
 
 const TextFieldStyled = styled(TextField)(() => ({
@@ -61,6 +63,8 @@ function PortfolioPopup({ id }) {
         name: portfolio.name,
         description: portfolio.description,
         gitlabGroupId: portfolio.gitlabGroupId ?? '',
+        sprintStartDate: portfolio.sprintStartDate,
+        sprintDurationInDays: portfolio.sprintDurationInDays,
         products: portfolio.products,
         owner: undefined,
         adminIds: portfolio.personnel?.adminIds ?? []
@@ -77,12 +81,13 @@ function PortfolioPopup({ id }) {
 
     const onSubmit = () => {
         const adminIdsFinal = new Set(formValues.adminIds)
-
         dispatch(context.request({
             ...portfolio,
             name: formValues.name,
             description: formValues.description,
             gitlabGroupId: formValues.gitlabGroupId,
+            sprintStartDate: formValues.sprintStartDate,
+            sprintDurationInDays: formValues.sprintDurationInDays,
             sourceControlId: sourceControl?.id ?? null,
             productIds: formValues.products?.map(product => product.id),
             personnel: {
@@ -176,6 +181,24 @@ function PortfolioPopup({ id }) {
                     helperText = {<FormatErrors errors = {gitLabError} />}
                     margin = 'dense'
                 />
+                <TextFieldStyled
+                    label = 'Sprint Duration In Days'
+                    type = 'number'
+                    inputProps = {{
+                        'data-testid': 'PortfolioPopup__input-sprint-duration',
+                    }}
+                    value = {formValues.sprintDurationInDays}
+                    onChange = {(e) => handleChange('sprintDurationInDays', e.target.value)}
+                    margin = 'dense'
+                />
+                <div style = {{ marginTop: '8px', marginBottom: '8px' }}>
+                    <DateSelector
+                        label = 'Sprint Start Date'
+                        initialValue = {getDateInDisplayOrder(portfolio?.sprintStartDate)}
+                        hasEdit = {true}
+                        onAccept = {(value) => handleChange('sprintStartDate', value)}
+                    />
+                </div>
                 <Autocomplete
                     multiple
                     autoSelect
