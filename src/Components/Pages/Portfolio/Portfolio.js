@@ -1,10 +1,8 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import { Box, Divider, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material'
-import EntriesContainer from 'Components/EntriesContainer/EntriesContainer'
-import { GanttPortfolioNote } from 'Components/Gantt/GanttPortfolioNote'
 import { Page } from 'Components/Page'
-import { PortfolioCapabilities } from 'Components/Portfolio/PortfolioCapabilities'
-import { PageMetrics } from 'Components/Tabs/PageMetrics/'
+import { PageMetrics } from 'Components/Tabs/PageMetrics'
+import * as PortfolioTab from 'Components/Tabs/PortfolioPage'
 import { Suspense, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
@@ -77,6 +75,7 @@ export default function Portfolio() {
                         value = 'requirements'
                         data-testid = 'Portfolio__requirements'
                     />
+                    {/* TODO: Add sprint-report tab in */}
                     <Tab
                         label = 'metrics'
                         value = 'metrics'
@@ -87,13 +86,21 @@ export default function Portfolio() {
                 <Box paddingY = {3}>
                     {(portfolioTab === 'roadmap' || portfolioTab === undefined) &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                            <GanttPortfolioNote id = {id}/>
-                            <EntriesContainer portfolioId = {id}/>
+                            <PortfolioTab.PortfolioRoadmap portfolioId = {id}/>
                         </Suspense>
                     }
                     {portfolioTab === 'requirements' &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                            <PortfolioCapabilities portfolioId = {id}/>
+                            <PortfolioTab.PortfolioCapabilities portfolioId = {id}/>
+                        </Suspense>
+                    }
+                    {portfolioTab === 'sprint-report' &&
+                        <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
+                            <PortfolioTab.PortfolioSprintReport
+                                productIds = {portfolio.productIds}
+                                sprintDuration = {14}
+                                sprintStart = {new Date()}
+                            />
                         </Suspense>
                     }
                     {portfolioTab === 'metrics' &&
