@@ -1,5 +1,5 @@
 import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
-import { EntriesContainer } from './index'
+import { PortfolioRoadmap } from './index'
 
 jest.mock('Components/Gantt/GanttTarget/GanttTarget', () => function testing(props) {
     return <div>{props.target.type}</div>
@@ -14,7 +14,7 @@ jest.mock('Components/Gantt/GanttWin/GanttWin', () => function testing(props) {
     return <div>{props.win.type}</div>
 })
 
-describe('<EntriesContainer />', () => {
+describe('<PortfolioRoadmap />', () => {
 
     const selectMilestonesByPortfolioIdMock =
         useModuleMock('Redux/Milestones/selectors', 'selectMilestonesByPortfolioId')
@@ -48,14 +48,14 @@ describe('<EntriesContainer />', () => {
     })
 
     test('should render without edit', () => {
-        render(<EntriesContainer portfolioId = {0} />)
+        render(<PortfolioRoadmap portfolioId = {0} />)
 
         expect(screen.queryByTestId('GanttAddNewItem__button')).not.toBeInTheDocument()
     })
 
     test('should render with edit', () => {
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
-        render(<EntriesContainer portfolioId = {0} />)
+        render(<PortfolioRoadmap portfolioId = {0} />)
 
         expect(screen.getByTestId('GanttAddNewItem__button')).toBeInTheDocument()
     })

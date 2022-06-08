@@ -4,10 +4,10 @@ import { Portfolio } from './index'
 
 const history = createMemoryHistory()
 
-jest.mock('Components/Portfolio/PortfolioCapabilities/PortfolioCapabilities',
+jest.mock('Components/Tabs/PortfolioPage/PortfolioCapabilities/PortfolioCapabilities',
     () => function testing() { return (<div>RequirementsTab</div>) })
 
-jest.mock('Components/EntriesContainer/EntriesContainer',
+jest.mock('Components/Tabs/PortfolioPage/PortfolioRoadmap/PortfolioRoadmap',
     () => function testing() { return (<div>RoadmapTab</div>) })
 
 jest.mock('Components/Tabs/PageMetrics/PageMetrics',

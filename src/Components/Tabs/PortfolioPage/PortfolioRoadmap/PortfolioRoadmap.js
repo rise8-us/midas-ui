@@ -31,7 +31,7 @@ import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
 const CHUNK_SIZE = 35
 
-export default function EntriesContainer({ portfolioId }) {
+export default function PortfolioRoadmap({ portfolioId }) {
 
     const dispatch = useDispatch()
     const theme = useTheme()
@@ -170,6 +170,6 @@ export default function EntriesContainer({ portfolioId }) {
     )
 }
 
-EntriesContainer.propTypes = {
+PortfolioRoadmap.propTypes = {
     portfolioId: PropTypes.number.isRequired,
 }
