@@ -1,6 +1,6 @@
 import { Notes } from '@mui/icons-material'
-import { ClickAwayListener, Fade, Stack, TextField, Tooltip, Typography } from '@mui/material'
-import { format } from 'date-fns'
+import { Fade, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import { format, formatRelative } from 'date-fns'
 import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
@@ -8,6 +8,30 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { requestUpdatePortfolio } from 'Redux/Portfolios/actions'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
+
+const lastModified = (date, user, left, top = '0px') => {
+    const tooltip = () =>
+        <span>
+            <Typography>Last Modified: {user}</Typography>
+            <Typography>Last Updated: {format(new Date(date + 'Z'), 'PPPppp')}</Typography>
+        </span>
+
+    return date
+        ? <Tooltip title = {tooltip()}>
+            <Typography
+                color = 'secondary'
+                variant = 'caption'
+                display = 'inline'
+                data-testid = 'GanttPortfolioNote__last-edited'
+                position = 'relative'
+                top = {top}
+                left = {left}
+            >
+                (updated: <i>{formatRelative(new Date(date + 'Z'), new Date())}</i>)
+            </Typography>
+        </Tooltip>
+        : null
+}
 
 export default function GanttPortfolioNote({ id }) {
     const dispatch = useDispatch()
@@ -17,24 +41,25 @@ export default function GanttPortfolioNote({ id }) {
 
     const portfolio = useSelector(state => selectPortfolioById(state, id))
     const { ganttNote, ganttNoteModifiedBy, ganttNoteModifiedAt } = portfolio
+    const user = ganttNoteModifiedBy?.displayName ?? ganttNoteModifiedBy?.username
 
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, id))
-    const debouncedValue = useDebounce(value, 1000)
+    const debouncedValue = useDebounce(value, 500)
 
     const onKeyDown = ({ key }) => key === 'Escape' && setValue(ganttNote)
 
     const handleOnChange = (event) => {
         setValue(event.target.value)
-        setSaved(false)
     }
 
-    const saveData = () => {
+    const saveData = async() => {
         !saved && dispatch(requestUpdatePortfolio({
             ...portfolio,
             ganttNote: debouncedValue
-        }))
-        setSaved(true)
-        setTimeout(() => setSaved(false), 1500)
+        })).then(() => {
+            setSaved(true)
+            setTimeout(() => setSaved(false), 1500)
+        })
     }
 
     useEffect(() => {
@@ -45,35 +70,37 @@ export default function GanttPortfolioNote({ id }) {
         !pagePermissions.edit && setValue(ganttNote)
     }, [JSON.stringify(ganttNote)])
 
-    if (!portfolio.id) return null
+    if (!portfolio.id || (!pagePermissions.edit && ganttNote?.length < 1)) return null
 
     return (
-        <ClickAwayListener onClickAway = {saveData}>
-            <Stack direction = 'row' marginBottom = {2} data-testid = 'GanttPortfolioNote__wrap'>
-                <Tooltip title = 'Portfolio Roadmap notes'>
-                    <Notes
-                        color = 'secondary'
-                        onClick = {() => pagePermissions.edit && inputRef.current.focus()}
+        <Stack direction = 'row' marginBottom = {2} data-testid = 'GanttPortfolioNote__wrap'>
+            <Tooltip title = 'Portfolio Roadmap notes'>
+                <Notes
+                    color = 'secondary'
+                    onClick = {() => pagePermissions.edit && inputRef.current.focus()}
+                />
+            </Tooltip>
+            {pagePermissions.edit
+                ? <div style = {{ width: '100%', paddingRight: '8px' }}>
+                    <TextField
+                        value = {value}
+                        onKeyDown = {onKeyDown}
+                        onChange = {handleOnChange}
+                        onBlur = {() => debouncedValue !== ganttNote && saveData()}
+                        placeholder = 'Add a Roadmap note...'
+                        style = {{ marginTop: '-8px', marginLeft: '8px' }}
+                        inputProps = {{
+                            style: { resize: 'vertical' },
+                            'data-testid': 'GanttPortfolioNote__input'
+                        }}
+                        inputRef = {inputRef}
+                        variant = 'outlined'
+                        size = 'small'
+                        multiline
+                        fullWidth
                     />
-                </Tooltip>
-                {pagePermissions.edit
-                    ? <div style = {{ width: '100%', paddingRight: '8px' }}>
-                        <TextField
-                            value = {value}
-                            onKeyDown = {onKeyDown}
-                            onChange = {handleOnChange}
-                            placeholder = 'Add a Roadmap note...'
-                            style = {{ marginTop: '-8px', marginLeft: '8px' }}
-                            inputProps = {{
-                                style: { resize: 'vertical' },
-                                'data-testid': 'GanttPortfolioNote__input'
-                            }}
-                            inputRef = {inputRef}
-                            variant = 'outlined'
-                            size = 'small'
-                            multiline
-                            fullWidth
-                        />
+                    <div style = {{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                        {lastModified(ganttNoteModifiedAt, user, '8px')}
                         <Fade in = {saved}>
                             <Typography
                                 color = 'secondary'
@@ -85,32 +112,15 @@ export default function GanttPortfolioNote({ id }) {
                             </Typography>
                         </Fade>
                     </div>
-                    : <span style = {{ marginLeft: '22px', marginBottom: '6px' }}>
-                        <Typography display = 'inline' marginRight = '4px'>
-                            {ganttNote}
-                        </Typography>
-                        <Tooltip
-                            title = {
-                                'Modified By: ' + (ganttNoteModifiedBy?.displayName ?? ganttNoteModifiedBy?.username)
-                            }
-                        >
-                            <div style = {{ display: 'inline' }}>
-                                {ganttNoteModifiedAt &&
-                                    <Typography
-                                        color = 'secondary'
-                                        variant = 'caption'
-                                        display = 'inline'
-                                        data-testid = 'GanttPortfolioNote__last-edited'
-                                    >
-                                        (edited: <i>{format(new Date(ganttNoteModifiedAt), 'PPPppp')}</i>)
-                                    </Typography>
-                                }
-                            </div>
-                        </Tooltip>
-                    </span>
-                }
-            </Stack>
-        </ClickAwayListener>
+                </div>
+                : <span>
+                    <Typography marginLeft = '22px' marginBottom = '5px'>
+                        {ganttNote}
+                    </Typography>
+                    {ganttNote?.length > 0 && lastModified(ganttNoteModifiedAt, user, '20px', '-6px')}
+                </span>
+            }
+        </Stack>
     )
 }
 
