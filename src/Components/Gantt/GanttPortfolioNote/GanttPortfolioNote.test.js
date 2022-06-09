@@ -1,4 +1,4 @@
-import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import { act, fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttPortfolioNote } from './index'
 
 jest.mock('Hooks/useDebounce', () => function testing(value) { return value })
@@ -15,7 +15,7 @@ describe('<GanttPortfolioNote />', () => {
         ganttNoteModifiedBy: {
             displayName: 'displayName'
         },
-        ganttNoteModifiedAt: '2022-01-01T00:00:00.000Z'
+        ganttNoteModifiedAt: '2022-01-01T00:00:00.000'
     }
 
     beforeEach(() => {
@@ -36,7 +36,7 @@ describe('<GanttPortfolioNote />', () => {
 
         expect(screen.getByText(ganttData.ganttNote)).toBeInTheDocument()
         expect(screen.getByTestId('GanttPortfolioNote__last-edited')).toBeInTheDocument()
-        expect(await screen.findByText('Modified By: displayName')).toBeInTheDocument()
+        expect(await screen.findByText('Last Modified: displayName')).toBeInTheDocument()
     })
 
     test('should render - no edit - with data - username', async() => {
@@ -45,7 +45,7 @@ describe('<GanttPortfolioNote />', () => {
         render(<GanttPortfolioNote id = {1} />)
         userEvent.hover(screen.getByTestId('GanttPortfolioNote__last-edited'))
 
-        expect(await screen.findByText('Modified By: username')).toBeInTheDocument()
+        expect(await screen.findByText('Last Modified: username')).toBeInTheDocument()
     })
 
     test('should render - edit - with data', () => {
@@ -68,15 +68,18 @@ describe('<GanttPortfolioNote />', () => {
         expect(screen.getByTestId('GanttPortfolioNote__input')).toHaveFocus()
     })
 
-    test('should handle onChange - save', () => {
+    test('should handle onChange - save', async() => {
         jest.useFakeTimers()
-        useDispatchMock().mockReturnValue({})
+        useDispatchMock().mockResolvedValue({})
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
         render(<GanttPortfolioNote id = {1} />)
-        userEvent.type(screen.getByPlaceholderText('Add a Roadmap note...'), 't')
 
-        act(() => {
+        await act(async() => {
+            userEvent.type(screen.getByPlaceholderText('Add a Roadmap note...'), 't')
+        })
+
+        await act(async() => {
             jest.runAllTimers()
         })
 
@@ -86,13 +89,23 @@ describe('<GanttPortfolioNote />', () => {
     })
 
     test('should handle onChange - revert {esc}', () => {
-        useDispatchMock().mockReturnValue({})
+        useDispatchMock().mockResolvedValue({})
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
         render(<GanttPortfolioNote id = {1} />)
         expect(screen.queryByDisplayValue(ganttData.ganttNote)).not.toBeInTheDocument()
-        userEvent.type(screen.getByPlaceholderText('Add a Roadmap note...'), 't{esc}')
+        userEvent.type(screen.getByPlaceholderText('Add a Roadmap note...'), '{esc}')
+        fireEvent.blur(screen.getByTestId('GanttPortfolioNote__input'))
 
         expect(screen.getByDisplayValue(ganttData.ganttNote)).toBeInTheDocument()
+    })
+
+    test('lastModified - does not render', () => {
+        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+        selectPortfolioByIdMock.mockReturnValue({ ...ganttData, ganttNoteModifiedAt: null })
+
+        render(<GanttPortfolioNote id = {1} />)
+
+        expect(screen.queryByTestId('GanttPortfolioNote__last-edited')).not.toBeInTheDocument()
     })
 })
