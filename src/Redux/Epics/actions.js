@@ -33,6 +33,7 @@ export const requestSyncEpicsByProductId = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
 export const requestSyncEpicsByPortfolioId = createAsyncThunk(
     Constants.SYNC_EPICS_PORTFOLIO,
     async(id, { rejectWithValue }) => {
