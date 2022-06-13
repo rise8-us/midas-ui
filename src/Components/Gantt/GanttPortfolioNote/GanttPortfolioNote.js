@@ -70,7 +70,7 @@ export default function GanttPortfolioNote({ id }) {
         !pagePermissions.edit && setValue(ganttNote)
     }, [JSON.stringify(ganttNote)])
 
-    if (!portfolio.id || (!pagePermissions.edit && ganttNote?.length < 1)) return null
+    if (!portfolio.id || (!pagePermissions.edit && !ganttNote)) return null
 
     return (
         <Stack direction = 'row' marginBottom = {2} data-testid = 'GanttPortfolioNote__wrap'>
@@ -83,7 +83,7 @@ export default function GanttPortfolioNote({ id }) {
             {pagePermissions.edit
                 ? <div style = {{ width: '100%', paddingRight: '8px' }}>
                     <TextField
-                        value = {value}
+                        value = {value ?? ''}
                         onKeyDown = {onKeyDown}
                         onChange = {handleOnChange}
                         onBlur = {() => debouncedValue !== ganttNote && saveData()}

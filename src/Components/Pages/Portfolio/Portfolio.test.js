@@ -13,6 +13,9 @@ jest.mock('Components/Tabs/PortfolioPage/PortfolioRoadmap/PortfolioRoadmap',
 jest.mock('Components/Tabs/PageMetrics/PageMetrics',
     () => function testing() { return (<div>MetricsTab</div>) })
 
+jest.mock('Components/Tabs/PortfolioPage/PortfolioSprintReport/PortfolioSprintReport',
+    () => function testing() { return (<div>PortfolioSprintReportTab</div>) })
+
 describe('<Portfolio />', () => {
 
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
@@ -30,6 +33,15 @@ describe('<Portfolio />', () => {
         expect(screen.getByText('foo')).toBeInTheDocument()
         expect(screen.getByText('roadmap')).toBeInTheDocument()
         expect(screen.getByText('requirements')).toBeInTheDocument()
+        expect(screen.getByText('sprint report')).toBeInTheDocument()
+    })
+
+    test('should render Skeleton', () => {
+        selectPortfolioByIdMock.mockReturnValue({})
+
+        renderWithRouter(<Portfolio />)
+
+        expect(screen.getByTestId('Portfolio__skeleton-name')).toBeInTheDocument()
     })
 
     test('should render Gantt tab', () => {
@@ -51,6 +63,15 @@ describe('<Portfolio />', () => {
         fireEvent.click(screen.getByText('metrics'))
 
         expect(history.location.pathname).toEqual('/portfolios/91/metrics')
+    })
+
+    test('should render metrics tab - with data', async() => {
+        selectPortfolioByIdMock.mockReturnValue({ name: 'foo', sprintStartDate: new Date() })
+
+        renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
+        fireEvent.click(screen.getByText('sprint report'))
+
+        expect(history.location.pathname).toEqual('/portfolios/91/sprint-report')
     })
 
     test('should handle action icons with permissions', () => {

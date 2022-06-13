@@ -1,5 +1,7 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
-import { Box, Divider, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import {
+    Box, CircularProgress, Divider, IconButton, Skeleton, Stack, Tab, Tabs, Tooltip, Typography
+} from '@mui/material'
 import { GanttPortfolioNote } from 'Components/Gantt/GanttPortfolioNote'
 import { Page } from 'Components/Page'
 import { PageMetrics } from 'Components/Tabs/PageMetrics'
@@ -12,6 +14,7 @@ import { setCapability } from 'Redux/Capabilities/reducer'
 import { setPortfolioPagePermission } from 'Redux/PageAccess/reducer'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
+import { parseStringToDate } from 'Utilities/dateHelpers'
 
 const isOwnerOrAdmin = (userId, personnel) => personnel?.ownerId === userId || personnel?.adminIds?.includes(userId)
 
@@ -49,11 +52,12 @@ export default function Portfolio() {
         <Page>
             <Stack paddingX = {2}>
                 <Stack direction = 'row' spacing = {1} alignItems = 'end'>
-                    <Typography variant = 'h3'>
-                        {portfolio.name}
-                    </Typography>
+                    {portfolio.name
+                        ? <Typography variant = 'h3'>{portfolio.name}</Typography>
+                        : <Skeleton height = '64px' width = '60vw' data-testid = 'Portfolio__skeleton-name'/>
+                    }
                     <div>
-                        {isAuthorized &&
+                        {portfolio.name && isAuthorized &&
                             <Tooltip title = {pagePermissions.edit ? 'Click to stop editing' : 'Click to edit'}>
                                 <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
                                     {pagePermissions.edit
@@ -76,7 +80,12 @@ export default function Portfolio() {
                         value = 'requirements'
                         data-testid = 'Portfolio__requirements'
                     />
-                    {/* TODO: Add sprint-report tab in */}
+                    <Tab
+                        label = 'sprint report'
+                        value = 'sprint-report'
+                        data-testid = 'Portfolio__sprint-report'
+                        disabled = {!portfolio.sprintStartDate}
+                    />
                     <Tab
                         label = 'metrics'
                         value = 'metrics'
@@ -98,11 +107,23 @@ export default function Portfolio() {
                     }
                     {portfolioTab === 'sprint-report' &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                            <PortfolioTab.PortfolioSprintReport
-                                productIds = {portfolio.productIds}
-                                sprintDuration = {portfolio.sprintDurationInDays}
-                                sprintStart = {portfolio.sprintStart}
-                            />
+                            {portfolio.sprintStartDate
+                                ? <PortfolioTab.PortfolioSprintReport
+                                    productIds = {portfolio.productIds}
+                                    sprintDuration = {portfolio.sprintDurationInDays}
+                                    sprintStart = {parseStringToDate(portfolio.sprintStartDate)}
+                                />
+                                : <div
+                                    style = {{
+                                        height: 'calc(100vh - 165px)',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <CircularProgress/>
+                                </div>
+                            }
                         </Suspense>
                     }
                     {portfolioTab === 'metrics' &&

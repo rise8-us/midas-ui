@@ -59,4 +59,4 @@ export const subscribe = (selectedStompClient, topic, callback) => {
     selectedStompClient.subscribe('/topic' + topic, callback)
 }
 
-export const buildOrQueryByIds = (ids) => ids.map(id => `id:${id}`).join(' OR ')
+export const buildOrQueryByIds = (ids, prefix = '') => ids.map(id => `${prefix}id:${id}`).join(' OR ')
