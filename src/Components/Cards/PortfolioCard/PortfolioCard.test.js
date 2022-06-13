@@ -64,12 +64,12 @@ describe('<PortfolioCard />', () => {
 
         expect(screen.getByText('Product Name')).toBeInTheDocument()
         expect(screen.getByText('Projects with CTF')).toBeInTheDocument()
-
         expect(screen.getByText('Midas')).toBeInTheDocument()
     })
 
     test('should display data without projects', () => {
         selectPortfolioByIdMock.mockReturnValue(portfolio2)
+
         render(<PortfolioCard id = {portfolio.id}/>)
 
         expect(screen.getByText('No products are currently assigned to this portfolio.')).toBeInTheDocument()
@@ -77,7 +77,6 @@ describe('<PortfolioCard />', () => {
 
     test('should call PortfolioPopup', () => {
         render(<PortfolioCard id = {portfolio.id}/>)
-
         fireEvent.click(screen.getByTestId('PortfolioCard__button-edit'))
 
         expect(openPopupMock).toHaveBeenCalledWith(
@@ -86,7 +85,6 @@ describe('<PortfolioCard />', () => {
 
     test('should go to portfolios page', () => {
         render(<MemoryRouter><PortfolioCard id = {portfolio.id}/></MemoryRouter>)
-
         fireEvent.click(screen.getByText('Midas'))
 
         expect(mockHistoryPush).toHaveBeenCalledWith('/products/4/overview')
@@ -102,10 +100,16 @@ describe('<PortfolioCard />', () => {
 
     test('should go to portfolios page', () => {
         render(<MemoryRouter><PortfolioCard id = {portfolio.id}/></MemoryRouter>)
-
         fireEvent.click(screen.getByText('portfolio'))
 
         expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/1')
+    })
+
+    test('should go to requirements tab', () => {
+        render(<MemoryRouter><PortfolioCard id = {portfolio.id}/></MemoryRouter>)
+        fireEvent.click(screen.getByText('requirements'))
+
+        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/1/requirements')
     })
 
 })
