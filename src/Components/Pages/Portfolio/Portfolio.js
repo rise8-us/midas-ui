@@ -17,6 +17,16 @@ import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { parseStringToDate } from 'Utilities/dateHelpers'
 
 const isOwnerOrAdmin = (userId, personnel) => personnel?.ownerId === userId || personnel?.adminIds?.includes(userId)
+const isMemberOrSiteAdmin = (portfolioMember, siteAdmin) => portfolioMember || siteAdmin
+const togglePageEdit = (permission) => permission ? false : true
+const pageEditTooltipTitle = (permission) =>permission ? 'Click to stop editing' : 'Click to edit'
+
+const loadPortfolioName = (portfolioName) => portfolioName
+    ? <Typography variant = 'h3'>{portfolioName}</Typography>
+    : <Skeleton height = '64px' width = '60vw' data-testid = 'Portfolio__skeleton-name'/>
+const pageEditIcon = (editPermissions) => editPermissions
+    ? <LockOpenOutlined fontSize = 'medium' color = 'primary'/>
+    : <LockOutlined fontSize = 'medium' color = 'primary'/>
 
 export default function Portfolio() {
     const history = useHistory()
@@ -27,7 +37,9 @@ export default function Portfolio() {
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, id))
-    const isAuthorized = isOwnerOrAdmin(userLoggedIn.id, portfolio?.personnel) || userLoggedIn.isAdmin
+    const isAuthorized = isMemberOrSiteAdmin(
+        isOwnerOrAdmin(userLoggedIn.id, portfolio?.personnel), userLoggedIn.isAdmin
+    )
 
     const handleChange = (_e, newValue) => {
         history.push(`/portfolios/${id}/${newValue}`)
@@ -37,7 +49,7 @@ export default function Portfolio() {
         dispatch(setPortfolioPagePermission({
             id,
             permissions: {
-                edit: pagePermissions.edit ? false : true
+                edit: togglePageEdit(pagePermissions.edit)
             }
         }))
     }
@@ -52,18 +64,12 @@ export default function Portfolio() {
         <Page>
             <Stack paddingX = {2}>
                 <Stack direction = 'row' spacing = {1} alignItems = 'end'>
-                    {portfolio.name
-                        ? <Typography variant = 'h3'>{portfolio.name}</Typography>
-                        : <Skeleton height = '64px' width = '60vw' data-testid = 'Portfolio__skeleton-name'/>
-                    }
+                    {loadPortfolioName(portfolio?.name)}
                     <div>
                         {portfolio.name && isAuthorized &&
-                            <Tooltip title = {pagePermissions.edit ? 'Click to stop editing' : 'Click to edit'}>
+                            <Tooltip title = {pageEditTooltipTitle(pagePermissions.edit)}>
                                 <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
-                                    {pagePermissions.edit
-                                        ? <LockOpenOutlined fontSize = 'medium' color = 'primary'/>
-                                        : <LockOutlined fontSize = 'medium' color = 'primary'/>
-                                    }
+                                    {pageEditIcon(pagePermissions.edit)}
                                 </IconButton>
                             </Tooltip>
                         }
