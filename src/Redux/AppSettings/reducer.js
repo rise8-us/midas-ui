@@ -8,6 +8,7 @@ const appSettingsSlice = createSlice({
         assertionCommentType: null,
         assertionStatus: {},
         classification: {},
+        epicSyncProgress: 1,
         projectJourneyMap: {},
         roadmapStatus: {},
         roadmapTypes: {},
@@ -30,6 +31,9 @@ const appSettingsSlice = createSlice({
 
             state.assertionCommentId = currentId === newId ? null : assertionId
             state.assertionCommentType = type
+        },
+        setEpicSyncProgress: (state, action) => {
+            state.epicSyncProgress = action.payload.value
         },
         setPageScrollY: (state, action) => {
             state.pageScrollY = action.payload
@@ -141,7 +145,8 @@ export const {
     setPortfolioPageSettings,
     setPortfolioPageSetting,
     setPortfolioPageSettingExpandAll,
-    setPortfolioPageSettingTargetIdExpand
+    setPortfolioPageSettingTargetIdExpand,
+    setEpicSyncProgress
 } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer

@@ -54,3 +54,6 @@ export const selectPortfolioPageSettingAllExpanded = (state, id) =>
 
 export const selectPortfolioPageSettingTargetIdExpanded = (state, portfolioId, id) =>
     state.app.portfolioPage[portfolioId]?.expanded?.[id] ?? false
+
+export const selectEpicSyncProgress = (state) =>
+    state.app.epicSyncProgress ?? 0

@@ -55,8 +55,8 @@ export const createAxiosRequest = (routeSuffix, method, body) => {
     return request
 }
 
-export const subscribe = (selectedStompClient, topic, callback) => {
-    selectedStompClient.subscribe('/topic' + topic, callback)
+export const subscribe = (selectedStompClient, topic, callback, prefix = '/topic') => {
+    selectedStompClient.subscribe(prefix + topic, callback)
 }
 
 export const buildOrQueryByIds = (ids, prefix = '') => ids.map(id => `${prefix}id:${id}`).join(' OR ')

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInitialized } from 'Redux/AppSettings/reducer'
+import appSettingsSubscriptions from 'Redux/AppSettings/subscriptions'
 import assertionSubscriptions from 'Redux/Assertions/subscriptions'
+import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import capabilitySubscriptions from 'Redux/Capabilities/subscriptions'
 import commentSubscriptions from 'Redux/Comments/subscriptions'
 import deliverableSubscriptions from 'Redux/Deliverables/subscriptions'
@@ -39,6 +41,7 @@ function WebsocketProvider({ children }) {
     const dispatch = useDispatch()
 
     const isInitialized = useSelector((state) => state.app.initialized)
+    const connectedUser = useSelector(selectUserLoggedIn)
 
     const [connected, setConnected] = useState(false)
 
@@ -69,6 +72,7 @@ function WebsocketProvider({ children }) {
             severity: 'success'
         }))
 
+        appSettingsSubscriptions({ stompClient, connectedUser })
         assertionSubscriptions({ stompClient })
         capabilitySubscriptions({ stompClient })
         commentSubscriptions({ stompClient })
@@ -99,14 +103,16 @@ function WebsocketProvider({ children }) {
     }
 
     useEffect(() => {
-        stompClient.webSocketFactory = socketFactory
-        stompClient.reconnectDelay = 5000
-        stompClient.debug = () => { /* turn off debug */ }
-        stompClient.onWebSocketClose = onWebsocketClose
-        stompClient.onWebSocketError = onConnectFailure
-        stompClient.onConnect = onConnectSuccess
-        stompClient.activate()
-    }, [isInitialized])
+        if (connectedUser.keycloakUid) {
+            stompClient.webSocketFactory = socketFactory
+            stompClient.reconnectDelay = 5000
+            stompClient.debug = () => { /* turn off debug */ }
+            stompClient.onWebSocketClose = onWebsocketClose
+            stompClient.onWebSocketError = onConnectFailure
+            stompClient.onConnect = onConnectSuccess
+            stompClient.activate()
+        }
+    }, [isInitialized, JSON.stringify(connectedUser)])
 
     return (
         <WebsocketContext.Provider value = {{ connected: connected }}>

@@ -6,6 +6,7 @@ const mockStore = {
     assertionCommentType: null,
     assertionStatus: {},
     classification: {},
+    epicSyncProgress: 1,
     pageScrollY: 0,
     projectJourneyMap: {},
     roadmapStatus: {},
@@ -58,6 +59,17 @@ test('should set setAssertionComment to null on deletedAssertionId', () => {
         ...mockStore,
         assertionCommentId: null,
         assertionCommentType: undefined
+    })
+})
+
+test('should setEpicSyncProgress', () => {
+    const payload = { value: .5 }
+
+    expect(
+        reducer(mockStore, { type: setters.setEpicSyncProgress.type, payload: payload })
+    ).toEqual({
+        ...mockStore,
+        epicSyncProgress: .5
     })
 })
 
