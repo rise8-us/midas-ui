@@ -24,7 +24,7 @@ export default function ProductCardSprintStats({ productId, dateRange }) {
         let requests = []
         if (product.projectIds?.length > 0) {
             product.projectIds.forEach(id => {
-                requests.put(dispatch(requestSyncIssuesByProjectId(id)))
+                requests.push(dispatch(requestSyncIssuesByProjectId(id)))
             })
         }
         return Promise.all(requests).then(fetchSprintIssues)
