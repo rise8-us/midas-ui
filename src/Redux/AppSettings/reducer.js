@@ -35,6 +35,9 @@ const appSettingsSlice = createSlice({
         setEpicSyncProgress: (state, action) => {
             state.epicSyncProgress = action.payload.value
         },
+        setIssueSyncProgress: (state, action) => {
+            state.issueSyncProgress = action.payload.value
+        },
         setPageScrollY: (state, action) => {
             state.pageScrollY = action.payload
         },
@@ -146,7 +149,8 @@ export const {
     setPortfolioPageSetting,
     setPortfolioPageSettingExpandAll,
     setPortfolioPageSettingTargetIdExpand,
-    setEpicSyncProgress
+    setEpicSyncProgress,
+    setIssueSyncProgress
 } = appSettingsSlice.actions
 
 export default appSettingsSlice.reducer

@@ -21,7 +21,7 @@ jest.mock('Components/UsersCollection/UsersCollection', () => function testing({
     return mockUsersCollectionComponent({ title, setUserIds })
 })
 
-jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
+jest.mock('Components/EpicSyncRequest/EpicSyncRequest', () => function testing() {
     return mockSyncRequest()
 })
 

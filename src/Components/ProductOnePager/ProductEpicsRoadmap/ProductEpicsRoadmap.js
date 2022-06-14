@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material'
 import { RoadmapEpic } from 'Components/Epics/RoadmapEpic'
+import { EpicSyncRequest } from 'Components/EpicSyncRequest'
 import { ProductRoadmapHeader } from 'Components/ProductOnePager'
-import { SyncRequest } from 'Components/SyncRequest'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
@@ -31,7 +31,7 @@ function ProductEpicsRoadmap({ productId, hasEdit }) {
                 <ProductRoadmapHeader
                     hasEdit = {hasEdit}
                     action = {
-                        <SyncRequest
+                        <EpicSyncRequest
                             id = {productId}
                             request = {requestSyncEpicsByProductId}
                             tooltip = {Tooltips.EPICS_ROADMAP_SYNC}

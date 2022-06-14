@@ -23,7 +23,7 @@ WarningIcon.propTypes = {
     errors: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-export default function SyncRequest({ id, request, tooltip }) {
+export default function EpicSyncRequest({ id, request, tooltip }) {
     const dispatch = useDispatch()
 
     const syncProgress = useSelector(state => selectEpicSyncProgress(state)) ?? 1
@@ -100,12 +100,12 @@ export default function SyncRequest({ id, request, tooltip }) {
     )
 }
 
-SyncRequest.propTypes = {
+EpicSyncRequest.propTypes = {
     id: PropTypes.number.isRequired,
     request: PropTypes.func.isRequired,
     tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 
-SyncRequest.defaultProps = {
+EpicSyncRequest.defaultProps = {
     tooltip: null
 }
