@@ -1,9 +1,9 @@
 import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { DateSelector } from 'Components/DateSelector'
+import { EpicSyncRequest } from 'Components/EpicSyncRequest'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
-import { SyncRequest } from 'Components/SyncRequest'
 import { UsersCollection } from 'Components/UsersCollection'
 import Tooltips from 'Constants/Tooltips'
 import useFormReducer from 'Hooks/useFormReducer'
@@ -168,7 +168,7 @@ function PortfolioPopup({ id }) {
                     InputProps = {{
                         endAdornment: (
                             showSync() &&
-                            <SyncRequest
+                            <EpicSyncRequest
                                 id = {id}
                                 request = {requestSyncEpicsByPortfolioId}
                                 tooltip = {Tooltips.EPICS_ROADMAP_SYNC}

@@ -12,7 +12,7 @@ import { sortProductEpics } from './ProductEpicsRoadmap'
 jest.mock('Components/Epics/RoadmapEpic/RoadmapEpic',
     () => function testing() { return (<div>RoadmapEpic</div>) })
 
-jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
+jest.mock('Components/EpicSyncRequest/EpicSyncRequest', () => function testing() {
     return mockSyncRequest()
 })
 

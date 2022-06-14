@@ -82,15 +82,15 @@ export default function Portfolio() {
                         data-testid = 'Portfolio__roadmap'
                     />
                     <Tab
-                        label = 'requirements'
-                        value = 'requirements'
-                        data-testid = 'Portfolio__requirements'
-                    />
-                    <Tab
                         label = 'sprint report'
                         value = 'sprint-report'
                         data-testid = 'Portfolio__sprint-report'
                         disabled = {!portfolio.sprintStartDate}
+                    />
+                    <Tab
+                        label = 'requirements'
+                        value = 'requirements'
+                        data-testid = 'Portfolio__requirements'
                     />
                     <Tab
                         label = 'metrics'

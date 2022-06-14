@@ -1,7 +1,7 @@
 import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
-import { SyncRequest } from './index'
+import { EpicSyncRequest } from './index'
 
-describe('<SyncRequest />', () => {
+describe('<EpicSyncRequest />', () => {
 
     const requestSyncEpicsByProductIdMock = useModuleMock('Redux/Products/actions', 'requestSyncEpicsByProductId')
     const selectEpicSyncProgressMock = useModuleMock('Redux/AppSettings/reducer', 'selectEpicSyncProgress')
@@ -9,7 +9,7 @@ describe('<SyncRequest />', () => {
     test('should render', () => {
         const request = jest.fn()
         render(
-            <SyncRequest
+            <EpicSyncRequest
                 id = {1}
                 request = {request}
                 tooltip = ''
@@ -23,7 +23,7 @@ describe('<SyncRequest />', () => {
         useDispatchMock().mockReturnValueOnce({}).mockRejectedValue(['errors'])
 
         render(
-            <SyncRequest
+            <EpicSyncRequest
                 id = {1}
                 request = {requestSyncEpicsByProductIdMock}
                 tooltip = ''
@@ -39,7 +39,7 @@ describe('<SyncRequest />', () => {
         const request = jest.fn()
         selectEpicSyncProgressMock.mockReturnValue({})
         useDispatchMock().mockResolvedValue({})
-        render(<SyncRequest
+        render(<EpicSyncRequest
             id = {1}
             request = {request}
             tooltip = ''

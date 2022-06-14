@@ -1,8 +1,8 @@
 import { Chip, Stack, TextField } from '@mui/material'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { EpicSyncRequest } from 'Components/EpicSyncRequest'
 import { SearchTeams } from 'Components/Search/SearchTeams'
-import { SyncRequest } from 'Components/SyncRequest'
 import { TagDropdown } from 'Components/TagDropdown'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
@@ -177,7 +177,7 @@ export default function ProductConfigurationFields({
                 }}
                 InputProps = {{
                     endAdornment: (
-                        <SyncRequest
+                        <EpicSyncRequest
                             id = {product.id}
                             request = {requestSyncEpicsByProductId}
                             tooltip = {Tooltips.EPICS_ROADMAP_SYNC}

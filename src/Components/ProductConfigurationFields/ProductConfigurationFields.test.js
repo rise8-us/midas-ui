@@ -9,7 +9,7 @@ import {
 } from 'Utilities/test-utils'
 import { ProductConfigurationFields } from './index'
 
-jest.mock('Components/SyncRequest/SyncRequest', () => function testing() {
+jest.mock('Components/EpicSyncRequest/EpicSyncRequest', () => function testing() {
     return mockSyncRequest()
 })
 

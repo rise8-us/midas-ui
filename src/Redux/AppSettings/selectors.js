@@ -57,3 +57,6 @@ export const selectPortfolioPageSettingTargetIdExpanded = (state, portfolioId, i
 
 export const selectEpicSyncProgress = (state) =>
     state.app.epicSyncProgress ?? 0
+
+export const selectIssueSyncProgress = (state) =>
+    state.app.issueSyncProgress ?? 0
