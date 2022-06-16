@@ -77,8 +77,8 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                         <IssueSyncRequest request = {syncIssues} tooltip = ''/>
                     </div>
                 </Stack>
-                <Grid container margin = {1}>
-                    <Grid item xs = {12} lg = {2}>
+                <Grid container margin = {1} columns = {13}>
+                    <Grid item xs = {12} lg = {3}>
                         <div>
                             <Typography variant = 'subtitle1' color = 'secondary'>
                                 Production Deployments:
