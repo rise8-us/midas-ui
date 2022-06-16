@@ -132,12 +132,14 @@ describe('<PortfolioPopup />', () => {
             errors: {
                 'portfolios/createOne': [
                     'portfolio name',
+                    'Gitlab Group ID and Server combination already used'
                 ]
             }
         }
         render(<PortfolioPopup />, { initialState: state })
 
         expect(await screen.findByText('portfolio name')).toBeInTheDocument()
+        expect(await screen.findAllByText('Gitlab Group ID and Server combination already used')).toHaveLength(1)
     })
 
     test('should call onSubmit for updatePortfolio', async() => {

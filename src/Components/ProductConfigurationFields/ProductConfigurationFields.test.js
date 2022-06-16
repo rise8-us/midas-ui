@@ -91,13 +91,13 @@ describe('<ProductConfigurationFields />', () => {
         render(<ProductConfigurationFields
             product = {product}
             errors = {[
-                'Gitlab error',
-                'Project with error'
+                'Project with error',
+                'Gitlab Group ID and Server combination already used',
             ]}
         />)
 
-        expect(screen.getByText('Gitlab error')).toBeInTheDocument()
         expect(screen.getByText('Project with error')).toBeInTheDocument()
+        expect(screen.getByText('Gitlab Group ID and Server combination already used')).toBeInTheDocument()
     })
 
     test('should handle onChange functions', async() => {
