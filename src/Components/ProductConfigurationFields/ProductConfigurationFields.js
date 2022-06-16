@@ -26,8 +26,6 @@ const TextFieldStyled = styled(TextField)(() => ({
 }))
 
 const filter = createFilterOptions()
-const searchErrors = (errors, searchString) => errors.filter(error => error.includes(searchString))
-
 export default function ProductConfigurationFields({
     product,
     errors,
@@ -59,6 +57,8 @@ export default function ProductConfigurationFields({
     const availableProjects = useMemo(() => selectedProjects.concat(projectsWithNoProductId),
         [projectsWithNoProductId, selectedProjects]
     )
+    const uniqueGroupAndSourceIdError = useMemo(() => errors.filter(error => error.includes('Gitlab'), [errors]))
+    const projectError = useMemo(() => errors.filter(error => error.includes('Project with')), [errors])
 
     const onSelectProjects = (_e, values) => {
         const newProject = values.filter((o) => o.id === -1)
@@ -185,8 +185,8 @@ export default function ProductConfigurationFields({
                     ) }}
                 value = {gitlabGroupId ?? ''}
                 onChange = {(e) => setGitlabGroupId(e.target.value)}
-                error = {searchErrors(errors, 'Gitlab').length > 0}
-                helperText = {<FormatErrors errors = {searchErrors(errors, 'Gitlab')} />}
+                error = {uniqueGroupAndSourceIdError.length > 0}
+                helperText = {<FormatErrors errors = {uniqueGroupAndSourceIdError} />}
                 margin = 'dense'
             />
             <Autocomplete
@@ -221,11 +221,11 @@ export default function ProductConfigurationFields({
                         {...params}
                         label = 'Gitlab Project(s)'
                         margin = 'dense'
-                        error = {searchErrors(errors, 'Project with').length > 0}
+                        error = {projectError.length > 0}
                         placeholder = {'Projects that have CTF pipeline'}
                         helperText = {
-                            searchErrors(errors, 'Project with').length > 0 ? (
-                                <FormatErrors errors = {searchErrors(errors, 'Project with')} />
+                            projectError.length > 0 ? (
+                                <FormatErrors errors = {projectError} />
                             ) : (
                                 'Don\'t see what you\'re looking for? Add it by typing it.'
                             )

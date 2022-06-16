@@ -55,7 +55,7 @@ function PortfolioPopup({ id }) {
 
     const errors = useSelector(state => selectRequestErrors(state, context.constant))
     const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
-    const gitLabError = useMemo(() => errors.filter(error => error.includes('Gitlab')), [errors])
+    const uniqueGroupAndSourceIdError = useMemo(() => errors.filter(error => error.includes('Gitlab'), [errors]))
 
     const availableProducts = notAssignedProducts.concat(portfolio.products)
 
@@ -177,8 +177,8 @@ function PortfolioPopup({ id }) {
                     }}
                     value = {formValues.gitlabGroupId}
                     onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
-                    error = {gitLabError.length > 0}
-                    helperText = {<FormatErrors errors = {gitLabError} />}
+                    error = {uniqueGroupAndSourceIdError.length > 0}
+                    helperText = {<FormatErrors errors = {uniqueGroupAndSourceIdError} />}
                     margin = 'dense'
                 />
                 <TextFieldStyled

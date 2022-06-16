@@ -73,7 +73,7 @@ export default function PortfolioCapabilities({ portfolioId }) {
 
     return (
         <Grid container direction = 'row' data-testid = 'PortfolioCapabilities__parent-grid'>
-            <Grid item lg = {6} xs = {12}>
+            <Grid item lg = {6} xs = {12} marginBottom = {4}>
                 <CapabilityCard
                     title = {
                         <CapabilityTitle
