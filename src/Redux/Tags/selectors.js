@@ -14,9 +14,7 @@ export const selectAllTags = state => {
         const labelA = a.label.toUpperCase()
         const labelB = b.label.toUpperCase()
 
-        if (labelA < labelB) return -1
-        else if (labelA > labelB) return 1
-        else return 0
+        return labelA < labelB ? -1 : 1
     })
 }
 
@@ -34,4 +32,15 @@ export const selectTagsByTypes = (state, types) => {
 
 export const selectTagsByScope = (state, scope) => {
     return selectAllTags(state).filter(tag => tag.label.split('::')[0] === scope)
+}
+
+export const selectTagByLabel = (state, label) => {
+    const tag = Object.values(state.tags).find(foundTag => foundTag.label === label)
+    if (!tag) return {
+        label: '',
+        description: '',
+        color: '#',
+        tagType: 'ALL'
+    }
+    return tag
 }

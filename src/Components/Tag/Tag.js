@@ -23,12 +23,13 @@ const buildTag = (tagLabel, tagColor, actions) => {
             size = 'small'
             onClick = {actions.onClick}
             onDelete = {actions.onDelete}
+            data-testid = 'Tag__chip'
             deleteIcon = {<Cancel title = {`Remove ${tagLabel[0]}`} />}
         />
     )
 }
 
-function Tag({ label, description, color, onDelete, onClick }) {
+export default function Tag({ label, description, color, onDelete, onClick }) {
 
     const labelArray = Array.from(String(label).split('::')).reverse()
 
@@ -46,17 +47,16 @@ function Tag({ label, description, color, onDelete, onClick }) {
 }
 
 Tag.propTypes = {
-    label: PropTypes.string.isRequired,
+    color: PropTypes.string,
     description: PropTypes.string,
-    color: PropTypes.string.isRequired,
-    onDelete: PropTypes.func,
+    label: PropTypes.string.isRequired,
     onClick: PropTypes.func,
+    onDelete: PropTypes.func,
 }
 
 Tag.defaultProps = {
+    color: 'black',
     description: null,
-    onDelete: undefined,
     onClick: undefined,
+    onDelete: undefined,
 }
-
-export default Tag

@@ -2,6 +2,7 @@
 import { Card, Grid, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { IssueSyncRequest } from 'Components/IssueSyncRequest'
+import { SprintIssues } from 'Components/SprintIssues'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
@@ -110,24 +111,10 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                                 Issues Deployed to Staging:
                             </Typography>
                             <Stack paddingX = {1}>
-                                {closedIssuesThisSprint.map((issue, index) =>
-                                    <Stack
-                                        display = 'list-item'
-                                        direction = 'row'
-                                        spacing = {1}
-                                        key = {index}
-                                        marginLeft = {2}
-                                    >
-                                        <Typography display = 'inline' variant = 'body2'>
-                                            {issue.title}
-                                        </Typography>
-                                    </Stack>
-                                )}
-                                {closedIssuesThisSprint?.length === 0 &&
-                                    <Typography>
-                                        <i>No issues closed this sprint.</i>
-                                    </Typography>
-                                }
+                                <SprintIssues
+                                    issues = {closedIssuesThisSprint}
+                                    noOptionsText = 'No issues closed this sprint.'
+                                />
                             </Stack>
                         </div>
                     </Grid>

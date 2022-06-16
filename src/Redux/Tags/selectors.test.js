@@ -36,10 +36,13 @@ const mockState = {
 test('should return empty object', () => {
     expect(selectors.selectTagById({ tags: {} }, 0))
         .toEqual({ label: '', description: '', color: '#', tagType: 'ALL' })
+    expect(selectors.selectTagByLabel({ tags: {} }, 'label'))
+        .toEqual({ label: '', description: '', color: '#', tagType: 'ALL' })
 })
 
-test('should return empty object', () => {
+test('should return the correct tag', () => {
     expect(selectors.selectTagById(mockState, 1)).toEqual(mockState.tags[1])
+    expect(selectors.selectTagByLabel(mockState, 'stuff::things')).toEqual(mockState.tags[2])
 })
 
 test('should return empty array', () => {
@@ -69,3 +72,4 @@ test('should return array of one', () => {
     expect(selectors.selectTagsByScope(mockState, 'stuff')).toEqual([mockState.tags[2]])
 
 })
+
