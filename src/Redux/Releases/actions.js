@@ -4,35 +4,33 @@ import { searchHelper } from 'Utilities/searchHelper'
 import Constants from './constants'
 
 export const requestSearchReleases = createAsyncThunk(
-    Constants.SEARCH_PRODUCTS,
+    Constants.SEARCH_RELEASES,
     async(search, { rejectWithValue }) => {
         const request = { endpoint: `/api/releases?search=${searchHelper(search)}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
 
-export const requestCreateRelease = createAsyncThunk(
-    Constants.CREATE_RELEASE,
-    async(release, { rejectWithValue }) => {
-        const request = { endpoint: '/api/releases', method: 'POST', body: release }
+export const fetchReleasesByProjectId = createAsyncThunk(
+    Constants.FETCH_RELEASES_BY_PROJECT,
+    async(projectId, { rejectWithValue }) => {
+        const request = { endpoint: `/api/releases/project/${projectId}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
 
-export const requestUpdateRelease = createAsyncThunk(
-    Constants.UPDATE_RELEASE,
-    async(release, { rejectWithValue }) => {
-        const { id, ...body } = release
-        const request = { endpoint: `/api/releases/${id}`, method: 'PUT', body }
+export const fetchReleasesByProductId = createAsyncThunk(
+    Constants.FETCH_RELEASES_BY_PRODUCT,
+    async(productId, { rejectWithValue }) => {
+        const request = { endpoint: `/api/releases/product/${productId}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
 
-export const requestDeleteRelease = createAsyncThunk(
-    Constants.DELETE_RELEASE,
-    async(id, { rejectWithValue }) => {
-        const request = { endpoint: `/api/releases/${id}`, method: 'DELETE', body: {} }
-        const data = await handleThunkRequest(request, rejectWithValue)
-        return { ...data, id }
+export const requestSyncReleasesByProjectId = createAsyncThunk(
+    Constants.SYNC_RELEASES_PROJECT,
+    async(projectId, { rejectWithValue }) => {
+        const request = { endpoint: `/api/releases/sync/project/${projectId}`, method: 'GET', body: {} }
+        return handleThunkRequest(request, rejectWithValue)
     }
 )

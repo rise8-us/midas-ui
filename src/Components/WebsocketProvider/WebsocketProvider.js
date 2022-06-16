@@ -20,7 +20,6 @@ import personaSubscriptions from 'Redux/Personas/subscriptions'
 import portfolioSubscriptions from 'Redux/Portfolios/subscriptions'
 import productSubscriptions from 'Redux/Products/subscriptions'
 import projectSubscriptions from 'Redux/Projects/subscriptions'
-import releaseSubscriptions from 'Redux/Releases/subscriptions'
 import { enqueueMessage, removeMessage } from 'Redux/Snackbar/reducer'
 import sourceControlSubscriptions from 'Redux/SourceControls/subscriptions'
 import tagSubscriptions from 'Redux/Tags/subscriptions'
@@ -89,7 +88,6 @@ function WebsocketProvider({ children }) {
         portfolioSubscriptions({ stompClient })
         productSubscriptions({ stompClient })
         projectSubscriptions({ stompClient })
-        releaseSubscriptions({ stompClient })
         sourceControlSubscriptions({ stompClient })
         tagSubscriptions({ stompClient })
         teamSubscriptions({ stompClient })
