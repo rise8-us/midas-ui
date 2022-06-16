@@ -1,43 +1,23 @@
-import { Sync, WarningAmberRounded } from '@mui/icons-material'
+import { Sync } from '@mui/icons-material'
 import { CircularProgress, IconButton, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIssueSyncProgress } from 'Redux/AppSettings/reducer'
 import { selectIssueSyncProgress } from 'Redux/AppSettings/selectors'
-import FormatErrors from 'Utilities/FormatErrors'
 
-function WarningIcon({ errors }) {
-    return (
-        <Tooltip title = {<FormatErrors errors = {errors} />}>
-            <WarningAmberRounded
-                color = 'warning'
-                style = {{ cursor: 'help', margin: '5px' }}
-                data-testid = 'SyncRequest__warning-icon'
-            />
-        </Tooltip>
-    )
-}
-
-WarningIcon.propTypes = {
-    errors: PropTypes.arrayOf(PropTypes.string).isRequired
-}
-
-export default function IssueSyncRequest({ id, request, tooltip }) {
+export default function IssueSyncRequest({ request, tooltip }) {
     const dispatch = useDispatch()
 
     const syncProgress = useSelector(state => selectIssueSyncProgress(state)) ?? 1
 
     const [isLoading, setIsLoading] = useState(false)
-    const [fetchErrors, setFetchErrors] = useState([])
 
-    const syncIssues = () => {
+    const syncIssues = async() => {
         dispatch(setIssueSyncProgress({ value: 0 }))
         setIsLoading(true)
-        dispatch(request(id))
-            .catch(error => {
-                setFetchErrors(error)
-            })
+        await request()
+        setIsLoading(false)
     }
 
     const getIcon = (processing) => processing ?
@@ -92,12 +72,11 @@ export default function IssueSyncRequest({ id, request, tooltip }) {
     }, [syncProgress])
 
     return (
-        fetchErrors.length > 0 ? <WarningIcon errors = {fetchErrors} /> : getIcon(isLoading)
+        getIcon(isLoading)
     )
 }
 
 IssueSyncRequest.propTypes = {
-    id: PropTypes.number.isRequired,
     request: PropTypes.func.isRequired,
     tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }

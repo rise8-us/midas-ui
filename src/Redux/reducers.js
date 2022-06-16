@@ -22,7 +22,6 @@ import popupReducer from './Popups/reducer'
 import portfolioReducer from './Portfolios/reducer'
 import productReducer from './Products/reducer'
 import projectReducer from './Projects/reducer'
-import releaseReducer from './Releases/reducer'
 import roadmapReducer from './Roadmaps/reducer'
 import snackbarReducer from './Snackbar/reducer'
 import sourceControlReducer from './SourceControls/reducer'
@@ -56,7 +55,6 @@ export const rootReducer = combineReducers({
     portfolios: portfolioReducer,
     products: productReducer,
     projects: projectReducer,
-    releases: releaseReducer,
     roadmaps: roadmapReducer,
     snackbar: snackbarReducer,
     sourceControls: sourceControlReducer,

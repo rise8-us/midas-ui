@@ -13,8 +13,8 @@ export const requestSearchIssues = createAsyncThunk(
 
 export const requestSyncIssuesByProjectId = createAsyncThunk(
     Constants.SYNC_ISSUES_PROJECT,
-    async(id, { rejectWithValue }) => {
-        const request = { endpoint: `/api/issues/all/${id}`, method: 'GET', body: {} }
+    async(projectId, { rejectWithValue }) => {
+        const request = { endpoint: `/api/issues/sync/project/${projectId}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

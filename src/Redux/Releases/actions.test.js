@@ -9,8 +9,6 @@ describe('Release action thunks', () => {
 
     const handleThunkRequest = useModuleMock('Utilities/requests', 'handleThunkRequest')
 
-    const body = { name: 'captain', description: 'foo' }
-
     afterEach(() => {
         jest.clearAllMocks()
         store.clearActions()
@@ -35,64 +33,61 @@ describe('Release action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestSearchReleases.rejected.toString())
     })
 
-    test('requestCreateRelease : fulfilled', async() => {
+    test('fetchReleasesByProjectId : fulfilled', async() => {
 
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestCreateRelease(body))
+        await store.dispatch(actions.fetchReleasesByProjectId(1))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/releases')
-        expect(handleThunkRequest.mock.calls[0][0].body).toEqual(body)
-        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('POST')
-        expect(store.getActions()[0].type).toEqual(actions.requestCreateRelease.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestCreateRelease.fulfilled.toString())
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/releases/project/1')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.fetchReleasesByProjectId.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.fetchReleasesByProjectId.fulfilled.toString())
     })
 
-    test('requestCreateRelease : rejected', async() => {
+    test('fetchReleasesByProjectId : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
-        await store.dispatch(actions.requestCreateRelease({ id: 1, name: 'starship9', description: 'foo' }))
+        await store.dispatch(actions.fetchReleasesByProjectId(1))
 
-        expect(store.getActions()[0].type).toEqual(actions.requestCreateRelease.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestCreateRelease.rejected.toString())
+        expect(store.getActions()[0].type).toEqual(actions.fetchReleasesByProjectId.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.fetchReleasesByProjectId.rejected.toString())
     })
 
-    test('requestUpdateRelease : fulfilled', async() => {
-        const release = { id: 1, ...body }
-
+    test('fetchReleasesByProductId : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestUpdateRelease(release))
+        await store.dispatch(actions.fetchReleasesByProductId(1))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/releases/1')
-        expect(handleThunkRequest.mock.calls[0][0].body).toEqual(body)
-        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('PUT')
-        expect(store.getActions()[0].type).toEqual(actions.requestUpdateRelease.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestUpdateRelease.fulfilled.toString())
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/releases/product/1')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.fetchReleasesByProductId.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.fetchReleasesByProductId.fulfilled.toString())
     })
 
-    test('requestUpdateRelease : rejected', async() => {
+    test('fetchReleasesByProductId : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
-        await store.dispatch(actions.requestUpdateRelease())
+        await store.dispatch(actions.fetchReleasesByProductId(1))
 
-        expect(store.getActions()[0].type).toEqual(actions.requestUpdateRelease.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestUpdateRelease.rejected.toString())
+        expect(store.getActions()[0].type).toEqual(actions.fetchReleasesByProductId.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.fetchReleasesByProductId.rejected.toString())
     })
 
-    test('requestDeleteRelease : fulfilled', async() => {
+    test('requestSyncReleasesByProjectId : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
-        const data = await store.dispatch(actions.requestDeleteRelease(1))
+        await store.dispatch(actions.requestSyncReleasesByProjectId(1))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/releases/1')
-        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
-        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('DELETE')
-        expect(store.getActions()[0].type).toEqual(actions.requestDeleteRelease.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestDeleteRelease.fulfilled.toString())
-        expect(data.payload).toEqual({ id: 1 })
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/releases/sync/project/1')
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestSyncReleasesByProjectId.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSyncReleasesByProjectId.fulfilled.toString())
     })
 
-    test('requestDeleteRelease : rejected', async() => {
+    test('requestSyncReleasesByProjectId : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
-        await store.dispatch(actions.requestDeleteRelease(1))
+        await store.dispatch(actions.requestSyncReleasesByProjectId(1))
 
-        expect(store.getActions()[0].type).toEqual(actions.requestDeleteRelease.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestDeleteRelease.rejected.toString())
+        expect(store.getActions()[0].type).toEqual(actions.requestSyncReleasesByProjectId.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSyncReleasesByProjectId.rejected.toString())
     })
 })
