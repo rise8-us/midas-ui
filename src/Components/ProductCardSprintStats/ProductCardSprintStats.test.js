@@ -1,4 +1,4 @@
-import { render, screen, useModuleMock } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProductCardSprintStats } from './index'
 
 jest.mock('Components/ProjectCardSprintStats/ProjectCardSprintStats',
@@ -11,6 +11,7 @@ describe('<ProductCardSprintStats />', () => {
     const JUN_9_2022 = 1654732800000
 
     test('should render', () => {
+        useDispatchMock().mockReturnValue({})
         selectPortfolioPagePermissionMock.mockReturnValue({})
         selectProductByIdMock.mockReturnValue({ name: 'product name', projectIds: [1] })
 

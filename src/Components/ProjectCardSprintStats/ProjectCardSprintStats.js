@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestSearchIssues, requestSyncIssuesByProjectId } from 'Redux/Issues/actions'
 import { selectProjectById } from 'Redux/Projects/selectors'
-import { requestSearchReleases, requestSyncReleasesByProjectId } from 'Redux/Releases/actions'
+import { requestSyncReleasesByProjectId } from 'Redux/Releases/actions'
+import { selectReleaseClosestTo, selectReleaseInRangeAndProjectId } from 'Redux/Releases/selectors'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 
 export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }) {
@@ -18,7 +19,9 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
     const project = useSelector(state => selectProjectById(state, projectId))
 
     const [closedIssuesThisSprint, setClosedIssuesThisSprint] = useState([])
-    const [releasesThisSprint, setReleasesThisSprint] = useState([])
+    const [releasedIssuesThisSprint, setReleasedIssuesThisSprint] = useState([])
+    const releasesThisSprint = useSelector(state => selectReleaseInRangeAndProjectId(state, dateRange, projectId))
+    const previousRelease = useSelector(state => selectReleaseClosestTo(state, dateRange[0], projectId))
 
     const syncIssues = async() => {
         return Promise.all(
@@ -29,29 +32,35 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
         )
     }
 
-    const projectSearchString = (field) => {
+    const projectSearchString = (field, rangeStart, rangeEnd) => {
         let searchString = ['project.id:' + projectId]
         searchString.push(' AND ')
-        searchString.push(`${field}>=` + getDateInDatabaseOrder((new Date(dateRange[0])).toISOString()))
+        searchString.push(`${field}>=` + getDateInDatabaseOrder((new Date(rangeStart)).toISOString()))
         searchString.push(' AND ')
-        searchString.push(`${field}<=` + getDateInDatabaseOrder((new Date(dateRange[1])).toISOString()))
+        searchString.push(`${field}<=` + getDateInDatabaseOrder((new Date(rangeEnd)).toISOString()))
         return searchString.join('')
     }
 
-    const fetchSprintIssues = () => {
-        dispatch(requestSearchIssues(projectSearchString('completedAt')))
+    const fetchSprintStagingIssues = () => {
+        dispatch(requestSearchIssues(projectSearchString('completedAt', dateRange[0], dateRange[1])))
             .then(unwrapResult).then(setClosedIssuesThisSprint)
     }
 
-    const fetchSprintReleases = () => {
-        dispatch(requestSearchReleases(projectSearchString('releasedAt')))
-            .then(unwrapResult).then(setReleasesThisSprint)
-    }
+    useEffect(() => {
+        fetchSprintStagingIssues()
+    }, [dateRange])
 
     useEffect(() => {
-        fetchSprintIssues()
-        fetchSprintReleases()
-    }, [dateRange])
+        if (releasesThisSprint.length > 0) {
+            const max = Math.max(...releasesThisSprint.map(release => { return new Date(release.releasedAt) }))
+
+            dispatch(requestSearchIssues(projectSearchString(
+                'completedAt',
+                previousRelease.releasedAt ?? 0,
+                max
+            ))).then(unwrapResult).then(setReleasedIssuesThisSprint)
+        } else { setReleasedIssuesThisSprint([]) }
+    }, [JSON.stringify(releasesThisSprint)])
 
     return (
         <Card style = {{ padding: '8px' }}>
@@ -69,7 +78,7 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                     </div>
                 </Stack>
                 <Grid container margin = {1}>
-                    <Grid item xs = {12} lg = {3}>
+                    <Grid item xs = {12} lg = {2}>
                         <div>
                             <Typography variant = 'subtitle1' color = 'secondary'>
                                 Production Deployments:
@@ -102,10 +111,20 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                             </Stack>
                         </div>
                     </Grid>
-                    <Grid item xs = {12} lg = {4} display = 'none'>
-                        <Typography>issues deployed to prod go here</Typography>
+                    <Grid item xs = {12} lg = {5}>
+                        <div>
+                            <Typography variant = 'subtitle1' color = 'secondary'>
+                                Issues Deployed to Production (CUI):
+                            </Typography>
+                            <Stack paddingX = {1}>
+                                <SprintIssues
+                                    issues = {releasedIssuesThisSprint}
+                                    noOptionsText = 'No issues released this sprint.'
+                                />
+                            </Stack>
+                        </div>
                     </Grid>
-                    <Grid item xs = {12} lg = {4}>
+                    <Grid item xs = {12} lg = {5}>
                         <div>
                             <Typography variant = 'subtitle1' color = 'secondary'>
                                 Issues Deployed to Staging:
