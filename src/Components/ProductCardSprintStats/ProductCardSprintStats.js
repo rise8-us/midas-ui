@@ -1,14 +1,21 @@
 import { Card, Stack, Typography } from '@mui/material'
 import { ProjectCardSprintStats } from 'Components/ProjectCardSprintStats'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
+import { fetchReleasesByProductId } from 'Redux/Releases/actions'
 
 export default function ProductCardSprintStats({ productId, dateRange }) {
+    const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, productId))
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, product.portfolioId))
+
+    useEffect(() => {
+        dispatch(fetchReleasesByProductId(productId))
+    }, [])
 
     return (
         <Card style = {{ padding: '8px' }}>
