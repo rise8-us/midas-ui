@@ -2,7 +2,9 @@ import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from '
 import { ProjectCardSprintStats } from './index'
 
 jest.mock('Components/IssueSyncRequest/IssueSyncRequest', () =>
-    function testing({ request }) { return (<div data-testid = 'SyncIcon' onClick = {request}></div>)})
+    function testing({ request }) { return (<div data-testid = 'SyncIcon' onClick = {request}></div>) })
+jest.mock('Components/SprintIssues/SprintIssues', () =>
+    function testing() { return (<div>SprintIssues</div>) })
 
 describe('<ProductCardSprintStats />', () => {
     const selectProjectById = useModuleMock('Redux/Projects/selectors', 'selectProjectById')
@@ -36,16 +38,6 @@ describe('<ProductCardSprintStats />', () => {
         expect(requestSyncIssuesByProjectIdMock).toHaveBeenCalledWith(1)
         expect(requestSyncReleasesByProjectIdMock).toHaveBeenCalledWith(1)
 
-    })
-
-    test('should show staging issues', async() => {
-        useDispatchMock()
-            .mockResolvedValueOnce({ payload: [{ title: 'stagingIssueTitle' }] })
-            .mockResolvedValue({ payload: [] })
-
-        render(<ProjectCardSprintStats projectId = {1} dateRange = {[JUN_9_2022, JUN_9_2022]}/>)
-
-        expect(await screen.findByText('stagingIssueTitle')).toBeInTheDocument()
     })
 
     test('should show deployments', async() => {
