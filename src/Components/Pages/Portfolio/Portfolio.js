@@ -115,6 +115,7 @@ export default function Portfolio() {
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
                             {portfolio.sprintStartDate
                                 ? <PortfolioTab.PortfolioSprintReport
+                                    portfolioId = {id}
                                     productIds = {portfolio.productIds}
                                     sprintDuration = {portfolio.sprintDurationInDays}
                                     sprintStart = {parseStringToDate(portfolio.sprintStartDate)}

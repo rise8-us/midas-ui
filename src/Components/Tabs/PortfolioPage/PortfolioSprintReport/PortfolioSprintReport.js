@@ -1,16 +1,22 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 import { IconButton, Stack, Typography } from '@mui/material'
+import { PortfolioCardSprintStats } from 'Components/PortfolioCardSprintStats'
 import { ProductCardSprintStats } from 'Components/ProductCardSprintStats'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { requestfetchPortfolioMetrics } from 'Redux/Portfolios/actions'
+import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 
 const calculateDate = (initialDate, duration, multipler) => {
     let newDate = new Date(initialDate.getTime())
     return newDate.setDate(newDate.getDate() + (duration * multipler))
 }
 
-export default function PortfolioSprintReport({ productIds, sprintStart, sprintDuration }) {
+export default function PortfolioSprintReport({ portfolioId, productIds, sprintStart, sprintDuration }) {
+    const dispatch = useDispatch()
+
     let sprintEnd = new Date(sprintStart.getTime())
     sprintEnd.setDate(sprintEnd.getDate() + (Math.abs(sprintDuration) - 1))
 
@@ -26,8 +32,17 @@ export default function PortfolioSprintReport({ productIds, sprintStart, sprintD
         setDateRange([newStartDate, newEndDate])
     }
 
+    useEffect(() => {
+        dispatch(requestfetchPortfolioMetrics({
+            id: portfolioId,
+            sprintCycles: 10,
+            startDate: getDateInDatabaseOrder(sprintStart.toISOString()),
+            sprintDuration,
+        }))
+    }, [])
+
     return (
-        <Stack spacing = {1}>
+        <Stack spacing = {1} data-testid = 'PortfolioSprintReport__container-stack'>
             <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                 <IconButton onClick = {() => updateRange(-1)}>
                     <ArrowBack fontSize = 'small' />
@@ -39,6 +54,7 @@ export default function PortfolioSprintReport({ productIds, sprintStart, sprintD
                     <ArrowForward fontSize = 'small' />
                 </IconButton>
             </Stack>
+            <PortfolioCardSprintStats prodDeployments = {2} />
             {productIds.map((productId, index) =>
                 <ProductCardSprintStats
                     key = {index}
@@ -52,6 +68,7 @@ export default function PortfolioSprintReport({ productIds, sprintStart, sprintD
 
 PortfolioSprintReport.propTypes = {
     productIds: PropTypes.arrayOf(PropTypes.number),
+    portfolioId: PropTypes.number.isRequired,
     sprintStart: PropTypes.instanceOf(Date).isRequired,
     sprintDuration: PropTypes.number.isRequired
 }
