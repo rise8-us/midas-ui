@@ -15,7 +15,7 @@ jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing(pr
 describe('<UsersCollection />', () => {
     jest.setTimeout(15000)
     const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
-    const requestFindUserByMock = useModuleMock('Redux/Users/actions', 'requestFindUserBy')
+    const requestSearchUsersMock = useModuleMock('Redux/Users/actions', 'requestSearchUsers')
 
     const userMock1 = {
         id: 1,
@@ -48,7 +48,7 @@ describe('<UsersCollection />', () => {
         selectUsersByIdsMock.mockReturnValue([userMock1, {}, {}])
         render(<UsersCollection userIds = {[1, 2, 3]} setUserIds = {setUserIdsMock} />)
 
-        expect(requestFindUserByMock).toHaveBeenCalledWith('id:2 OR id:3')
+        expect(requestSearchUsersMock).toHaveBeenCalledWith('id:2 OR id:3')
     })
 
     test('should add user to userids list', () => {

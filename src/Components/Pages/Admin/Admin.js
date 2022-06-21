@@ -27,51 +27,53 @@ function Admin() {
 
     return (
         <Page>
-            <TabsStyled
-                value = {value}
-                onChange = {handleChange}
-                variant = 'fullWidth'
-                ref = {tabRef}
-            >
-                <Tab label = 'users' value = 'users' data-testid = 'Admin__users'/>
-                <Tab label = 'teams' value = 'teams' data-testid = 'Admin__teams'/>
-                <Tab label = 'projects' value = 'projects' data-testid = 'Admin__projects'/>
-                <Tab label = 'products' value = 'products' data-testid = 'Admin__products'/>
-                <Tab label = 'portfolios' value = 'portfolios' data-testid = 'Admin__portfolios'/>
-                <Tab
-                    label = 'source Controls'
-                    value = 'source Controls'
-                    data-testid = 'Admin__sourceControls'
-                />
-                <Tab
-                    label = 'Database Backup & Recovery'
-                    value = 'database'
-                    data-testid = 'Admin__database'
-                />
-            </TabsStyled>
-            { value === 'users' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}>
-                    <UserTab offsetTop = {tabRef?.current?.offsetHeight + 16}/>
-                </Suspense>
-            }
-            { value === 'teams' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><TeamsTab/></Suspense>
-            }
-            { value === 'projects' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProjectsTab/></Suspense>
-            }
-            { value === 'products' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProductsTab/></Suspense>
-            }
-            { value === 'portfolios' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><PortfoliosTab/></Suspense>
-            }
-            { value === 'source Controls' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><SourceControlTab/></Suspense>
-            }
-            { value === 'database' &&
-                <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><DatabaseTab/></Suspense>
-            }
+            <>
+                <TabsStyled
+                    value = {value}
+                    onChange = {handleChange}
+                    variant = 'fullWidth'
+                    ref = {tabRef}
+                >
+                    <Tab label = 'users' value = 'users' data-testid = 'Admin__users'/>
+                    <Tab label = 'teams' value = 'teams' data-testid = 'Admin__teams'/>
+                    <Tab label = 'projects' value = 'projects' data-testid = 'Admin__projects'/>
+                    <Tab label = 'products' value = 'products' data-testid = 'Admin__products'/>
+                    <Tab label = 'portfolios' value = 'portfolios' data-testid = 'Admin__portfolios'/>
+                    <Tab
+                        label = 'source Controls'
+                        value = 'source Controls'
+                        data-testid = 'Admin__sourceControls'
+                    />
+                    <Tab
+                        label = 'Database Backup & Recovery'
+                        value = 'database'
+                        data-testid = 'Admin__database'
+                    />
+                </TabsStyled>
+                { value === 'users' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}>
+                        <UserTab offsetTop = {tabRef?.current?.offsetHeight + 16}/>
+                    </Suspense>
+                }
+                { value === 'teams' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><TeamsTab/></Suspense>
+                }
+                { value === 'projects' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProjectsTab/></Suspense>
+                }
+                { value === 'products' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><ProductsTab/></Suspense>
+                }
+                { value === 'portfolios' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><PortfoliosTab/></Suspense>
+                }
+                { value === 'source Controls' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><SourceControlTab/></Suspense>
+                }
+                { value === 'database' &&
+                    <Suspense fallback = {<div data-testid = 'Admin__fallback'/>}><DatabaseTab/></Suspense>
+                }
+            </>
         </Page>
     )
 }

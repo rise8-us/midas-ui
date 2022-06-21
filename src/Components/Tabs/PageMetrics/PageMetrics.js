@@ -8,7 +8,7 @@ import { requestSearchPageMetrics } from 'Redux/AppMetrics/actions'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { selectTeamById } from 'Redux/Teams/selectors'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 
 const generateTeamUsersQuery = (userIds) => {
@@ -66,7 +66,7 @@ export default function PageMetrics({ id, type }) {
             uniqueViews.forEach(uId => {
                 !users[uId] && missingUserIds.push(uId)
             })
-            dispatch(requestFindUserBy(generateTeamUsersQuery(missingUserIds)))
+            dispatch(requestSearchUsers(generateTeamUsersQuery(missingUserIds)))
         }
     }, [uniqueViews])
 

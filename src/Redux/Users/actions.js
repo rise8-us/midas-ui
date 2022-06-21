@@ -3,7 +3,6 @@ import { handleThunkRequest } from 'Utilities/requests'
 import { searchHelper } from 'Utilities/searchHelper'
 import Constants from './constants'
 
-
 export const requestFetchOneUser = createAsyncThunk(
     Constants.FETCH_ONE_USER,
     async(id, { rejectWithValue }) => {
@@ -29,8 +28,8 @@ export const requestUpdateUserRoles = createAsyncThunk(
     }
 )
 
-export const requestFindUserBy = createAsyncThunk(
-    Constants.FIND_USER_BY,
+export const requestSearchUsers = createAsyncThunk(
+    Constants.USERS_SEARCH,
     async(search, { rejectWithValue }) => {
         const request = { endpoint: `/api/users?search=${searchHelper(search)}`, method: 'GET', body: {} }
         return handleThunkRequest(request, rejectWithValue)

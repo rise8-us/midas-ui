@@ -12,7 +12,7 @@ import { closePopup } from 'Redux/Popups/actions'
 import { requestCreateProduct, requestUpdateProduct } from 'Redux/Products/actions'
 import ProductConstants from 'Redux/Products/constants'
 import { selectProductById } from 'Redux/Products/selectors'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
@@ -83,7 +83,7 @@ function ProductPopup({ id }) {
     useEffect(() => {
         if (!fetched && product?.personnel?.ownerId > 0) {
             setFetched(true)
-            dispatch(requestFindUserBy(`id:${product.personnel.ownerId}`))
+            dispatch(requestSearchUsers(`id:${product.personnel.ownerId}`))
                 .then(unwrapResult)
                 .then((data) => {
                     handleChange('owner', data[0])

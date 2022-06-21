@@ -20,7 +20,7 @@ const userSlice = createSlice({
         [requestFetchInit.fulfilled]: (state, action) => {
             state[action.payload.userLoggedIn.id] = action.payload.userLoggedIn
         },
-        [actions.requestFindUserBy.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
+        [actions.requestSearchUsers.fulfilled]: (state, action) => setStateFromArray(state, action.payload),
     }
 })
 

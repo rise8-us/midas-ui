@@ -18,7 +18,7 @@ import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectAvailableProducts } from 'Redux/Products/selectors'
 import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 import { styled } from 'Styles/materialThemes'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 import FormatErrors from 'Utilities/FormatErrors'
@@ -106,7 +106,7 @@ function PortfolioPopup({ id }) {
     useEffect(() => {
         if (!fetched && portfolio?.personnel?.ownerId > 0) {
             setFetched(true)
-            dispatch(requestFindUserBy(`id:${portfolio.personnel.ownerId}`)).then(unwrapResult)
+            dispatch(requestSearchUsers(`id:${portfolio.personnel.ownerId}`)).then(unwrapResult)
                 .then(data => { handleChange('owner', data[0]) })
         }
     }, [portfolio])

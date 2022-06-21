@@ -4,7 +4,7 @@ import { SearchBar } from 'Components/Search'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 
 function SearchUsers({ onDataReturn, title, placeholder, value, error, clearOnSelect, ...autoCompleteProps }) {
     const dispatch = useDispatch()
@@ -24,7 +24,7 @@ function SearchUsers({ onDataReturn, title, placeholder, value, error, clearOnSe
     const onTextFieldChange = (input) => {
         const searchValue = `username:*${input}* OR email:*${input}* OR displayName:*${input}*`
 
-        dispatch(requestFindUserBy(searchValue))
+        dispatch(requestSearchUsers(searchValue))
             .then(unwrapResult)
             .then(data => {
                 typeof onDataReturn === 'function' ? onDataReturn(data) : setOptions(data)
