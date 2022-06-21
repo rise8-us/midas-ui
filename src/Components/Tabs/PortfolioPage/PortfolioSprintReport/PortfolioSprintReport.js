@@ -1,6 +1,5 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 import { IconButton, Stack, Typography } from '@mui/material'
-import { PortfolioCardSprintStats } from 'Components/PortfolioCardSprintStats'
 import { ProductCardSprintStats } from 'Components/ProductCardSprintStats'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -54,7 +53,6 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
                     <ArrowForward fontSize = 'small' />
                 </IconButton>
             </Stack>
-            <PortfolioCardSprintStats prodDeployments = {2} />
             {productIds.map((productId, index) =>
                 <ProductCardSprintStats
                     key = {index}

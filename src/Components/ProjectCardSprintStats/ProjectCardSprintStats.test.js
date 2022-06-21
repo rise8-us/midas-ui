@@ -31,7 +31,9 @@ describe('<ProductCardSprintStats />', () => {
         expect(screen.getByText('Issues Deployed to Production (CUI):')).toBeInTheDocument()
         expect(screen.getByText('Issues Deployed to Staging:')).toBeInTheDocument()
         expect(requestSearchIssuesMock)
-            .toHaveBeenCalledWith('project.id:1 AND completedAt>=2022-06-09 AND completedAt<=2022-06-09')
+            .toHaveBeenCalledWith(
+                'project.id:1 AND completedAt>="2022-06-09\'T\'00:00:00" AND completedAt<="2022-06-09\'T\'00:00:00"'
+            )
     })
 
     test('should sync when sync button is pressed', async() => {
