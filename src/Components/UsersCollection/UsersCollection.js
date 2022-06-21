@@ -5,7 +5,7 @@ import { Table } from 'Components/Table'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 import { selectUsersByIds } from 'Redux/Users/selectors'
 import { scrollbar, styled } from 'Styles/materialThemes'
 
@@ -52,7 +52,7 @@ export default function UsersCollection(props) {
             (_id, index) => users[index].id === undefined
         )
         if (missingUserIds.length > 0) {
-            dispatch(requestFindUserBy(generateTeamUsersQuery(missingUserIds)))
+            dispatch(requestSearchUsers(generateTeamUsersQuery(missingUserIds)))
         }
     }, [userIds])
 

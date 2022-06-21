@@ -71,22 +71,22 @@ describe('User action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestUpdateUser.rejected.toString())
     })
 
-    test('requestFindUserBy : fulfilled', async() => {
+    test('requestSearchUsers : fulfilled', async() => {
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestFindUserBy('id:1'))
+        await store.dispatch(actions.requestSearchUsers('id:1'))
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/users?search=id:1')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
-        expect(store.getActions()[0].type).toEqual(actions.requestFindUserBy.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestFindUserBy.fulfilled.toString())
+        expect(store.getActions()[0].type).toEqual(actions.requestSearchUsers.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSearchUsers.fulfilled.toString())
     })
 
-    test('requestFindUserBy : rejected', async() => {
+    test('requestSearchUsers : rejected', async() => {
         handleThunkRequest.mockRejectedValueOnce()
-        await store.dispatch(actions.requestFindUserBy('id:3a'))
+        await store.dispatch(actions.requestSearchUsers('id:3a'))
 
-        expect(store.getActions()[0].type).toEqual(actions.requestFindUserBy.pending.toString())
-        expect(store.getActions()[1].type).toEqual(actions.requestFindUserBy.rejected.toString())
+        expect(store.getActions()[0].type).toEqual(actions.requestSearchUsers.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestSearchUsers.rejected.toString())
     })
 })

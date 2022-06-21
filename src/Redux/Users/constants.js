@@ -1,6 +1,6 @@
 const constants = {
     FETCH_ONE_USER: 'users/fetchOne',
-    FIND_USER_BY: 'users/find',
+    USERS_SEARCH: 'users/search',
     UPDATE_USER: 'users/update',
     UPDATE_USER_ROLES: 'users/updateRoles'
 }

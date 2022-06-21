@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 import { selectUsersByIds } from 'Redux/Users/selectors'
 import { buildOrQueryByIds } from 'Utilities/requests'
 import { GanttTooltip } from '../GanttTooltip'
@@ -16,7 +16,7 @@ export default function GanttEventTooltip({ event, dateRange, onEditClick, onDel
     const attendees = useSelector(state => selectUsersByIds(state, attendeeIds))
 
     useEffect(() => {
-        dispatch(requestFindUserBy(buildOrQueryByIds([...organizerIds, ...attendeeIds])))
+        dispatch(requestSearchUsers(buildOrQueryByIds([...organizerIds, ...attendeeIds])))
     }, [])
 
     return (

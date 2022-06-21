@@ -7,7 +7,7 @@ describe('<PageMetrics>', () => {
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfoliosById')
     const getPageMetricsMock = useModuleMock('Redux/AppMetrics/actions', 'requestGetPageMetrics')
     const selectTeamByProductIdMock = useModuleMock('Redux/Teams/selectors', 'selectTeamByProductId')
-    const requestFindUserByMock = useModuleMock('Redux/Users/actions', 'requestFindUserBy')
+    const requestSearchUsersMock = useModuleMock('Redux/Users/actions', 'requestSearchUsers')
 
     const existingProduct = {
         id: 4,
@@ -68,7 +68,7 @@ describe('<PageMetrics>', () => {
 
     test('should render PageMetrics for products', async() => {
         useDispatchMock().mockResolvedValue(productMetrics)
-        requestFindUserByMock.mockReturnValue({})
+        requestSearchUsersMock.mockReturnValue({})
         getPageMetricsMock.mockReturnValue({})
         selectProductByIdMock.mockReturnValue(existingProduct)
         selectTeamByProductIdMock.mockReturnValue({
@@ -88,7 +88,7 @@ describe('<PageMetrics>', () => {
 
     test('should render PageMetrics for portfolios', async() => {
         useDispatchMock().mockResolvedValue(portfolioMetrics)
-        requestFindUserByMock.mockReturnValue({})
+        requestSearchUsersMock.mockReturnValue({})
         getPageMetricsMock.mockReturnValue({})
         selectPortfolioByIdMock.mockReturnValue(existingPortfolio)
         selectTeamByProductIdMock.mockReturnValue({

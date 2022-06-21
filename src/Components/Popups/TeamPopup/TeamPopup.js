@@ -14,7 +14,7 @@ import { selectProductById } from 'Redux/Products/selectors'
 import { requestCreateTeam, requestUpdateTeam } from 'Redux/Teams/actions'
 import TeamsConstants from 'Redux/Teams/constants'
 import { selectTeamById } from 'Redux/Teams/selectors'
-import { requestFindUserBy } from 'Redux/Users/actions'
+import { requestSearchUsers } from 'Redux/Users/actions'
 import FormatErrors from 'Utilities/FormatErrors'
 
 const initDetails = (create) => {
@@ -100,7 +100,7 @@ function TeamPopup({ id, productIds }) {
     }
 
     const requestUserData = (userId, field) => {
-        dispatch(requestFindUserBy(`id:${userId}`))
+        dispatch(requestSearchUsers(`id:${userId}`))
             .then(unwrapResult)
             .then(data => {
                 handleChange(field, data[0])
