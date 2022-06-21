@@ -36,6 +36,16 @@ const theme = createTheme({
                     text: '#fff'
                 }
             },
+            win: {
+                dark: {
+                    background: '#D4AF37',
+                    text: '#fff'
+                },
+                light: {
+                    background: '#D4AF37',
+                    text: '#fff'
+                }
+            },
             event: {
                 dark: {
                     background: '#442783',
