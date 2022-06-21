@@ -33,21 +33,18 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
     }
 
     const projectSearchString = (field, rangeStart, rangeEnd) => {
-        const rangeStartDateTime = new Date(rangeStart).toISOString().split('T')
-        const rangeEndDateTime = new Date(rangeEnd).toISOString().split('T')
-        const startInDatabaseOrder = getDateInDatabaseOrder(rangeStartDateTime.join('T'))
-        const endInDatabaseOrder = getDateInDatabaseOrder(rangeEndDateTime.join('T'))
-
         let searchString = ['project.id:' + projectId]
         searchString.push(' AND ')
-        searchString.push(`${field}>="` + startInDatabaseOrder + `'T'${rangeStartDateTime[1].split('.')[0]}"`)
+        searchString.push(`${field}>=` + rangeStart)
         searchString.push(' AND ')
-        searchString.push(`${field}<="` + endInDatabaseOrder + `'T'${rangeEndDateTime[1].split('.')[0]}"`)
+        searchString.push(`${field}<=` + rangeEnd)
         return searchString.join('')
     }
 
     const fetchSprintStagingIssues = () => {
-        dispatch(requestSearchIssues(projectSearchString('completedAt', dateRange[0], dateRange[1])))
+        const startInDatabaseOrder = getDateInDatabaseOrder(new Date(dateRange[0]).toISOString())
+        const endInDatabaseOrder = getDateInDatabaseOrder(new Date(dateRange[1]).toISOString())
+        dispatch(requestSearchIssues(projectSearchString('completedAt', startInDatabaseOrder, endInDatabaseOrder)))
             .then(unwrapResult).then(setClosedIssuesThisSprint)
     }
 
@@ -58,12 +55,15 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
     useEffect(() => {
         if (releasesThisSprint.length > 0) {
             const max = Math.max(...releasesThisSprint.map(release => { return new Date(release.releasedAt) }))
+            const rangeStartDateTime = new Date(previousRelease.releasedAt ?? 0).toISOString().split('T')
+            const rangeEndDateTime = new Date(max).toISOString().split('T')
+            const startInDatabaseOrder = getDateInDatabaseOrder(rangeStartDateTime.join('T'))
+            const endInDatabaseOrder = getDateInDatabaseOrder(rangeEndDateTime.join('T'))
+            const startString = `"${startInDatabaseOrder}'T'${rangeStartDateTime[1].split('.')[0]}"`
+            const endString = `"${endInDatabaseOrder}'T'${rangeEndDateTime[1].split('.')[0]}"`
 
-            dispatch(requestSearchIssues(projectSearchString(
-                'completedAt',
-                previousRelease.releasedAt ?? 0,
-                max
-            ))).then(unwrapResult).then(setReleasedIssuesThisSprint)
+            dispatch(requestSearchIssues(projectSearchString('completedAt', startString, endString)))
+                .then(unwrapResult).then(setReleasedIssuesThisSprint)
         } else { setReleasedIssuesThisSprint([]) }
     }, [JSON.stringify(releasesThisSprint)])
 
