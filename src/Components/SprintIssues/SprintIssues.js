@@ -21,7 +21,7 @@ export default function SprintIssues({ issues, noOptionsText }) {
                     {issue.labels.filter(label => label.includes('type::')).map((label, idx) =>
                         <Tag
                             key = {idx}
-                            label = {label}
+                            label = {label.replace('type::', '')}
                             color = {tags.find(tag => tag.label === label)?.color ?? 'black'}
                         />
                     )}

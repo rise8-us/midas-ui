@@ -1,11 +1,12 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
-import { Button, useTheme } from '@mui/material'
+import { Button, Stack, useTheme } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { GanttChart } from 'Components/Gantt'
 import { GanttAddNewItem } from 'Components/Gantt/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
 import { GanttExpandAllTargets } from 'Components/Gantt/GanttExpandAllTargets'
 import { GanttFilter } from 'Components/Gantt/GanttFilter'
+import { GanttLegend } from 'Components/Gantt/GanttLegend'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
 import { GanttTarget } from 'Components/Gantt/GanttTarget'
 import { GanttView } from 'Components/Gantt/GanttView'
@@ -132,41 +133,44 @@ export default function PortfolioRoadmap({ portfolioId }) {
     }, [JSON.stringify(view)])
 
     return (
-        <GanttChart
-            startDate = {dateStart}
-            maxHeight = 'calc(100vh - 280px)'
-            entries = {entries}
-            onEntriesFilter = {onEntriesFilter}
-            renderComponent = {renderComponent}
-            fillUndefinedRowsWithLikeTypes
-            actionBar = {{
-                navLeftIcon: <ChevronLeft size = 'small' />,
-                navRightIcon: <ChevronRight size = 'small' />,
-                buttonComponent: Button,
-                buttonProps: {
-                    style: { minWidth: '34px', borderRadius: 0, borderRight: '1px solid black' },
-                    size: 'small'
-                },
-                additionalActions: permissions.edit ?
-                    <GanttAddNewItem portfolioId = {portfolioId} /> :
-                    <>
-                        <GanttView portfolioId = {portfolioId}/>
-                        <GanttExpandAllTargets portfolioId = {portfolioId}/>
-                        <GanttFilter />
-                    </>
-            }}
-            chartBackgroundColor = {theme.palette.background.paper}
-            headerStyles = {{
-                color: theme.palette.grey[600],
-                ...theme.typography.subtitle2,
-                marginLeft: theme.spacing(1),
-                marginBlock: 'unset'
-            }}
-            todayColor = {theme.palette.primary.main}
-            scope = {view?.scope}
-            leadingColumns = {view?.leadingColumns}
-            viewBy = {view?.viewBy}
-        />
+        <Stack>
+            <GanttLegend />
+            <GanttChart
+                startDate = {dateStart}
+                maxHeight = 'calc(100vh - 280px)'
+                entries = {entries}
+                onEntriesFilter = {onEntriesFilter}
+                renderComponent = {renderComponent}
+                fillUndefinedRowsWithLikeTypes
+                actionBar = {{
+                    navLeftIcon: <ChevronLeft size = 'small' />,
+                    navRightIcon: <ChevronRight size = 'small' />,
+                    buttonComponent: Button,
+                    buttonProps: {
+                        style: { minWidth: '34px', borderRadius: 0, borderRight: '1px solid black' },
+                        size: 'small'
+                    },
+                    additionalActions: permissions.edit ?
+                        <GanttAddNewItem portfolioId = {portfolioId} /> :
+                        <>
+                            <GanttView portfolioId = {portfolioId}/>
+                            <GanttExpandAllTargets portfolioId = {portfolioId}/>
+                            <GanttFilter />
+                        </>
+                }}
+                chartBackgroundColor = {theme.palette.background.paper}
+                headerStyles = {{
+                    color: theme.palette.grey[600],
+                    ...theme.typography.subtitle2,
+                    marginLeft: theme.spacing(1),
+                    marginBlock: 'unset'
+                }}
+                todayColor = {theme.palette.primary.main}
+                scope = {view?.scope}
+                leadingColumns = {view?.leadingColumns}
+                viewBy = {view?.viewBy}
+            />
+        </Stack>
     )
 }
 
