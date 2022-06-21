@@ -33,11 +33,16 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
     }
 
     const projectSearchString = (field, rangeStart, rangeEnd) => {
+        const rangeStartDateTime = new Date(rangeStart).toISOString().split('T')
+        const rangeEndDateTime = new Date(rangeEnd).toISOString().split('T')
+        const startInDatabaseOrder = getDateInDatabaseOrder(rangeStartDateTime.join('T'))
+        const endInDatabaseOrder = getDateInDatabaseOrder(rangeEndDateTime.join('T'))
+
         let searchString = ['project.id:' + projectId]
         searchString.push(' AND ')
-        searchString.push(`${field}>=` + getDateInDatabaseOrder((new Date(rangeStart)).toISOString()))
+        searchString.push(`${field}>="` + startInDatabaseOrder + `'T'${rangeStartDateTime[1].split('.')[0]}"`)
         searchString.push(' AND ')
-        searchString.push(`${field}<=` + getDateInDatabaseOrder((new Date(rangeEnd)).toISOString()))
+        searchString.push(`${field}<="` + endInDatabaseOrder + `'T'${rangeEndDateTime[1].split('.')[0]}"`)
         return searchString.join('')
     }
 
