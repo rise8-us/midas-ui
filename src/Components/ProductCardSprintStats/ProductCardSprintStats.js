@@ -18,7 +18,7 @@ export default function ProductCardSprintStats({ productId, dateRange }) {
     }, [])
 
     return (
-        <Card style = {{ padding: '8px' }}>
+        <Card style = {{ padding: '0px 8px 8px' }}>
             <Stack>
                 <Typography margin = {1} variant = 'h6'>{product.name}</Typography>
                 <Stack paddingX = {1} spacing = {1}>

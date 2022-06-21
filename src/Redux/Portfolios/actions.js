@@ -45,3 +45,16 @@ export const requestArchivePortfolio = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestfetchPortfolioMetrics = createAsyncThunk(
+    Constants.ARCHIVE_PORTFOLIO,
+    async({ id, startDate, sprintDuration, sprintCycles }, { rejectWithValue }) => {
+        const requestParams = `sprints=${sprintCycles} & duration=${sprintDuration}`
+        const request = {
+            endpoint: `/api/portfolios/${id}/sprint-metrics/${startDate}?` + requestParams,
+            method: 'GET',
+            body: {}
+        }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)

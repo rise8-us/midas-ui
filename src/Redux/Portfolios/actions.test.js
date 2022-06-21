@@ -99,10 +99,8 @@ describe('Portfolio action thunks', () => {
     })
 
     test('requestSearchPortfolio : fulfilled', async() => {
-        const search = 'id:1'
-
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestSearchPortfolio(search))
+        await store.dispatch(actions.requestSearchPortfolio('id:1'))
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint)
             .toContain('/api/portfolios AND id:1')
@@ -118,6 +116,32 @@ describe('Portfolio action thunks', () => {
 
         expect(store.getActions()[0].type).toEqual(actions.requestSearchPortfolio.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestSearchPortfolio.rejected.toString())
+    })
+
+    test('requestfetchPortfolioMetrics : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestfetchPortfolioMetrics({
+            id: 1,
+            startDate: '2020-05-05',
+            sprintDuration: 14,
+            sprintCycles: 10
+        }))
+        const uri = '/api/portfolios/1/sprint-metrics/2020-05-05'
+        const params = '?sprints=10 & duration=14'
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain(uri + params)
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestfetchPortfolioMetrics.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestfetchPortfolioMetrics.fulfilled.toString())
+    })
+
+    test('requestfetchPortfolioMetrics : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestfetchPortfolioMetrics())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestfetchPortfolioMetrics.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestfetchPortfolioMetrics.rejected.toString())
     })
 
 })
