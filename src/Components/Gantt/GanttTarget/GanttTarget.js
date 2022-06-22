@@ -79,7 +79,7 @@ export default function GanttTarget({ target, dateRange }) {
     const due = parseStringToDate(dueDate)
     const duration = calculatePosition([start, due], dateRange)[1]
 
-    const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 48}px)`, [JSON.stringify(duration)])
+    const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 28}px)`, [JSON.stringify(duration)])
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const epicIds = useSelector(state => selectEpicIdsByTargetIds(state, childrenIds))
