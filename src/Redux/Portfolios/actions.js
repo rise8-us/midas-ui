@@ -47,7 +47,7 @@ export const requestArchivePortfolio = createAsyncThunk(
 )
 
 export const requestfetchPortfolioMetrics = createAsyncThunk(
-    Constants.ARCHIVE_PORTFOLIO,
+    Constants.FETCH_PORTFOLIO_METRICS,
     async({ id, startDate, sprintDuration, sprintCycles }, { rejectWithValue }) => {
         const requestParams = `sprints=${sprintCycles} & duration=${sprintDuration}`
         const request = {
