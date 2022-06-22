@@ -42,3 +42,12 @@ export const requestArchiveProduct = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestFetchProductSprintMetrics = createAsyncThunk(
+    Constants.FETCH_PRODUCT_SPRINT_METRICS,
+    async({ id, startDate, duration, sprints = 1 }, { rejectWithValue }) => {
+        const params = `duration=${duration}&sprints=${sprints}`
+        const request = { endpoint: `/api/products/${id}/sprint-metrics/${startDate}?${params}`, method: 'GET' }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)

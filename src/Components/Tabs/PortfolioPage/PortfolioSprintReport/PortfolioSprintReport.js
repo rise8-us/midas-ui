@@ -1,5 +1,6 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 import { IconButton, Stack, Typography } from '@mui/material'
+import { unwrapResult } from '@reduxjs/toolkit'
 import { ProductCardSprintStats } from 'Components/ProductCardSprintStats'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -21,6 +22,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
 
     const [navigationMultiplier, setNavigationMultiplier] = useState(0)
     const [dateRange, setDateRange] = useState([sprintStart, sprintEnd])
+    const [portfolioMetrics, setPortfolioMetrics] = useState({})
 
     const updateRange = (newModifier) => {
         const newNav = navigationMultiplier + newModifier
@@ -37,7 +39,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
             sprintCycles: 10,
             startDate: getDateInDatabaseOrder(sprintStart.toISOString()),
             sprintDuration,
-        }))
+        })).then(unwrapResult).then(setPortfolioMetrics)
     }, [])
 
     return (
@@ -58,6 +60,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
                     key = {index}
                     productId = {productId}
                     dateRange = {dateRange}
+                    sprintMetrics = {portfolioMetrics[productId]}
                 />
             )}
         </Stack>

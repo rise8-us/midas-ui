@@ -99,13 +99,10 @@ describe('Product action thunks', () => {
     })
 
     test('requestSearchProduct : fulfilled', async() => {
-        const search = 'id:1'
-
         handleThunkRequest.mockResolvedValueOnce()
-        await store.dispatch(actions.requestSearchProduct(search))
+        await store.dispatch(actions.requestSearchProduct('id:1'))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint)
-            .toContain('/api/products AND id:1')
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/products AND id:1')
         expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestSearchProduct.pending.toString())
@@ -118,6 +115,25 @@ describe('Product action thunks', () => {
 
         expect(store.getActions()[0].type).toEqual(actions.requestSearchProduct.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestSearchProduct.rejected.toString())
+    })
+
+    test('requestFetchProductSprintMetrics : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestFetchProductSprintMetrics({ id: 1, startDate: '2022-06-21', duration: 14 }))
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint)
+            .toContain('/api/products/1/sprint-metrics/2022-06-21?duration=14&sprints=1')
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestFetchProductSprintMetrics.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestFetchProductSprintMetrics.fulfilled.toString())
+    })
+
+    test('requestFetchProductSprintMetrics : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestFetchProductSprintMetrics())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestFetchProductSprintMetrics.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestFetchProductSprintMetrics.rejected.toString())
     })
 
 })

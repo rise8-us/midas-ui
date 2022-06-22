@@ -13,7 +13,7 @@ const handleErrors = async(error, action) => {
     }
 }
 
-export const handleThunkRequest = async({ endpoint, method, body }, rejectWithValue) => {
+export const handleThunkRequest = async({ endpoint, method, body = {} }, rejectWithValue) => {
     const request = createAxiosRequest(endpoint, method, body)
     try {
         const response = await Axios(request)
@@ -23,7 +23,7 @@ export const handleThunkRequest = async({ endpoint, method, body }, rejectWithVa
     }
 }
 
-export const handleThunkDownloadRequest = async({ endpoint, method, body }, rejectWithValue) => {
+export const handleThunkDownloadRequest = async({ endpoint, method, body = {} }, rejectWithValue) => {
     const request = createAxiosDownloadRequest(endpoint, method, body)
     try {
         const response = await Axios(request)
