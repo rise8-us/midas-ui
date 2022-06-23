@@ -13,7 +13,7 @@ describe('<ProductDoraMetrics />', () => {
 
         expect(screen.getByText('Closed Issues:')).toBeInTheDocument()
         expect(screen.getByText('Points Delivered:')).toBeInTheDocument()
-        expect(screen.getByText('Last Release:')).toBeInTheDocument()
+        expect(screen.getByText('Latest Release:')).toBeInTheDocument()
         expect(screen.queryByTestId('ProductDoraMetrics__last-release')).not.toBeInTheDocument()
 
         expect(screen.getByText('100')).toBeInTheDocument()
