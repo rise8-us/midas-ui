@@ -1,4 +1,5 @@
-import { Card, Stack, Typography } from '@mui/material'
+import { Card, Grid, Stack, Typography } from '@mui/material'
+import { ProductStoriesLineGraph } from 'Components/Charts/ProductStoriesLineGraph'
 import { ProductDoraMetrics } from 'Components/ProductDoraMetrics'
 import { ProjectCardSprintStats } from 'Components/ProjectCardSprintStats'
 import PropTypes from 'prop-types'
@@ -23,22 +24,31 @@ export default function ProductCardSprintStats({ productId, dateRange, sprintMet
 
     return (
         <Card style = {{ padding: '0px 8px 8px' }}>
-            <Stack>
-                <Typography margin = {1} variant = 'h6'>{product.name}</Typography>
-                <Stack paddingX = {1} spacing = {1}>
-                    <ProductDoraMetrics
-                        releasedAt = {latestReleasedAt}
-                        sprintMetrics = {latestSprintMetrics}
+            <Stack paddingX = {1} spacing = {1}>
+                <Grid container>
+                    <Grid item xs = {12} md = {3}>
+                        <Stack>
+                            <Typography marginY = {1} variant = 'h6'>{product.name}</Typography>
+                            <ProductDoraMetrics
+                                releasedAt = {latestReleasedAt}
+                                sprintMetrics = {latestSprintMetrics}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item md = {9} xs = {12} paddingTop = {1.5}>
+                        <div style = {{ maxWidth: '800px', minHeight: '200px', height: '100%', width: '100%' }}>
+                            <ProductStoriesLineGraph rawData = {sprintMetrics} />
+                        </div>
+                    </Grid>
+                </Grid>
+                {product.projectIds?.map((projectId, index) =>
+                    <ProjectCardSprintStats
+                        key = {index}
+                        projectId = {projectId}
+                        dateRange = {dateRange}
+                        hasEdit = {Boolean(pagePermissions.edit)}
                     />
-                    {product.projectIds?.map((projectId, index) =>
-                        <ProjectCardSprintStats
-                            key = {index}
-                            projectId = {projectId}
-                            dateRange = {dateRange}
-                            hasEdit = {Boolean(pagePermissions.edit)}
-                        />
-                    )}
-                </Stack>
+                )}
             </Stack>
         </Card>
     )
