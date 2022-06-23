@@ -15,6 +15,8 @@ jest.mock('Components/ProductDoraMetrics/ProductDoraMetrics',
             </div>
         </div>)
     })
+jest.mock('Components/Charts/ProductStoriesLineGraph/ProductStoriesLineGraph',
+    () => function testing() { return (<div>Product Stories Line Graph</div>) })
 
 describe('<ProductCardSprintStats />', () => {
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
@@ -44,7 +46,7 @@ describe('<ProductCardSprintStats />', () => {
 
     test('should handle latest release stats', () => {
         selectProductByIdMock.mockReturnValue(productWithLatestRelease)
-        const sprintMetrics = [{ deliverStories: 1000, deliveredPoints: 2000 }]
+        const sprintMetrics = [{ deliveredStories: 1000, deliveredPoints: 2000, date: '2022-06-22' }]
 
         render(<ProductCardSprintStats productId = {1} dateRange = {dateRange} sprintMetrics = {sprintMetrics} />)
 
