@@ -14,7 +14,7 @@ export default function ProductCardSprintStats({ productId, dateRange, sprintMet
     const product = useSelector(state => selectProductById(state, productId))
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, product.portfolioId))
 
-    const latestSprintMetrics = sprintMetrics.at(-1) ?? {}
+    const latestSprintMetrics = sprintMetrics[0] ?? {}
     const latestReleasedAt = product.latestRelease?.releasedAt ? product.latestRelease.releasedAt + 'Z' : null
 
     useEffect(() => {
