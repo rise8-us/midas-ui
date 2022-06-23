@@ -37,10 +37,10 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
         dispatch(requestfetchPortfolioMetrics({
             id: portfolioId,
             sprintCycles: 10,
-            startDate: getDateInDatabaseOrder(sprintStart.toISOString()),
+            startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
             sprintDuration,
         })).then(unwrapResult).then(setPortfolioMetrics)
-    }, [])
+    }, [JSON.stringify(dateRange)])
 
     return (
         <Stack spacing = {1} data-testid = 'PortfolioSprintReport__container-stack'>

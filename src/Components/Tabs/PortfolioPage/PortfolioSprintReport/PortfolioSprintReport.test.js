@@ -35,11 +35,11 @@ describe('<PortfolioSprintReport />', () => {
         await screen.findByTestId('PortfolioSprintReport__container-stack')
 
         userEvent.click(screen.getByTestId('ArrowBackIcon'))
-        expect(screen.getByText('11 Jul 20')).toBeInTheDocument()
+        expect(await screen.findByText('11 Jul 20')).toBeInTheDocument()
         expect(screen.getByText('14 Jul 20')).toBeInTheDocument()
 
         userEvent.click(screen.getByTestId('ArrowForwardIcon'))
-        expect(screen.getByText('15 Jul 20')).toBeInTheDocument()
+        expect(await screen.findByText('15 Jul 20')).toBeInTheDocument()
         expect(screen.getByText('18 Jul 20')).toBeInTheDocument()
     })
 
