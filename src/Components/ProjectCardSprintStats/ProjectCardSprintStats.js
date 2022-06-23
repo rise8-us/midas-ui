@@ -85,8 +85,8 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                 <Grid container margin = {1} columns = {13}>
                     <Grid item xs = {12} lg = {3}>
                         <div>
-                            <Typography variant = 'subtitle1' color = 'secondary'>
-                                Production Deployments:
+                            <Typography variant = 'subtitle1'>
+                                Release Deployments:
                             </Typography>
                             <Stack paddingX = {1}>
                                 {releasesThisSprint.map((release, index) =>
@@ -118,7 +118,7 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                     </Grid>
                     <Grid item xs = {12} lg = {5}>
                         <div>
-                            <Typography variant = 'subtitle1' color = 'secondary'>
+                            <Typography variant = 'subtitle1'>
                                 Issues Deployed to Production (CUI):
                             </Typography>
                             <Stack paddingX = {1}>
@@ -131,7 +131,7 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                     </Grid>
                     <Grid item xs = {12} lg = {5}>
                         <div>
-                            <Typography variant = 'subtitle1' color = 'secondary'>
+                            <Typography variant = 'subtitle1'>
                                 Issues Deployed to Staging:
                             </Typography>
                             <Stack paddingX = {1}>

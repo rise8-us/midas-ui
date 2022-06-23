@@ -20,7 +20,7 @@ export default function ProductDoraMetrics({ sprintMetrics, releasedAt }) {
                 placement = 'bottom-start'
             >
                 <Stack direction = 'row' alignItems = 'baseline' spacing = {0.5}>
-                    <Typography variant = 'body2'>Last Release:</Typography>
+                    <Typography variant = 'body2'>Latest Release:</Typography>
                     {releasedAt ?
                         <Typography fontWeight = 'bold' data-testid = 'ProductDoraMetrics__last-release'>
                             {formatDistanceToNow(

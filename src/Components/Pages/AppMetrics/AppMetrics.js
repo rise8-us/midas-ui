@@ -1,8 +1,9 @@
-import { Box, CircularProgress, Stack, Typography } from '@mui/material'
+import { Box, CircularProgress, Stack, Tooltip, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Page } from 'Components/Page'
+import { UserTooltip } from 'Components/UserTooltip'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestGetUniqueLogonMetrics } from 'Redux/AppMetrics/actions'
 import { camelToCapitalCase } from 'Utilities/caseConversions'
@@ -26,6 +27,31 @@ RowEntry.defaultProps = {
     value: '?'
 }
 
+function RowEntryTooltip({ title, value }) {
+    return (
+        <Tooltip
+            arrow
+            placement = 'right'
+            disableHoverListener = {value.length === 0}
+            title = {<UserTooltip userIds = {value} />}
+        >
+            <Stack direction = 'row' width = '225px' justifyContent = 'space-between' alignItems = 'end'>
+                <Typography variant = 'subtitle1' color = 'secondary'>{title}</Typography>
+                <Typography variant = 'h9' color = 'primary'>{value.length}</Typography>
+            </Stack>
+        </Tooltip>
+    )
+}
+
+RowEntryTooltip.propTypes = {
+    title: PropTypes.string,
+    value: PropTypes.arrayOf(PropTypes.number)
+}
+RowEntryTooltip.defaultProps = {
+    title: 'Loading...',
+    value: []
+}
+
 const calculateAverageOverDays = (duration, appUserMetricsArray) => {
     let startIndex
     let daysAgoDate
@@ -43,7 +69,7 @@ const calculateAverageOverDays = (duration, appUserMetricsArray) => {
         curr.uniqueLogins = curr.uniqueLogins + next.uniqueLogins
 
         Object.entries(next.uniqueRoleMetrics).forEach(([key, value]) => {
-            curr[key] = (curr[key] ?? 0) + (value?.length ?? 0)
+            curr[key] = (curr[key] ?? 0) + (value.length)
         })
 
         return curr
@@ -60,6 +86,13 @@ export default function AppMetrics() {
 
     const [rawData, setRawData] = useState([])
     const [loading, setLoading] = useState(true)
+    const lastThreeDays = useMemo(() => {
+        return rawData.slice(-3).reverse().map(entry => ({
+            id: entry.id,
+            uniqueLogins: Array.from(new Set(Object.values(entry.uniqueRoleMetrics).flatMap(userId => userId))),
+            uniqueRoleMetrics: entry.uniqueRoleMetrics
+        }))
+    }, [rawData])
 
     const dispatch = useDispatch()
 
@@ -90,12 +123,12 @@ export default function AppMetrics() {
                 :
                 <Box marginTop = {3} data-testid = 'AppMetrics__data'>
                     <Stack direction = 'row' justifyContent = 'space-evenly' marginBottom = {4}>
-                        {rawData.slice(-3).reverse().map((entry, index) => (
+                        {lastThreeDays.map((entry, index) => (
                             <Stack key = {index}>
                                 <Typography variant = 'h6'>{new Date(entry.id + 'T00:00').toDateString()}</Typography>
-                                <RowEntry title = 'Unique Logins' value = {entry.uniqueLogins} />
+                                <RowEntryTooltip title = 'Unique Logins' value = {entry.uniqueLogins} />
                                 {Object.entries(entry.uniqueRoleMetrics).map(([key, value], idx) => (
-                                    <RowEntry key = {idx} title = {camelToCapitalCase(key)} value = {value.length}/>
+                                    <RowEntryTooltip key = {idx} title = {camelToCapitalCase(key)} value = {value}/>
                                 ))}
                             </Stack>
                         ))}
