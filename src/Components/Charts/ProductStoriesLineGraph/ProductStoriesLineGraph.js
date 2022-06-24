@@ -4,16 +4,21 @@ import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
-export default function ProductStoriesLineGraph({ rawData }) {
+export default function ProductStoriesLineGraph({ dateOffset, rawData }) {
 
     const theme = useTheme()
 
-    const data = useMemo(() => rawData.map(entry => ({
-        'Delivered Points': entry.deliveredPoints,
-        'Delivered Stories': entry.deliveredStories,
-        xAxis: format(new Date(entry.date + 'T00:00'), 'ddMMM'),
-        legend: format(new Date(entry.date + 'T00:00'), 'PPP'),
-    })).reverse(), [rawData])
+    const data = useMemo(() => rawData.map(entry => {
+        let date = new Date(entry.date + 'T00:00')
+        date.setDate(date.getDate() + dateOffset)
+
+        return {
+            'Closed Issues': entry.deliveredStories,
+            'Points Delivered': entry.deliveredPoints,
+            xAxis: format(date, 'ddMMM'),
+            legend: format(date, 'PPP'),
+        }
+    }).reverse(), [rawData])
 
     return (
         <ResponsiveContainer>
@@ -94,24 +99,7 @@ export default function ProductStoriesLineGraph({ rawData }) {
                 />
                 <Line
                     type = 'monotone'
-                    dataKey = 'Delivered Points'
-                    stroke = {theme.palette.primary.main}
-                    dot = {{
-                        stroke: theme.palette.primary.main,
-                        strokeWidth: 2,
-                        radius: 3,
-                        fill: theme.palette.background.paper,
-                    }}
-                    activeDot = {{
-                        stroke: theme.palette.primary.main,
-                        strokeWidth: 2,
-                        radius: 3,
-                        fill: theme.palette.primary.main,
-                    }}
-                />
-                <Line
-                    type = 'monotone'
-                    dataKey = 'Delivered Stories'
+                    dataKey = 'Closed Issues'
                     stroke = 'silver'
                     dot = {{
                         stroke: 'silver',
@@ -126,12 +114,30 @@ export default function ProductStoriesLineGraph({ rawData }) {
                         fill: 'silver',
                     }}
                 />
+                <Line
+                    type = 'monotone'
+                    dataKey = 'Points Delivered'
+                    stroke = {theme.palette.primary.main}
+                    dot = {{
+                        stroke: theme.palette.primary.main,
+                        strokeWidth: 2,
+                        radius: 3,
+                        fill: theme.palette.background.paper,
+                    }}
+                    activeDot = {{
+                        stroke: theme.palette.primary.main,
+                        strokeWidth: 2,
+                        radius: 3,
+                        fill: theme.palette.primary.main,
+                    }}
+                />
             </LineChart>
         </ResponsiveContainer>
     )
 }
 
 ProductStoriesLineGraph.propTypes = {
+    dateOffset: PropTypes.number,
     rawData: PropTypes.arrayOf(PropTypes.shape({
         date: PropTypes.string,
         deliveredPoints: PropTypes.number,
@@ -140,5 +146,6 @@ ProductStoriesLineGraph.propTypes = {
 }
 
 ProductStoriesLineGraph.defaultProps = {
+    dateOffset: 0,
     rawData: [],
 }

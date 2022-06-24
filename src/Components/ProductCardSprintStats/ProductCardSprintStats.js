@@ -9,7 +9,7 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { fetchReleasesByProductId } from 'Redux/Releases/actions'
 
-export default function ProductCardSprintStats({ productId, dateRange, sprintMetrics }) {
+export default function ProductCardSprintStats({ productId, dateRange, sprintMetrics, sprintDuration }) {
     const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, productId))
@@ -37,7 +37,7 @@ export default function ProductCardSprintStats({ productId, dateRange, sprintMet
                     </Grid>
                     <Grid item md = {9} xs = {12} paddingTop = {1.5}>
                         <div style = {{ maxWidth: '800px', minHeight: '200px', height: '100%', width: '100%' }}>
-                            <ProductStoriesLineGraph rawData = {sprintMetrics} />
+                            <ProductStoriesLineGraph rawData = {sprintMetrics} dateOffset = {sprintDuration}/>
                         </div>
                     </Grid>
                 </Grid>
@@ -57,6 +57,7 @@ export default function ProductCardSprintStats({ productId, dateRange, sprintMet
 ProductCardSprintStats.propTypes = {
     dateRange: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number])).isRequired,
     productId: PropTypes.number.isRequired,
+    sprintDuration: PropTypes.number,
     sprintMetrics: PropTypes.arrayOf(PropTypes.shape({
         deliveredStories: PropTypes.number,
         deliveredPoints: PropTypes.number,
@@ -64,5 +65,6 @@ ProductCardSprintStats.propTypes = {
 }
 
 ProductCardSprintStats.defaultProps = {
+    sprintDuration: 0,
     sprintMetrics: [],
 }

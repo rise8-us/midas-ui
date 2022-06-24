@@ -28,8 +28,8 @@ describe('<ProductStoriesLineGraph />', () => {
     test('should render', async() => {
         render(<div style = {{ width: '100px', height: '100px' }}><ProductStoriesLineGraph rawData = {rawData}/></div>)
 
-        expect(await screen.findByText('Delivered Points')).toBeInTheDocument()
-        expect(screen.getByText('Delivered Stories')).toBeInTheDocument()
+        expect(await screen.findByText('Points Delivered')).toBeInTheDocument()
+        expect(screen.getByText('Closed Issues')).toBeInTheDocument()
         expect(screen.getByText('22Jun')).toBeInTheDocument()
     })
 
