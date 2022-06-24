@@ -60,6 +60,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
                     key = {index}
                     productId = {productId}
                     dateRange = {dateRange}
+                    showReleasedAt = {navigationMultiplier === 0}
                     sprintMetrics = {portfolioMetrics[productId]}
                     sprintDuration = {sprintDuration}
                 />

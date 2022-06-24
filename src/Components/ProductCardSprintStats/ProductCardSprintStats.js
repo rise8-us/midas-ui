@@ -9,7 +9,8 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { fetchReleasesByProductId } from 'Redux/Releases/actions'
 
-export default function ProductCardSprintStats({ productId, dateRange, sprintMetrics, sprintDuration }) {
+export default function ProductCardSprintStats(props) {
+    const { productId, dateRange, showReleasedAt, sprintMetrics, sprintDuration } = props
     const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, productId))
@@ -30,6 +31,7 @@ export default function ProductCardSprintStats({ productId, dateRange, sprintMet
                         <Stack>
                             <Typography marginY = {1} variant = 'h6'>{product.name}</Typography>
                             <ProductDoraMetrics
+                                showReleasedAt = {showReleasedAt}
                                 releasedAt = {latestReleasedAt}
                                 sprintMetrics = {latestSprintMetrics}
                             />
@@ -57,6 +59,7 @@ export default function ProductCardSprintStats({ productId, dateRange, sprintMet
 ProductCardSprintStats.propTypes = {
     dateRange: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number])).isRequired,
     productId: PropTypes.number.isRequired,
+    showReleasedAt: PropTypes.bool,
     sprintDuration: PropTypes.number,
     sprintMetrics: PropTypes.arrayOf(PropTypes.shape({
         deliveredStories: PropTypes.number,
@@ -65,6 +68,7 @@ ProductCardSprintStats.propTypes = {
 }
 
 ProductCardSprintStats.defaultProps = {
+    showReleasedAt: true,
     sprintDuration: 0,
     sprintMetrics: [],
 }
