@@ -37,7 +37,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
         dispatch(requestfetchPortfolioMetrics({
             id: portfolioId,
             sprintCycles: 10,
-            startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
+            startDate: getDateInDatabaseOrder(new Date(dateRange[1]).toISOString()),
             sprintDuration,
         })).then(unwrapResult).then(setPortfolioMetrics)
     }, [JSON.stringify(dateRange)])
