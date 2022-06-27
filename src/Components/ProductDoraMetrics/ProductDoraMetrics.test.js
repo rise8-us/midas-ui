@@ -6,6 +6,7 @@ describe('<ProductDoraMetrics />', () => {
     const sprintMetrics = {
         deliveredStories: 100,
         deliveredPoints: 200,
+        releaseFrequency: .3
     }
 
     test('should render', () => {
@@ -19,6 +20,7 @@ describe('<ProductDoraMetrics />', () => {
         expect(screen.getByText('100')).toBeInTheDocument()
         expect(screen.getByText('200')).toBeInTheDocument()
         expect(screen.getByText('N/A')).toBeInTheDocument()
+        expect(screen.getByText('3 days 8 hours')).toBeInTheDocument()
     })
 
     test('should show released at', () => {
