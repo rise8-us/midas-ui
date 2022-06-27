@@ -40,6 +40,21 @@ describe('AppSettings selectors', () => {
                         allExpanded: true
                     }
                 }
+            },
+            epicSyncProgress: {
+                1: {
+                    foo: 'bar'
+                }
+            },
+            issueSyncProgress: {
+                2: {
+                    foo2: 'bar2'
+                }
+            },
+            releaseSyncProgress: {
+                3: {
+                    foo3: 'bar3'
+                }
             }
         }
     }
@@ -134,5 +149,21 @@ describe('AppSettings selectors', () => {
     test('should return portfolioPage target id expanded setting', () => {
         expect(selectors.selectPortfolioPageSettingTargetIdExpanded(mockState, 1, 2))
             .toEqual(true)
+    })
+
+    test('should return epic sync progress', () => {
+        expect(selectors.selectEpicSyncProgress(mockState, 1)).toEqual({ foo: 'bar' })
+    })
+
+    test('should return issue sync progress', () => {
+        expect(selectors.selectIssueSyncProgress(mockState, 2)).toEqual({ foo2: 'bar2' })
+    })
+
+    test('should return release sync progress', () => {
+        expect(selectors.selectReleaseSyncProgress(mockState, 3)).toEqual({ foo3: 'bar3' })
+    })
+
+    test('should return default values for progress', () => {
+        expect(selectors.selectEpicSyncProgress(mockState, -1)).toEqual({ value: 0, status: 'SYNCED' })
     })
 })

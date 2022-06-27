@@ -1,16 +1,20 @@
-import { setEpicSyncProgress, setIssueSyncProgress } from 'Redux/AppSettings/reducer'
+import { setEpicSyncProgress, setIssueSyncProgress, setReleaseSyncProgress } from 'Redux/AppSettings/reducer'
 import { subscribe } from 'Utilities/requests'
 import store from '../store'
 
-const subscriptions = ({ stompClient, connectedUser }) => {
+const subscriptions = ({ stompClient }) => {
 
-    subscribe(stompClient, `/${connectedUser.keycloakUid}/queue/fetchGitlabEpicsPagination`, (msg) => {
+    subscribe(stompClient, '/fetchGitlabEpicsPagination', (msg) => {
         store.dispatch(setEpicSyncProgress(JSON.parse(msg.body)))
-    }, '/user')
+    })
 
-    subscribe(stompClient, `/${connectedUser.keycloakUid}/queue/fetchGitlabIssuesPagination`, (msg) => {
+    subscribe(stompClient, '/fetchGitlabIssuesPagination', (msg) => {
         store.dispatch(setIssueSyncProgress(JSON.parse(msg.body)))
-    }, '/user')
+    })
+
+    subscribe(stompClient, '/fetchGitlabReleasesPagination', (msg) => {
+        store.dispatch(setReleaseSyncProgress(JSON.parse(msg.body)))
+    })
 
 }
 

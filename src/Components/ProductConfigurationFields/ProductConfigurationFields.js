@@ -179,7 +179,7 @@ export default function ProductConfigurationFields({
                     endAdornment: (
                         <EpicSyncRequest
                             id = {product.id}
-                            request = {requestSyncEpicsByProductId}
+                            request = {() => dispatch(requestSyncEpicsByProductId(product.id))}
                             tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
                         />
                     ) }}

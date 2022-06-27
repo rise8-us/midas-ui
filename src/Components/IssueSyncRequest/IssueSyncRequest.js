@@ -1,30 +1,29 @@
 import { Sync } from '@mui/icons-material'
 import { CircularProgress, IconButton, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIssueSyncProgress } from 'Redux/AppSettings/reducer'
-import { selectIssueSyncProgress } from 'Redux/AppSettings/selectors'
+import { selectIssueSyncProgress, selectReleaseSyncProgress } from 'Redux/AppSettings/selectors'
 
-export default function IssueSyncRequest({ request, tooltip }) {
+export default function IssueSyncRequest({ projectId, request, tooltip }) {
     const dispatch = useDispatch()
 
-    const syncProgress = useSelector(state => selectIssueSyncProgress(state)) ?? 1
-
-    const [isLoading, setIsLoading] = useState(false)
+    const issueSyncProgress = useSelector(state => selectIssueSyncProgress(state, projectId))
+    const releaseSyncProgress = useSelector(state => selectReleaseSyncProgress(state, projectId))
+    const { value: issueValue, status: issueStatus } = issueSyncProgress
+    const { status: releaseStatus } = releaseSyncProgress
+    const loading = issueStatus !== 'SYNCED' || releaseStatus !== 'SYNCED'
 
     const syncIssues = async() => {
-        dispatch(setIssueSyncProgress({ value: 0 }))
-        setIsLoading(true)
+        dispatch(setIssueSyncProgress({ id: projectId, value: .01 }))
         await request()
-        setIsLoading(false)
     }
 
-    const getIcon = (processing) => processing ?
-        <Tooltip title = {`${(syncProgress * 100).toFixed(1)}%`} placement = 'top' arrow>
+    return loading ?
+        <Tooltip title = {`${(issueValue * 100).toFixed(1)}%`} placement = 'top' arrow>
             <div style = {{ position: 'relative' }}>
                 <CircularProgress
-                    value = {syncProgress * 100}
+                    value = {issueValue * 100}
                     variant = 'determinate'
                     data-testid = 'SyncRequest__CircularProgress'
                     style = {{
@@ -66,17 +65,10 @@ export default function IssueSyncRequest({ request, tooltip }) {
                 />
             </IconButton>
         </Tooltip>
-
-    useEffect(() => {
-        syncProgress === 1 && setTimeout(() => setIsLoading(false), 500)
-    }, [syncProgress])
-
-    return (
-        getIcon(isLoading)
-    )
 }
 
 IssueSyncRequest.propTypes = {
+    projectId: PropTypes.number.isRequired,
     request: PropTypes.func.isRequired,
     tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }

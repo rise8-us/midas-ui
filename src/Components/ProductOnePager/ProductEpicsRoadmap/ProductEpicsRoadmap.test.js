@@ -1,4 +1,5 @@
 import {
+    fireEvent,
     mockSyncRequest,
     render,
     screen,
@@ -12,13 +13,14 @@ import { sortProductEpics } from './ProductEpicsRoadmap'
 jest.mock('Components/Epics/RoadmapEpic/RoadmapEpic',
     () => function testing() { return (<div>RoadmapEpic</div>) })
 
-jest.mock('Components/EpicSyncRequest/EpicSyncRequest', () => function testing() {
-    return mockSyncRequest()
+jest.mock('Components/EpicSyncRequest/EpicSyncRequest', () => function testing(props) {
+    return mockSyncRequest(props)
 })
 
 describe('<ProductEpicsRoadmap />', () => {
 
     const selectEpicsByProductIdMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByProductId')
+    const requestSyncEpicsByProductIdMock = useModuleMock('Redux/Epics/actions', 'requestSyncEpicsByProductId')
 
     const epics = [
         {
@@ -67,7 +69,6 @@ describe('<ProductEpicsRoadmap />', () => {
             const correctOrder = [epics[1], epics[2]]
 
             expect(sortProductEpics([epics[1], epics[2]])).toEqual(correctOrder)
-            // expect(sortProductEpics([epics[2], epics[1]])).toEqual(correctOrder) //why not work?
         })
 
         test('should sort opened products', () => {
@@ -81,5 +82,13 @@ describe('<ProductEpicsRoadmap />', () => {
         render(<ProductEpicsRoadmap productId = {1} hasEdit = {true} />)
 
         expect(screen.getByTestId('mockSyncRequest__sync-button')).toBeInTheDocument()
+    })
+
+    test('sync icon is visible', () => {
+        render(<ProductEpicsRoadmap productId = {1} hasEdit = {true} />)
+
+        fireEvent.click(screen.getByTestId('mockSyncRequest__sync-button'))
+
+        expect(requestSyncEpicsByProductIdMock).toHaveBeenCalledWith(1)
     })
 })

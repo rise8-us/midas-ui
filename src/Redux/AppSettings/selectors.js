@@ -55,8 +55,13 @@ export const selectPortfolioPageSettingAllExpanded = (state, id) =>
 export const selectPortfolioPageSettingTargetIdExpanded = (state, portfolioId, id) =>
     state.app.portfolioPage[portfolioId]?.expanded?.[id] ?? false
 
-export const selectEpicSyncProgress = (state) =>
-    state.app.epicSyncProgress ?? 0
+const getGitlabPaginationOrDefault = (itemToFetch) => itemToFetch ?? { value: 0, status: 'SYNCED' }
 
-export const selectIssueSyncProgress = (state) =>
-    state.app.issueSyncProgress ?? 0
+export const selectEpicSyncProgress = (state, id) =>
+    getGitlabPaginationOrDefault(state.app.epicSyncProgress[id])
+
+export const selectIssueSyncProgress = (state, id) =>
+    getGitlabPaginationOrDefault(state.app.issueSyncProgress[id])
+
+export const selectReleaseSyncProgress = (state, id) =>
+    getGitlabPaginationOrDefault(state.app.releaseSyncProgress[id])
