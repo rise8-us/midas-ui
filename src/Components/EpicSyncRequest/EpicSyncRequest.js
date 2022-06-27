@@ -1,50 +1,27 @@
-import { Sync, WarningAmberRounded } from '@mui/icons-material'
+import { Sync } from '@mui/icons-material'
 import { CircularProgress, IconButton, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setEpicSyncProgress } from 'Redux/AppSettings/reducer'
 import { selectEpicSyncProgress } from 'Redux/AppSettings/selectors'
-import FormatErrors from 'Utilities/FormatErrors'
-
-function WarningIcon({ errors }) {
-    return (
-        <Tooltip title = {<FormatErrors errors = {errors} />}>
-            <WarningAmberRounded
-                color = 'warning'
-                style = {{ cursor: 'help', margin: '5px' }}
-                data-testid = 'SyncRequest__warning-icon'
-            />
-        </Tooltip>
-    )
-}
-
-WarningIcon.propTypes = {
-    errors: PropTypes.arrayOf(PropTypes.string).isRequired
-}
 
 export default function EpicSyncRequest({ id, request, tooltip }) {
     const dispatch = useDispatch()
 
-    const syncProgress = useSelector(state => selectEpicSyncProgress(state)) ?? 1
-
-    const [isLoading, setIsLoading] = useState(false)
-    const [fetchErrors, setFetchErrors] = useState([])
+    const syncProgress = useSelector(state => selectEpicSyncProgress(state, id))
+    const { value, status } = syncProgress
+    const loading = status !== 'SYNCED'
 
     const syncEpics = () => {
-        dispatch(setEpicSyncProgress({ value: 0 }))
-        setIsLoading(true)
-        dispatch(request(id))
-            .catch(error => {
-                setFetchErrors(error)
-            })
+        dispatch(setEpicSyncProgress({ id: id, value: .01 }))
+        request(id)
     }
 
-    const getIcon = (processing) => processing ?
-        <Tooltip title = {`${(syncProgress * 100).toFixed(1)}%`} placement = 'top' arrow>
+    return loading ?
+        <Tooltip title = {`${(value * 100).toFixed(1)}%`} placement = 'top' arrow>
             <div>
                 <CircularProgress
-                    value = {syncProgress * 100}
+                    value = {value * 100}
                     variant = 'determinate'
                     data-testid = 'SyncRequest__CircularProgress'
                     style = {{
@@ -86,18 +63,6 @@ export default function EpicSyncRequest({ id, request, tooltip }) {
                 />
             </IconButton>
         </Tooltip>
-
-    useEffect(() => {
-        if (syncProgress === 1) {
-            setTimeout(() => setIsLoading(false), 500)
-        } else {
-            setIsLoading(true)
-        }
-    }, [syncProgress])
-
-    return (
-        fetchErrors.length > 0 ? <WarningIcon errors = {fetchErrors} /> : getIcon(isLoading)
-    )
 }
 
 EpicSyncRequest.propTypes = {

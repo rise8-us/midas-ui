@@ -5,7 +5,7 @@ import { ProductRoadmapHeader } from 'Components/ProductOnePager'
 import Tooltips from 'Constants/Tooltips'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { requestSyncEpicsByProductId } from 'Redux/Epics/actions'
 import { selectEpicsByProductId } from 'Redux/Epics/selectors'
 
@@ -21,7 +21,9 @@ export const sortProductEpics = (productEpics) => {
     return futureEpics.reverse().concat(currentEpics.reverse()).concat(closedEpics)
 }
 
-function ProductEpicsRoadmap({ productId, hasEdit }) {
+export default function ProductEpicsRoadmap({ productId, hasEdit }) {
+    const dispatch = useDispatch()
+
     const productEpics = useSelector(state => selectEpicsByProductId(state, productId))
     const sortedEpics = useMemo(() => sortProductEpics(productEpics), [productEpics])
 
@@ -33,7 +35,7 @@ function ProductEpicsRoadmap({ productId, hasEdit }) {
                     action = {
                         <EpicSyncRequest
                             id = {productId}
-                            request = {requestSyncEpicsByProductId}
+                            request = {() => dispatch(requestSyncEpicsByProductId(productId))}
                             tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
                         />
                     }
@@ -54,5 +56,3 @@ ProductEpicsRoadmap.propTypes = {
     productId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired,
 }
-
-export default ProductEpicsRoadmap

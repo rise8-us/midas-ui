@@ -81,7 +81,7 @@ function PortfolioCard({ id }) {
                 style = {{ paddingBottom: 0 }}
             />
             <Grid container margin = {1} marginBottom = {0} rowSpacing = {1} columnSpacing = {1}>
-                {['roadmap', 'requirements', 'sprint-report', 'metrics'].map((page, index) =>
+                {['roadmap', 'sprint-report', 'requirements', 'metrics'].map((page, index) =>
                     <Grid item key = {index}>
                         <Button
                             onClick = {() => history.push(`/portfolios/${portfolio.id}/${page}`)}

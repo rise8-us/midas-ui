@@ -79,7 +79,7 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                 >
                     <Typography variant = 'h6'>{project.name}</Typography>
                     <div style = {{ visibility: hasEdit ? 'visible' : 'hidden' }} >
-                        <IssueSyncRequest request = {syncIssues} tooltip = ''/>
+                        <IssueSyncRequest projectId = {projectId} request = {syncIssues} tooltip = ''/>
                     </div>
                 </Stack>
                 <Grid container margin = {1} columns = {13}>
