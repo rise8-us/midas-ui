@@ -47,14 +47,11 @@ describe('update status of measure', () => {
 
         pickDate(currentDay, null)
 
-        cy.get('.MuiButton-root').contains('OK').click()
         cy.wait('@updateApiCheck')
 
         cy.get('[data-testId=MeasureCard__due-date-5]', {timeout: 10000}).should('be.visible').click()
 
         pickDate(currentDay, lastDayOfMonth)
-
-        cy.get('.MuiButton-root').contains('OK').click()
 
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
@@ -69,15 +66,12 @@ describe('update status of measure', () => {
 
         pickDate(currentDay, null)
 
-        cy.get('.MuiButton-root').contains('OK').click()
         cy.wait('@updateApiCheck')
 
         cy.get('[data-testId=MeasureCard__title-input-5').click()
         cy.get('[data-testId=MeasureCard__due-date-5]', {timeout: 10000}).should('be.visible').click()
 
         pickDate(currentDay, null)
-
-        cy.get('.MuiButton-root').contains('OK').click()
 
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)
@@ -90,12 +84,9 @@ describe('update status of measure', () => {
         cy.get('.MuiButton-root').contains('Clear').click()
 
         cy.wait('@updateApiCheck')
-        cy.wait('@updateApiCheck')
 
         cy.get('[data-testId=MeasureCard__start-date-5]', {timeout: 10000}).click()
         cy.get('.MuiButton-root').contains('Clear').click()
-
-        cy.wait('@updateApiCheck')
 
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)

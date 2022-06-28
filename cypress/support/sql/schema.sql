@@ -277,7 +277,7 @@ CREATE TABLE `gantt_event` (
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `start_date` date DEFAULT NULL,
   `due_date` date DEFAULT NULL,
-  `title` varchar(280) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `description` text,
   `location` text,
   PRIMARY KEY (`id`)
@@ -303,7 +303,7 @@ CREATE TABLE `gantt_milestone` (
   `id` bigint NOT NULL,
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `due_date` date DEFAULT NULL,
-  `title` varchar(280) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -343,7 +343,7 @@ CREATE TABLE `gantt_target` (
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `start_date` date DEFAULT NULL,
   `due_date` date DEFAULT NULL,
-  `title` varchar(280) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `description` text,
   `parent_id` bigint DEFAULT NULL,
   `is_priority` bit(1) DEFAULT b'0',
@@ -399,6 +399,7 @@ CREATE TABLE `issue` (
   `web_url` text,
   `weight` bigint NOT NULL DEFAULT '1',
   `project_id` bigint DEFAULT NULL,
+  `labels` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
@@ -522,6 +523,11 @@ CREATE TABLE `portfolio` (
   `vision` text,
   `mission` text,
   `problem_statement` text,
+  `gantt_note` text,
+  `gantt_note_modified_by` bigint DEFAULT NULL,
+  `gantt_note_modified_at` datetime DEFAULT NULL,
+  `sprint_start_date` date DEFAULT NULL,
+  `sprint_duration_in_days` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `source_control_id` (`source_control_id`),
   CONSTRAINT `portfolio_ibfk_1` FOREIGN KEY (`source_control_id`) REFERENCES `source_control` (`id`)
@@ -613,22 +619,19 @@ CREATE TABLE `project_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-DROP TABLE IF EXISTS `release_deliverable`;
-CREATE TABLE `release_deliverable` (
-  `release_id` bigint NOT NULL,
-  `deliverable_id` bigint NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
 DROP TABLE IF EXISTS `releases`;
 CREATE TABLE `releases` (
   `id` bigint NOT NULL,
-  `title` text NOT NULL,
-  `is_archived` bit(1) DEFAULT b'0',
+  `name` varchar(120) NOT NULL,
+  `description` text,
+  `tag_name` varchar(120) DEFAULT NULL,
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `target_date` datetime DEFAULT NULL,
-  `status` varchar(70) DEFAULT 'NOT_STARTED',
-  PRIMARY KEY (`id`)
+  `released_at` datetime DEFAULT NULL,
+  `project_id` bigint NOT NULL,
+  `uid` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `project_id` (`project_id`),
+  CONSTRAINT `releases_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -725,4 +728,4 @@ CREATE TABLE `user_team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2022-05-25 15:16:49
+-- 2022-06-28 00:17:28
