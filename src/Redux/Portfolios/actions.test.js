@@ -144,4 +144,29 @@ describe('Portfolio action thunks', () => {
         expect(store.getActions()[1].type).toEqual(actions.requestfetchPortfolioMetrics.rejected.toString())
     })
 
+    test('requestfetchPortfolioMetricsSummary : fulfilled', async() => {
+        handleThunkRequest.mockResolvedValueOnce()
+        await store.dispatch(actions.requestfetchPortfolioMetricsSummary({
+            id: 1,
+            startDate: '2020-05-05',
+            sprintDuration: 14,
+        }))
+        const uri = '/api/portfolios/1/sprint-metrics/summary'
+        const params = '?startDate=2020-05-05&duration=14'
+
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain(uri + params)
+        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
+        expect(store.getActions()[0].type).toEqual(actions.requestfetchPortfolioMetricsSummary.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestfetchPortfolioMetricsSummary.fulfilled.toString())
+    })
+
+    test('requestfetchPortfolioMetricsSummary : rejected', async() => {
+        handleThunkRequest.mockRejectedValueOnce()
+        await store.dispatch(actions.requestfetchPortfolioMetricsSummary())
+
+        expect(store.getActions()[0].type).toEqual(actions.requestfetchPortfolioMetricsSummary.pending.toString())
+        expect(store.getActions()[1].type).toEqual(actions.requestfetchPortfolioMetricsSummary.rejected.toString())
+    })
+
 })

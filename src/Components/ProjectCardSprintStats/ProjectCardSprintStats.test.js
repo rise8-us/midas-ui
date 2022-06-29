@@ -57,4 +57,14 @@ describe('<ProductCardSprintStats />', () => {
                 'project.id:1 AND completedAt>="1970-01-01\'T\'00:00:00" AND completedAt<="2022-06-09\'T\'00:00:00"'
             )
     })
+
+    test('should show loading skeletons', async() => {
+        selectReleaseInRangeAndProjectIdMock.mockReturnValue([])
+
+        render(<ProjectCardSprintStats projectId = {1} dateRange = {[JUN_9_2022, JUN_9_2022]} loading = {true}/>)
+
+        expect(await screen.findByTestId('ProjectCardSprintStats__skeleton-releases')).toBeInTheDocument()
+        expect(screen.getByTestId('ProjectCardSprintStats__skeleton-prod')).toBeInTheDocument()
+        expect(screen.getByTestId('ProjectCardSprintStats__skeleton-staging')).toBeInTheDocument()
+    })
 })

@@ -58,3 +58,16 @@ export const requestfetchPortfolioMetrics = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestfetchPortfolioMetricsSummary = createAsyncThunk(
+    Constants.FETCH_PORTFOLIO_METRICS_SUMMARY,
+    async({ id, startDate, sprintDuration }, { rejectWithValue }) => {
+        const requestParams = `startDate=${startDate}&duration=${sprintDuration}`
+        const request = {
+            endpoint: `/api/portfolios/${id}/sprint-metrics/summary?` + requestParams,
+            method: 'GET',
+            body: {}
+        }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
