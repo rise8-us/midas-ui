@@ -1,7 +1,8 @@
 
-import { Card, Grid, Stack, Typography } from '@mui/material'
+import { Card, Grid, Skeleton, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { IssueSyncRequest } from 'Components/IssueSyncRequest'
+import { TextSkeleton } from 'Components/Skeletons'
 import { SprintIssues } from 'Components/SprintIssues'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -12,8 +13,9 @@ import { selectProjectById } from 'Redux/Projects/selectors'
 import { requestSyncReleasesByProjectId } from 'Redux/Releases/actions'
 import { selectReleaseClosestTo, selectReleaseInRangeAndProjectId } from 'Redux/Releases/selectors'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
+import { isLoading } from 'Utilities/requests'
 
-export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }) {
+export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, loading }) {
     const dispatch = useDispatch()
 
     const project = useSelector(state => selectProjectById(state, projectId))
@@ -77,7 +79,9 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                     direction = 'row'
                     spacing = {1}
                 >
-                    <Typography variant = 'h6'>{project.name}</Typography>
+                    <Typography variant = 'h6'>
+                        <TextSkeleton loading = {!project.name} text = {project.name} />
+                    </Typography>
                     <div style = {{ visibility: hasEdit ? 'visible' : 'hidden' }} >
                         <IssueSyncRequest projectId = {projectId} request = {syncIssues} tooltip = ''/>
                     </div>
@@ -89,31 +93,42 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                                 Release Deployments:
                             </Typography>
                             <Stack paddingX = {1}>
-                                {releasesThisSprint.map((release, index) =>
-                                    <Stack
-                                        display = 'list-item'
-                                        direction = 'row'
-                                        spacing = {1}
-                                        key = {index}
-                                        marginLeft = {2}
-                                    >
-                                        <Typography display = 'inline' variant = 'body2'>
-                                            {release.name}
-                                        </Typography>
-                                        <Typography display = 'inline' color = 'secondary'>
-                                            -
-                                        </Typography>
-                                        <Typography display = 'inline' variant = 'body2'>
-                                            {format(new Date(release.releasedAt), 'dd MMM yy')}
-                                        </Typography>
-                                    </Stack>
-                                )}
-                                {releasesThisSprint?.length === 0 &&
-                                    <Typography>
-                                        <i>No deployments this sprint.</i>
-                                    </Typography>
+                                {isLoading(loading, releasesThisSprint.length === 0) ?
+                                    <Skeleton
+                                        width = '80%'
+                                        height = '22px'
+                                        data-testid = 'ProjectCardSprintStats__skeleton-releases'
+                                    />
+                                    :
+                                    <>
+                                        {releasesThisSprint.map((release, index) =>
+                                            <Stack
+                                                display = 'list-item'
+                                                direction = 'row'
+                                                spacing = {1}
+                                                key = {index}
+                                                marginLeft = {2}
+                                            >
+                                                <Typography display = 'inline' variant = 'body2'>
+                                                    {release.name}
+                                                </Typography>
+                                                <Typography display = 'inline' color = 'secondary'>
+                                                    -
+                                                </Typography>
+                                                <Typography display = 'inline' variant = 'body2'>
+                                                    {format(new Date(release.releasedAt), 'dd MMM yy')}
+                                                </Typography>
+                                            </Stack>
+                                        )}
+                                        {releasesThisSprint?.length === 0 &&
+                                            <Typography>
+                                                <i>No deployments this sprint.</i>
+                                            </Typography>
+                                        }
+                                    </>
                                 }
                             </Stack>
+
                         </div>
                     </Grid>
                     <Grid item xs = {12} lg = {5}>
@@ -122,10 +137,18 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                                 Issues Deployed to Production (CUI):
                             </Typography>
                             <Stack paddingX = {1}>
-                                <SprintIssues
-                                    issues = {releasedIssuesThisSprint}
-                                    noOptionsText = 'No issues released this sprint.'
-                                />
+                                {isLoading(loading, releasedIssuesThisSprint.length === 0) ?
+                                    <Skeleton
+                                        width = '80%'
+                                        height = '22px'
+                                        data-testid = 'ProjectCardSprintStats__skeleton-prod'
+                                    />
+                                    :
+                                    <SprintIssues
+                                        issues = {releasedIssuesThisSprint}
+                                        noOptionsText = 'No issues released this sprint.'
+                                    />
+                                }
                             </Stack>
                         </div>
                     </Grid>
@@ -135,10 +158,18 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
                                 Issues Deployed to Staging:
                             </Typography>
                             <Stack paddingX = {1}>
-                                <SprintIssues
-                                    issues = {closedIssuesThisSprint}
-                                    noOptionsText = 'No issues closed this sprint.'
-                                />
+                                {isLoading(loading, closedIssuesThisSprint.length === 0) ?
+                                    <Skeleton
+                                        width = '80%'
+                                        height = '22px'
+                                        data-testid = 'ProjectCardSprintStats__skeleton-staging'
+                                    />
+                                    :
+                                    <SprintIssues
+                                        issues = {closedIssuesThisSprint}
+                                        noOptionsText = 'No issues closed this sprint.'
+                                    />
+                                }
                             </Stack>
                         </div>
                     </Grid>
@@ -150,10 +181,12 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit }
 
 ProjectCardSprintStats.propTypes = {
     dateRange: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number])).isRequired,
+    hasEdit: PropTypes.bool,
+    loading: PropTypes.bool,
     projectId: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool
 }
 
 ProjectCardSprintStats.defaultProps = {
-    hasEdit: false
+    hasEdit: false,
+    loading: false,
 }

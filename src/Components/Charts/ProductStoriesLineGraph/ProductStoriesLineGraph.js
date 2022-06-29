@@ -1,4 +1,4 @@
-import { Card, Stack, Typography, useTheme } from '@mui/material'
+import { Card, Skeleton, Stack, Typography, useTheme } from '@mui/material'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
@@ -19,6 +19,15 @@ export default function ProductStoriesLineGraph({ dateOffset, rawData }) {
             legend: format(date, 'PPP'),
         }
     }).reverse(), [rawData])
+
+    if (rawData.length === 0) return (
+        <Skeleton
+            variant = 'rectangular'
+            width = '100%'
+            height = {180}
+            data-testid = 'ProductStoriesLineGraph__skeleton'
+        />
+    )
 
     return (
         <ResponsiveContainer>

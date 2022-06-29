@@ -1,12 +1,14 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 import { IconButton, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { PortfolioCardSprintStats } from 'Components/PortfolioCardSprintStats'
 import { ProductCardSprintStats } from 'Components/ProductCardSprintStats'
 import { format } from 'date-fns'
+import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { requestfetchPortfolioMetrics } from 'Redux/Portfolios/actions'
+import { requestfetchPortfolioMetrics, requestfetchPortfolioMetricsSummary } from 'Redux/Portfolios/actions'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 
 const calculateDate = (initialDate, duration, multipler) => {
@@ -23,6 +25,10 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
     const [navigationMultiplier, setNavigationMultiplier] = useState(0)
     const [dateRange, setDateRange] = useState([sprintStart, sprintEnd])
     const [portfolioMetrics, setPortfolioMetrics] = useState({})
+    const [portfolioMetricsSummary, setPortfolioMetricsSummary] = useState({})
+    const [loading, setLoading] = useState(true)
+
+    const debouncedDateRange = useDebounce(dateRange, 200)
 
     const updateRange = (newModifier) => {
         const newNav = navigationMultiplier + newModifier
@@ -31,16 +37,26 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
 
         setNavigationMultiplier(newNav)
         setDateRange([newStartDate, newEndDate])
+        setLoading(true)
     }
 
-    useEffect(() => {
-        dispatch(requestfetchPortfolioMetrics({
+    useEffect(async() => {
+        const requests = []
+        requests.push(dispatch(requestfetchPortfolioMetrics({
             id: portfolioId,
             sprintCycles: 10,
             startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
             sprintDuration,
-        })).then(unwrapResult).then(setPortfolioMetrics)
-    }, [JSON.stringify(dateRange)])
+        })).then(unwrapResult).then(setPortfolioMetrics))
+
+        requests.push(dispatch(requestfetchPortfolioMetricsSummary({
+            id: portfolioId,
+            startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
+            sprintDuration,
+        })).then(unwrapResult).then(setPortfolioMetricsSummary))
+
+        Promise.allSettled(requests).then(() => setLoading(false))
+    }, [JSON.stringify(debouncedDateRange)])
 
     return (
         <Stack spacing = {1} data-testid = 'PortfolioSprintReport__container-stack'>
@@ -55,14 +71,21 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
                     <ArrowForward fontSize = 'small' />
                 </IconButton>
             </Stack>
+            <PortfolioCardSprintStats
+                prodDeployments = {portfolioMetricsSummary.totalReleases}
+                prodIssues = {portfolioMetricsSummary.totalIssuesDelivered}
+                stagingIssues = {portfolioMetricsSummary.totalIssuesClosed}
+                loading = {loading}
+            />
             {productIds.map((productId, index) =>
                 <ProductCardSprintStats
                     key = {index}
                     productId = {productId}
-                    dateRange = {dateRange}
+                    dateRange = {debouncedDateRange}
                     showReleasedAt = {navigationMultiplier === 0}
                     sprintMetrics = {portfolioMetrics[productId]}
                     sprintDuration = {sprintDuration}
+                    loading = {loading}
                 />
             )}
         </Stack>

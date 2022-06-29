@@ -8,6 +8,7 @@ import { selectAllTags } from 'Redux/Tags/selectors'
 export default function SprintIssues({ issues, noOptionsText }) {
 
     const tags = useSelector(selectAllTags)
+
     return (
         <>
             {issues.map((issue, index) => (

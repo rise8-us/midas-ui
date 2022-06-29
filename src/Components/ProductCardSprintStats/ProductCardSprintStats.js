@@ -2,6 +2,7 @@ import { Card, Grid, Stack, Typography } from '@mui/material'
 import { ProductStoriesLineGraph } from 'Components/Charts/ProductStoriesLineGraph'
 import { ProductDoraMetrics } from 'Components/ProductDoraMetrics'
 import { ProjectCardSprintStats } from 'Components/ProjectCardSprintStats'
+import { TextSkeleton } from 'Components/Skeletons'
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +11,7 @@ import { selectProductById } from 'Redux/Products/selectors'
 import { fetchReleasesByProductId } from 'Redux/Releases/actions'
 
 export default function ProductCardSprintStats(props) {
-    const { productId, dateRange, showReleasedAt, sprintMetrics, sprintDuration } = props
+    const { productId, dateRange, loading, showReleasedAt, sprintMetrics, sprintDuration } = props
     const dispatch = useDispatch()
 
     const product = useSelector(state => selectProductById(state, productId))
@@ -29,8 +30,11 @@ export default function ProductCardSprintStats(props) {
                 <Grid container>
                     <Grid item xs = {12} md = {3}>
                         <Stack>
-                            <Typography marginY = {1} variant = 'h6'>{product.name}</Typography>
+                            <Typography marginY = {1} variant = 'h6'>
+                                <TextSkeleton loading = {!product.name} text = {product.name} width = '160px'/>
+                            </Typography>
                             <ProductDoraMetrics
+                                loading = {loading}
                                 showReleasedAt = {showReleasedAt}
                                 releasedAt = {latestReleasedAt}
                                 sprintMetrics = {latestSprintMetrics}
@@ -49,6 +53,7 @@ export default function ProductCardSprintStats(props) {
                         projectId = {projectId}
                         dateRange = {dateRange}
                         hasEdit = {Boolean(pagePermissions.edit)}
+                        loading = {loading}
                     />
                 )}
             </Stack>
@@ -59,6 +64,7 @@ export default function ProductCardSprintStats(props) {
 ProductCardSprintStats.propTypes = {
     dateRange: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number])).isRequired,
     productId: PropTypes.number.isRequired,
+    loading: PropTypes.bool,
     showReleasedAt: PropTypes.bool,
     sprintDuration: PropTypes.number,
     sprintMetrics: PropTypes.arrayOf(PropTypes.shape({
@@ -68,6 +74,7 @@ ProductCardSprintStats.propTypes = {
 }
 
 ProductCardSprintStats.defaultProps = {
+    loading: false,
     showReleasedAt: true,
     sprintDuration: 0,
     sprintMetrics: [],
