@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 
 export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt, sprintMetrics }) {
-    const { deliveredStories, deliveredPoints, releaseFrequency, leadTimeForChange } = sprintMetrics
+    const { deliveredStories, deliveredPoints, releaseFrequency, leadTimeForChangeInMinutes } = sprintMetrics
 
     const releaseFrequencyString = useMemo(() => {
         if (releaseFrequency) {
@@ -22,22 +22,22 @@ export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt
     }, [releaseFrequency])
 
     const leadTimeForChangeString = useMemo(() => {
-        if (leadTimeForChange) {
-            const days = Math.floor(leadTimeForChange)
-            const hours = (leadTimeForChange % 1) * 24
+        if (leadTimeForChangeInMinutes > 0) {
+            const days = leadTimeForChangeInMinutes / 60 / 24
+            const hours = (days % 1) * 24
             return formatDuration({
-                days: days,
+                days: Math.floor(days),
                 hours: Math.floor(hours),
             })
         }
-        return 'No Deployments'
-    }, [leadTimeForChange])
+        return 'No Releases'
+    }, [leadTimeForChangeInMinutes])
 
     const metrics = [
         { title: 'Closed Issues:', value: deliveredStories },
         { title: 'Points Delivered:', value: deliveredPoints },
-        { title: 'Release Frequency:', value: releaseFrequencyString, tooltip: tooltips.DORA_RELEASE_FREQUENCY },
         { title: 'Lead Time for Change:', value: leadTimeForChangeString, tooltip: tooltips.DORA_LEAD_TIME_FOR_CHANGE },
+        { title: 'Release Frequency:', value: releaseFrequencyString, tooltip: tooltips.DORA_RELEASE_FREQUENCY },
     ]
 
     return (
@@ -92,7 +92,7 @@ ProductDoraMetrics.propTypes = {
         deliveredStories: PropTypes.number,
         deliveredPoints: PropTypes.number,
         releaseFrequency: PropTypes.number,
-        leadTimeForChange: PropTypes.number,
+        leadTimeForChangeInMinutes: PropTypes.number,
     }),
 }
 
