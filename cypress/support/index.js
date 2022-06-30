@@ -17,3 +17,5 @@
 // Import commands.js using ES2015 syntax:
 import './commands/dbCommands';
 import './commands/helperCommands';
+import './commands/networkCommands';
+

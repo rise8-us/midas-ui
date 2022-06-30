@@ -5,7 +5,7 @@ import Constants from './constants'
 export const requestFetchAllPortfolios = createAsyncThunk(
     Constants.FETCH_ALL_PORTFOLIOS,
     async(_, { rejectWithValue }) => {
-        const request = { endpoint: '/api/portfolios', method: 'GET', body: {} }
+        const request = { endpoint: '/api/portfolios', method: 'GET' }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
@@ -13,10 +13,7 @@ export const requestFetchAllPortfolios = createAsyncThunk(
 export const requestSearchPortfolio = createAsyncThunk(
     Constants.SEARCH_PORTFOLIO,
     async(search, { rejectWithValue }) => {
-        const request = {
-            endpoint: `/api/portfolios AND ${search}`,
-            method: 'GET', body: {}
-        }
+        const request = { endpoint: `/api/portfolios?search=${search}`, method: 'GET' }
         return handleThunkRequest(request, rejectWithValue)
     }
 )

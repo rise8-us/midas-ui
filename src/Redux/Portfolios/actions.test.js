@@ -20,7 +20,6 @@ describe('Portfolio action thunks', () => {
         await store.dispatch(actions.requestFetchAllPortfolios())
 
         expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/portfolios')
-        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({ })
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestFetchAllPortfolios.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestFetchAllPortfolios.fulfilled.toString())
@@ -102,9 +101,7 @@ describe('Portfolio action thunks', () => {
         handleThunkRequest.mockResolvedValueOnce()
         await store.dispatch(actions.requestSearchPortfolio('id:1'))
 
-        expect(handleThunkRequest.mock.calls[0][0].endpoint)
-            .toContain('/api/portfolios AND id:1')
-        expect(handleThunkRequest.mock.calls[0][0].body).toEqual({})
+        expect(handleThunkRequest.mock.calls[0][0].endpoint).toContain('/api/portfolios?search=id:1')
         expect(handleThunkRequest.mock.calls[0][0].method).toEqual('GET')
         expect(store.getActions()[0].type).toEqual(actions.requestSearchPortfolio.pending.toString())
         expect(store.getActions()[1].type).toEqual(actions.requestSearchPortfolio.fulfilled.toString())
