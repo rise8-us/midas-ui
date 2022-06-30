@@ -7,6 +7,7 @@ Cypress.Commands.add('db', (script) => {
 Cypress.Commands.add('initDB', () => {
     cy.db('support/sql/schema.sql')
     cy.db('support/sql/initialize.sql')
+    cy.aliasIntercepts()
 })
 
 Cypress.Commands.add('addLocalUserAsAdmin', () => {
