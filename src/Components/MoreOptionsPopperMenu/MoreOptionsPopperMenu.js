@@ -60,7 +60,10 @@ function MoreOptionsPopperMenu({ options, icon }) {
                     <StyledCard>
                         {options.map((option, key) => (
                             <React.Fragment key = {key}>
-                                <DivOption onClick = {(e) => handleOptionClick(e, option.onClick)}>
+                                <DivOption
+                                    onClick = {(e) => handleOptionClick(e, option.onClick)}
+                                    data-testid = {`MoreOptionsPopperMenu__${option.text}`}
+                                >
                                     {option.link ?
                                         <Link
                                             href = {option.link}
