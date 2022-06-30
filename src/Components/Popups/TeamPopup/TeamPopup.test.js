@@ -37,15 +37,15 @@ describe('<TeamPopup />', () => {
     }
 
     const returnedProduct = {
-        ownerId: null
+        personnel: {
+            ownerId: null
+        }
     }
 
     beforeEach(async() => {
-
         useDispatchMock().mockReturnValue({})
         selectTeamByIdMock.mockReturnValue(returnedNewTeam)
         selectProductByIdMock.mockReturnValue(returnedProduct)
-
     })
 
     test('should render properly for createTeam', () => {
@@ -170,7 +170,7 @@ describe('<TeamPopup />', () => {
 
         expect(requestUpdateProductMock).toHaveBeenCalledWith({
             ...returnedProduct,
-            ownerId: 24,
+            personnel: { ...returnedProduct.personnel, ownerId: 24 },
             childIds: []
         })
     })
