@@ -182,6 +182,7 @@ export default function GanttSubTarget({ id, defaultOpen }) {
                 }
                 <AutoSaveTextField
                     canEdit = {permissions.edit}
+                    data-testid = 'GanttSubTarget__title'
                     initialValue = {title}
                     onSave = {updateTitle}
                     title = {title}
