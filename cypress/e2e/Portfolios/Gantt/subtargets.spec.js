@@ -3,7 +3,7 @@ describe('CRUD subtargets', () => {
 
     before(() => {
         cy.initDB()
-        cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql','e2e/Portfolios/Gantt/gantt-insert-target.sql'])
+        cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql','e2e/Portfolios/Gantt/gantt-insert-target.sql','e2e/Portfolios/Gantt/gantt-insert-requirement.sql'])
 
         cy.visit('localhost:3000/portfolios/4')
     })
@@ -65,6 +65,33 @@ describe('CRUD subtargets', () => {
         cy.get('[data-testId=GanttSubTarget__title]').within(() => {
             cy.get('input').should('have.value', 'newSubtargetTitle')
         })
+    })
+
+    it('should link an existing requirement', () => {
+        cy.get('[data-testId=GanttTarget__expandButton_closed]').first().click()
+        cy.get('[data-testId=GanttSubTarget__associate-req]').click()
+        cy.get('[data-testId=AssociateRequirementsPopup__checkbox-0]').click()
+        cy.get('[data-testId=Popup__button-submit]').click()
+
+        cy.wait('@updateSubtarget').then(res => {
+            expect(res.response.statusCode).to.equal(200)
+        })
+
+        cy.get('[data-testId=GanttRequirements__tooltip]').should('exist')
+
+    })
+
+    it('should unlink a linked requirement', () => {
+        cy.get('[data-testId=GanttTarget__expandButton_closed]').first().click()
+        cy.get('[data-testId=GanttRequirementsList__edit-button]').click()
+        cy.get('[data-testId=AssociateRequirementsPopup__checkbox-0]').click()
+        cy.get('[data-testId=Popup__button-submit]').click()
+
+        cy.wait('@updateSubtarget').then(res => {
+            expect(res.response.statusCode).to.equal(200)
+        })
+
+        cy.get('[data-testId=GanttRequirements__tooltip]').should('not.exist')
     })
 
     it('should delete an existing subtarget', () => {
