@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 
 export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt, sprintMetrics }) {
-    const { deliveredStories, deliveredPoints, releaseFrequency } = sprintMetrics
+    const { deliveredStories, deliveredPoints, releaseFrequency, leadTimeForChangeInMinutes } = sprintMetrics
 
-    const durationString = useMemo(() => {
+    const releaseFrequencyString = useMemo(() => {
         if (releaseFrequency) {
             const freq =  1 / releaseFrequency
             const days = Math.floor(freq)
@@ -21,10 +21,23 @@ export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt
         return 'No Releases'
     }, [releaseFrequency])
 
+    const leadTimeForChangeString = useMemo(() => {
+        if (leadTimeForChangeInMinutes > 0) {
+            const days = leadTimeForChangeInMinutes / 60 / 24
+            const hours = (days % 1) * 24
+            return formatDuration({
+                days: Math.floor(days),
+                hours: Math.floor(hours),
+            })
+        }
+        return 'No Releases'
+    }, [leadTimeForChangeInMinutes])
+
     const metrics = [
         { title: 'Closed Issues:', value: deliveredStories },
         { title: 'Points Delivered:', value: deliveredPoints },
-        { title: 'Release Frequency:', value: durationString, tooltip: tooltips.DORA_RELEASE_FREQUENCY },
+        { title: 'Lead Time for Change:', value: leadTimeForChangeString, tooltip: tooltips.DORA_LEAD_TIME_FOR_CHANGE },
+        { title: 'Release Frequency:', value: releaseFrequencyString, tooltip: tooltips.DORA_RELEASE_FREQUENCY },
     ]
 
     return (
@@ -79,6 +92,7 @@ ProductDoraMetrics.propTypes = {
         deliveredStories: PropTypes.number,
         deliveredPoints: PropTypes.number,
         releaseFrequency: PropTypes.number,
+        leadTimeForChangeInMinutes: PropTypes.number,
     }),
 }
 
