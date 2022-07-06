@@ -23,5 +23,7 @@ export default {
     MATTERMOST_LOGO: 'Find a bug? Got a Feature Request? Just need someone to talk to? Hop over to the ' +
     'Midas MatterMost server where we you can communicate your needs directly to developers. See you there!',
     DORA_RELEASE_FREQUENCY: 'DORA throughput metric that represents the average number of' +
-    ' days between releases. Low numbers indicate high performing teams.'
+    ' days between releases. Low numbers indicate high performing teams.',
+    DORA_LEAD_TIME_FOR_CHANGE: 'DORA throughput metric that represents time from work' +
+    ' completed to deployed in production. Low numbers indicate high performing teams.'
 }
