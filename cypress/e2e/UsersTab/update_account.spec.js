@@ -3,16 +3,10 @@ describe('Updates own account', () => {
     before(() => {
         cy.initDB()
         cy.loadSqlFiles(['e2e/UsersTab/insert-users.sql'])
-        cy.intercept({
-            method: 'GET',
-            url: 'http://localhost:8000/api/assertions*',
-        }).as('assertion')
         cy.visit('localhost:3000/')
-
     })
     
     it('Users can update own account info', () => {
-        cy.wait('@assertion')
         cy.get('[data-testid=AppBar__account-button]').click()
 
         cy.get('[data-testid=UserSettings__input-display-name]').within(() => {
@@ -31,7 +25,6 @@ describe('Updates own account', () => {
 
         cy.get('[data-testid=AppBar__logo]').click()
         cy.reload()
-        cy.wait('@assertion')
 
         cy.get('[data-testid=AppBar__account-button]').click()
 

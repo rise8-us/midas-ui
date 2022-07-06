@@ -4,8 +4,7 @@ describe('CRUD targets', () => {
     before(() => {
         cy.initDB()
         cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql'])
-
-        cy.visit('localhost:3000/portfolios/4')
+        cy.visitBravoPortfolio()
     })
 
     beforeEach(() => {

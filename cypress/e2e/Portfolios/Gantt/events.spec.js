@@ -5,8 +5,7 @@ describe('CRUD events', () => {
         cy.clock(currentDate)
         cy.initDB()
         cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql'])
-
-        cy.visit('localhost:3000/portfolios/4/roadmap')
+        cy.visitBravoPortfolio()
     })
 
     beforeEach(() => {

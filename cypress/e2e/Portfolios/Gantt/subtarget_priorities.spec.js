@@ -4,8 +4,7 @@ describe('CRUD subtarget priorities', () => {
     before(() => {
         cy.initDB()
         cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql','e2e/Portfolios/Gantt/gantt-insert-subtargets.sql'])
-
-        cy.visit('localhost:3000/portfolios/4')
+        cy.visitBravoPortfolio()
     })
 
     beforeEach(() => {
