@@ -4,8 +4,7 @@ describe('CRUD subtarget linking epics', () => {
     before(() => {
         cy.initDB()
         cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql','e2e/Portfolios/Gantt/gantt-insert-subtargets.sql','e2e/Portfolios/Gantt/gantt-insert-epics.sql'])
-
-        cy.visit('localhost:3000/portfolios/4')
+        cy.visitBravoPortfolio()
     })
 
     beforeEach(() => {
@@ -29,7 +28,7 @@ describe('CRUD subtarget linking epics', () => {
         
         cy.get('input[placeholder="Link epics by title or product name"]').click()
 
-        cy.get('li').should('have.length', 4) //there is always one empty li item at the start
+        cy.get('li').should('have.length', 4)
 
     })
 

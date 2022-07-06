@@ -4,8 +4,7 @@ describe('CRUD subtargets', () => {
     before(() => {
         cy.initDB()
         cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql','e2e/Portfolios/Gantt/gantt-insert-target.sql','e2e/Portfolios/Gantt/gantt-insert-requirement.sql'])
-
-        cy.visit('localhost:3000/portfolios/4')
+        cy.visitBravoPortfolio()
     })
 
     beforeEach(() => {
@@ -39,9 +38,11 @@ describe('CRUD subtargets', () => {
         cy.wait('@createSubtarget').then(res => {
             expect(res.response.statusCode).to.equal(200)
         })
-        cy.wait(1000)
 
-        cy.get('[data-testId=GanttSubTarget__title]').should('exist')
+        cy.get('[data-testId=Portfolio__sprint-report]').click()
+        cy.get('[data-testId=Portfolio__roadmap]').click()
+
+        cy.get('[data-testId=GanttSubTarget__title]', { timeout: 10000 }).should('exist')
     })
 
     it('should update an existing subtarget', () => {
