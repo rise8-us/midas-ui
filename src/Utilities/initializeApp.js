@@ -1,8 +1,6 @@
 
 import { setInitialized } from 'Redux/AppSettings/reducer'
-import { requestFetchAllBlockedAssertions } from 'Redux/Assertions/actions'
 import { requestFetchInit } from 'Redux/Init/actions'
-import { requestFetchAllPersonnel } from 'Redux/Personnel/actions'
 import { requestFetchAllPortfolios } from 'Redux/Portfolios/actions'
 import { requestFetchAllProducts } from 'Redux/Products/actions'
 import { requestFetchAllProjects } from 'Redux/Projects/actions'
@@ -20,14 +18,12 @@ export const initializeApp = async() => {
             return reject(init.error.message)
         }
         store.dispatch(setInitialized(true))
-        store.dispatch(requestFetchAllTeams())
-        store.dispatch(requestFetchAllProjects())
-        store.dispatch(requestFetchAllTags())
-        store.dispatch(requestFetchAllPersonnel())
-        store.dispatch(requestFetchAllProducts())
         store.dispatch(requestFetchAllPortfolios())
+        store.dispatch(requestFetchAllProducts())
+        store.dispatch(requestFetchAllProjects())
         store.dispatch(requestFetchAllSourceControls())
-        store.dispatch(requestFetchAllBlockedAssertions())
+        store.dispatch(requestFetchAllTags())
+        store.dispatch(requestFetchAllTeams())
 
         resolve('INIT SUCCESS')
     })

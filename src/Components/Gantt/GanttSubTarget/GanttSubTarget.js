@@ -182,6 +182,7 @@ export default function GanttSubTarget({ id, defaultOpen }) {
                 }
                 <AutoSaveTextField
                     canEdit = {permissions.edit}
+                    data-testid = 'GanttSubTarget__title'
                     initialValue = {title}
                     onSave = {updateTitle}
                     title = {title}
@@ -255,6 +256,7 @@ export default function GanttSubTarget({ id, defaultOpen }) {
                                 Associate Requirement
                             </StyledButton>
                             <StyledButton
+                                data-testid = 'GanttSubTarget__associate-epic'
                                 onClick = {onClickAssociateEpics}
                                 variant = 'contained'
                             >

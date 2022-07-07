@@ -64,6 +64,7 @@ export default function GanttFilter() {
                 }}
                 onClick = {() => setIsOpen(prev => !prev)}
                 endIcon = {<Tune fontSize = 'small'/>}
+                data-testid = 'GanttFilter__button'
             >
                 filter
             </Button>

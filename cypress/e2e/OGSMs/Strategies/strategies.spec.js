@@ -5,7 +5,7 @@ describe('update strategy', () => {
         cy.addLocalUserAsAdmin()
         cy.loadSqlFiles(['e2e/OGSMs/insert-portfolio.sql','e2e/OGSMs/insert-objective.sql'])
 
-        cy.visit('localhost:3000/products/5/objectives')
+       cy.visitAlphaProduct('objectives')
         cy.get('[data-testId=LockOutlinedIcon]', { timeout: 10000 }).should('be.visible')
     })
 
@@ -35,6 +35,9 @@ describe('update strategy', () => {
             expect(interception.response.body.text).to.equal('Enter new strategy here...')
         })
 
+        cy.get('[data-testId=Product__overview]').click()
+        cy.get('[data-testId=Product__objectives]').click()
+        
         cy.get('[data-testId=StrategyCard__title-input-12]').should('exist')
     })
 

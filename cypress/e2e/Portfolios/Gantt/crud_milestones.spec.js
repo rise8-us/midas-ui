@@ -1,15 +1,11 @@
 describe('CRUD milestones', () => {
+    const currentDate = new Date('2000-01-05')
 
     before(() => {
+        cy.clock(currentDate)
         cy.initDB()
         cy.loadSqlFiles(['e2e/Portfolios/Gantt/gantt-setup.sql'])
-
-        const currentDate = new Date('2000-01-05')
-        cy.clock(currentDate)
-
-        cy.visit('localhost:3000/portfolios/4')
-        cy.get('[data-testId=LockOutlinedIcon]', { timeout: 10000 }).should('be.visible')
-
+        cy.visitBravoPortfolio()
     })
 
     beforeEach(() => {
@@ -32,9 +28,7 @@ describe('CRUD milestones', () => {
     it('should create a new milestone', () => {
         cy.get('[data-testId=LockOutlinedIcon]', { timeout: 10000 }).click()
         cy.get('[data-testId=GanttAddNewItem__button]').click()
-        cy.get('.MuiPaper-root').within(() => {
-            cy.get('.MuiTypography-root').contains('Milestone').click()
-        })
+        cy.get('[data-testId=MoreOptionsPopperMenu__Milestone]').click()
 
         cy.get('[data-testId=MilestonePopup__input-title]').click().type('milestoneTitle')
         cy.get('[data-testId=MilestonePopup__input-description]').click().type('milestoneDescription')

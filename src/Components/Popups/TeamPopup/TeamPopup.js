@@ -92,7 +92,10 @@ function TeamPopup({ id, productIds }) {
         if (productIds.length) {
             dispatch(requestUpdateProduct({
                 ...product,
-                ownerId: productOwnerId,
+                personnel: {
+                    ...product.personnel,
+                    ownerId: productOwnerId
+                },
                 childIds: []
             }))
         }
@@ -116,8 +119,9 @@ function TeamPopup({ id, productIds }) {
             /> :
             null
     }
+
     useEffect(() => {
-        product.ownerId && requestUserData(product.ownerId, 'productOwner')
+        product?.personnel?.ownerId && requestUserData(product?.personnel?.ownerId, 'productOwner')
         team.productManagerId && requestUserData(team.productManagerId, 'productManager')
         team.designerId && requestUserData(team.designerId, 'designer')
         team.techLeadId && requestUserData(team.techLeadId, 'techLead')
