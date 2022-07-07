@@ -14,12 +14,12 @@ describe('CRUD subtarget linking epics', () => {
         }).as('updateTarget')
 
         cy.clock(currentDate)
-
+    })
+    
+    it('should find product epics', () => {
         cy.get('[data-testId=Portfolio__sprint-report]').click()
         cy.get('[data-testId=Portfolio__roadmap]').click()
-    })
 
-    it('should find product epics', () => {
         cy.get('[data-testId=LockOutlinedIcon]', { timeout: 10000 }).click()
 
         cy.get('[data-testId=GanttTarget__expandButton_closed]').first().click()
@@ -29,7 +29,6 @@ describe('CRUD subtarget linking epics', () => {
         cy.get('input[placeholder="Link epics by title or product name"]').click()
 
         cy.get('li').should('have.length', 4)
-
     })
 
 })

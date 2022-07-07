@@ -1,4 +1,4 @@
-describe('CRUD targets', () => {
+describe('Gantt Chart Navigation', () => {
     const currentDate = new Date('2000-01-05')
 
     before(() => {
