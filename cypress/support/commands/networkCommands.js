@@ -25,6 +25,14 @@ Cypress.Commands.add('visitBravoPortfolio', (tab = null) => {
     if (tab) cy.get(`[data-testid=Portfolio__${tab}]`).click()
 })
 
+Cypress.Commands.add('visitAlphaProduct', (tab = null) => {
+    cy.visit('localhost:3000/products')
+    cy.waitAppLoads()
+
+    cy.get('[data-testid=ProductCard__header-title]').contains('alpha product').click()
+    if (tab) cy.get(`[data-testid=Product__${tab}]`).click()
+})
+
 Cypress.Commands.add('aliasIntercepts', () => {
     cy.intercept('GET', '/api/init').as('get_init')
 
