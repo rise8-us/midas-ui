@@ -8,13 +8,13 @@ describe('Release selectors', () => {
                 id: 1,
                 name: 'Release 1',
                 projectId: 4,
-                releasedAt: new Date(2022, 6, 1)
+                releasedAt: new Date(2022, 5, 1)
             },
             2: {
                 id: 2,
                 name: 'Release 2',
                 projectId: 4,
-                releasedAt: new Date(2022, 5, 1)
+                releasedAt: new Date(2022, 6, 1)
             },
             3: {
                 id: 3,
@@ -41,7 +41,10 @@ describe('Release selectors', () => {
     const endDate =  new Date(2022, 7, 0)
 
     test('selectReleaseInRangeAndProjectId - returns correct array', () => {
-        expect(selectors.selectReleaseInRangeAndProjectId(mockState, [startDate, endDate], 4)).toHaveLength(2)
+        const results = selectors.selectReleaseInRangeAndProjectId(mockState, [startDate, endDate], 4)
+
+        expect(results).toHaveLength(2)
+        expect(results.at(0)).toEqual(mockState.releases[2])
     })
 
     test('should selectReleaseClosestTo', () => {

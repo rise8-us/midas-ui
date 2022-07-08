@@ -3,7 +3,7 @@ export const selectReleaseInRangeAndProjectId = (state, dateRange, projectId) =>
         new Date(release.releasedAt) < dateRange[1] &&
         new Date(release.releasedAt) > dateRange[0] &&
         release.projectId === projectId
-    )
+    ).sort((a, b) => new Date(b.releasedAt) - new Date(a.releasedAt))
 }
 
 export const selectReleaseClosestTo = (state, date, projectId) => {
