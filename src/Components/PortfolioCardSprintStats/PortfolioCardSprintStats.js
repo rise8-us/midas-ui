@@ -1,4 +1,5 @@
 import { Card, Grid, Stack, Typography } from '@mui/material'
+import PortfolioStatsPieChart from 'Components/PortfolioStatsPieChart/PortfolioStatsPieChart'
 import { TextSkeleton } from 'Components/Skeletons'
 import PropTypes from 'prop-types'
 
@@ -9,7 +10,8 @@ const statsStackProps = {
     spacing: 1,
 }
 
-export default function PortfolioCardSprintStats({ loading, prodDeployments, prodIssues, stagingIssues }) {
+export default function PortfolioCardSprintStats(props) {
+    const { portfolioId, dateRange, loading, prodDeployments, prodIssues, stagingIssues } = props
 
     const metrics = [
         { title: 'Total Production Deployments:', value: prodDeployments },
@@ -19,7 +21,7 @@ export default function PortfolioCardSprintStats({ loading, prodDeployments, pro
 
     return (
         <Card style = {{ padding: '0px 8px' }}>
-            <Grid container margin = {1}>
+            <Grid container margin = {1} justifyContent = 'space-between'>
                 <Grid item xs = {12} md = {6}>
                     <Stack spacing = {1} maxWidth = '240px'>
                         <Typography variant = 'h6'>Portfolio Summary</Typography>
@@ -37,9 +39,9 @@ export default function PortfolioCardSprintStats({ loading, prodDeployments, pro
                         )}
                     </Stack>
                 </Grid>
-                <Grid item xs = {12} md = {6} display = 'none'>
+                <Grid item xs = {12} md = {6}>
                     <Stack>
-                        <Typography margin = {1} variant = 'h6'>Pie Chart here</Typography>
+                        <PortfolioStatsPieChart portfolioId = {portfolioId} dateRange = {dateRange}/>
                     </Stack>
                 </Grid>
             </Grid>
@@ -48,6 +50,8 @@ export default function PortfolioCardSprintStats({ loading, prodDeployments, pro
 }
 
 PortfolioCardSprintStats.propTypes = {
+    portfolioId: PropTypes.number.isRequired,
+    dateRange: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number])).isRequired,
     loading: PropTypes.bool,
     prodDeployments: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     prodIssues: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
