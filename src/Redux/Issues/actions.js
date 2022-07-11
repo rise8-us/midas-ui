@@ -18,3 +18,12 @@ export const requestSyncIssuesByProjectId = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestSearchIssuesByPortfolioIdAndDateRange = createAsyncThunk(
+    Constants.SEARCH_ISSUES,
+    async([portfolioId, startDate, endDate], { rejectWithValue }) => {
+        const request = { endpoint: `/api/issues/portfolio/${portfolioId}/${startDate}/${endDate}`,
+            method: 'GET', body: {} }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)

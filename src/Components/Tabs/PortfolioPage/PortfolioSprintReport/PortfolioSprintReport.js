@@ -72,6 +72,8 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
                 </IconButton>
             </Stack>
             <PortfolioCardSprintStats
+                portfolioId = {portfolioId}
+                dateRange = {debouncedDateRange}
                 prodDeployments = {portfolioMetricsSummary.totalReleases}
                 prodIssues = {portfolioMetricsSummary.totalIssuesDelivered}
                 stagingIssues = {portfolioMetricsSummary.totalIssuesClosed}
