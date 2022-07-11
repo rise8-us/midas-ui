@@ -12,6 +12,7 @@ describe('<DeliverablesView>', () => {
     const selectDeliverableByParentIdMock = useModuleMock('Redux/Deliverables/selectors', 'selectDeliverableByParentId')
     const requestCreateDeliverableMock = useModuleMock('Redux/Deliverables/actions', 'requestCreateDeliverable')
     const enqueueMessageMock = useModuleMock('Redux/Snackbar/reducer', 'enqueueMessage')
+    const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
 
     const defaultProps = {
         selectedDeliverableId: 2,
@@ -30,6 +31,7 @@ describe('<DeliverablesView>', () => {
             }
         })
         selectDeliverableByParentIdMock.mockReturnValue([])
+        selectEpicsByIdsMock.mockReturnValue([])
     })
 
     test('should render with no edit', () => {
@@ -101,6 +103,33 @@ describe('<DeliverablesView>', () => {
             message: 'epic title is already tied to deliverable: deliverable parent title',
             severity: 'warning'
         })
+    })
+
+    test('should show correct progrss percentage', () => {
+        selectDeliverableByParentIdMock.mockReturnValue([{
+            title: 'epic title',
+            productId: 1,
+            id: 2,
+            completion: {
+                value: 2,
+                target: 10,
+                gitlabEpic: {
+                    id: 20
+                }
+            }
+        }])
+
+        selectEpicsByIdsMock.mockReturnValue([
+            {
+                title: 'subtargetEpicTitle',
+                totalWeight: 10,
+                completedWeight: 3
+            }
+        ])
+
+        renderWithRouter(<DeliverablesView hasEdit {...defaultProps}/>)
+
+        expect(screen.getByText('25%')).toBeInTheDocument()
     })
 
 })

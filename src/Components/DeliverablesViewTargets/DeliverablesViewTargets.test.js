@@ -1,7 +1,7 @@
 import { DeliverablesViewTargets } from 'Components/DeliverablesViewTargets'
 import { render, screen, useModuleMock } from 'Utilities/test-utils'
 
-describe('<DeliverablesViewEpics />', () => {
+describe('<DeliverablesViewTargets />', () => {
     const selectTargetByIdMock = useModuleMock('Redux/Targets/selectors', 'selectTargetById')
 
     const foundTarget = {

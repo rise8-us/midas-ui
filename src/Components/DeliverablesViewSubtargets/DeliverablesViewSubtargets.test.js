@@ -1,7 +1,7 @@
 import { DeliverablesViewSubtargets } from 'Components/DeliverablesViewSubtargets'
 import { render, screen, useModuleMock } from 'Utilities/test-utils'
 
-describe('<DeliverablesViewEpics />', () => {
+describe('<DeliverablesViewSubtargets />', () => {
 
     const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
 
@@ -32,5 +32,13 @@ describe('<DeliverablesViewEpics />', () => {
         expect(screen.getByText('30%')).toBeInTheDocument()
         expect(screen.getByTestId('DeliverablesViewSubtargets__progress-bar')).toBeInTheDocument()
 
+    })
+
+    test('should render with no epics linked', () => {
+        selectEpicsByIdsMock.mockReturnValue([])
+        render(<DeliverablesViewSubtargets subtarget = {subtarget}/>)
+
+        expect(screen.getByText('subtarget title')).toBeInTheDocument()
+        expect(screen.getByText('No Epics linked')).toBeInTheDocument()
     })
 })

@@ -21,21 +21,25 @@ export default function DeliverablesViewSubtargets({ subtarget }) {
                 disableInteractive
                 title = {roundedPercent(totalCompletedWeight, totalWeight)}
             >
-                <Box display = 'flex' alignItems = 'center'>
-                    <Box minWidth = {35}>
-                        <Typography variant = 'body2' color = 'text.secondary'>
-                            {Math.floor(normalise(totalCompletedWeight, totalWeight)) + '%'}
-                        </Typography>
+                {epics.length > 0 ?
+                    <Box display = 'flex' alignItems = 'center'>
+                        <Box minWidth = {35}>
+                            <Typography variant = 'body2' color = 'text.secondary'>
+                                {Math.floor(normalise(totalCompletedWeight, totalWeight)) + '%'}
+                            </Typography>
+                        </Box>
+                        <Box width = '100%' marginLeft = {1}>
+                            <LinearProgress
+                                variant = 'determinate'
+                                value = {progressValue}
+                                color = 'primary'
+                                data-testid = 'DeliverablesViewSubtargets__progress-bar'
+                            />
+                        </Box>
                     </Box>
-                    <Box width = '100%' marginLeft = {1}>
-                        <LinearProgress
-                            variant = 'determinate'
-                            value = {progressValue}
-                            color = 'primary'
-                            data-testid = 'DeliverablesViewSubtargets__progress-bar'
-                        />
-                    </Box>
-                </Box>
+                    :
+                    <Typography variant = 'body2' color = 'text.secondary'>No Epics linked</Typography>
+                }
             </Tooltip>
             {epics.map((epic, index) => (
                 <DeliverablesViewEpics epic = {epic} key = {index}/>
