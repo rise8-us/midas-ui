@@ -4,11 +4,41 @@ import { GanttTarget } from './index'
 
 describe('<GanttTarget />', () => {
 
-    const target = {
+    const target1 = {
         id: 1,
-        title: 'This is the target title',
-        dueDate: '2022-06-31',
-        startDate: '2022-06-01',
+        title: 'This is the target title1',
+        startDate: '2022-04-30',
+        dueDate: '2022-05-01',
+        description: 'These are the details',
+        childrenIds: [],
+        portfolioId: 1,
+    }
+
+    const target2 = {
+        id: 1,
+        title: 'This is the target title2',
+        startDate: '2021-02-31',
+        dueDate: '2022-04-30',
+        description: 'These are the details',
+        childrenIds: [],
+        portfolioId: 1,
+    }
+
+    const target3 = {
+        id: 1,
+        title: 'This is the target title3',
+        startDate: '2022-04-31',
+        dueDate: '2023-04-30',
+        description: 'These are the details',
+        childrenIds: [],
+        portfolioId: 1,
+    }
+
+    const target4 = {
+        id: 1,
+        title: 'This is the target title4',
+        startDate: '2021-05-31',
+        dueDate: '2023-04-30',
         description: 'These are the details',
         childrenIds: [],
         portfolioId: 1,
@@ -18,17 +48,19 @@ describe('<GanttTarget />', () => {
         title: 'Enter subtarget title',
         parentId: 1,
         portfolioId: 1,
-        dueDate: '2022-06-31',
-        startDate: '2022-06-01',
+        startDate: '2022-04-30',
+        dueDate: '2022-05-01',
     }
 
     const foundEpics = [
         { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 }
     ]
 
+    const dateRange = [new Date(2022, 0, 1), new Date(2022, 5, 1)]
+
     const defaultProps = {
-        target,
-        dateRange: [new Date(), new Date()]
+        target: target1,
+        dateRange
     }
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
@@ -43,10 +75,31 @@ describe('<GanttTarget />', () => {
         openPopupMock.mockReset()
     })
 
-    test('should render', () => {
+    test('should render within dateRange', () => {
         render(<GanttTarget {...defaultProps}/>)
 
-        expect(screen.getByText('This is the target title')).toBeInTheDocument()
+        expect(screen.getByText('This is the target title1')).toBeInTheDocument()
+        expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
+    })
+
+    test('should render out of startRange', () => {
+        render(<GanttTarget target = {target2} dateRange = {dateRange} />)
+
+        expect(screen.getByText('This is the target title2')).toBeInTheDocument()
+        expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
+    })
+
+    test('shouild render out of endRange', () => {
+        render(<GanttTarget target = {target3} dateRange = {dateRange} />)
+
+        expect(screen.getByText('This is the target title3')).toBeInTheDocument()
+        expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
+    })
+
+    test('should render outside of start and end ranges', () => {
+        render(<GanttTarget target = {target4} dateRange = {dateRange} />)
+
+        expect(screen.getByText('This is the target title4')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
     })
 
@@ -79,7 +132,7 @@ describe('<GanttTarget />', () => {
             expect.objectContaining({
                 id: 1,
                 constant: 'target/delete',
-                title: 'This is the target title',
+                title: 'This is the target title1',
                 type: undefined
             })
         )

@@ -62,6 +62,7 @@ export default function GanttBody({
                                 dueDate = {entry.dueDate}
                                 enableFullHeight = {entry.enableFullHeight}
                                 style = {entry.style}
+                                type = {entry.type}
                             >
                                 {renderComponent(entry, dateRange)}
                             </GanttEntry>

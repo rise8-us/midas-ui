@@ -23,7 +23,6 @@ import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.background.paper}`,
-    borderRadius: '6px',
     color: theme.palette.gantt.target.dark.text,
     background: theme.palette.gantt.target.dark.background,
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
@@ -57,16 +56,50 @@ const StyledExpandButton = styled(IconButton)(({ theme }) => ({
     marginRight: theme.spacing(-1)
 }))
 
-const getTransitionStyles = (horizontalOpen, shouldNotGrowHorizantally, defaultMinWidth) => ({
-    minWidth: horizontalOpen && !shouldNotGrowHorizantally ? '50vw' : defaultMinWidth ?? '106px',
-    transition: shouldNotGrowHorizantally ? 'none' : 'min-width 800ms'
-})
+const getTransitionStyles = (horizontalOpen, shouldNotGrowHorizantally, defaultMinWidth, start) => {
+    let minWidth = '50vw'
+    if (start > 50) {
+        minWidth =  `calc(${100 - start}vw - ${(100 - start) / 100 * 28}px)`
+    }
+    return {
+        minWidth: horizontalOpen && !shouldNotGrowHorizantally ? minWidth : defaultMinWidth ?? '106px',
+        transition: shouldNotGrowHorizantally ? 'none' : 'min-width 800ms'
+    }
+}
 
 const getExpandProperties = (open) => ({
     transform: open ? 180 : 0,
     testid: open ? 'open' : 'closed',
     tooltip: !open ? 'Expand' : 'Collapse',
 })
+
+const calculateDurationOnChart = (start, due, dateRange) => {
+    let [startPos, duration] = calculatePosition([start, due], dateRange)
+    if (start < dateRange[0] && due < dateRange[1]) {
+        duration = startPos + duration
+    } else if (start > dateRange[0] && due > dateRange[1]) {
+        duration = 100 - startPos
+    } else if (start < dateRange[0] && due > dateRange[1]) {
+        duration = 100
+    }
+    return [startPos, duration]
+}
+
+const calculateBorderRadius = (start, due, dateRange) => {
+    let [borderLeft, borderRight] = ['6px', '6px']
+    if (start < dateRange[0]) {
+        borderLeft = 0
+    }
+    if (due > dateRange[1]) {
+        borderRight = 0
+    }
+    return {
+        borderTopLeftRadius: borderLeft,
+        borderBottomLeftRadius: borderLeft,
+        borderTopRightRadius: borderRight,
+        borderBottomRightRadius: borderRight
+    }
+}
 
 export default function GanttTarget({ target, dateRange }) {
     const dispatch = useDispatch()
@@ -75,10 +108,14 @@ export default function GanttTarget({ target, dateRange }) {
     const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
     const dateString = parseDate(startDate, dueDate)
 
+    const [openAll, setOpenAll] = useState(false)
+    const [hover, setHover] = useState(false)
+    const [horizontalOpen, setHorizontalOpen] = useState(false)
+    const [shouldNotGrowHorizantally, setShouldNotGrowHorizantally] = useState(false)
+
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)
-    const duration = calculatePosition([start, due], dateRange)[1]
-
+    const [startPos, duration] = calculateDurationOnChart(start, due, dateRange)
     const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 28}px)`, [JSON.stringify(duration)])
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
@@ -88,11 +125,6 @@ export default function GanttTarget({ target, dateRange }) {
     const epics = useSelector(state => selectEpicsByIds(state, epicIds))
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
-
-    const [openAll, setOpenAll] = useState(false)
-    const [hover, setHover] = useState(false)
-    const [horizontalOpen, setHorizontalOpen] = useState(false)
-    const [shouldNotGrowHorizantally, setShouldNotGrowHorizantally] = useState(false)
 
     const handleHover = {
         onMouseEnter: () => setHover(true),
@@ -151,10 +183,10 @@ export default function GanttTarget({ target, dateRange }) {
     }
 
     useEffect(() => {
-        if (ref.current.clientWidth > (window.innerWidth / 2)) {
+        if (duration > 50) {
             setShouldNotGrowHorizantally(true)
         }
-    }, [])
+    }, [JSON.stringify(dateRange)])
 
     useEffect(() => {
         setHorizontalOpen(isExpanded)
@@ -164,7 +196,10 @@ export default function GanttTarget({ target, dateRange }) {
         <StyledDiv
             data-testid = {'GanttTarget__container_' + id}
             ref = {ref}
-            style = {getTransitionStyles(horizontalOpen, shouldNotGrowHorizantally, minWidth)}
+            style = {{
+                ...getTransitionStyles(horizontalOpen, shouldNotGrowHorizantally, minWidth, startPos),
+                ...calculateBorderRadius(start, due, dateRange)
+            }}
         >
             {epics.length > 0 &&
                 <GanttProgressBar
