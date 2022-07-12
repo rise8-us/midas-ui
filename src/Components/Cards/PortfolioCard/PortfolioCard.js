@@ -15,6 +15,17 @@ const StyledCard = styled(Card)(({ theme }) => ({
     width: '450px',
     height: 'fit-content',
     backgroundColor: theme.palette.grey[1100],
+    '&:hover': {
+        boxShadow: '7px 7px 8px black',
+    },
+}))
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    height: '20px',
+    '&:hover': {
+        color: theme.palette.primary.main,
+    },
 }))
 
 const TypographyLink = styled(Typography)(({ theme }) => ({
@@ -59,11 +70,11 @@ function PortfolioCard({ id }) {
                     onClick: goToPortfolioPage,
                     'data-testid': 'PortfolioCard__header-title-' + portfolio.name,
                     sx: {
+                        width: 'fit-content',
                         '&:hover': {
                             color: 'primary.main',
-                            cursor: 'pointer'
-                        },
-                        width: 'fit-content'
+                            cursor: 'pointer',
+                        }
                     }
                 }}
                 action = {
@@ -78,28 +89,33 @@ function PortfolioCard({ id }) {
                         </IconButton>
                     )
                 }
-                style = {{ paddingBottom: 0 }}
             />
-            <Grid container margin = {1} marginBottom = {0} rowSpacing = {1} columnSpacing = {1}>
-                {['roadmap', 'sprint-report', 'requirements', 'metrics'].map((page, index) =>
-                    <Grid item key = {index}>
-                        <Button
-                            onClick = {() => history.push(`/portfolios/${portfolio.id}/${page}`)}
-                            variant = 'outlined'
-                        >
-                            {page.replace('-', ' ')}
-                        </Button>
-                    </Grid>
-                )}
-            </Grid>
-            <CardContent>
+            <CardContent style = {{ paddingTop: 0 }}>
+                <Box display = 'flex' justifyContent = 'space-between'>
+                    <Typography>Quick Links</Typography>
+                </Box>
+                <Divider />
+                <Grid container marginY = {1} rowSpacing = {1} columnSpacing = {1}>
+                    {['roadmap', 'sprint-report', 'requirements', 'metrics'].map((page, index) =>
+                        <Grid item key = {index}>
+                            <StyledButton
+                                onClick = {() => history.push(`/portfolios/${portfolio.id}/${page}`)}
+                                variant = 'outlined'
+                            >
+                                {page.replace('-', ' ')}
+                            </StyledButton>
+                        </Grid>
+                    )}
+                </Grid>
+            </CardContent>
+            <CardContent style = {{ paddingTop: 0 }}>
                 {portfolio.products?.length > 0 ? (
                     <>
                         <Box display = 'flex' justifyContent = 'space-between'>
-                            <Typography color = 'text.secondary'>Product Name</Typography>
-                            <Typography color = 'text.secondary'>Projects with CTF</Typography>
+                            <Typography>Product Name</Typography>
+                            <Typography>Projects with CTF</Typography>
                         </Box>
-                        <Divider />
+                        <Divider style = {{ marginBottom: '10px' }} />
                     </>
                 ) : (
                     <Typography color = 'text.secondary'>
@@ -125,15 +141,15 @@ function PortfolioCard({ id }) {
                     )
                 })}
             </CardContent>
-            <CardContent>
-                {portfolio.tags?.length > 0 && (
+            {portfolio.tags?.length > 0 &&
+                <CardContent>
                     <Box display = 'flex' flexWrap = 'wrap' marginTop = {1}>
                         {portfolio.tags.map((tag, index) => (
                             <Tag {...tag} key = {index} />
                         ))}
                     </Box>
-                )}
-            </CardContent>
+                </CardContent>
+            }
         </StyledCard>
     )
 }
