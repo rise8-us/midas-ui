@@ -2,6 +2,14 @@ import PropTypes from 'prop-types'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import './GanttEntry.css'
 
+const calculatePositionOnChart = (start, due, dateRange) => {
+    if (!start) return calculatePosition([start, due], dateRange)
+    let [startLeft, duration] = calculatePosition([start, due], dateRange)
+    if (start < dateRange[0] && due < dateRange[1] || start < dateRange[0] && due > dateRange[1]) {
+        startLeft = 0
+    }
+    return [startLeft, duration]
+}
 export default function GanttEntry({
     children,
     dateRange,
@@ -13,7 +21,7 @@ export default function GanttEntry({
 
     const start = parseStringToDate(startDate)
     const due = parseStringToDate(dueDate)
-    const [startLeft, duration] = calculatePosition([start, due], dateRange)
+    const [startLeft, duration] = calculatePositionOnChart(start, due, dateRange)
 
     const defaultStyle = {
         position: 'relative',
