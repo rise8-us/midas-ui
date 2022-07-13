@@ -16,6 +16,7 @@ export const selectWinsByPortfolioId = (state, portfolioId) => {
             ...win,
             type: 'win',
             row: 1,
-            style: { width: 0 }
+            style: { width: 0 },
+            hasNoWidth: true
         }))
 }

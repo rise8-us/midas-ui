@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
-import * as dateHelpers from './dateHelpers'
+import { ArialBoldKernMap, ArialBoldLetterMap, ArialKernMap, ArialLetterMap } from '../Utilities/fontSizeMaps'
+import { calculateSinglePosition, getDayAbbreviated, getMonthAbbreviated, parseStringToDate } from './dateHelpers'
 
 const QUARTER_IN_YEAR = 4
 
@@ -37,8 +38,8 @@ const viewByModes = {
             let endDate = new Date(startDate.getTime())
             endDate.setMonth(endDate.getMonth() + 2)
 
-            const startMonth = dateHelpers.getMonthAbbreviated(startDate.getMonth())
-            const endMonth = dateHelpers.getMonthAbbreviated(endDate.getMonth())
+            const startMonth = getMonthAbbreviated(startDate.getMonth())
+            const endMonth = getMonthAbbreviated(endDate.getMonth())
             const startYear = getYearAbbreviated(startDate)
             const endYear = getYearAbbreviated(endDate)
 
@@ -61,7 +62,7 @@ const viewByModes = {
     },
     month: {
         formatter: (date, index) => {
-            const month = dateHelpers.getMonthAbbreviated(date.getMonth())
+            const month = getMonthAbbreviated(date.getMonth())
             return month +
                 (index === 0 || month === 'Jan' ? getYearAbbreviated(date) : '')
         },
@@ -75,8 +76,8 @@ const viewByModes = {
 
             const startDay = startDate.getDate()
             const endDay = endDate.getDate()
-            const startMonth = dateHelpers.getMonthAbbreviated(startDate.getMonth())
-            const endMonth = dateHelpers.getMonthAbbreviated(endDate.getMonth())
+            const startMonth = getMonthAbbreviated(startDate.getMonth())
+            const endMonth = getMonthAbbreviated(endDate.getMonth())
             const endYear = index === 0 || (endMonth === 'Jan' && endDay >= 1 && endDay <= 7) ?
                 getYearAbbreviated(endDate) : ''
             const startYear = (startMonth === 'Dec' && endMonth === 'Jan') ?
@@ -91,8 +92,8 @@ const viewByModes = {
     day: {
         formatter: (date, index) => {
             const num = date.getDate()
-            const weekday = dateHelpers.getDayAbbreviated(date.getDay())
-            const month = dateHelpers.getMonthAbbreviated(date.getMonth())
+            const weekday = getDayAbbreviated(date.getDay())
+            const month = getMonthAbbreviated(date.getMonth())
             const year = index === 0
                 || (month === 'Jan' && num === 1) ? getYearAbbreviated(date) : ''
             return weekday + ', ' + num + ' ' + month + year
@@ -140,28 +141,106 @@ export const parseDate = (startDate, endDate) => {
     const parsedMonth = (month) => parseInt(month) - 1
 
     if (startDate === endDate) {
-        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
+        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
     } else if (yearStart === yearEnd && monthStart === monthEnd) {
-        return `${dayStart} - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
+        return `${dayStart} - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
     } else if (yearStart === yearEnd) {
-        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))}`
-                + ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearStart}`
+        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))}`
+                + ` - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthEnd))} ${yearStart}`
     } else {
-        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}` +
-    ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
+        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}` +
+    ` - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
     }
 }
 
 const isWholeNumber = (num) => num !== null && num !== undefined && num >= 0
 
-const handleRowfulEntries = (rowfulEntries, indexedEntries) => {
-    for (const rowfulEntry of rowfulEntries) {
-        if (indexedEntries[rowfulEntry.row]?.length > 0) {
-            indexedEntries[rowfulEntry.row].push(rowfulEntry)
-        } else {
-            indexedEntries[rowfulEntry.row] = [rowfulEntry]
+const calculateStringWidth = (string, fontSize, fontWeight = 'bold') => {
+    const letterMapSingle = new Map(fontWeight === 'bold' ? ArialBoldLetterMap : ArialLetterMap)
+    const letterMapKern = new Map(fontWeight === 'bold' ? ArialBoldKernMap : ArialKernMap)
+
+    let letterWidth = 0
+
+    const letterSplit = [...string.split('')]
+
+    for (const [key, letter] of letterSplit.entries()) {
+        letterWidth += letterMapSingle.get(letter) || letterMapSingle.get('_median')
+
+        if (key !== letterSplit.length - 1) {
+            letterWidth += letterMapKern.get(`${letter}${letterSplit[key + 1]}`) || 0
         }
     }
+
+    const fontRatio = 100 / fontSize
+
+    return letterWidth / fontRatio
+}
+
+//Date Length ~ 100
+
+const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange) => {
+    const tempIndexedEntries = {}
+    for (const rowfulEntry of rowfulEntries) {
+        if (tempIndexedEntries[rowfulEntry.row]?.length > 0) {
+            tempIndexedEntries[rowfulEntry.row].push(rowfulEntry)
+        } else {
+            tempIndexedEntries[rowfulEntry.row] = [rowfulEntry]
+        }
+    }
+
+    let currentRow = 0
+    //still have to deal w spaces between rows
+    Object.entries(tempIndexedEntries).sort((prev, next) => { return prev.row - next.row })
+        .map(([_rowIndex, itemsInRow]) => {
+            const indexedRowEntries = {}
+            const rowAvailability = {}
+            const startingRow = 0
+            rowAvailability[startingRow] = 0
+
+            const entriesSortedByDueDate = itemsInRow
+                .sort((prev, next) => {
+                    const prevDueDate = parseStringToDate(prev.dueDate).getTime()
+                    const nextDueDate = parseStringToDate(next.dueDate).getTime()
+                    return prevDueDate - nextDueDate
+                })
+
+            for (const entry of entriesSortedByDueDate) {
+                if (entry.hasNoWidth) {
+                    if (indexedRowEntries[0]?.length > 0) indexedRowEntries[0].push(entry)
+                    else indexedRowEntries[0] = [entry]
+                } else if (!entry.startDate) {
+                    const windowWidth = window.innerWidth
+                    const itemWidth =
+                        Math.max(100, Math.min(calculateStringWidth(entry.title, 16, 'bold'), windowWidth * .24 - 48))
+                    const startPos = calculateSinglePosition(parseStringToDate(entry.dueDate), dateRange)[0]
+                    const availableRow = findAvailableRow(
+                        startPos,
+                        startPos + itemWidth / window.innerWidth * 100, //end position in vw
+                        startingRow,
+                        rowAvailability,
+                        []
+                    )
+                    if (indexedRowEntries[availableRow]?.length > 0) indexedRowEntries[availableRow].push(entry)
+                    else indexedRowEntries[availableRow] = [entry]
+                } else {
+                    const availableRow = findAvailableRow(
+                        parseStringToDate(entry.startDate),
+                        parseStringToDate(entry.dueDate),
+                        startingRow,
+                        rowAvailability,
+                        []
+                    )
+                    if (indexedRowEntries[availableRow]?.length > 0) indexedRowEntries[availableRow].push(entry)
+                    else indexedRowEntries[availableRow] = [entry]
+                }
+            }
+
+            for (const key in indexedRowEntries) {
+                indexedEntries[currentRow] = indexedRowEntries[key]
+                currentRow++
+            }
+        })
+
     return indexedEntries
 }
 
@@ -212,15 +291,15 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
 
             const entriesSortedByDueDate = rowlessEntriesByType[type]
                 .sort((prev, next) => {
-                    const prevDueDate = dateHelpers.parseStringToDate(prev.dueDate).getTime()
-                    const nextDueDate = dateHelpers.parseStringToDate(next.dueDate).getTime()
+                    const prevDueDate = parseStringToDate(prev.dueDate).getTime()
+                    const nextDueDate = parseStringToDate(next.dueDate).getTime()
                     return prevDueDate - nextDueDate
                 })
 
             for (const entry of entriesSortedByDueDate) {
                 const rowWithAvailability = findAvailableRow(
-                    dateHelpers.parseStringToDate(entry.startDate),
-                    dateHelpers.parseStringToDate(entry.dueDate),
+                    parseStringToDate(entry.startDate),
+                    parseStringToDate(entry.dueDate),
                     startingRow,
                     rowAvailability,
                     existingFilledRows
@@ -239,7 +318,7 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
     return indexedEntries
 }
 
-export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeTypes = false) => {
+export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeTypes = false, dateRange) => {
     let indexedEntries = {}
 
     const sortedEntries = entries.reduce((acc, entry) => {
@@ -256,7 +335,6 @@ export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeType
             else acc[type] = [entry]
             return acc
         }, {})
-
-    indexedEntries = handleRowfulEntries(rowfulEntries, indexedEntries)
+    indexedEntries = handleRowfulEntries(rowfulEntries, indexedEntries, dateRange)
     return handleRowlessEntries(indexedEntries, rowlessEntriesByType, fillUndefinedRowsWithLikeTypes)
 }
