@@ -37,6 +37,7 @@ describe('Win selectors', () => {
             ...mockState.wins[6],
             type: 'win',
             row: 1,
+            hasNoWidth: true,
             style: {
                 width: 0,
             }

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import { ArialBoldKernMap, ArialBoldLetterMap, ArialKernMap, ArialLetterMap } from '../Utilities/fontSizeMaps'
 import { calculateSinglePosition, getDayAbbreviated, getMonthAbbreviated, parseStringToDate } from './dateHelpers'
 
 const QUARTER_IN_YEAR = 4
@@ -155,31 +154,30 @@ export const parseDate = (startDate, endDate) => {
 
 const isWholeNumber = (num) => num !== null && num !== undefined && num >= 0
 
-const calculateStringWidth = (string, fontSize, fontWeight = 'bold') => {
-    const letterMapSingle = new Map(fontWeight === 'bold' ? ArialBoldLetterMap : ArialLetterMap)
-    const letterMapKern = new Map(fontWeight === 'bold' ? ArialBoldKernMap : ArialKernMap)
-
-    let letterWidth = 0
-
-    const letterSplit = [...string.split('')]
-
-    for (const [key, letter] of letterSplit.entries()) {
-        letterWidth += letterMapSingle.get(letter) || letterMapSingle.get('_median')
-
-        if (key !== letterSplit.length - 1) {
-            letterWidth += letterMapKern.get(`${letter}${letterSplit[key + 1]}`) || 0
-        }
-    }
-
+const calculateEntryWidth = (string, fontSize) => {
+    const letterWidthAtFontSize100 = 55 * string?.length
     const fontRatio = 100 / fontSize
-
-    return letterWidth / fontRatio
+    const maxEntrySize = window.innerWidth * .24 - 48
+    let letterWidth = letterWidthAtFontSize100 / fontRatio
+    return Math.max(100, Math.min(letterWidth, maxEntrySize))
 }
 
-//Date Length ~ 100
+const insertEntry = (entriesObject, row, entry) => {
+    if (entriesObject[row]?.length > 0) entriesObject[row].push(entry)
+    else entriesObject[row] = [entry]
+}
 
-const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange) => {
+const sortEntriesByDueDate = (entries) => {
+    return entries.sort((prev, next) => {
+        const prevDueDate = parseStringToDate(prev.dueDate)?.getTime()
+        const nextDueDate = parseStringToDate(next.dueDate)?.getTime()
+        return prevDueDate - nextDueDate
+    })
+}
+
+const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange = []) => {
     const tempIndexedEntries = {}
+
     for (const rowfulEntry of rowfulEntries) {
         if (tempIndexedEntries[rowfulEntry.row]?.length > 0) {
             tempIndexedEntries[rowfulEntry.row].push(rowfulEntry)
@@ -188,31 +186,24 @@ const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange) => {
         }
     }
 
+    if (!dateRange || dateRange.length == 0) {
+        return tempIndexedEntries
+    }
+
     let currentRow = 0
-    //still have to deal w spaces between rows
     Object.entries(tempIndexedEntries).sort((prev, next) => { return prev.row - next.row })
-        .map(([_rowIndex, itemsInRow]) => {
+        .map(rowEntry => {
             const indexedRowEntries = {}
             const rowAvailability = {}
             const startingRow = 0
+            const entriesSortedByDueDate = sortEntriesByDueDate(rowEntry[1])
             rowAvailability[startingRow] = 0
-
-            const entriesSortedByDueDate = itemsInRow
-                .sort((prev, next) => {
-                    const prevDueDate = parseStringToDate(prev.dueDate).getTime()
-                    const nextDueDate = parseStringToDate(next.dueDate).getTime()
-                    return prevDueDate - nextDueDate
-                })
 
             for (const entry of entriesSortedByDueDate) {
                 if (entry.hasNoWidth) {
-                    if (indexedRowEntries[0]?.length > 0) indexedRowEntries[0].push(entry)
-                    else indexedRowEntries[0] = [entry]
+                    insertEntry(indexedRowEntries, 0, entry)
                 } else if (!entry.startDate) {
-                    const windowWidth = window.innerWidth
-                    const itemWidth =
-                        Math.max(100,
-                            Math.min(calculateStringWidth(entry.title, 16, 'bold') + 16, windowWidth * .24 - 48))
+                    const itemWidth = calculateEntryWidth(entry.title, 16)
                     const startPos = calculateSinglePosition(parseStringToDate(entry.dueDate), dateRange)[0]
                     const availableRow = findAvailableRow(
                         startPos,
@@ -221,8 +212,7 @@ const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange) => {
                         rowAvailability,
                         []
                     )
-                    if (indexedRowEntries[availableRow]?.length > 0) indexedRowEntries[availableRow].push(entry)
-                    else indexedRowEntries[availableRow] = [entry]
+                    insertEntry(indexedRowEntries, availableRow, entry)
                 } else {
                     const availableRow = findAvailableRow(
                         parseStringToDate(entry.startDate),
@@ -231,8 +221,7 @@ const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange) => {
                         rowAvailability,
                         []
                     )
-                    if (indexedRowEntries[availableRow]?.length > 0) indexedRowEntries[availableRow].push(entry)
-                    else indexedRowEntries[availableRow] = [entry]
+                    insertEntry(indexedRowEntries, availableRow, entry)
                 }
             }
 
@@ -285,17 +274,11 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
         if (fillUndefinedRowsWithLikeTypes) {
             const rowAvailability = {}
             const startingRow = getFirstAvailableRowId(indexedEntries)
-            rowAvailability[startingRow] = 0
+            const entriesSortedByDueDate = sortEntriesByDueDate(rowlessEntriesByType[type])
             const existingFilledRows = Object.keys(indexedEntries)
                 .filter(key => parseInt(key) > startingRow)
                 .map(numberAsString => parseInt(numberAsString))
-
-            const entriesSortedByDueDate = rowlessEntriesByType[type]
-                .sort((prev, next) => {
-                    const prevDueDate = parseStringToDate(prev.dueDate).getTime()
-                    const nextDueDate = parseStringToDate(next.dueDate).getTime()
-                    return prevDueDate - nextDueDate
-                })
+            rowAvailability[startingRow] = 0
 
             for (const entry of entriesSortedByDueDate) {
                 const rowWithAvailability = findAvailableRow(
@@ -305,9 +288,7 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
                     rowAvailability,
                     existingFilledRows
                 )
-
-                if (indexedEntries[rowWithAvailability]?.length > 0) indexedEntries[rowWithAvailability].push(entry)
-                else indexedEntries[rowWithAvailability] = [entry]
+                insertEntry(indexedEntries, rowWithAvailability, entry)
             }
         } else {
             for (const entry of rowlessEntriesByType[type]) {
@@ -319,7 +300,7 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
     return indexedEntries
 }
 
-export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeTypes = false, dateRange) => {
+export const createIndexedRowsFromData = (entries, dateRange = [], fillUndefinedRowsWithLikeTypes = false) => {
     let indexedEntries = {}
 
     const sortedEntries = entries.reduce((acc, entry) => {

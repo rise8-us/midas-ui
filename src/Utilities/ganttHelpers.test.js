@@ -98,7 +98,7 @@ describe('ganttHelpers', () => {
                 4: [{ a: 2 }]
             }
 
-            expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
+            expect(ganttHelpers.createIndexedRowsFromData(data, [])).toEqual(expected)
         })
 
         test('without rows', () => {
@@ -113,7 +113,7 @@ describe('ganttHelpers', () => {
                 5: [{ a: 6 }],
             }
 
-            expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
+            expect(ganttHelpers.createIndexedRowsFromData(data, [])).toEqual(expected)
         })
 
         test('rows that are defined only have elements that specify that row', () => {
@@ -136,7 +136,7 @@ describe('ganttHelpers', () => {
                 5: [{ a: 2 }]
             }
 
-            expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
+            expect(ganttHelpers.createIndexedRowsFromData(data, [])).toEqual(expected)
         })
     })
 })

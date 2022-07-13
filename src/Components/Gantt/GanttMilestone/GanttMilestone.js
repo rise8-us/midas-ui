@@ -13,10 +13,10 @@ import { GanttTooltip } from '../GanttTooltip'
 
 const MilestoneFlagPole = styled('div')(({ theme }) => ({
     position: 'absolute',
-    width: '3px',
-    height: `calc(100% + ${theme.spacing(1)})`,
+    width: '2px',
+    height: '200vh',
     background: theme.palette.gantt.milestone.dark.background,
-    top: `-${theme.spacing(1)}`,
+    top: '-100vh',
     '&:hover': {
         boxShadow: '0px 0px 8px 0px black'
     }
