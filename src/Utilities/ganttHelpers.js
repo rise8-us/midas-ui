@@ -211,11 +211,12 @@ const handleRowfulEntries = (rowfulEntries, indexedEntries, dateRange) => {
                 } else if (!entry.startDate) {
                     const windowWidth = window.innerWidth
                     const itemWidth =
-                        Math.max(100, Math.min(calculateStringWidth(entry.title, 16, 'bold'), windowWidth * .24 - 48))
+                        Math.max(100,
+                            Math.min(calculateStringWidth(entry.title, 16, 'bold') + 16, windowWidth * .24 - 48))
                     const startPos = calculateSinglePosition(parseStringToDate(entry.dueDate), dateRange)[0]
                     const availableRow = findAvailableRow(
                         startPos,
-                        startPos + itemWidth / window.innerWidth * 100, //end position in vw
+                        startPos + itemWidth / window.innerWidth * 100,
                         startingRow,
                         rowAvailability,
                         []
