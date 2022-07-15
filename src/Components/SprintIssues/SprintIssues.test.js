@@ -7,7 +7,8 @@ describe('<SprintIssues />', () => {
     const issues = [
         {
             title: 'issueTitle',
-            labels: ['type::Bug']
+            labels: ['type::Bug'],
+            webUrl: 'testUrl'
         }
     ]
 
@@ -22,6 +23,12 @@ describe('<SprintIssues />', () => {
 
         expect(screen.getByTestId('Tag__chip')).toBeInTheDocument()
         expect(screen.getByText('issueTitle')).toBeInTheDocument()
+    })
+
+    test('should have url attached', () => {
+        render(<SprintIssues issues = {issues}/>)
+
+        expect(screen.getByTestId('HrefText__link')).toHaveAttribute('href', 'testUrl')
     })
 
 })
