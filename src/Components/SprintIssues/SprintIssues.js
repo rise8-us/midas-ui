@@ -1,9 +1,17 @@
 
 import { Stack, Typography } from '@mui/material'
+import { HrefText } from 'Components/HrefText'
 import { Tag } from 'Components/Tag'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { selectAllTags } from 'Redux/Tags/selectors'
+import { styled } from 'Styles/materialThemes'
+
+
+const StyledHrefText = styled(HrefText)(({ theme }) => ({
+    color: theme.palette.gantt.association.dark.text,
+    display: 'inline'
+}))
 
 export default function SprintIssues({ issues, noOptionsText }) {
 
@@ -26,9 +34,7 @@ export default function SprintIssues({ issues, noOptionsText }) {
                             color = {tags.find(tag => tag.label === label)?.color ?? 'black'}
                         />
                     )}
-                    <Typography display = 'inline' variant = 'body2'>
-                        {issue.title}
-                    </Typography>
+                    <StyledHrefText text = {issue.title} href = {issue.webUrl}/>
                 </Stack>
             ))}
             {issues?.length === 0 &&
