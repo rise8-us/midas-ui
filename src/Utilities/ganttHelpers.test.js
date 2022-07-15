@@ -138,5 +138,24 @@ describe('ganttHelpers', () => {
 
             expect(ganttHelpers.createIndexedRowsFromData(data)).toEqual(expected)
         })
+
+        test('should stagger rows', () => {
+            global.innerWidth = 1000
+            const dateRange = [new Date(2000, 0, 1), new Date(2000, 5, 1)]
+            const data = [
+                { a: 1, row: 0, startDate: '2000-01-02', endDate: '2000-01-03', minWidthInPx: 100 },
+                { a: 2, row: 0, startDate: '2000-01-04', endDate: '2000-01-05', minWidthInPx: 100 },
+                { a: 3, row: 0, startDate: '2000-04-04', endDate: '2000-04-06', minWidthInPx: 100 },
+                { a: 4, row: 0, startDate: '2000-01-10', endDate: '2000-01-12', minWidthInPx: 100 }
+            ]
+            const expected = {
+                0: [{ a: 1, row: 0, startDate: '2000-01-02', endDate: '2000-01-03', minWidthInPx: 100 },
+                    { a: 3, row: 0, startDate: '2000-04-04', endDate: '2000-04-06', minWidthInPx: 100 }],
+                1: [{ a: 2, row: 0, startDate: '2000-01-04', endDate: '2000-01-05', minWidthInPx: 100 }],
+                2: [{ a: 4, row: 0, startDate: '2000-01-10', endDate: '2000-01-12', minWidthInPx: 100 }]
+            }
+
+            expect(ganttHelpers.createIndexedRowsFromData(data, dateRange)).toEqual(expected)
+        })
     })
 })

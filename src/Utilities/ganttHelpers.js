@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import * as dateHelpers from './dateHelpers'
+import { calculatePosition, getDayAbbreviated, getMonthAbbreviated, parseStringToDate } from './dateHelpers'
 
 const QUARTER_IN_YEAR = 4
 
@@ -37,8 +37,8 @@ const viewByModes = {
             let endDate = new Date(startDate.getTime())
             endDate.setMonth(endDate.getMonth() + 2)
 
-            const startMonth = dateHelpers.getMonthAbbreviated(startDate.getMonth())
-            const endMonth = dateHelpers.getMonthAbbreviated(endDate.getMonth())
+            const startMonth = getMonthAbbreviated(startDate.getMonth())
+            const endMonth = getMonthAbbreviated(endDate.getMonth())
             const startYear = getYearAbbreviated(startDate)
             const endYear = getYearAbbreviated(endDate)
 
@@ -61,7 +61,7 @@ const viewByModes = {
     },
     month: {
         formatter: (date, index) => {
-            const month = dateHelpers.getMonthAbbreviated(date.getMonth())
+            const month = getMonthAbbreviated(date.getMonth())
             return month +
                 (index === 0 || month === 'Jan' ? getYearAbbreviated(date) : '')
         },
@@ -75,8 +75,8 @@ const viewByModes = {
 
             const startDay = startDate.getDate()
             const endDay = endDate.getDate()
-            const startMonth = dateHelpers.getMonthAbbreviated(startDate.getMonth())
-            const endMonth = dateHelpers.getMonthAbbreviated(endDate.getMonth())
+            const startMonth = getMonthAbbreviated(startDate.getMonth())
+            const endMonth = getMonthAbbreviated(endDate.getMonth())
             const endYear = index === 0 || (endMonth === 'Jan' && endDay >= 1 && endDay <= 7) ?
                 getYearAbbreviated(endDate) : ''
             const startYear = (startMonth === 'Dec' && endMonth === 'Jan') ?
@@ -91,8 +91,8 @@ const viewByModes = {
     day: {
         formatter: (date, index) => {
             const num = date.getDate()
-            const weekday = dateHelpers.getDayAbbreviated(date.getDay())
-            const month = dateHelpers.getMonthAbbreviated(date.getMonth())
+            const weekday = getDayAbbreviated(date.getDay())
+            const month = getMonthAbbreviated(date.getMonth())
             const year = index === 0
                 || (month === 'Jan' && num === 1) ? getYearAbbreviated(date) : ''
             return weekday + ', ' + num + ' ' + month + year
@@ -140,28 +140,86 @@ export const parseDate = (startDate, endDate) => {
     const parsedMonth = (month) => parseInt(month) - 1
 
     if (startDate === endDate) {
-        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
+        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
     } else if (yearStart === yearEnd && monthStart === monthEnd) {
-        return `${dayStart} - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
+        return `${dayStart} - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}`
     } else if (yearStart === yearEnd) {
-        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))}`
-                + ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearStart}`
+        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))}`
+                + ` - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthEnd))} ${yearStart}`
     } else {
-        return `${dayStart} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}` +
-    ` - ${dayEnd} ${dateHelpers.getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
+        return `${dayStart} ${getMonthAbbreviated(parsedMonth(monthStart))} ${yearStart}` +
+    ` - ${dayEnd} ${getMonthAbbreviated(parsedMonth(monthEnd))} ${yearEnd}`
     }
 }
 
 const isWholeNumber = (num) => num !== null && num !== undefined && num >= 0
 
-const handleRowfulEntries = (rowfulEntries, indexedEntries) => {
+const insertEntry = (entriesObject, row, entry) => {
+    if (entriesObject[row]?.length > 0) entriesObject[row].push(entry)
+    else entriesObject[row] = [entry]
+}
+
+const calculateEntryWidthInVw = (string, fontSize, minWidthInPx, maxWidthInVw) => {
+    const letterWidthAtFontSize100 = 55 * (string?.length ?? 0)
+    const fontRatio = 100 / fontSize
+    let letterWidth = letterWidthAtFontSize100 / fontRatio
+    return Math.min(Math.max(minWidthInPx ?? 0, letterWidth) / window.innerWidth * 100, maxWidthInVw ?? 100)
+}
+
+const sortEntriesByDueDate = (entries) => {
+    return entries.sort((prev, next) => {
+        const prevDueDate = parseStringToDate(prev.dueDate)?.getTime()
+        const nextDueDate = parseStringToDate(next.dueDate)?.getTime()
+        return prevDueDate - nextDueDate
+    })
+}
+
+const handleRowfulEntries = (rowfulEntries, dateRange, indexedEntries) => {
+
+    const indexedEntriesNoStagger = {}
+
     for (const rowfulEntry of rowfulEntries) {
-        if (indexedEntries[rowfulEntry.row]?.length > 0) {
-            indexedEntries[rowfulEntry.row].push(rowfulEntry)
+        if (indexedEntriesNoStagger[rowfulEntry.row]?.length > 0) {
+            indexedEntriesNoStagger[rowfulEntry.row].push(rowfulEntry)
         } else {
-            indexedEntries[rowfulEntry.row] = [rowfulEntry]
+            indexedEntriesNoStagger[rowfulEntry.row] = [rowfulEntry]
         }
     }
+
+    if (!dateRange || dateRange.length == 0) {
+        return indexedEntriesNoStagger
+    }
+
+    let currentRow = 0
+    Object.entries(indexedEntriesNoStagger).sort((prev, next) => prev.row - next.row).map(rowEntry => {
+        const indexedRowEntries = {}
+        const rowAvailability = { 0: 0 }
+        const entriesSortedByDueDate = sortEntriesByDueDate(rowEntry[1])
+
+        for (const entry of entriesSortedByDueDate) {
+            const { title, startDate, endDate, minWidthInPx, maxWidthInVw } = entry
+            if (!entry.startDate) {
+                insertEntry(indexedRowEntries, 0, entry)
+            } else {
+                const itemWidth = calculateEntryWidthInVw(title, 16, minWidthInPx, maxWidthInVw)
+                const [startPos, duration] =
+                    calculatePosition([parseStringToDate(startDate), parseStringToDate(endDate)], dateRange)
+                const availableRow = findAvailableRow(
+                    startPos,
+                    Math.max(startPos + itemWidth, startPos + duration),
+                    0,
+                    rowAvailability,
+                    []
+                )
+                insertEntry(indexedRowEntries, availableRow, entry)
+            }
+        }
+        for (const key in indexedRowEntries) {
+            indexedEntries[currentRow] = indexedRowEntries[key]
+            currentRow++
+        }
+    })
+
     return indexedEntries
 }
 
@@ -212,15 +270,15 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
 
             const entriesSortedByDueDate = rowlessEntriesByType[type]
                 .sort((prev, next) => {
-                    const prevDueDate = dateHelpers.parseStringToDate(prev.dueDate).getTime()
-                    const nextDueDate = dateHelpers.parseStringToDate(next.dueDate).getTime()
+                    const prevDueDate = parseStringToDate(prev.dueDate).getTime()
+                    const nextDueDate = parseStringToDate(next.dueDate).getTime()
                     return prevDueDate - nextDueDate
                 })
 
             for (const entry of entriesSortedByDueDate) {
                 const rowWithAvailability = findAvailableRow(
-                    dateHelpers.parseStringToDate(entry.startDate),
-                    dateHelpers.parseStringToDate(entry.dueDate),
+                    parseStringToDate(entry.startDate),
+                    parseStringToDate(entry.dueDate),
                     startingRow,
                     rowAvailability,
                     existingFilledRows
@@ -239,7 +297,7 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
     return indexedEntries
 }
 
-export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeTypes = false) => {
+export const createIndexedRowsFromData = (entries, dateRange, fillUndefinedRowsWithLikeTypes = false) => {
     let indexedEntries = {}
 
     const sortedEntries = entries.reduce((acc, entry) => {
@@ -257,6 +315,6 @@ export const createIndexedRowsFromData = (entries, fillUndefinedRowsWithLikeType
             return acc
         }, {})
 
-    indexedEntries = handleRowfulEntries(rowfulEntries, indexedEntries)
+    indexedEntries = handleRowfulEntries(rowfulEntries, dateRange, indexedEntries)
     return handleRowlessEntries(indexedEntries, rowlessEntriesByType, fillUndefinedRowsWithLikeTypes)
 }

@@ -41,7 +41,9 @@ describe('Event selectors', () => {
             ...mockState.events[6],
             type: 'event',
             row: 2,
-            style: { width: 0 }
+            style: { width: 0 },
+            minWidthInPx: 144,
+            maxWidthInVw: 24
         }])
     })
 })
