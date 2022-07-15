@@ -24,7 +24,7 @@ export default function GanttBody({
         }
     }
 
-    const indexedEntries = createIndexedRowsFromData(entries, fillUndefinedRowsWithLikeTypes)
+    const indexedEntries = createIndexedRowsFromData(entries, dateRange, fillUndefinedRowsWithLikeTypes)
 
     const containerStyles = {
         ...rowStyles(chartBackgroundColor, borderColor),

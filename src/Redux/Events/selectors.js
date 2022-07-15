@@ -16,5 +16,5 @@ export const selectEventsByPortfolioId = (state, portfolioId) => {
 
     return Object.values(events)
         .filter(event => event.portfolioId === portfolioId)
-        .map(event => ({ ...event, type: 'event', row: 2, style: { width: 0 } }))
+        .map(event => ({ ...event, type: 'event', row: 2, style: { width: 0 }, minWidthInPx: 144, maxWidthInVw: 24 }))
 }
