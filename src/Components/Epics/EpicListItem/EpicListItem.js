@@ -14,6 +14,8 @@ export default function EpicListItem({ epic, epicIds, handleOnSelect, handleOnDe
         }
     }
 
+    const checkboxState = epicAlreadyExists ? 'checked' : 'unchecked'
+
     return (
         <Stack
             direction = 'row'
@@ -24,7 +26,7 @@ export default function EpicListItem({ epic, epicIds, handleOnSelect, handleOnDe
                 <Checkbox
                     checked = {epicAlreadyExists}
                     onChange = {onClick}
-                    data-testid = {'EpicListItem__checkbox-' + (epicAlreadyExists ? 'checked' : 'unchecked')}
+                    data-testid = {'EpicListItem__checkbox-' + checkboxState}
                 />
                 :
                 <CircularProgress
