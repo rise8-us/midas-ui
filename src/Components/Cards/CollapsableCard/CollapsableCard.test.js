@@ -26,4 +26,15 @@ describe('<CollapsableCard />', () => {
         jest.useRealTimers()
     })
 
+    test('should react to clicks', async() => {
+        jest.useFakeTimers()
+
+        render(<><div>outside</div><CollapsableCard mouseMovement = {false}><div>Hello World</div></CollapsableCard></>)
+
+        expect(screen.getByTestId('Collapsable__card')).toBeInTheDocument()
+
+        userEvent.click(screen.getByTestId('Collapsable__card'))
+        expect(screen.getByText('Hello World')).toBeInTheDocument()
+    })
+
 })

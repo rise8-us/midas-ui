@@ -99,27 +99,28 @@ export default function GanttSubTarget({ id, defaultOpen }) {
             { id, capabilities, target }))
     }
 
-    const onClickAssociateEpics = () => {
-
-        const onSelectEpic = (newEpicIds) => {
-            dispatch(requestUpdateTarget({
-                ...target,
-                epicIds: [...newEpicIds]
-            }))
-        }
-
-        dispatch(openPopup('AssociateEpics', 'AssociateEpicsPopup', {
-            onSelect: onSelectEpic,
-            subtitle: title,
-            title: 'Add Epics to subtarget',
-            targetId: id
-        }))
-    }
-
     const handleEpicDelete = (epicIdToRemove) => {
         dispatch(requestUpdateTarget({
             ...target,
             epicIds: epicIds.filter(epicId => epicId !== epicIdToRemove)
+        }))
+    }
+
+    const onClickAssociateEpics = () => {
+
+        const onSelectEpic = (newEpicIds, setEpicLoading) => {
+            setEpicLoading(true)
+            dispatch(requestUpdateTarget({
+                ...target,
+                epicIds: [...newEpicIds]
+            })).then(() => setEpicLoading(false))
+        }
+
+        dispatch(openPopup('AssociateEpics', 'AssociateEpicsPopup', {
+            subtitle: title,
+            title: 'Associate Epics to Subtarget',
+            targetId: id,
+            onSelectEpic: onSelectEpic,
         }))
     }
 

@@ -49,3 +49,7 @@ export const selectAvailableProducts = (state) => {
 export const selectProductOwnerByProductId = (state, productId) => {
     return state.products[productId]?.personnel?.ownerId
 }
+
+export const selectProductsByPortfolioId = (state, portfolioId) => {
+    return Object.values(state.products).filter(product => product.portfolioId === portfolioId)
+}

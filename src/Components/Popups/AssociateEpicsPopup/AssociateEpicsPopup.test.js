@@ -1,45 +1,34 @@
 import {
-    fireEvent, mockSearchEpicsComponent,
-    render,
-    screen,
-    useDispatchMock,
-    useModuleMock,
-    userEvent
+    fireEvent, render,
+    screen, useDispatchMock, useModuleMock
 } from 'Utilities/test-utils'
 import { AssociatedEpicsPopup } from './index'
 
-jest.mock('Components/Search/SearchEpics/SearchEpics', () => function testing(props) {
-    return mockSearchEpicsComponent(props)
+jest.mock('Components/Search/SearchEpicsDropdown/SearchEpicsDropdown', () => function testing() {
+    return <div>SearchEpicsDropdown</div>
 })
 
 describe('<AssociatedEpicsPopup />', () => {
 
     const closePopupMock = useModuleMock('Redux/Popups/actions', 'closePopup')
 
-    test('should render properly', () => {
-        render(<AssociatedEpicsPopup onSelect = {jest.fn} targetId = {0}/>)
+    beforeEach(() => {
+        useDispatchMock()
+    })
 
-        expect(screen.getByText('Add Epics')).toBeInTheDocument()
+    test('should render properly', async() => {
+        render(<AssociatedEpicsPopup onSelectEpic = {jest.fn()} targetId = {0}/>)
+
+        expect(await screen.findByText('Associate Epics')).toBeInTheDocument()
         expect(screen.getByText('close')).toBeInTheDocument()
         expect(screen.queryByText('* are Required')).not.toBeInTheDocument()
     })
 
-    test('should close popup', () => {
-        useDispatchMock().mockReturnValue({})
-
-        render(<AssociatedEpicsPopup onSelect = {jest.fn} targetId = {0}/>)
-        fireEvent.click(screen.getByTestId('Popup__button-close'))
+    test('should close popup', async() => {
+        render(<AssociatedEpicsPopup onSelectEpic = {jest.fn()} targetId = {0}/>)
+        fireEvent.click(await screen.findByTestId('Popup__button-close'))
 
         expect(closePopupMock).toHaveBeenCalled()
-    })
-
-    test('should handle onSelect', () => {
-        const onSelectMock = jest.fn()
-
-        render(<AssociatedEpicsPopup onSelect = {onSelectMock} targetId = {0}/>)
-        userEvent.type(screen.getByTitle('searchEpicsMock'), 'a')
-
-        expect(onSelectMock).toHaveBeenCalledWith([20])
     })
 
 })

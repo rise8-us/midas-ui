@@ -21,7 +21,8 @@ const Popup = ({
     subtitle,
     subtitleVariant,
     title,
-    width
+    width,
+    height
 }) => {
 
     return (
@@ -29,7 +30,7 @@ const Popup = ({
             data-testid = 'Popup__dialog'
             open = {open}
             scroll = 'paper'
-            PaperProps = {{ style: { width } }}
+            PaperProps = {{ style: { width, height } }}
         >
             <Header
                 title = {title}
@@ -89,6 +90,7 @@ Popup.propTypes = {
     ]).isRequired,
     disableDefaultDivider: PropTypes.bool,
     disableDefaultPadding: PropTypes.bool,
+    height: PropTypes.string,
     hideRequiredText: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
@@ -97,20 +99,21 @@ Popup.propTypes = {
     subtitle: PropTypes.string,
     subtitleVariant: PropTypes.string,
     title: PropTypes.string.isRequired,
-    width: PropTypes.string
+    width: PropTypes.string,
 }
 
 Popup.defaultProps = {
     cancelText: 'cancel',
     disableDefaultDivider: false,
     disableDefaultPadding: false,
+    height: 'max-content',
     hideRequiredText: false,
     onSubmit: undefined,
     open: true,
     submitText: 'submit',
     subtitle: null,
     subtitleVariant: 'h6',
-    width: '395px'
+    width: '395px',
 }
 
 export default Popup
