@@ -12,5 +12,12 @@ export const selectMilestonesByPortfolioId = (state, portfolioId) => {
 
     return Object.values(milestones)
         .filter(milestone => milestone.portfolioId === portfolioId)
-        .map(milestone => ({ ...milestone, type: 'milestone', enableFullHeight: true, row: 0 }))
+        .map(milestone => ({
+            ...milestone,
+            type: 'milestone',
+            enableFullHeight: true,
+            row: 0,
+            minWidthInPx: 110,
+            maxWidthInVw: 24
+        }))
 }
