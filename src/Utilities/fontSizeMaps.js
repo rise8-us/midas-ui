@@ -1415,71 +1415,71 @@ const BlinkMacSystemFontKernMap = [
 ]
 
 /*
-const BlinkMacSystemFontBoldLetterMap = 
+const BlinkMacSystemFontBoldLetterMap =
 
-const BlinkMacSystemFontBoldKernMap = 
+const BlinkMacSystemFontBoldKernMap =
 
-const SegoeUILetterMap = 
+const SegoeUILetterMap =
 
-const SegoeUIKernMap = 
+const SegoeUIKernMap =
 
-const SegoeUIBoldLetterMap = 
+const SegoeUIBoldLetterMap =
 
-const SegoeUIBoldKernMap = 
+const SegoeUIBoldKernMap =
 
-const HelveticaNeueLetterMap = 
+const HelveticaNeueLetterMap =
 
-const HelveticaNeueKernMap = 
+const HelveticaNeueKernMap =
 
-const HelveticaNeueBoldLetterMap = 
+const HelveticaNeueBoldLetterMap =
 
-const HelveticaNeueBoldKernMap = 
+const HelveticaNeueBoldKernMap =
 
-const sansSerifLetterMap = 
+const sansSerifLetterMap =
 
-const sansSerifKernMap = 
+const sansSerifKernMap =
 
-const sansSerifBoldLetterMap = 
+const sansSerifBoldLetterMap =
 
-const sansSerifBoldKernMap = 
+const sansSerifBoldKernMap =
 
-const AppleColorEmojiLetterMap = 
+const AppleColorEmojiLetterMap =
 
-const AppleColorEmojiKernMap = 
+const AppleColorEmojiKernMap =
 
-const AppleColorEmojiBoldLetterMap = 
+const AppleColorEmojiBoldLetterMap =
 
-const AppleColorEmojiBoldKernMap = 
+const AppleColorEmojiBoldKernMap =
 
-const appleSystemLetterMap = 
+const appleSystemLetterMap =
 
-const appleSystemKernMap = 
+const appleSystemKernMap =
 
-const appleSystemBoldLetterMap = 
+const appleSystemBoldLetterMap =
 
-const appleSystemBoldKernMap = 
+const appleSystemBoldKernMap =
 
-const RobotoLetterMap = 
+const RobotoLetterMap =
 
-const RobotoKernMap = 
+const RobotoKernMap =
 
-const RobotoBoldLetterMap = 
+const RobotoBoldLetterMap =
 
-const RobotoBoldKernMap = 
+const RobotoBoldKernMap =
 
-const SegoeUIEmojiLetterMap = 
+const SegoeUIEmojiLetterMap =
 
-const SegoeUIEmojiKernMap = 
+const SegoeUIEmojiKernMap =
 
-const SegoeUIEmojiBoldLetterMap = 
+const SegoeUIEmojiBoldLetterMap =
 
-const SegoeUIEmojiBoldKernMap = 
+const SegoeUIEmojiBoldKernMap =
 
-const SegoeUISymbolLetterMap = 
+const SegoeUISymbolLetterMap =
 
-const SegoeUISymbolKernMap = 
+const SegoeUISymbolKernMap =
 
-const SegoeUISymbolBoldLetterMap = 
+const SegoeUISymbolBoldLetterMap =
 
-const SegoeUISymbolBoldKernMap = 
+const SegoeUISymbolBoldKernMap =
 */
