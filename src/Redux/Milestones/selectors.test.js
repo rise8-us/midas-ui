@@ -37,7 +37,9 @@ describe('Milestone selectors', () => {
             ...mockState.milestones[6],
             type: 'milestone',
             enableFullHeight: true,
-            row: 0
+            row: 0,
+            maxWidthInVw: 24,
+            minWidthInPx: 110
         }])
     })
 })

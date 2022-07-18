@@ -167,11 +167,13 @@ const insertEntry = (entriesObject, row, entry) => {
 }
 
 const calculateEntryWidthInVw = (string, fontSize, minWidthInPx, maxWidthInVw) => {
+    if (!string) {
+        return (minWidthInPx / window.innerWidth * 100) ?? 0
+    }
     const letterMapSingle = new Map(ArialBoldLetterMap)
     const letterMapKern = new Map(ArialBoldKernMap)
 
     let letterWidthAtFontSize100 = 0
-
     const letterSplit = [...string.split('')]
 
     for (const [key, letter] of letterSplit.entries()) {
