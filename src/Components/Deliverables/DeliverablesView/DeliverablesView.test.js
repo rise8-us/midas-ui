@@ -36,7 +36,7 @@ describe('<DeliverablesView>', () => {
         render(<DeliverablesView {...defaultProps}/>)
 
         expect(screen.getByText('DELIVERABLE PARENT TITLE')).toBeInTheDocument()
-        expect(screen.queryByText('Link epics')).not.toBeInTheDocument()
+        expect(screen.queryByText('Associate Epics')).not.toBeInTheDocument()
     })
 
     test('should render with edit', async() => {
@@ -46,7 +46,7 @@ describe('<DeliverablesView>', () => {
 
         render(<DeliverablesView hasEdit {...defaultProps}/>)
 
-        expect(screen.getByText('Link epics')).toBeInTheDocument()
+        expect(screen.getByText('Associate Epics')).toBeInTheDocument()
     })
 
     test('should not render when selectedDeliverableId===null', () => {
@@ -85,7 +85,7 @@ describe('<DeliverablesView>', () => {
     test('should handle input selection', () => {
         render(<DeliverablesView hasEdit {...defaultProps}/>)
 
-        userEvent.click(screen.getByText('Link epics'))
+        userEvent.click(screen.getByText('Associate Epics'))
     })
 
 })
