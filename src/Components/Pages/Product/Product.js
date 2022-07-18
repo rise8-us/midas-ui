@@ -1,5 +1,6 @@
 import { LockOpenOutlined, LockOutlined, Settings } from '@mui/icons-material'
 import { Divider, Grid, Grow, IconButton, Tab, Tabs, Tooltip } from '@mui/material'
+import { FileManager } from 'Components/FileManager'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
@@ -133,6 +134,11 @@ function Product() {
                                     value = 'metrics'
                                     data-testid = 'Product__metrics'
                                 />
+                                <Tab
+                                    label = 'Files'
+                                    value = 'files'
+                                    data-testid = 'Product__files'
+                                />
                             </Tabs>
                             <Divider variant = 'fullWidth' />
                         </Grid>
@@ -156,6 +162,11 @@ function Product() {
                                 { value === 'metrics' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <PageMetrics id = {id} type = 'product'/>
+                                    </Suspense>
+                                }
+                                { value === 'files' &&
+                                    <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                                        <FileManager />
                                     </Suspense>
                                 }
                             </div>
