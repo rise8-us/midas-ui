@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 import { closePopup } from 'Redux/Popups/actions'
 
-export default function AssociateEpicsPopup({
+export default function AssociateDeliverableEpicsPopup({
     deliverableId,
     title,
     subtitle,
@@ -52,7 +52,7 @@ export default function AssociateEpicsPopup({
     )
 }
 
-AssociateEpicsPopup.propTypes = {
+AssociateDeliverableEpicsPopup.propTypes = {
     deliverableId: PropTypes.number.isRequired,
     onDeselectEpic: PropTypes.func.isRequired,
     onSelectEpic: PropTypes.func.isRequired,
@@ -61,7 +61,7 @@ AssociateEpicsPopup.propTypes = {
     title: PropTypes.string,
 }
 
-AssociateEpicsPopup.defaultProps = {
+AssociateDeliverableEpicsPopup.defaultProps = {
     subtitle: undefined,
     title: 'Associate Epics',
 }
