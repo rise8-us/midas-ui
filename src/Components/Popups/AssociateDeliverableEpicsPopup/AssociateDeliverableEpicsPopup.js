@@ -1,26 +1,35 @@
 import { Popup } from 'Components/Popup'
 import { SearchEpicsDropdown } from 'Components/Search/SearchEpicsDropdown'
 import PropTypes from 'prop-types'
+import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 import { closePopup } from 'Redux/Popups/actions'
-import { selectTargetById } from 'Redux/Targets/selectors'
 
-export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelectEpic }) {
+export default function AssociateEpicsPopup({
+    deliverableId,
+    title,
+    subtitle,
+    onSelectEpic,
+    onDeselectEpic,
+    portfolioId
+}) {
     const dispatch = useDispatch()
 
-    const target = useSelector(state => selectTargetById(state, targetId))
+    const children = useSelector(state => selectDeliverableByParentId(state, deliverableId))
+    const epicIds = useMemo(() => children.map(c => c.completion.gitlabEpic?.id), [children])
 
-    const onClose = () => dispatch(closePopup('AssociateEpics'))
+    const onClose = () => dispatch(closePopup('AssociateDeliverableEpics'))
 
     const handleOnSelect = (e, value, setEpicLoading) => {
         e.stopPropagation()
-        onSelectEpic([...target.epicIds, value.id], setEpicLoading)
+        onSelectEpic(value, setEpicLoading)
     }
 
     const handleOnDeselect = (e, value, setEpicLoading) => {
         e.stopPropagation()
-        const filteredEpicIds = target.epicIds.filter(id => id !== value.id)
-        onSelectEpic(filteredEpicIds, setEpicLoading)
+        const deliverableToDelete = children.filter(child => child.title === value.title)
+        onDeselectEpic(deliverableToDelete[0].id, setEpicLoading)
     }
 
     return (
@@ -34,8 +43,8 @@ export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelec
             width = '500px'
         >
             <SearchEpicsDropdown
-                portfolioId = {target.portfolioId}
-                linkedEpicIds = {target.epicIds}
+                portfolioId = {portfolioId}
+                linkedEpicIds = {epicIds}
                 handleOnSelect = {handleOnSelect}
                 handleOnDeselect = {handleOnDeselect}
             />
@@ -44,9 +53,11 @@ export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelec
 }
 
 AssociateEpicsPopup.propTypes = {
+    deliverableId: PropTypes.number.isRequired,
+    onDeselectEpic: PropTypes.func.isRequired,
     onSelectEpic: PropTypes.func.isRequired,
+    portfolioId: PropTypes.number.isRequired,
     subtitle: PropTypes.string,
-    targetId: PropTypes.number.isRequired,
     title: PropTypes.string,
 }
 

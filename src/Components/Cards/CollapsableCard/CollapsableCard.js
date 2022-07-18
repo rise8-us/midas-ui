@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
 const CollapsableCard = React.forwardRef((props, ref) => {
-    const { children, header, footer, collapsedSize, onExpanded, enterDelay, exitDelay, timeout, ...cardProps } = props
+    const { children, header, footer, collapsedSize, onExpanded,
+        enterDelay, exitDelay, timeout, mouseMovement, ...cardProps } = props
 
     const [expanded, setExpanded] = useState(false)
     const [hasFocus, setHasFocus] = useState(false)
@@ -25,7 +26,7 @@ const CollapsableCard = React.forwardRef((props, ref) => {
     const onFocus = () => {
         setDelay(enterDelay)
         setHasFocus(true)
-        setExpanded(true)
+        mouseMovement ? setExpanded(true) : setExpanded(prev => !prev)
     }
 
     const onClickAway = () => {
@@ -44,8 +45,8 @@ const CollapsableCard = React.forwardRef((props, ref) => {
                 {...cardProps}
                 data-testid = 'Collapsable__card'
                 ref = {ref}
-                onMouseEnter = {onMouseEnter}
-                onMouseLeave = {onMouseLeave}
+                onMouseEnter = {mouseMovement ? onMouseEnter : undefined}
+                onMouseLeave = {mouseMovement ? onMouseLeave : undefined}
                 onClick = {onFocus}
                 onFocus = {onFocus}
             >
@@ -73,11 +74,12 @@ CollapsableCard.propTypes = {
     exitDelay: PropTypes.number,
     footer: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     header: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
+    mouseMovement: PropTypes.bool,
     onExpanded: PropTypes.func,
     timeout: PropTypes.shape({
         enter: PropTypes.number,
         exit: PropTypes.number
-    })
+    }),
 }
 
 CollapsableCard.defaultProps = {
@@ -86,8 +88,9 @@ CollapsableCard.defaultProps = {
     exitDelay: 200,
     footer: undefined,
     header: undefined,
+    mouseMovement: true,
     onExpanded: (e) => e,
-    timeout: { enter: 1500, exit: 750 }
+    timeout: { enter: 1500, exit: 750 },
 }
 
 export default CollapsableCard

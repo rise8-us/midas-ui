@@ -1,16 +1,17 @@
+import { Link } from '@mui/icons-material'
 import { Box, Collapse, Divider, Stack, Typography } from '@mui/material'
-import { DeliverableWorkList } from 'Components/Deliverables'
 import { DeliverablesViewTargets } from 'Components/DeliverablesViewTargets'
-import { SearchEpics } from 'Components/Search'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestCreateDeliverable } from 'Redux/Deliverables/actions'
+import { requestCreateDeliverable, requestDeleteDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById, selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
 import { selectEpicsByIds } from 'Redux/Epics/selectors'
+import { openPopup } from 'Redux/Popups/actions'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
 import { selectEpicIdsByTargetIds, selectTargetsByIds } from 'Redux/Targets/selectors'
 import { getTotalWeights } from 'Utilities/progressHelpers'
+import { DeliverableWorkList } from '../DeliverableWorkList'
 
 export default function DeliverablesView({ hasEdit, selectedDeliverableId, portfolioId }) {
     const dispatch = useDispatch()
@@ -24,8 +25,6 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
     const subtargetEpicIds = useSelector(state => selectEpicIdsByTargetIds(state, subtargetIds))
     const subtargetEpics = useSelector(state => selectEpicsByIds(state, subtargetEpicIds))
     const [totalWeight, totalCompletedWeight] = getTotalWeights(subtargetEpics)
-
-    const epicIds = useMemo(() => children.map(c => c.completion.gitlabEpic?.id), [children])
 
     const progress = useMemo(() => {
         const accumulatedProgress = children.reduce((currentValues, child) => {
@@ -43,26 +42,40 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
             : 0
     }, [children])
 
-    const onSelectEpic = (_e, values, reason) => {
-        reason === 'selectOption' && !epicIds.includes(values[0].id) && dispatch(requestCreateDeliverable({
-            title: values[0].title,
-            index: deliverable.children.length,
-            productId: values[0].productId,
-            parentId: selectedDeliverableId,
-            referenceId: 0,
-            completion: {
-                gitlabEpicId: values[0].id
-            }
-        })).then(() => {
-            dispatch(enqueueMessage({
-                message: 'Linked ' + values[0].title + ' to deliverable: ' + deliverable.title,
-                severity: 'success'
-            }))
-        })
+    const onClickAssociateEpics = () => {
 
-        epicIds.includes(values[0].id) && dispatch(enqueueMessage({
-            message: values[0].title + ' is already tied to deliverable: ' + deliverable.title,
-            severity: 'warning'
+        const onSelectEpic = (value, setEpicLoading) => {
+            setEpicLoading(true)
+            dispatch(requestCreateDeliverable({
+                title: value.title,
+                index: deliverable.children.length,
+                productId: value.productId,
+                parentId: selectedDeliverableId,
+                referenceId: 0,
+                completion: {
+                    gitlabEpicId: value.id
+                }
+            })).then(() => {
+                setEpicLoading(false)
+                dispatch(enqueueMessage({
+                    message: 'Linked ' + value.title + ' to deliverable: ' + deliverable.title,
+                    severity: 'success'
+                }))
+            })
+        }
+
+        const onDeselectEpic = (deliverableToDeleteId, setEpicLoading) => {
+            setEpicLoading(true)
+            dispatch(requestDeleteDeliverable(deliverableToDeleteId)).then(() => setEpicLoading(false))
+        }
+
+        dispatch(openPopup('AssociateDeliverableEpics', 'AssociateDeliverableEpicsPopup', {
+            subtitle: '',
+            title: 'Associate Epics to Deliverable',
+            deliverableId: deliverable.id,
+            onSelectEpic: onSelectEpic,
+            onDeselectEpic: onDeselectEpic,
+            portfolioId: portfolioId,
         }))
     }
 
@@ -90,10 +103,15 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
             <Collapse in = {hasEdit} collapsedSize = {0}>
                 <div style = {{ height: '32px', width: '100%' }}>
                     {hasEdit &&
-                        <SearchEpics
-                            onChange = {onSelectEpic}
-                            defaultSearchTerms = {`product.portfolio.id:${portfolioId}`}
-                        />
+                        <Stack
+                            direction = 'row'
+                            borderBottom = '1px solid #dddddd'
+                            onClick = {onClickAssociateEpics}
+                            sx = {{ '&:hover': { cursor: 'text' } }}
+                        >
+                            <Link size = 'small' />
+                            <Typography color = 'text.secondary' marginLeft = '3px'>Associate Epics</Typography>
+                        </Stack>
                     }
                 </div>
             </Collapse>
