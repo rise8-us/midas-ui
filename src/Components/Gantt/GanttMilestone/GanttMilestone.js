@@ -16,7 +16,7 @@ const MilestoneFlagPole = styled('div')(({ theme }) => ({
     width: '3px',
     height: `calc(100% + ${theme.spacing(1)})`,
     background: theme.palette.gantt.milestone.dark.background,
-    top: `-${theme.spacing(1)}`,
+    top: `calc(9px - ${theme.spacing(1)})`,
     '&:hover': {
         boxShadow: '0px 0px 8px 0px black'
     }

@@ -1,5 +1,12 @@
 import PropTypes from 'prop-types'
-import { calculatePosition, getDayAbbreviated, getMonthAbbreviated, parseStringToDate } from './dateHelpers'
+import { ArialBoldKernMap, ArialBoldLetterMap } from '../Utilities/fontSizeMaps'
+import {
+    calculatePosition,
+    calculateSinglePosition,
+    getDayAbbreviated,
+    getMonthAbbreviated,
+    parseStringToDate
+} from './dateHelpers'
 
 const QUARTER_IN_YEAR = 4
 
@@ -160,10 +167,24 @@ const insertEntry = (entriesObject, row, entry) => {
 }
 
 const calculateEntryWidthInVw = (string, fontSize, minWidthInPx, maxWidthInVw) => {
-    const letterWidthAtFontSize100 = 55 * (string?.length ?? 0)
+    const letterMapSingle = new Map(ArialBoldLetterMap)
+    const letterMapKern = new Map(ArialBoldKernMap)
+
+    let letterWidthAtFontSize100 = 0
+
+    const letterSplit = [...string.split('')]
+
+    for (const [key, letter] of letterSplit.entries()) {
+        letterWidthAtFontSize100 += letterMapSingle.get(letter) || letterMapSingle.get('_median')
+
+        if (key !== letterSplit.length - 1) {
+            letterWidthAtFontSize100 += letterMapKern.get(`${letter}${letterSplit[key + 1]}`) || 0
+        }
+    }
+
     const fontRatio = 100 / fontSize
     let letterWidth = letterWidthAtFontSize100 / fontRatio
-    return Math.min(Math.max(minWidthInPx ?? 0, letterWidth) / window.innerWidth * 100, maxWidthInVw ?? 100)
+    return Math.min(Math.max(minWidthInPx ?? 0, letterWidth + 16) / window.innerWidth * 100, maxWidthInVw ?? 100)
 }
 
 const sortEntriesByDueDate = (entries) => {
@@ -198,8 +219,19 @@ const handleRowfulEntries = (rowfulEntries, dateRange, indexedEntries) => {
 
         for (const entry of entriesSortedByDueDate) {
             const { title, startDate, endDate, minWidthInPx, maxWidthInVw } = entry
-            if (!entry.startDate) {
+            if (entry.hasNoWidth) {
                 insertEntry(indexedRowEntries, 0, entry)
+            } else if (!entry.startDate) {
+                const itemWidth = calculateEntryWidthInVw(title, 16, minWidthInPx, maxWidthInVw)
+                const startPos = calculateSinglePosition(parseStringToDate(entry.dueDate), dateRange)[0]
+                const availableRow = findAvailableRow(
+                    startPos,
+                    startPos + itemWidth,
+                    0,
+                    rowAvailability,
+                    []
+                )
+                insertEntry(indexedRowEntries, availableRow, entry)
             } else {
                 const itemWidth = calculateEntryWidthInVw(title, 16, minWidthInPx, maxWidthInVw)
                 const [startPos, duration] =
@@ -284,8 +316,7 @@ const handleRowlessEntries = (indexedEntries, rowlessEntriesByType, fillUndefine
                     existingFilledRows
                 )
 
-                if (indexedEntries[rowWithAvailability]?.length > 0) indexedEntries[rowWithAvailability].push(entry)
-                else indexedEntries[rowWithAvailability] = [entry]
+                insertEntry(indexedEntries, rowWithAvailability, entry)
             }
         } else {
             for (const entry of rowlessEntriesByType[type]) {

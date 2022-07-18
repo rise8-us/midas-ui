@@ -10,6 +10,7 @@ const calculatePositionOnChart = (start, due, dateRange) => {
     }
     return [startLeft, duration]
 }
+
 export default function GanttEntry({
     children,
     dateRange,
@@ -59,6 +60,7 @@ GanttEntry.propTypes = {
     startDate: PropTypes.string,
     style: PropTypes.shape({})
 }
+
 GanttEntry.defaultProps = {
     children: undefined,
     enableFullHeight: false,
