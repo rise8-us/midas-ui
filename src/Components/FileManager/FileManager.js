@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 export default function FileManager() {
 
@@ -7,9 +7,11 @@ export default function FileManager() {
 
     const [file, setFile] = useState(undefined)
 
-    useEffect(() => {
-        console.log(uploadFileInput.current?.value)
-    }, [uploadFileInput.current?.value])
+    const onChange = (e) => {
+        console.log('onChange: ', uploadFileInput.current?.value)
+        setFile(e.target.value)
+        console.log('e: ', e.target.value)
+    }
 
     return (
         <div>
@@ -22,9 +24,10 @@ export default function FileManager() {
                     ref = {uploadFileInput}
                     type = 'file'
                     hidden
+                    onChange = {onChange}
                 />
             </Button>
-            file:
+            {file}
         </div>
     )
 }
