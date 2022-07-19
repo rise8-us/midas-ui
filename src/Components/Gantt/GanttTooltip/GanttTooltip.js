@@ -21,7 +21,7 @@ export default function GanttTooltip({
 }) {
 
     return (
-        <div style = {{ minWidth: '240px' }}>
+        <div style = {{ minWidth: '240px', maxHeight: '350px', overflow: 'scroll' }}>
             <Stack spacing = {2}>
                 <div style = {{ marginBottom: '8px' }}>
                     <div style = {headerRowStyle}>
