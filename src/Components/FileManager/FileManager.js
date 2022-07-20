@@ -1,16 +1,26 @@
 import { Button } from '@mui/material'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 export default function FileManager() {
-
-    const uploadFileInput = useRef()
 
     const [file, setFile] = useState(undefined)
 
     const onChange = (e) => {
-        console.log('onChange: ', uploadFileInput.current?.value)
-        setFile(e.target.value)
-        console.log('e: ', e.target.value)
+        const formData = new FormData()
+        const fileToAdd = new Blob(e.target.files)
+        formData.append('file', fileToAdd)
+        setFile(formData)
+
+        console.log(e.target.files)
+    }
+
+    const onSave = () => {
+        let url = 'http://localhost:8000/api/filemanager/upload'
+        let request = new XMLHttpRequest()
+        request.open('POST', url)
+        request.send(file)
+        console.log('onsaved')
+        // axios.post('http://localhost:8000/api/filemanager/upload', file, config)
     }
 
     return (
@@ -21,13 +31,14 @@ export default function FileManager() {
             >
                 Upload File
                 <input
-                    ref = {uploadFileInput}
                     type = 'file'
                     hidden
                     onChange = {onChange}
                 />
             </Button>
-            {file}
+            <Button onClick = {onSave}>
+                Save File
+            </Button>
         </div>
     )
 }
