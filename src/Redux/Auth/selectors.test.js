@@ -106,7 +106,7 @@ describe('User Access selectors', () => {
         expect(selectors.hasProductAccess(mockState)).toBeFalsy()
     })
 
-    test('should return product access false if user does not has access', () => {
+    test('should return product access false if user does not have access', () => {
         const mockProduct = {
             id: 9,
             ownerId: 4,

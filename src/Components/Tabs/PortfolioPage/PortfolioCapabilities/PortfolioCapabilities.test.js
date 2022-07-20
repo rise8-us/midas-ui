@@ -108,4 +108,10 @@ describe('<PortfolioCapabilities />', () => {
 
     })
 
+    test('should render capability 2', () => {
+        render(<PortfolioCapabilities portfolioId = {1} capabilityId = {2}/>)
+
+        expect(screen.getByDisplayValue('title 2')).toBeInTheDocument()
+    })
+
 })

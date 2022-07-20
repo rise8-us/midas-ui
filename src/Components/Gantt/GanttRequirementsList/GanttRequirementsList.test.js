@@ -26,6 +26,7 @@ describe('<GanttRequirementsList /> ', () => {
             handleEditCapability = {handleClick}
             capabilityIds = {[2, 3]}
             deliverableIds = {[2, 3, 4]}
+            portfolioId = {1}
         />)
 
         expect(screen.getByTestId('GanttRequirementsList__wrapper')).toBeInTheDocument()

@@ -14,13 +14,19 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { buildOrQueryByIds } from 'Utilities/requests'
 
-export default function PortfolioCapabilities({ portfolioId }) {
+export default function PortfolioCapabilities({ portfolioId, capabilityId }) {
     const dispatch = useDispatch()
 
     const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const pageSettings = useSelector(state => selectPortfolioPageSettings(state, portfolioId))
-    const [viewingCapability, setViewingCapability] = useState(0)
+
+    const initialViewingCapability = () => {
+        const index = capabilities.findIndex(c => c.id === capabilityId)
+        return index !== -1 ? index : 0
+    }
+
+    const [viewingCapability, setViewingCapability] = useState(initialViewingCapability())
     const [fetched, setFetched] = useState(false)
 
     const { selectedDeliverableId } = pageSettings
@@ -134,9 +140,11 @@ export default function PortfolioCapabilities({ portfolioId }) {
 }
 
 PortfolioCapabilities.propTypes = {
-    portfolioId: PropTypes.number
+    capabilityId: PropTypes.number,
+    portfolioId: PropTypes.number,
 }
 
 PortfolioCapabilities.defaultProps = {
-    portfolioId: null
+    capabilityId: null,
+    portfolioId: null,
 }

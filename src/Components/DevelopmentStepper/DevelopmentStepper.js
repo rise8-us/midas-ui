@@ -86,7 +86,7 @@ const tooltipTitle = (label) => (
 function DevelopmentStepper({ completedIndex }) {
 
     const icons = [0, 1, 2]
-    const titles = ['Jira onboarding request not submitted', 'Pipelines not created', 'Project does not has CtF']
+    const titles = ['Jira onboarding request not submitted', 'Pipelines not created', 'Project does not have CtF']
 
     const parseTitle = (currentIndex) => {
         if (completedIndex >= currentIndex) return titles[currentIndex].replace('not ', '')

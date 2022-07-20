@@ -1,6 +1,14 @@
 import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { GanttRequirements } from './index'
 
+const mockHistoryPush = jest.fn()
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useHistory: () => ({
+        push: mockHistoryPush,
+    })
+}))
+
 describe('<GanttRequirements />', () => {
 
     const selectPortfolioPagePermissionMock =
@@ -55,6 +63,7 @@ describe('<GanttRequirements />', () => {
     const defaultProps = {
         deliverableIds: [2, 3],
         capabilityId: 2,
+        portfolioId: 1,
     }
 
     beforeEach(() => {
@@ -77,5 +86,13 @@ describe('<GanttRequirements />', () => {
         userEvent.hover(await screen.findByText('capability'))
 
         expect(await screen.findByTestId('GanttRequirements__deliverable-0')).toBeInTheDocument()
+    })
+
+    test('should route to requirement on click', async() => {
+        render(<GanttRequirements {...defaultProps}/>)
+
+        userEvent.click(await screen.findByText('capability'))
+
+        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/1/requirements/2')
     })
 })

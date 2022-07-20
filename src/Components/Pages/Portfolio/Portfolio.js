@@ -31,7 +31,7 @@ const pageEditIcon = (editPermissions) => editPermissions
 export default function Portfolio() {
     const history = useHistory()
     const dispatch = useDispatch()
-    const { portfolioId, portfolioTab } = useParams()
+    const { portfolioId, portfolioTab, capabilityId } = useParams()
     const id = parseInt(portfolioId)
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
@@ -42,7 +42,10 @@ export default function Portfolio() {
     )
 
     const handleChange = (_e, newValue) => {
-        history.push(`/portfolios/${id}/${newValue}`)
+        let url = `/portfolios/${id}/${newValue}`
+        if (newValue === 'requirements') url += `/${capabilityId ?? ''}`
+
+        history.push(url)
     }
 
     const updatePageEdit = () => {
@@ -108,7 +111,10 @@ export default function Portfolio() {
                     }
                     {portfolioTab === 'requirements' &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                            <PortfolioTab.PortfolioCapabilities portfolioId = {id}/>
+                            <PortfolioTab.PortfolioCapabilities
+                                portfolioId = {id}
+                                capabilityId = {parseInt(capabilityId)}
+                            />
                         </Suspense>
                     }
                     {portfolioTab === 'sprint-report' &&
