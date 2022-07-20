@@ -38,6 +38,11 @@ function App() {
                     <Route exact path = '/portfolios' component = {Pages.Portfolios} />
                     <Route exact path = '/portfolios/:portfolioId' component = {Pages.Portfolio} />
                     <Route exact path = '/portfolios/:portfolioId/:portfolioTab' component = {Pages.Portfolio} />
+                    <Route
+                        exact
+                        path = '/portfolios/:portfolioId/:portfolioTab/:capabilityId'
+                        component = {Pages.Portfolio}
+                    />
                     <Route exact path = '/products' component = {Pages.Products} />
                     <Route exact path = '/products/:productId' component = {Pages.Product} />
                     <Route exact path = '/products/:productId/:productTab' component = {Pages.Product} />

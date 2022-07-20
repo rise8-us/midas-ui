@@ -12,7 +12,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     padding: theme.spacing(1),
 }))
 
-export default function GanttRequirementsList({ handleEditCapability, capabilities, deliverableIds }) {
+export default function GanttRequirementsList({ handleEditCapability, portfolioId, capabilities, deliverableIds }) {
 
     return (
         <StyledDiv data-testid = 'GanttRequirementsList__wrapper'>
@@ -24,6 +24,7 @@ export default function GanttRequirementsList({ handleEditCapability, capabiliti
                             key = {index}
                             capabilityId = {capability.id}
                             deliverableIds = {deliverableIds}
+                            portfolioId = {portfolioId}
                         />
                     })}
                 </Stack>
@@ -41,13 +42,14 @@ export default function GanttRequirementsList({ handleEditCapability, capabiliti
 }
 
 GanttRequirementsList.propTypes = {
-    handleEditCapability: PropTypes.func,
     capabilities: PropTypes.array,
-    deliverableIds: PropTypes.arrayOf(PropTypes.number)
+    deliverableIds: PropTypes.arrayOf(PropTypes.number),
+    handleEditCapability: PropTypes.func,
+    portfolioId: PropTypes.number.isRequired,
 }
 
 GanttRequirementsList.defaultProps = {
-    handleEditCapability: undefined,
     capabilities: [],
-    deliverableIds: []
+    deliverableIds: [],
+    handleEditCapability: undefined
 }

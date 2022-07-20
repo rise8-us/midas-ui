@@ -55,7 +55,7 @@ describe('<Portfolio />', () => {
         renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
         fireEvent.click(screen.getByText('requirements'))
 
-        expect(history.location.pathname).toEqual('/portfolios/91/requirements')
+        expect(history.location.pathname).toEqual('/portfolios/91/requirements/')
     })
 
     test('should render metrics tab', async() => {
