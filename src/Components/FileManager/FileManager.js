@@ -1,7 +1,11 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { requestSaveFile } from 'Redux/FileManager/actions'
 
 export default function FileManager() {
+
+    const dispatch = useDispatch()
 
     const [file, setFile] = useState(undefined)
 
@@ -10,17 +14,10 @@ export default function FileManager() {
         const fileToAdd = new Blob(e.target.files)
         formData.append('file', fileToAdd)
         setFile(formData)
-
-        console.log(e.target.files)
     }
 
     const onSave = () => {
-        let url = 'http://localhost:8000/api/filemanager/upload'
-        let request = new XMLHttpRequest()
-        request.open('POST', url)
-        request.send(file)
-        console.log('onsaved')
-        // axios.post('http://localhost:8000/api/filemanager/upload', file, config)
+        dispatch(requestSaveFile(file))
     }
 
     return (
