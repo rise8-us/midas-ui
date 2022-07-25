@@ -18,11 +18,13 @@ describe('Link epic to a deliverable', () => {
 
         cy.get('[data-testid="deliverable with linked epic"]').click()
         cy.get('[data-testid=PortfolioCapabilities__parent-grid]').within(() => {
-            cy.get('[data-testid=SearchBar__input]').click()
+            cy.get('[data-testid=LinkIcon]').click()
         })
 
-        cy.get('li').contains('epic title').should('exist')
+        cy.get('[data-testid=Collapsable__card]').first().click()
+        cy.get('[data-testid=Collapsable__card]').next().click()
 
+        cy.get('[data-testid=EpicListItem__checkbox-unchecked]').click()
         
         cy.wait('@updateApiCheck').then((interception) => {
             expect(interception.response.statusCode).to.equal(200)

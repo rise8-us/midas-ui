@@ -29,6 +29,8 @@ describe('update measure', () => {
     it('should create new measure', () => {
         cy.get('[data-testId="LockOutlinedIcon"]').click()
         cy.get('[data-testId=Product__objectives]').click()
+        cy.get('[data-testId=Product__overview]').click()
+        cy.get('[data-testId=Product__objectives]').click()
         cy.get('[data-testId=MeasuresContainer__add-item]').click()
 
         cy.wait('@createApiCheck').then((interception) => {
