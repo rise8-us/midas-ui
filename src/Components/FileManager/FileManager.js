@@ -11,8 +11,7 @@ export default function FileManager() {
 
     const onChange = (e) => {
         const formData = new FormData()
-        const fileToAdd = new Blob(e.target.files)
-        formData.append('file', fileToAdd)
+        formData.append('file', e.target.files[0])
         setFile(formData)
     }
 
