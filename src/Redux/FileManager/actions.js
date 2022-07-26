@@ -35,3 +35,11 @@ export const requestGetFileNames = createAsyncThunk(
         return handleThunkRequest(request, rejectWithValue)
     }
 )
+
+export const requestDeleteFile = createAsyncThunk(
+    'delete_file',
+    async(deleteRequest, { rejectWithValue }) => {
+        const request = { endpoint: '/api/filemanager/delete', method: 'DELETE', body: deleteRequest }
+        return handleThunkRequest(request, rejectWithValue)
+    }
+)
