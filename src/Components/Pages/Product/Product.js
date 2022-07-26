@@ -135,9 +135,9 @@ function Product() {
                                     data-testid = 'Product__metrics'
                                 />
                                 <Tab
-                                    label = 'Files'
-                                    value = 'files'
-                                    data-testid = 'Product__files'
+                                    label = 'Media'
+                                    value = 'media'
+                                    data-testid = 'Product__media'
                                 />
                             </Tabs>
                             <Divider variant = 'fullWidth' />
@@ -164,7 +164,7 @@ function Product() {
                                         <PageMetrics id = {id} type = 'product'/>
                                     </Suspense>
                                 }
-                                { value === 'files' &&
+                                { value === 'media' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <FileManager id = {id}/>
                                     </Suspense>
