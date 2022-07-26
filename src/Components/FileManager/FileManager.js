@@ -22,7 +22,7 @@ export default function FileManager({ id }) {
     }
 
     const handleDownloadFile = (fileName) => {
-        dispatch(requestGetFile(fileName))
+        dispatch(requestGetFile({ fileName: fileName.substring(fileName.lastIndexOf('/') + 1), filePath: fileName }))
     }
 
     const handleChange = (e) => {
@@ -75,7 +75,7 @@ export default function FileManager({ id }) {
                             }}
                             onClick = {() => handleDownloadFile(filePath)}
                         >
-                            {filePath.replace(`files/${product.name}/`, '')}
+                            {filePath.substring(filePath.lastIndexOf('/') + 1)}
                         </Typography>
                     )
                 }

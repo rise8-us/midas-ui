@@ -3,8 +3,8 @@ import { handleThunkDownloadRequest, handleThunkRequest, handleThunkRequestWithH
 
 export const requestGetFile = createAsyncThunk(
     'get_file',
-    async(fileName, { rejectWithValue }) => {
-        const request = { endpoint: '/api/filemanager/download', method: 'POST', body: { fileName: fileName } }
+    async(downloadRequest, { rejectWithValue }) => {
+        const request = { endpoint: '/api/filemanager/download', method: 'POST', body: downloadRequest }
         return handleThunkDownloadRequest(request, rejectWithValue)
     }
 )
