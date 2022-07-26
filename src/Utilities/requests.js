@@ -13,7 +13,17 @@ const handleErrors = async(error, action) => {
     }
 }
 
-export const handleThunkRequest = async({ endpoint, method, body = {}}, rejectWithValue) => {
+export const handleThunkRequestWithHeaders = async({ endpoint, method, headers, body = {} }, rejectWithValue) => {
+    const request = createAxiosRequestWithHeaders(endpoint, method, headers, body)
+    try {
+        const response = await Axios(request)
+        return response.data
+    } catch (error) {
+        return handleErrors(error, rejectWithValue)
+    }
+}
+
+export const handleThunkRequest = async({ endpoint, method, body = {} }, rejectWithValue) => {
     const request = createAxiosRequest(endpoint, method, body)
     try {
         const response = await Axios(request)
@@ -38,6 +48,21 @@ export const createAxiosDownloadRequest = (routeSuffix, method, body) => {
     request.responseType = 'blob'
     request.headers['Content-Disposition'] = 'attachment'
 
+    return request
+}
+
+export const createAxiosRequestWithHeaders = (routeSuffix, method, headers, body) => {
+    let request = {
+        method: method,
+        url: getAPIURL() + routeSuffix,
+        headers: Object.keys(headers).length > 0 ? headers :
+            {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        responseType: 'json'
+    }
+    if (body) request.data = body
     return request
 }
 
