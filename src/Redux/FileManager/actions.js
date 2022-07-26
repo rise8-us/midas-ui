@@ -16,7 +16,8 @@ export const requestSaveFile = createAsyncThunk(
             body: saveRequest.file,
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'product': saveRequest.product
+                'product': saveRequest.product,
+                'portfolio': saveRequest.portfolio
             }
         }
         return handleThunkRequestWithHeaders(request, rejectWithValue)
@@ -25,8 +26,12 @@ export const requestSaveFile = createAsyncThunk(
 
 export const requestGetFileNames = createAsyncThunk(
     'get_files',
-    async(productName, { rejectWithValue }) => {
-        const request = { endpoint: '/api/filemanager/files/?product=' + `${productName}`, method: 'GET', body: {} }
+    async(params, { rejectWithValue }) => {
+        const request = {
+            endpoint: `/api/filemanager/files/?portfolio=${params.portfolioName}&product=${params.productName}`,
+            method: 'GET',
+            body: {}
+        }
         return handleThunkRequest(request, rejectWithValue)
     }
 )
