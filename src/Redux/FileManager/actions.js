@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { handleThunkDownloadRequest, handleThunkRequest, handleThunkRequestWithHeaders } from 'Utilities/requests'
+import Constants from './constants'
 
 export const requestGetFile = createAsyncThunk(
-    'get_file',
+    Constants.DOWNLOAD_FILE,
     async(downloadRequest, { rejectWithValue }) => {
         const request = { endpoint: '/api/filemanager/download', method: 'POST', body: downloadRequest }
         return handleThunkDownloadRequest(request, rejectWithValue)
@@ -10,7 +11,7 @@ export const requestGetFile = createAsyncThunk(
 )
 
 export const requestSaveFile = createAsyncThunk(
-    'save_file',
+    Constants.UPLOAD_FILE,
     async(saveRequest, { rejectWithValue }) => {
         const request = { endpoint: '/api/filemanager/upload', method: 'POST',
             body: saveRequest.file,
@@ -25,7 +26,7 @@ export const requestSaveFile = createAsyncThunk(
 )
 
 export const requestGetFileNames = createAsyncThunk(
-    'get_files',
+    Constants.GET_FILE_LIST,
     async(params, { rejectWithValue }) => {
         const request = {
             endpoint: `/api/filemanager/files/?portfolio=${params.portfolioName}&product=${params.productName}`,
@@ -37,7 +38,7 @@ export const requestGetFileNames = createAsyncThunk(
 )
 
 export const requestDeleteFile = createAsyncThunk(
-    'delete_file',
+    Constants.DELETE_FILE,
     async(deleteRequest, { rejectWithValue }) => {
         const request = { endpoint: '/api/filemanager/delete', method: 'DELETE', body: deleteRequest }
         return handleThunkRequest(request, rejectWithValue)

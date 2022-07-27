@@ -17,7 +17,7 @@ import { openPopup } from 'Redux/Popups/actions'
 import ProductConstants from 'Redux/Products/constants'
 import { requestFetchRoadmapsByProductId } from 'Redux/Roadmaps/actions'
 
-const knownTabs = ['overview', 'objectives', 'projects', 'metrics']
+const knownTabs = ['overview', 'objectives', 'projects', 'metrics', 'media']
 const validTab = (potentialTab) => knownTabs.includes(potentialTab)
 const calculateHasEdit = (canEdit, readOnly) => canEdit && (!readOnly)
 
@@ -166,7 +166,7 @@ function Product() {
                                 }
                                 { value === 'media' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <FileManager id = {id}/>
+                                        <FileManager id = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
                                 }
                             </div>
