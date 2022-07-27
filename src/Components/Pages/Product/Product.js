@@ -166,7 +166,7 @@ function Product() {
                                 }
                                 { value === 'media' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <FileManager id = {id} hasEdit = {hasEdit}/>
+                                        <FileManager productId = {id} hasEdit = {hasEdit}/>
                                     </Suspense>
                                 }
                             </div>

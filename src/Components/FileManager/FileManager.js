@@ -6,12 +6,12 @@ import { requestDeleteFile, requestGetFile, requestGetFileNames, requestSaveFile
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 
-export default function FileManager({ id, hasEdit }) {
+export default function FileManager({ productId, hasEdit }) {
     const dispatch = useDispatch()
 
     const inputRef = useRef(null)
 
-    const product = useSelector(state => selectProductById(state, id))
+    const product = useSelector(state => selectProductById(state, productId))
     const portfolio = useSelector(state => selectPortfolioById(state, product?.portfolioId))
 
     const [uploadFileSelected, setUploadFileSelected] = useState(null)
@@ -118,12 +118,13 @@ export default function FileManager({ id, hasEdit }) {
                                 variant = 'outlined'
                                 label = {`Select existing file from ${product.name}`}
                                 InputProps = {{
+                                    'data-testid': 'FileManager-select-file',
                                     ...params.InputProps,
                                     endAdornment: loading &&
                                         <CircularProgress
                                             color = 'inherit'
                                             size = {20}
-                                            data-testid = 'DatabaseTab__waiting-icon'
+                                            data-testid = 'FileManager__waiting-icon'
                                         />
                                 }}
                             />
@@ -178,6 +179,6 @@ export default function FileManager({ id, hasEdit }) {
 }
 
 FileManager.propTypes = {
-    id: PropTypes.number.isRequired,
+    productId: PropTypes.number.isRequired,
     hasEdit: PropTypes.bool.isRequired,
 }
