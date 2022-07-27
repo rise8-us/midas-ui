@@ -1,5 +1,5 @@
 import { LockOpenOutlined, LockOutlined, Settings } from '@mui/icons-material'
-import { Divider, Grid, Grow, IconButton, Tab, Tabs, Tooltip } from '@mui/material'
+import { Divider, Grid, Grow, IconButton, Tab, Tabs, Tooltip, Typography } from '@mui/material'
 import { FileManager } from 'Components/FileManager'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
@@ -134,11 +134,13 @@ function Product() {
                                     value = 'metrics'
                                     data-testid = 'Product__metrics'
                                 />
-                                <Tab
-                                    label = 'Media'
-                                    value = 'media'
-                                    data-testid = 'Product__media'
-                                />
+                                { hasPermission &&
+                                    <Tab
+                                        label = 'Media'
+                                        value = 'media'
+                                        data-testid = 'Product__media'
+                                    />
+                                }
                             </Tabs>
                             <Divider variant = 'fullWidth' />
                         </Grid>
@@ -164,9 +166,13 @@ function Product() {
                                         <PageMetrics id = {id} type = 'product'/>
                                     </Suspense>
                                 }
-                                { value === 'media' &&
+                                { value === 'media' && hasPermission &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
-                                        <FileManager productId = {id} hasEdit = {hasEdit}/>
+                                        {hasEdit ?
+                                            <FileManager productId = {id} hasEdit = {hasEdit}/>
+                                            :
+                                            <Typography color = 'text.primary'>Unlock page to view files</Typography>
+                                        }
                                     </Suspense>
                                 }
                             </div>

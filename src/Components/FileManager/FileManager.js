@@ -1,12 +1,13 @@
-import { Autocomplete, Button, CircularProgress, Grid, TextField } from '@mui/material'
+import { Delete, Download } from '@mui/icons-material'
+import { Button, Grid, Stack, TextField, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteFile, requestGetFile, requestGetFileNames, requestSaveFile } from 'Redux/FileManager/actions'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 
-export default function FileManager({ productId, hasEdit }) {
+export default function FileManager({ productId }) {
     const dispatch = useDispatch()
 
     const inputRef = useRef(null)
@@ -15,8 +16,7 @@ export default function FileManager({ productId, hasEdit }) {
     const portfolio = useSelector(state => selectPortfolioById(state, product?.portfolioId))
 
     const [uploadFileSelected, setUploadFileSelected] = useState(null)
-    const [uploadFileName, setUploadFileName ] = useState('')
-    const [selectedFileName, setSelectedFileName] = useState(null)
+    const [uploadFileName, setUploadFileName] = useState('')
     const [allFileNames, setAllFileNames] = useState([])
     const [hasError, setHasError] = useState(false)
     const [helperText, setHelperText] = useState('')
@@ -28,10 +28,6 @@ export default function FileManager({ productId, hasEdit }) {
             setAllFileNames(fileNames.payload)
             setLoading(false)
         })
-    }
-
-    const handleSelectFileToDownload = (_e, selectedValue) => {
-        setSelectedFileName(selectedValue)
     }
 
     const handleDownloadFile = (filePath) => {
@@ -71,7 +67,7 @@ export default function FileManager({ productId, hasEdit }) {
             product: product.name,
             file: uploadFileSelected
         }
-        dispatch(requestSaveFile(saveRequest))
+        dispatch(requestSaveFile(saveRequest)).then(() => getAllFiles())
         setUploadFileSelected(null)
         setUploadFileName('')
         setHelperText('File Upload Success.')
@@ -79,66 +75,35 @@ export default function FileManager({ productId, hasEdit }) {
 
     const handleDelete = (filePath) => {
         dispatch(requestDeleteFile({ fileName: filePath.substring(filePath.lastIndexOf('/') + 1), filePath: filePath }))
-            .then(() => {
-                setSelectedFileName(null)
-            })
+            .then(() => getAllFiles())
     }
+
+    useEffect(() => {
+        getAllFiles()
+    }, [JSON.stringify(portfolio), JSON.stringify(product)])
 
     return (
         <>
-            <Grid container rowSpacing = {2} direction = 'column'>
-                <Grid item justifyContent = 'center' flexGrow = {1} width = '375px'>
-                    <TextField
-                        disabled = {!hasEdit}
-                        fullWidth
-                        label = {uploadFileName.length > 0 ? '' : 'Choose File'}
-                        variant = 'outlined'
-                        placeholder = 'Choose File'
-                        onClick = {handleUploadFileSelect}
-                        value = {uploadFileName}
-                        error = {hasError}
-                        helperText = {helperText}
-                    />
-                </Grid>
-                <Grid item width = '375px'>
-                    <Autocomplete
-                        disabled = {!hasEdit}
-                        options = {allFileNames.sort()}
-                        getOptionLabel = {(option) => option.split('/')[3]}
-                        onChange = {handleSelectFileToDownload}
-                        onOpen = {getAllFiles}
-                        loadingText = 'Retrieving files...'
-                        loading = {loading}
-                        noOptionsText = 'No files.'
-                        ListboxProps = {{ style: { fontFamily: 'monospace' } }}
-                        renderInput = {(params) =>
-                            <TextField
-                                {...params}
-                                fullWidth
-                                variant = 'outlined'
-                                label = {`Select existing file from ${product.name}`}
-                                InputProps = {{
-                                    'data-testid': 'FileManager-select-file',
-                                    ...params.InputProps,
-                                    endAdornment: loading &&
-                                        <CircularProgress
-                                            color = 'inherit'
-                                            size = {20}
-                                            data-testid = 'FileManager__waiting-icon'
-                                        />
-                                }}
-                            />
-                        }
-                    />
-                </Grid>
-                <Grid container item justifyContent = 'center' width = '375px' columnGap = {2}>
-                    <Grid item xs>
+            <Grid container columnSpacing = {2} direction = 'row'>
+                <Grid container item rowSpacing = {2} direction = 'column' xs = {6}>
+                    <Grid item justifyContent = 'center' width = '80%'>
+                        <TextField
+                            fullWidth
+                            label = {uploadFileName.length > 0 ? '' : 'Choose File'}
+                            variant = 'outlined'
+                            placeholder = 'Choose File'
+                            onClick = {handleUploadFileSelect}
+                            value = {uploadFileName}
+                            error = {hasError}
+                            helperText = {helperText}
+                        />
+                    </Grid>
+                    <Grid item width = '80%'>
                         <input
                             type = 'file'
                             hidden
                             ref = {inputRef}
                             onChange = {handleUploadChange}
-                            disabled = {!hasEdit}
                         />
                         <Button
                             disabled = {uploadFileSelected === null}
@@ -150,28 +115,35 @@ export default function FileManager({ productId, hasEdit }) {
                             Upload
                         </Button>
                     </Grid>
-                    <Grid item xs>
-                        <Button
-                            disabled = {selectedFileName === null}
-                            variant = 'outlined'
-                            onClick = {() => handleDownloadFile(selectedFileName)}
-                            disableRipple
-                            fullWidth
-                        >
-                            download
-                        </Button>
-                    </Grid>
-                    <Grid item xs>
-                        <Button
-                            disabled = {selectedFileName === null}
-                            variant = 'outlined'
-                            onClick = {() => handleDelete(selectedFileName)}
-                            disableRipple
-                            fullWidth
-                        >
-                            delete
-                        </Button>
-                    </Grid>
+                </Grid>
+                <Grid container item rowSpacing = {2} direction = 'column' paddingTop = {2} paddingRight = {2} xs = {6}>
+                    <Typography variant = 'h6'>Exisiting File Uploads</Typography>
+                    {allFileNames.map((fileName, index) =>
+                        <Grid item key = {index}>
+                            <Stack direction = 'row' justifyContent = 'space-between'>
+                                <Stack
+                                    direction = 'row'
+                                    onClick = {() => handleDownloadFile(fileName)}
+                                    color = 'text.secondary'
+                                    sx = {{
+                                        cursor: 'pointer',
+                                        '&:hover': { color: 'primary.main' }
+                                    }}
+                                >
+                                    <Download />
+                                    <Typography>{fileName.substring(fileName.lastIndexOf('/') + 1)}</Typography>
+                                </Stack>
+                                <Delete
+                                    onClick = {() => handleDelete(fileName)}
+                                    sx = {{
+                                        color: 'text.secondary',
+                                        cursor: 'pointer',
+                                        '&:hover': { color: 'text.primary' }
+                                    }}
+                                />
+                            </Stack>
+                        </Grid>
+                    )}
                 </Grid>
             </Grid>
         </>
@@ -180,5 +152,4 @@ export default function FileManager({ productId, hasEdit }) {
 
 FileManager.propTypes = {
     productId: PropTypes.number.isRequired,
-    hasEdit: PropTypes.bool.isRequired,
 }

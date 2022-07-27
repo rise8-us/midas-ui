@@ -1,4 +1,4 @@
-import { render, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { FileManager } from './index'
 
 describe('<FileManager />', () => {
@@ -22,9 +22,8 @@ describe('<FileManager />', () => {
     test('should render', async() => {
         render(<FileManager productId = {1} hasEdit = {true} />)
 
-        // fireEvent.click(screen.getByTestId('FileManager-select-file'))
-
-        // expect(requestGetFileNamesMock).toHaveBeenCalledWith({ portfolioName: 'portfolio', productName: 'product' })
+        expect(await screen.findByPlaceholderText('Choose File')).toBeInTheDocument()
+        expect(await screen.findByLabelText('Select existing file from product')).toBeInTheDocument()
     })
 
 })
