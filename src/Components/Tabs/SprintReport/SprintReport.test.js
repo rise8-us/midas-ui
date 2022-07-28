@@ -1,12 +1,12 @@
 import { render, screen, useDispatchMock, userEvent } from 'Utilities/test-utils'
-import { PortfolioSprintReport } from './index'
+import { SprintReport } from './index'
 
 jest.mock('Components/ProductCardSprintStats/ProductCardSprintStats',
     () => function testing() { return (<div>Product Sprint Stats</div>) })
 jest.mock('Components/PortfolioCardSprintStats/PortfolioCardSprintStats',
     () => function testing() { return (<div>Portfolio Sprint Summary</div>) })
 
-describe('<PortfolioSprintReport />', () => {
+describe('<SprintReport />', () => {
 
     const defaultProps = {
         portfolioId: 10,
@@ -20,8 +20,8 @@ describe('<PortfolioSprintReport />', () => {
     })
 
     test('should render', async() => {
-        render(<PortfolioSprintReport {...defaultProps}/>)
-        await screen.findByTestId('PortfolioSprintReport__container-stack')
+        render(<SprintReport {...defaultProps}/>)
+        await screen.findByTestId('SprintReport__container-stack')
 
         expect(screen.getByTestId('ArrowBackIcon')).toBeInTheDocument()
         expect(screen.getByText('15 Jul 20')).toBeInTheDocument()
@@ -31,8 +31,8 @@ describe('<PortfolioSprintReport />', () => {
     })
 
     test('should handle navigation changes', async() => {
-        render(<PortfolioSprintReport {...defaultProps}/>)
-        await screen.findByTestId('PortfolioSprintReport__container-stack')
+        render(<SprintReport {...defaultProps}/>)
+        await screen.findByTestId('SprintReport__container-stack')
 
         userEvent.click(screen.getByTestId('ArrowBackIcon'))
         expect(await screen.findByText('11 Jul 20')).toBeInTheDocument()

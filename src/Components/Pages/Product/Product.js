@@ -1,10 +1,11 @@
 import { LockOpenOutlined, LockOutlined, Settings } from '@mui/icons-material'
-import { Divider, Grid, Grow, IconButton, Tab, Tabs, Tooltip } from '@mui/material'
+import { CircularProgress, Divider, Grid, Grow, IconButton, Tab, Tabs, Tooltip } from '@mui/material'
 import { Page } from 'Components/Page'
 import { ProductDetails, ProductFeatures, ProductHeader, ProductTeam } from 'Components/ProductOnePager'
 import { AssertionsTab, ProjectsTab } from 'Components/Tabs'
 import { PageMetrics } from 'Components/Tabs/PageMetrics'
 import { ProductPageOverview } from 'Components/Tabs/ProductPageOverview'
+import { SprintReport } from 'Components/Tabs/SprintReport'
 import { Suspense, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
@@ -13,10 +14,13 @@ import { requestFetchEpicsByProductId } from 'Redux/Epics/actions'
 import { requestFetchFeaturesByProductId } from 'Redux/Features/actions'
 import { requestFetchPersonasByProductId } from 'Redux/Personas/actions'
 import { openPopup } from 'Redux/Popups/actions'
+import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import ProductConstants from 'Redux/Products/constants'
+import { selectProductById } from 'Redux/Products/selectors'
 import { requestFetchRoadmapsByProductId } from 'Redux/Roadmaps/actions'
+import { parseStringToDate } from 'Utilities/dateHelpers'
 
-const knownTabs = ['overview', 'objectives', 'projects', 'metrics']
+const knownTabs = ['overview', 'objectives', 'projects', 'metrics', 'sprint-report']
 const validTab = (potentialTab) => knownTabs.includes(potentialTab)
 const calculateHasEdit = (canEdit, readOnly) => canEdit && (!readOnly)
 
@@ -28,6 +32,8 @@ function Product() {
     const id = parseInt(productId)
 
     const hasPermission = useSelector(state => hasProductOrTeamAccess(state, id))
+    const product = useSelector(state => selectProductById(state, id))
+    const portfolio = useSelector(state => selectPortfolioById(state, product?.portfolioId))
 
     const [value, setValue] = useState(false)
     const [pageLock, setPageLock] = useState(true)
@@ -129,6 +135,12 @@ function Product() {
                                     data-testid = 'Product__projects'
                                 />
                                 <Tab
+                                    label = 'Sprint Report'
+                                    value = 'sprint-report'
+                                    data-testid = 'Product__sprint-report'
+                                    disabled = {!portfolio.sprintStartDate}
+                                />
+                                <Tab
                                     label = 'Metrics'
                                     value = 'metrics'
                                     data-testid = 'Product__metrics'
@@ -137,7 +149,7 @@ function Product() {
                             <Divider variant = 'fullWidth' />
                         </Grid>
                         <Grid item>
-                            <div style = {{ padding: '24px 0' }}>
+                            <div style = {{ padding: '24px 16px' }}>
                                 { value === 'overview' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <ProductPageOverview id = {id} hasEdit = {hasEdit}/>
@@ -151,6 +163,29 @@ function Product() {
                                 { value === 'projects' &&
                                     <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
                                         <ProjectsTab id = {id} hasEdit = {hasEdit}/>
+                                    </Suspense>
+                                }
+                                { value === 'sprint-report' &&
+                                    <Suspense fallback = {<div data-testid = 'Product__fallback'/>}>
+                                        {portfolio.sprintStartDate
+                                            ? <SprintReport
+                                                portfolioId = {portfolio.id}
+                                                productIds = {[id]}
+                                                sprintDuration = {portfolio.sprintDurationInDays}
+                                                sprintStart = {parseStringToDate(portfolio.sprintStartDate)}
+                                                type = 'product'
+                                            />
+                                            : <div
+                                                style = {{
+                                                    height: 'calc(100vh - 165px)',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}
+                                            >
+                                                <CircularProgress/>
+                                            </div>
+                                        }
                                     </Suspense>
                                 }
                                 { value === 'metrics' &&

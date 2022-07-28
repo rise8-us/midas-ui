@@ -16,7 +16,7 @@ const calculateDate = (initialDate, duration, multipler) => {
     return newDate.setDate(newDate.getDate() + (duration * multipler))
 }
 
-export default function PortfolioSprintReport({ portfolioId, productIds, sprintStart, sprintDuration }) {
+export default function SprintReport({ portfolioId, productIds, sprintStart, sprintDuration, type }) {
     const dispatch = useDispatch()
 
     let sprintEnd = new Date(sprintStart.getTime())
@@ -49,7 +49,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
             sprintDuration,
         })).then(unwrapResult).then(setPortfolioMetrics))
 
-        requests.push(dispatch(requestfetchPortfolioMetricsSummary({
+        type === 'portfolio' && requests.push(dispatch(requestfetchPortfolioMetricsSummary({
             id: portfolioId,
             startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
             sprintDuration,
@@ -59,7 +59,7 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
     }, [JSON.stringify(debouncedDateRange)])
 
     return (
-        <Stack spacing = {1} data-testid = 'PortfolioSprintReport__container-stack'>
+        <Stack spacing = {1} data-testid = 'SprintReport__container-stack'>
             <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                 <IconButton onClick = {() => updateRange(-1)}>
                     <ArrowBack fontSize = 'small' />
@@ -71,14 +71,16 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
                     <ArrowForward fontSize = 'small' />
                 </IconButton>
             </Stack>
-            <PortfolioCardSprintStats
-                portfolioId = {portfolioId}
-                dateRange = {debouncedDateRange}
-                prodDeployments = {portfolioMetricsSummary.totalReleases}
-                prodIssues = {portfolioMetricsSummary.totalIssuesDelivered}
-                stagingIssues = {portfolioMetricsSummary.totalIssuesClosed}
-                loading = {loading}
-            />
+            {type === 'portfolio' &&
+                <PortfolioCardSprintStats
+                    portfolioId = {portfolioId}
+                    dateRange = {debouncedDateRange}
+                    prodDeployments = {portfolioMetricsSummary.totalReleases}
+                    prodIssues = {portfolioMetricsSummary.totalIssuesDelivered}
+                    stagingIssues = {portfolioMetricsSummary.totalIssuesClosed}
+                    loading = {loading}
+                />
+            }
             {productIds.map((productId, index) =>
                 <ProductCardSprintStats
                     key = {index}
@@ -94,13 +96,15 @@ export default function PortfolioSprintReport({ portfolioId, productIds, sprintS
     )
 }
 
-PortfolioSprintReport.propTypes = {
+SprintReport.propTypes = {
     productIds: PropTypes.arrayOf(PropTypes.number),
     portfolioId: PropTypes.number.isRequired,
     sprintStart: PropTypes.instanceOf(Date).isRequired,
-    sprintDuration: PropTypes.number.isRequired
+    sprintDuration: PropTypes.number.isRequired,
+    type: PropTypes.string,
 }
 
-PortfolioSprintReport.defaultProps = {
+SprintReport.defaultProps = {
     productIds: [],
+    type: 'portfolio',
 }
