@@ -7,6 +7,9 @@ jest.mock('Components/Tabs/ProjectsTab/ProjectsTab',
 jest.mock('Components/Tabs/AssertionsTab/AssertionsTab',
     () => function testing() { return (<div>AssertionsTab</div>) })
 
+jest.mock('Components/Tabs/SprintReport/SprintReport',
+    () => function testing() { return (<div>SprintReportTab</div>) })
+
 jest.mock('Components/Tabs/PageMetrics/PageMetrics',
     () => function testing() { return (<div>MetricsTab</div>) })
 
@@ -25,6 +28,7 @@ jest.mock('Components/Page/Page',
 describe('<Product>', () => {
 
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
+    const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
     const hasProductOrTeamAccessMock = useModuleMock('Redux/Auth/selectors', 'hasProductOrTeamAccess')
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
 
@@ -40,12 +44,19 @@ describe('<Product>', () => {
                 description: null,
                 color: ''
             }
-        ]
+        ],
+    }
+
+    const portfolio = {
+        id: 1,
+        name: 'Portfolio 1',
+        sprintStartDate: '2022-07-14',
     }
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
         selectProductByIdMock.mockReturnValue(product)
+        selectPortfolioByIdMock.mockReturnValue(portfolio)
         hasProductOrTeamAccessMock.mockReturnValue(true)
     })
 
@@ -93,6 +104,13 @@ describe('<Product>', () => {
 
         expect(screen.getByTestId('LockOpenOutlinedIcon')).toBeInTheDocument()
         expect(openPopupMock).toHaveBeenCalled()
+    })
+
+    test('should render sprint report tab', () => {
+        renderWithRouter(<Product />)
+
+        fireEvent.click(screen.getByText(/Sprint Report/i))
+        expect(screen.getByText('SprintReportTab')).toBeInTheDocument()
     })
 
 })

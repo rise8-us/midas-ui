@@ -6,6 +6,7 @@ import { GanttPortfolioNote } from 'Components/Gantt/GanttPortfolioNote'
 import { Page } from 'Components/Page'
 import { PageMetrics } from 'Components/Tabs/PageMetrics'
 import * as PortfolioTab from 'Components/Tabs/PortfolioPage'
+import { SprintReport } from 'Components/Tabs/SprintReport'
 import { Suspense, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
@@ -120,7 +121,7 @@ export default function Portfolio() {
                     {portfolioTab === 'sprint-report' &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
                             {portfolio.sprintStartDate
-                                ? <PortfolioTab.PortfolioSprintReport
+                                ? <SprintReport
                                     portfolioId = {id}
                                     productIds = {portfolio.productIds}
                                     sprintDuration = {portfolio.sprintDurationInDays}

@@ -13,8 +13,8 @@ jest.mock('Components/Tabs/PortfolioPage/PortfolioRoadmap/PortfolioRoadmap',
 jest.mock('Components/Tabs/PageMetrics/PageMetrics',
     () => function testing() { return (<div>MetricsTab</div>) })
 
-jest.mock('Components/Tabs/PortfolioPage/PortfolioSprintReport/PortfolioSprintReport',
-    () => function testing() { return (<div>PortfolioSprintReportTab</div>) })
+jest.mock('Components/Tabs/SprintReport/SprintReport',
+    () => function testing() { return (<div>SprintReportTab</div>) })
 
 describe('<Portfolio />', () => {
 
