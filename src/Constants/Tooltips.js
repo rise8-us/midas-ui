@@ -14,6 +14,7 @@ export default {
     MEASURE_NEW_ENTRY: 'Add new Measure',
     GOAL_NEW_ENTRY: 'Add a new Goal',
     STRATEGY_NEW_ENTRY: 'Add a new Strategy',
+    PRODUCT_CORE_DOMAIN: 'Type of data the app is the system of record for.',
     PRODUCT_VISION: 'The end goal for this product.',
     PRODUCT_MISSION: 'The near-term goal that supports the vision.',
     PRODUCT_PROBLEM_STATEMENT: 'A single statement that describes what problem this product is aiming to ' +

@@ -8,7 +8,7 @@ describe('<ProductList>', () => {
     const product = {
         id: 1,
         name: 'product 1',
-        description: 'description',
+        acronym: 'acronym',
         mission: 'mission',
         vision: 'vision',
         problemStatement: 'problem',
@@ -32,7 +32,7 @@ describe('<ProductList>', () => {
 
         // Header
         expect(screen.getByDisplayValue('product 1')).toBeInTheDocument()
-        expect(screen.getByText('description')).toBeInTheDocument()
+        expect(screen.getByText('acronym')).toBeInTheDocument()
         expect(screen.getByText(/Ownership \| this tag/i)).toBeInTheDocument()
 
         // Details
