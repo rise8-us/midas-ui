@@ -31,7 +31,8 @@ describe('<ProductPopup />', () => {
     const existingProduct = {
         id: 4,
         name: 'Midas Product',
-        description: 'New Product',
+        acronym: 'New Product',
+        coreDomain: 'New Core Domain',
         projectIds: [4],
         isArchived: false,
         portfolioId: 2,
@@ -49,7 +50,8 @@ describe('<ProductPopup />', () => {
 
     const newProduct = {
         name: '',
-        description: '',
+        acronym: '',
+        coreDomain: '',
         tagIds: [],
         tags: [],
         projects: [],
@@ -99,7 +101,8 @@ describe('<ProductPopup />', () => {
 
         expect(submitCreateProductMock).toHaveBeenCalledWith({
             name: '',
-            description: '',
+            acronym: '',
+            coreDomain: '',
             vision: undefined,
             mission: undefined,
             problemStatement: undefined,
@@ -122,24 +125,28 @@ describe('<ProductPopup />', () => {
         render(<ProductPopup id = {4} />)
 
         const name = 'My Edited Product'
-        const description = 'New description'
+        const acronym = 'New acronym'
+        const coreDomain = 'New Core Domain'
         const vision = 'vision'
         const mission = 'mission'
         const problemStatement = 'problem'
 
         const nameInput = screen.getByTestId('ProductPopup__input-name')
-        const descriptionInput = screen.getByTestId('ProductPopup__input-description')
+        const acronymInput = screen.getByTestId('ProductPopup__input-acronym')
+        const coreDomainInput = screen.getByTestId('ProductPopup__input-core-domain')
         const visionInput = screen.getByTestId('ProductPopup__input-vision')
         const missionInput = screen.getByTestId('ProductPopup__input-mission')
         const problemInput = screen.getByTestId('ProductPopup__input-problem')
 
-        userEvent.clear(descriptionInput)
+        userEvent.clear(acronymInput)
+        userEvent.clear(coreDomainInput)
         userEvent.clear(nameInput)
         userEvent.clear(visionInput)
         userEvent.clear(missionInput)
         userEvent.clear(problemInput)
 
-        userEvent.type(descriptionInput, description)
+        userEvent.type(acronymInput, acronym)
+        userEvent.type(coreDomainInput, coreDomain)
         userEvent.type(nameInput, name)
         userEvent.type(visionInput, vision)
         userEvent.type(missionInput, mission)
@@ -157,7 +164,8 @@ describe('<ProductPopup />', () => {
         expect(submitUpdateProductMock).toHaveBeenCalledWith({
             ...existingProduct,
             name,
-            description,
+            acronym,
+            coreDomain,
             vision,
             mission,
             personnel: {

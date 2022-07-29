@@ -9,12 +9,12 @@ describe('<ProductHeader>', () => {
     const product = {
         id: 0,
         name: 'Product 1',
-        description: '',
+        acronym: '',
         tagIds: [4],
         tags: [
             {   id: 4,
                 label: 'Some tags',
-                description: null,
+                acronym: null,
                 color: ''
             }
         ]
@@ -34,7 +34,7 @@ describe('<ProductHeader>', () => {
     test('should display empty quotes if hasEdit === false and no content', () => {
         render(<ProductHeader id = {0} />)
 
-        expect(screen.getByTestId('ProductHeader__input-description')).toBeInTheDocument()
+        expect(screen.getByTestId('ProductHeader__input-acronym')).toBeInTheDocument()
     })
 
     test('should call onSubmit for name change', () => {
@@ -48,16 +48,16 @@ describe('<ProductHeader>', () => {
         })
     })
 
-    test('should call onSubmit for description change', () => {
+    test('should call onSubmit for acronym change', () => {
         useDispatchMock().mockReturnValue({})
-        const description = 'is no longer empty'
+        const acronym = 'is no longer empty'
 
         render(<ProductHeader id = {0} hasEdit/>)
 
-        userEvent.type(screen.getByTestId('ProductHeader__input-description'), `${description}{enter}`)
+        userEvent.type(screen.getByTestId('ProductHeader__input-acronym'), `${acronym}{enter}`)
 
         expect(requestUpdateProductMock).toHaveBeenCalledWith({
-            ...product, description, childIds: []
+            ...product, acronym, childIds: []
         })
     })
 

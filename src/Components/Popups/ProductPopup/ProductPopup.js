@@ -32,6 +32,7 @@ function ProductPopup({ id }) {
 
     const errors = useSelector((state) => selectRequestErrors(state, context.constant))
     const nameError = useMemo(() => errors.filter((error) => error.includes('name')), [errors])
+    const coreDomainError = useMemo(() => errors.filter((error) => error.includes('characters')), [errors])
 
     const [teams, setTeams] = useState([])
     const [tags, setTags] = useState([])
@@ -42,7 +43,8 @@ function ProductPopup({ id }) {
     const [roadmapType, setRoadmapType] = useState(null)
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
-        description: product.description,
+        acronym: product.acronym,
+        coreDomain: product.coreDomain,
         mission: product.mission,
         name: product.name,
         problemStatement: product.problemStatement,
@@ -62,7 +64,8 @@ function ProductPopup({ id }) {
         dispatch(context.request({
             ...product,
             name: formValues.name,
-            description: formValues.description,
+            acronym: formValues.acronym,
+            coreDomain: formValues.coreDomain,
             mission: formValues.mission,
             vision: formValues.vision,
             problemStatement: formValues.problemStatement,
@@ -112,12 +115,24 @@ function ProductPopup({ id }) {
                     onChange = {(_e, values) => handleChange('owner', values)}
                 />
                 <TextField
-                    label = 'Description'
+                    label = 'Acronym'
                     inputProps = {{
-                        'data-testid': 'ProductPopup__input-description',
+                        'data-testid': 'ProductPopup__input-acronym',
                     }}
-                    value = {formValues.description}
-                    onChange = {(e) => handleChange('description', e.target.value)}
+                    value = {formValues.acronym}
+                    onChange = {(e) => handleChange('acronym', e.target.value)}
+                    margin = 'dense'
+                    multiline
+                />
+                <TextField
+                    label = 'Core Domain'
+                    inputProps = {{
+                        'data-testid': 'ProductPopup__input-core-domain',
+                    }}
+                    value = {formValues.coreDomain}
+                    onChange = {(e) => handleChange('coreDomain', e.target.value)}
+                    helperText = {<FormatErrors errors = {coreDomainError} />}
+                    error = {coreDomainError.length > 0}
                     margin = 'dense'
                     multiline
                 />

@@ -11,6 +11,7 @@ describe('<ProductDetails>', () => {
         mission: 'get to da chappa',
         problemStatement: 'da bridge is out',
         vision: 'to be the governer',
+        coreDomain: 'to be da guvna',
         childIds: []
     }
 
@@ -25,6 +26,7 @@ describe('<ProductDetails>', () => {
         expect(screen.getByDisplayValue(product.mission)).toBeInTheDocument()
         expect(screen.getByDisplayValue(product.problemStatement)).toBeInTheDocument()
         expect(screen.getByDisplayValue(product.vision)).toBeInTheDocument()
+        expect(screen.getByDisplayValue(product.coreDomain)).toBeInTheDocument()
 
         userEvent.type(screen.getByDisplayValue(product.mission), '!')
         userEvent.tab()
@@ -42,6 +44,12 @@ describe('<ProductDetails>', () => {
         userEvent.tab()
 
         expect(requestUpdateProductMock).toHaveBeenCalledWith({ ...product, vision: '!' })
+
+        requestUpdateProductMock.mockReset()
+        userEvent.type(screen.getByDisplayValue(product.coreDomain), 'core')
+        userEvent.tab()
+
+        expect(requestUpdateProductMock).toHaveBeenCalledWith({ ...product, coreDomain: 'core' })
     })
 
     test('should render with no data and no access', () => {

@@ -37,7 +37,7 @@ function ProductHeader({ id, hasEdit }) {
     const onDescriptionSave = (newValue) => {
         submitUpdate({
             ...product,
-            description: newValue
+            acronym: newValue
         })
     }
 
@@ -69,14 +69,14 @@ function ProductHeader({ id, hasEdit }) {
             </Grid>
             <Grid>
                 <StyledSubheader
-                    initialValue = {product.description}
+                    initialValue = {product.acronym}
                     onSave = {onDescriptionSave}
                     placeholder = {hasEdit ? 'App name an acronym? Spell it out here.' : ''}
                     errors = {[]}
                     multiline
                     fullWidth
                     enableSpellCheck
-                    dataTestId = 'ProductHeader__input-description'
+                    dataTestId = 'ProductHeader__input-acronym'
                     canEdit = {hasEdit}
                 />
             </Grid>

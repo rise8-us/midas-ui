@@ -30,8 +30,18 @@ export default function ProductCardSprintStats(props) {
                 <Grid container>
                     <Grid item xs = {12} md = {3}>
                         <Stack>
-                            <Typography marginY = {1} variant = 'h6'>
+                            <Typography marginTop = {1} variant = 'h6'>
                                 <TextSkeleton loading = {!product.name} text = {product.name} width = '160px'/>
+                            </Typography>
+                            <Typography
+                                color = 'secondary'
+                                variant = 'body2'
+                                sx = {{
+                                    fontStyle: 'italic',
+                                    marginBottom: '8px'
+                                }}
+                            >
+                                {product.coreDomain}
                             </Typography>
                             <ProductDoraMetrics
                                 loading = {loading}
