@@ -13,7 +13,11 @@ export default function CollapsableRow({ children, typeText, headerText, styles 
             collapsedSize = '0px'
             mouseMovement = {false}
             header = {
-                <Stack direction = 'row' justifyContent = 'space-between' alignItems = 'center'>
+                <Stack
+                    data-testid = {`CollapsableRow__stack-${headerText}`}
+                    direction = 'row'
+                    justifyContent = 'space-between'
+                    alignItems = 'center'>
                     <Stack direction = 'row' alignItems = 'center'>
                         <Typography
                             fontWeight = 'bold'
