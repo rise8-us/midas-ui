@@ -49,7 +49,8 @@ describe('CRUD subtargets', () => {
         cy.get('[data-testId=GanttTarget__expandButton_open]').click()
         cy.wait(1500)
         cy.get('[data-testId=GanttTarget__expandButton_closed]').first().click()
-        cy.get('[data-testId=GanttSubTarget__title]').click().type('subtargetTitle{enter}')
+        cy.wait(1000)
+        cy.get('[data-testId=AutoSaveTextField__input]').click().type('subtargetTitle{enter}')
 
         cy.wait('@updateSubtarget').then(res => {
             expect(res.response.statusCode).to.equal(200)
