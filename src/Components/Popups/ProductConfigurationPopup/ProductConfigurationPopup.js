@@ -34,7 +34,10 @@ export default function ProductConfigurationPopup({ id }) {
             sourceControlId: sourceControl?.id ?? null,
             tagIds: Object.values(tags.map((tag) => tag.id)),
             projectIds: Object.values(projects.map((project) => project.id)),
-            teamIds: teams.map((team) => team.id),
+            personnel: {
+                ...product.personnel,
+                teamIds: teams.map((team) => team.id),
+            },
             childIds: [] // required by api
         }))
     }

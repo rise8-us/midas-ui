@@ -36,16 +36,19 @@ function ProductDetails({ productId, hasEdit }) {
             <Grid item marginTop = {1}>
                 <AutoSaveTextFieldStyled
                     label = 'CORE DOMAIN'
-                    initialValue = {product.coreDomain}
-                    onSave = {(e) => dispatchUpdateProduct('coreDomain', e)}
-                    placeholder = {hasEdit ? 'Type of data the app is the system of record for.' : ''}
-                    multiline
-                    tooltip = {tooltips.PRODUCT_CORE_DOMAIN}
-                    fullWidth
-                    enableSpellCheck
                     dataTestId = 'ProductDetails-core-domain'
-                    errors = {errors}
+                    initialValue = {defaultValue(product.coreDomain)}
                     canEdit = {hasEdit}
+                    onSave = {(e) => dispatchUpdateProduct('coreDomain', e)}
+                    placeholder = 'Type of data the app is the system of record for.'
+                    tooltip = {tooltips.PRODUCT_CORE_DOMAIN}
+                    enableSpellCheck
+                    fullWidth
+                    multiline
+                    errors = {errors}
+                    InputLabelProps = {{
+                        shrink: true
+                    }}
                 />
             </Grid>
             <Grid item>
@@ -55,10 +58,14 @@ function ProductDetails({ productId, hasEdit }) {
                     initialValue = {defaultValue(product.vision)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('vision', e)}
+                    placeholder = 'End goal for this product.'
                     tooltip = {tooltips.PRODUCT_VISION}
                     enableSpellCheck
                     fullWidth
                     multiline
+                    InputLabelProps = {{
+                        shrink: true
+                    }}
                 />
             </Grid>
             <Grid item>
@@ -68,10 +75,14 @@ function ProductDetails({ productId, hasEdit }) {
                     initialValue = {defaultValue(product.mission)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('mission', e)}
+                    placeholder = 'Near term goal that supports the vision.'
                     tooltip = {tooltips.PRODUCT_MISSION}
                     enableSpellCheck
                     fullWidth
                     multiline
+                    InputLabelProps = {{
+                        shrink: true
+                    }}
                 />
             </Grid>
             <Grid item>
@@ -81,10 +92,14 @@ function ProductDetails({ productId, hasEdit }) {
                     initialValue = {defaultValue(product.problemStatement)}
                     canEdit = {hasEdit}
                     onSave = {(e) => dispatchUpdateProduct('problemStatement', e)}
+                    placeholder = 'What problem does this product aim to fix/improve upon.'
                     tooltip = {tooltips.PRODUCT_PROBLEM_STATEMENT}
                     enableSpellCheck
                     fullWidth
                     multiline
+                    InputLabelProps = {{
+                        shrink: true
+                    }}
                 />
             </Grid>
         </Grid>

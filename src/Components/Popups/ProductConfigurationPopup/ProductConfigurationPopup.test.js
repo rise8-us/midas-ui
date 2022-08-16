@@ -41,7 +41,9 @@ describe('<ProductConfigurationPopup />', () => {
             ...product,
             gitlabGroupId: null,
             tagIds: [],
-            teamIds: [],
+            personnel: {
+                teamIds: []
+            },
             projectIds: [],
             sourceControlId: null,
             roadmapType: 'MANUAL',
@@ -65,7 +67,9 @@ describe('<ProductConfigurationPopup />', () => {
             ...product,
             gitlabGroupId: 50,
             tagIds: [10],
-            teamIds: [20],
+            personnel: {
+                teamIds: [20],
+            },
             projectIds: [30],
             sourceControlId: 40,
             roadmapType: 'roadmaptype',
