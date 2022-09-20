@@ -5,6 +5,8 @@ import { Products } from './index'
 jest.mock('Components/Cards/ProductCard/ProductCard', () =>
     function testing() { return (<div>Product Card mock</div>) })
 
+jest.mock('Hooks/useHistory')
+
 describe('<Products>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')

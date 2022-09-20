@@ -1,4 +1,4 @@
-import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { Product } from './index'
 
 jest.mock('Components/Tabs/ProjectsTab/ProjectsTab',
@@ -24,6 +24,10 @@ jest.mock('Components/ProductOnePager/ProductTeam/ProductTeam',
 
 jest.mock('Components/Page/Page',
     () => function testing({ children }) { return (<div>{children}</div>) })
+
+jest.mock('Hooks/useHistory', () => () => ({
+    push: jest.fn()
+}))
 
 describe('<Product>', () => {
 
@@ -61,21 +65,21 @@ describe('<Product>', () => {
     })
 
     test('should have correct header text', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         expect(screen.getByDisplayValue('Product 1'))
         expect(screen.getByText(/Some tags/i)).toBeInTheDocument()
     })
 
     test('should render projects tab', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         fireEvent.click(screen.getByText(/Projects/i))
         expect(screen.getByText('ProjectsTab')).toBeInTheDocument()
     })
 
     test('should render overview tab', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         fireEvent.click(screen.getByText(/overview/i))
         expect(screen.getByText('ProductRoadmap')).toBeInTheDocument()
@@ -83,21 +87,21 @@ describe('<Product>', () => {
     })
 
     test('should render objectives tab', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         fireEvent.click(screen.getByText(/objectives/i))
         expect(screen.getByText('AssertionsTab')).toBeInTheDocument()
     })
 
     test('should render metrics tab', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         fireEvent.click(screen.getByText(/metrics/i))
         expect(screen.getByText('MetricsTab')).toBeInTheDocument()
     })
 
     test('should handle action icons', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         fireEvent.click(screen.getByTestId('ProductPage__icon-inline-edit'))
         fireEvent.click(screen.getByTestId('ProductPage__icon-popup-edit'))
@@ -107,7 +111,7 @@ describe('<Product>', () => {
     })
 
     test('should render sprint report tab', () => {
-        renderWithRouter(<Product />)
+        render(<Product />)
 
         fireEvent.click(screen.getByText(/Sprint Report/i))
         expect(screen.getByText('SprintReportTab')).toBeInTheDocument()

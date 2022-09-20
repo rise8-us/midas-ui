@@ -1,6 +1,8 @@
 import { render, screen, useDispatchMock, waitFor } from 'Utilities/test-utils'
 import { AppMetrics } from './index'
 
+jest.mock('Hooks/useHistory')
+
 describe('<PersonaEntry>', () => {
 
     beforeAll(() => {

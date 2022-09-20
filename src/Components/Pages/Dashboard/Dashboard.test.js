@@ -1,6 +1,10 @@
 import { fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { buildCtfData, buildScopedData, combinePortfolios, combineProducts, Dashboard } from './index'
 
+jest.mock('Hooks/useHistory', () => () => ({
+    push: jest.fn()
+}))
+
 describe('<Dashboard>', () => {
 
     const selectAllActivePortfoliosNameAndIdsMock =

@@ -1,7 +1,7 @@
 import { alpha, Grid, useTheme } from '@mui/material'
 import { ProductBox } from 'Components/ProductBox'
+import useHistory from 'Hooks/useHistory'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router'
 import { sortArrayAlphabetically } from 'Utilities/sorting'
 
 function ProductList({ products, tagScope }) {

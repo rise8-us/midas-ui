@@ -4,11 +4,8 @@ import { ProjectCard } from './index'
 import { tooltipDisplay } from './ProjectCard'
 
 const mockHistoryPush = jest.fn()
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-        push: mockHistoryPush,
-    })
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush,
 }))
 
 describe('<ProjectCard />', () => {

@@ -22,6 +22,8 @@ jest.mock('Components/Admin/SourceControlTab/SourceControlTab',
 jest.mock('Components/Admin/DatabaseTab/DatabaseTab',
     () => function testing() { return (<div>Admin Page dbActions Tab Test</div>) })
 
+jest.mock('Hooks/useHistory')
+
 describe('<Admin />', () => {
     jest.setTimeout(15000)
 

@@ -1,4 +1,4 @@
-import { renderWithRouter, screen } from 'Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { GanttTargetTooltip } from './index'
 
 describe('<GanttTargetTooltip />', () => {
@@ -11,7 +11,7 @@ describe('<GanttTargetTooltip />', () => {
     }
 
     test('should render', () => {
-        renderWithRouter(<GanttTargetTooltip target = {target}/>)
+        render(<GanttTargetTooltip target = {target}/>)
 
         expect(screen.getByText('This is the target title')).toBeInTheDocument()
         expect(screen.getByText('These are the details')).toBeInTheDocument()

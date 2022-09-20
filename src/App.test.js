@@ -1,8 +1,11 @@
 import App from './App'
-import { renderWithRouter, useModuleMock, waitFor } from './Utilities/test-utils'
+import { render, useModuleMock, waitFor } from './Utilities/test-utils'
 
 jest.mock('./Components/PopupManager/PopupManager', () => function testing() { return (<div/>) })
 jest.mock('./Components/WebsocketProvider/WebsocketProvider', () => function testing() {  return (<div/>) })
+jest.mock('Hooks/useHistory', () => () => ({
+    listen: jest.fn()
+}))
 
 describe('<App />', () => {
 
@@ -14,7 +17,7 @@ describe('<App />', () => {
         initializeAppMock.mockResolvedValue()
         selectUserLoggedInMock.mockReturnValue({ isAdmin: true })
 
-        renderWithRouter(<App />)
+        render(<App />)
 
         expect(setInitializedMock).not.toHaveBeenCalled()
     })
@@ -23,7 +26,7 @@ describe('<App />', () => {
         initializeAppMock.mockImplementation(() => Promise.reject('failed'))
         selectUserLoggedInMock.mockReturnValue({ isAdmin: false })
 
-        renderWithRouter(<App />)
+        render(<App />)
 
         await waitFor(() => {
             expect(setInitializedMock).toHaveBeenCalledWith(false)

@@ -4,6 +4,8 @@ import { Projects } from './index'
 
 jest.mock('Components/Cards/ProjectCard/ProjectCard', () => function testing() { return (<div>ProjectCard</div>) })
 
+jest.mock('Hooks/useHistory')
+
 describe('<Projects>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
