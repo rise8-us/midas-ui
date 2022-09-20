@@ -5,6 +5,8 @@ import { Portfolios } from './index'
 jest.mock('Components/Cards/PortfolioCard/PortfolioCard', () =>
     (function testing() { return (<div>Portfolio Card mock</div>) }))
 
+jest.mock('Hooks/useHistory')
+
 describe('<Portfolios>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')

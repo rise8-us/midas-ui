@@ -1,10 +1,12 @@
-import { createMemoryHistory } from 'history'
-import { fireEvent, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { BlockerRow } from './index'
 
-describe('<BlockerRow />', () => {
-    const history = createMemoryHistory()
+const mockHistoryPush = jest.fn()
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush
+}))
 
+describe('<BlockerRow />', () => {
     const selectAssertionByIdMock = useModuleMock('Redux/Assertions/selectors', 'selectAssertionById')
     const selectCommentByIdMock = useModuleMock('Redux/Comments/selectors', 'selectCommentById')
     const selectProductByIdMock = useModuleMock('Redux/Products/selectors', 'selectProductById')
@@ -45,8 +47,8 @@ describe('<BlockerRow />', () => {
     })
 
     test('should render', () => {
-        renderWithRouter(<BlockerRow assertionId = {1} productId = {2} commentId = {3}/>,
-            { history, initialState: mockState })
+        render(<BlockerRow assertionId = {1} productId = {2} commentId = {3}/>,
+            { initialState: mockState })
 
         expect(screen.getByText('PRODUCT')).toBeInTheDocument()
         expect(screen.getByText('assertion')).toBeInTheDocument()
@@ -60,8 +62,8 @@ describe('<BlockerRow />', () => {
             text: ''
         })
 
-        renderWithRouter(<BlockerRow assertionId = {1} productId = {2} commentId = {3}/>,
-            { history, initialState: mockState })
+        render(<BlockerRow assertionId = {1} productId = {2} commentId = {3}/>,
+            { initialState: mockState })
 
         expect(screen.getByText('DD MMM YY')).toBeInTheDocument()
         expect(requestSearchCommentsMock).toHaveBeenCalled()
@@ -72,28 +74,28 @@ describe('<BlockerRow />', () => {
             creationDate: '2021-01-02 14:50:15'
         })
 
-        renderWithRouter(<BlockerRow assertionId = {1} productId = {2} commentId = {3}/>,
-            { history, initialState: mockState })
+        render(<BlockerRow assertionId = {1} productId = {2} commentId = {3}/>,
+            { initialState: mockState })
 
         expect(screen.getByText('02 JAN 21')).toBeInTheDocument()
     })
 
     test('should go to product', () => {
-        renderWithRouter(<BlockerRow assertionId = {1} productId = {2} commentId = {3} />,
-            { history, initialState: mockState })
+        render(<BlockerRow assertionId = {1} productId = {2} commentId = {3} />,
+            { initialState: mockState })
 
         fireEvent.click(screen.getByText('PRODUCT'))
 
-        expect(history.location.pathname).toEqual('/products/2')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/products/2')
     })
 
     test('should go to ogsm', () => {
-        renderWithRouter(<BlockerRow assertionId = {1} productId = {2} commentId = {3} />,
-            { history, initialState: mockState })
+        render(<BlockerRow assertionId = {1} productId = {2} commentId = {3} />,
+            { initialState: mockState })
 
         fireEvent.click(screen.getByText('assertion'))
 
-        expect(history.location.pathname).toEqual('/products/2/objectives/1')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/products/2/objectives/1')
     })
 
 })

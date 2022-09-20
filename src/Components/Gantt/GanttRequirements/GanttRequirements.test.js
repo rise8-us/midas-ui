@@ -2,11 +2,8 @@ import { render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utili
 import { GanttRequirements } from './index'
 
 const mockHistoryPush = jest.fn()
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-        push: mockHistoryPush,
-    })
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush
 }))
 
 describe('<GanttRequirements />', () => {

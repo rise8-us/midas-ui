@@ -1,6 +1,8 @@
 import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { Account } from './index'
 
+jest.mock('Hooks/useHistory')
+
 describe('<Account />', () => {
 
     const mockState = {

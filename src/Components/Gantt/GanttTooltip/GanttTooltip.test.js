@@ -1,4 +1,4 @@
-import { renderWithRouter, screen } from 'Utilities/test-utils'
+import { render, screen } from 'Utilities/test-utils'
 import { GanttTooltip } from './index'
 
 describe('<GanttTooltip />', () => {
@@ -13,7 +13,7 @@ describe('<GanttTooltip />', () => {
     }
 
     test('should render', () => {
-        renderWithRouter(<GanttTooltip {...defaultProps}/>)
+        render(<GanttTooltip {...defaultProps}/>)
 
         expect(screen.getByText('This is the milestone title')).toBeInTheDocument()
         expect(screen.getByText('These are the details')).toBeInTheDocument()

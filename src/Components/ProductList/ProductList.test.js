@@ -1,10 +1,12 @@
-import { createMemoryHistory } from 'history'
-import { fireEvent, renderWithRouter, screen } from 'Utilities/test-utils'
+import { fireEvent, render, screen } from 'Utilities/test-utils'
 import { ProductList } from './index'
 
-describe('<ProductList>', () => {
-    const history = createMemoryHistory()
+const mockHistoryPush = jest.fn()
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush
+}))
 
+describe('<ProductList>', () => {
     const productsList = [
         {
             id: 1,
@@ -33,17 +35,17 @@ describe('<ProductList>', () => {
     ]
 
     test('should render', () => {
-        renderWithRouter(<ProductList products = {productsList} tagScope = 'yolo'/>)
+        render(<ProductList products = {productsList} tagScope = 'yolo'/>)
 
         expect(screen.getByText('product 1')).toBeInTheDocument()
     })
 
     test('should nav to product Page', () => {
-        renderWithRouter(<ProductList products = {productsList} tagScope = 'agileAF'/>, { history })
+        render(<ProductList products = {productsList} tagScope = 'agileAF'/>)
 
         fireEvent.click(screen.getByText('product 1'))
 
-        expect(history.location.pathname).toEqual('/products/1/overview')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/products/1/overview')
     })
 
 })

@@ -3,9 +3,8 @@
 import { ThemeProvider } from '@mui/material/styles'
 import { render as rtlRender } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { createMemoryHistory } from 'history'
 import { Provider } from 'react-redux'
-import { Route, Router } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { createStore } from 'redux'
 import { rootReducer } from 'Redux/reducers'
 import { theme } from 'Styles/materialThemes'
@@ -20,16 +19,14 @@ function render(ui, { initialState, store = createStore(rootReducer, initialStat
 function renderWithRouter(ui, {
     path = '/', // ie. "/project/:id"
     route = '/', // ie. "/project/ABC123"
-    history = createMemoryHistory(),
     ...renderOptions
 } = {}) {
-
-    history.push(route)
-
     return render(
-        <Router history = {history}>
-            <Route path = {path} render = {() => ui}/>
-        </Router>, { ...renderOptions })
+        <MemoryRouter initialEntries = {[route]} initialIndex = {0}>
+            <Routes>
+                <Route path = {path} element = {ui} />
+            </Routes>
+        </MemoryRouter>, { ...renderOptions })
 }
 
 export const useSelectorMock = () => {

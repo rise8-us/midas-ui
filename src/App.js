@@ -3,9 +3,10 @@ import * as Pages from 'Components/Pages'
 import { PopupManager } from 'Components/PopupManager'
 import { SnackbarManager } from 'Components/Snackbar'
 import { WebsocketProvider } from 'Components/WebsocketProvider'
+import useHistory from 'Hooks/useHistory'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { requestPostPageMetrics } from 'Redux/AppMetrics/actions'
 import { setInitialized } from 'Redux/AppSettings/reducer'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
@@ -30,33 +31,31 @@ function App() {
             <WebsocketProvider>
                 <PopupManager />
                 <SnackbarManager />
-                <Switch>
-                    <Route exact path = '/'><Redirect to = '/portfolios'/></Route>
-                    <Route exact path = '/account' component = {Pages.Account} />
-                    <Route exact path = '/dashboard' component = {Pages.Dashboard} />
-                    <Route exact path = '/home'><Redirect to = '/portfolios'/></Route>
-                    <Route exact path = '/portfolios' component = {Pages.Portfolios} />
-                    <Route exact path = '/portfolios/:portfolioId' component = {Pages.Portfolio} />
-                    <Route exact path = '/portfolios/:portfolioId/:portfolioTab' component = {Pages.Portfolio} />
+                <Routes>
+                    <Route path = '/' element = {<Navigate to = '/portfolios' replace />} />
+                    <Route path = '/account' element = {<Pages.Account />} />
+                    <Route path = '/dashboard' element = {<Pages.Dashboard />} />
+                    <Route path = '/home' element = {<Navigate to = '/portfolios' replace />} />
+                    <Route path = '/portfolios' element = {<Pages.Portfolios />} />
+                    <Route path = '/portfolios/:portfolioId' element = {<Pages.Portfolio />} />
+                    <Route path = '/portfolios/:portfolioId/:portfolioTab' element = {<Pages.Portfolio />} />
                     <Route
-                        exact
                         path = '/portfolios/:portfolioId/:portfolioTab/:capabilityId'
-                        component = {Pages.Portfolio}
+                        element = {<Pages.Portfolio />}
                     />
-                    <Route exact path = '/products' component = {Pages.Products} />
-                    <Route exact path = '/products/:productId' component = {Pages.Product} />
-                    <Route exact path = '/products/:productId/:productTab' component = {Pages.Product} />
+                    <Route path = '/products' element = {<Pages.Products />} />
+                    <Route path = '/products/:productId' element = {<Pages.Product />} />
+                    <Route path = '/products/:productId/:productTab' element = {<Pages.Product />} />
                     <Route
-                        exact
                         path = '/products/:productId/:productTab/:assertionId'
-                        component = {Pages.Product}
+                        element = {<Pages.Product />}
                     />
-                    <Route exact path = '/projects' component = {Pages.Projects} />
-                    <Route exact path = '/tags' component = {Pages.Tags} />
-                    {user.isAdmin && <Route exact path = '/admin' component = {Pages.Admin} />}
-                    <Route exact path = '/appMetrics' component = {Pages.AppMetrics} />
-                    <Route component = {Pages.PageNotFound} />
-                </Switch>
+                    <Route path = '/projects' element = {<Pages.Projects />} />
+                    <Route path = '/tags' element = {<Pages.Tags />} />
+                    {user.isAdmin && <Route path = '/admin' element = {<Pages.Admin />} />}
+                    <Route path = '/appMetrics' element = {<Pages.AppMetrics />} />
+                    <Route element = {<Pages.PageNotFound />} />
+                </Routes>
             </WebsocketProvider>
         </Banner>
     )

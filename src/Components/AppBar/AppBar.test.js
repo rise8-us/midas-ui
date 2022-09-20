@@ -1,10 +1,12 @@
-import { createMemoryHistory } from 'history'
 import {
-    fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor
 } from 'Utilities/test-utils'
 import { AppBar } from './index'
 
-const history = createMemoryHistory()
+const mockHistoryPush = jest.fn()
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush
+}))
 
 describe('<AppBar />', () => {
     jest.setTimeout(15000)
@@ -23,7 +25,7 @@ describe('<AppBar />', () => {
     test('should render no authd user', () => {
         selectUserLoggedInMock.mockReturnValue({})
 
-        renderWithRouter(<AppBar />, { history })
+        render(<AppBar />)
 
         expect(screen.getByTestId('AppBar__logo')).toBeInTheDocument()
         expect(screen.queryByTitle('Dashboard')).not.toBeInTheDocument()
@@ -69,37 +71,37 @@ describe('<AppBar />', () => {
     test('should links navigate correctly', () => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
 
-        renderWithRouter(<AppBar />, { history })
+        render(<AppBar />)
 
         fireEvent.click(screen.getByTestId('AppBar__logo'))
-        expect(history.location.pathname).toEqual('/portfolios')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/portfolios')
 
         fireEvent.click(screen.getByTitle('tags'))
-        expect(history.location.pathname).toEqual('/tags')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/tags')
 
         fireEvent.click(screen.getByTitle('admin'))
-        expect(history.location.pathname).toEqual('/admin')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/admin')
 
         fireEvent.click(screen.getByTitle('account'))
-        expect(history.location.pathname).toEqual('/account')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/account')
 
         // Page links
 
         fireEvent.click(screen.getByText('Projects'))
-        expect(history.location.pathname).toEqual('/projects')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/projects')
 
         fireEvent.click(screen.getByText('Products'))
-        expect(history.location.pathname).toEqual('/products')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/products')
 
         fireEvent.click(screen.getByText('Portfolios'))
-        expect(history.location.pathname).toEqual('/portfolios')
+        expect(mockHistoryPush).toHaveBeenLastCalledWith('/portfolios')
 
     })
 
     test('should link to support channels', () => {
         selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
 
-        renderWithRouter(<AppBar />)
+        render(<AppBar />)
 
         fireEvent.click(screen.getByTestId('ContactSupportOutlinedIcon'))
 

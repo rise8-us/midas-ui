@@ -1,7 +1,7 @@
 import { Link, Stack, Tooltip, Typography } from '@mui/material'
+import useHistory from 'Hooks/useHistory'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { selectCapabilityById } from 'Redux/Capabilities/selectors'
 import { selectDeliverablesByCapabilityId, selectDeliverablesByIds } from 'Redux/Deliverables/selectors'
 export default function GanttRequirements({ capabilityId, deliverableIds, portfolioId }) {

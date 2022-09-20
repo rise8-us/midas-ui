@@ -1,7 +1,11 @@
-import { createMemoryHistory } from 'history'
 import ProductConstants from 'Redux/Products/constants'
-import { fireEvent, render, renderWithRouter, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { ProductCard } from './index'
+
+const mockHistoryPush = jest.fn()
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush
+}))
 
 describe('<ProductCard />', () => {
     const product = {
@@ -64,13 +68,11 @@ describe('<ProductCard />', () => {
     })
 
     test('should go to products page', () => {
-        const history = createMemoryHistory()
-
-        renderWithRouter(<ProductCard id = {product.id}/>, { history })
+        render(<ProductCard id = {product.id}/>)
 
         fireEvent.click(screen.getByText('Midas'))
 
-        expect(history.location.pathname).toEqual('/products/4/overview')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/products/4/overview')
     })
 
 })

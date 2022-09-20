@@ -5,7 +5,7 @@ import { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import store from 'Redux/store'
 import App from './App'
 import { theme } from './Styles/materialThemes'
@@ -25,18 +25,16 @@ const errorFallbackComponent = ({ error }) => (
 ReactDOM.render(
     <Router>
         <Provider store = {store}>
-            <Switch>
-                <Fragment>
-                    <ThemeProvider theme = {theme}>
-                        <CssBaseline />
-                        <ErrorBoundary FallbackComponent = {errorFallbackComponent}>
-                            {/* <React.StrictMode> */}
-                            <App />
-                            {/* </React.StrictMode> */}
-                        </ErrorBoundary>
-                    </ThemeProvider>
-                </Fragment>
-            </Switch>
+            <Fragment>
+                <ThemeProvider theme = {theme}>
+                    <CssBaseline />
+                    <ErrorBoundary FallbackComponent = {errorFallbackComponent}>
+                        {/* <React.StrictMode> */}
+                        <App />
+                        {/* </React.StrictMode> */}
+                    </ErrorBoundary>
+                </ThemeProvider>
+            </Fragment>
         </Provider>
     </Router>,
     document.getElementById('root')

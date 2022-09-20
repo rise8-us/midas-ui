@@ -1,8 +1,5 @@
-import { createMemoryHistory } from 'history'
 import { fireEvent, renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
 import { Portfolio } from './index'
-
-const history = createMemoryHistory()
 
 jest.mock('Components/Tabs/PortfolioPage/PortfolioCapabilities/PortfolioCapabilities',
     () => function testing() { return (<div>RequirementsTab</div>) })
@@ -15,6 +12,11 @@ jest.mock('Components/Tabs/PageMetrics/PageMetrics',
 
 jest.mock('Components/Tabs/SprintReport/SprintReport',
     () => function testing() { return (<div>SprintReportTab</div>) })
+
+const mockHistoryPush = jest.fn()
+jest.mock('Hooks/useHistory', () => () => ({
+    push: mockHistoryPush
+}))
 
 describe('<Portfolio />', () => {
 
@@ -55,14 +57,14 @@ describe('<Portfolio />', () => {
         renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
         fireEvent.click(screen.getByText('requirements'))
 
-        expect(history.location.pathname).toEqual('/portfolios/91/requirements/')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/91/requirements/')
     })
 
     test('should render metrics tab', async() => {
         renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
         fireEvent.click(screen.getByText('metrics'))
 
-        expect(history.location.pathname).toEqual('/portfolios/91/metrics')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/91/metrics')
     })
 
     test('should render metrics tab - with data', async() => {
@@ -71,7 +73,7 @@ describe('<Portfolio />', () => {
         renderWithRouter(<Portfolio />, { history, route: '/portfolios/91', path: '/portfolios/:portfolioId' })
         fireEvent.click(screen.getByText('sprint report'))
 
-        expect(history.location.pathname).toEqual('/portfolios/91/sprint-report')
+        expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/91/sprint-report')
     })
 
     test('should handle action icons with permissions', () => {

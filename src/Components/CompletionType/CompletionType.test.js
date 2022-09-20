@@ -1,5 +1,5 @@
 import {
-    act, mockSearchEpicsComponent, renderWithRouter, screen, selectCompletionTypesMock, userEvent
+    act, mockSearchEpicsComponent, render, screen, selectCompletionTypesMock, userEvent
 } from 'Utilities/test-utils'
 import { determineCompletionTypeData } from './CompletionType'
 import { CompletionType } from './index'
@@ -25,7 +25,7 @@ describe('<CompletionType />', () => {
     })
 
     test('should render with unknown completionType', () => {
-        renderWithRouter(<CompletionType {...requiredProps}/>)
+        render(<CompletionType {...requiredProps}/>)
 
         expect(screen.getByLabelText('Completion Type')).toBeInTheDocument()
         expect(screen.queryByLabelText('Value')).not.toBeInTheDocument()
@@ -36,7 +36,7 @@ describe('<CompletionType />', () => {
         test('should handle empty values onChange', () => {
             jest.useFakeTimers()
 
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -63,7 +63,7 @@ describe('<CompletionType />', () => {
         test('should call onChange for manual value field', () => {
             jest.useFakeTimers()
 
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -89,7 +89,7 @@ describe('<CompletionType />', () => {
         test('should call onChange for target field', () => {
             jest.useFakeTimers()
 
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -112,7 +112,7 @@ describe('<CompletionType />', () => {
         })
 
         test('should handle onchange for binary completion type', () => {
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -131,7 +131,7 @@ describe('<CompletionType />', () => {
         })
 
         test('should handle onchange for binary completion type', () => {
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -149,7 +149,7 @@ describe('<CompletionType />', () => {
         })
 
         test('should handle onChange for completionType', () => {
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -176,7 +176,7 @@ describe('<CompletionType />', () => {
 
     describe('automated options', () => {
         test('gitlab epic - not selected calls update', () => {
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -198,7 +198,7 @@ describe('<CompletionType />', () => {
             })
         })
         test('gitlab epic - should render with option', () => {
-            renderWithRouter(
+            render(
                 <CompletionType
                     {...requiredProps}
                     onChange = {testMock}
@@ -221,7 +221,7 @@ describe('<CompletionType />', () => {
 
     describe('should render each completionType', () => {
         test('BINARY', () => {
-            renderWithRouter(
+            render(
                 <CompletionType {...requiredProps} completion = {{ ...completion, completionType: 'BINARY' }}/>
             )
 
@@ -230,7 +230,7 @@ describe('<CompletionType />', () => {
         })
 
         test('PERCENTAGE', () => {
-            renderWithRouter(
+            render(
                 <CompletionType {...requiredProps} completion = {{ ...completion, completionType: 'PERCENTAGE' }}/>
             )
 
@@ -239,7 +239,7 @@ describe('<CompletionType />', () => {
         })
 
         test('NUMBER', () => {
-            renderWithRouter(
+            render(
                 <CompletionType {...requiredProps} completion = {{ ...completion, completionType: 'NUMBER' }}/>
             )
 
@@ -249,7 +249,7 @@ describe('<CompletionType />', () => {
         })
 
         test('MONEY', () => {
-            renderWithRouter(
+            render(
                 <CompletionType {...requiredProps} completion = {{ ...completion, completionType: 'MONEY' }}/>
             )
 
