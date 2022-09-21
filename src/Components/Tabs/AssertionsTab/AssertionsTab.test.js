@@ -64,15 +64,6 @@ describe('<AssertionsTab>', () => {
     test('should display objective blocker', () => {
         render(<AssertionsTab productId = {2} hasEdit = {false} />)
 
-        // TODO: Make this test more accurate
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
-        expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
-    })
-
-    test('should display strategy blocker', () => {
-        render(<AssertionsTab productId = {2} hasEdit = {false} />)
-
-        // TODO: Make this test more accurate
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toBeInTheDocument()
         expect(screen.getByTestId('AssertionRootIdentifier-true')).toHaveTextContent(1)
     })
