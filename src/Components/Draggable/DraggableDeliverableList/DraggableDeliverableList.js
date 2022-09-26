@@ -3,19 +3,14 @@ import { DeliverableEntry } from 'Components/Deliverables'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
-import { useSelector } from 'react-redux'
-import { selectDeliverablesByCapabilityId } from 'Redux/Deliverables/selectors'
 
 const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
-    capabilityId,
+    deliverables,
     hasEdit,
     onUpdate,
     onDelete,
     onClick
 }) {
-
-    const deliverables = useSelector(state => selectDeliverablesByCapabilityId(state, capabilityId))
-
     return (
         <>
             {deliverables.map((deliverable, index) => (
@@ -31,7 +26,6 @@ const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
                             ref = {provider.innerRef}
                             {...provider.draggableProps}
                             {...provider.dragHandleProps}
-                            style = {{ paddingBottom: '10px' }}
                         >
                             <DeliverableEntry
                                 id = {deliverable.id}
@@ -59,7 +53,11 @@ const DraggableDeliverableList = React.memo(function DraggableDeliverableList({
 })
 
 DraggableDeliverableList.propTypes = {
-    capabilityId: PropTypes.number.isRequired,
+    deliverables: PropTypes.arrayOf(PropTypes.shape({
+        title: PropTypes.string,
+        index: PropTypes.number,
+        id: PropTypes.number
+    })).isRequired,
     hasEdit: PropTypes.bool,
     onClick: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
