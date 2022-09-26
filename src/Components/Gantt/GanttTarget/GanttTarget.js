@@ -266,7 +266,7 @@ export default function GanttTarget({ target, dateRange }) {
             >
                 <Typography
                     margin = '8px'
-                    color = 'secondary'
+                    color = 'target.dark.text'
                     variant = 'subtitle2'
                 >
                     {description}

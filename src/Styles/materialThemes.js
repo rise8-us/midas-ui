@@ -59,13 +59,13 @@ const theme = createTheme({
             target: {
                 dark: {
                     background: '#003E73',
-                    text: '#fff'
+                    text: '#FAFAFA'
                 }
             },
             subtarget: {
                 dark: {
                     background: '#002E57',
-                    text: '#fff'
+                    text: '#C6C6C9'
                 }
             },
             association: {
