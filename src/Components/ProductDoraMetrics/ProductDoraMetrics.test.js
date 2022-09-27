@@ -6,8 +6,15 @@ describe('<ProductDoraMetrics />', () => {
     const sprintMetrics = {
         deliveredStories: 100,
         deliveredPoints: 200,
-        releaseFrequency: .3,
-        leadTimeForChangeInMinutes: 1600
+        releaseFrequencyThreeSprints: .3,
+        leadTimeForChangeInMinutes: 1550
+    }
+
+    const sprintMetricsNeedRoundingUp = {
+        deliveredStories: 100,
+        deliveredPoints: 200,
+        releaseFrequencyThreeSprints: .071429,
+        leadTimeForChangeInMinutes: 1420
     }
 
     test('should render', () => {
@@ -24,6 +31,13 @@ describe('<ProductDoraMetrics />', () => {
         expect(screen.getByText('N/A')).toBeInTheDocument()
         expect(screen.getByText('3 days 8 hours')).toBeInTheDocument()
         expect(screen.getByText('1 day 2 hours')).toBeInTheDocument()
+    })
+
+    test('should round hours to the nearest hour', () => {
+        render(<ProductDoraMetrics sprintMetrics = {sprintMetricsNeedRoundingUp}/>)
+
+        expect(screen.getByText('14 days')).toBeInTheDocument()
+        expect(screen.getByText('1 day')).toBeInTheDocument()
     })
 
     test('should show released at', () => {
