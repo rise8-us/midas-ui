@@ -4,7 +4,7 @@ import { DraggableDeliverableList } from './index'
 describe('<DraggableDeliverableList />', () => {
 
     const commonProps = {
-        capabilityId: 1,
+        deliverables: [],
         onUpdate: jest.fn,
         onDelete: jest.fn,
         onClick: jest.fn

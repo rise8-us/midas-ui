@@ -61,7 +61,7 @@ export default function DeliverablesContainer({ capabilityId, portfolioId }) {
                     {provided => (
                         <div ref = {provided.innerRef} {...provided.droppableProps}>
                             <DraggableDeliverableList
-                                capabilityId = {capabilityId}
+                                deliverables = {deliverables}
                                 onUpdate = {updateDeliverable}
                                 onDelete = {deleteDeliverable}
                                 hasEdit = {pagePermissions.edit}
