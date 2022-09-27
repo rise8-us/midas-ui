@@ -5,30 +5,35 @@ import { format, formatDistanceToNow, formatDuration } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 
+function getFormatDuration(value, hours) {
+    return {
+        days: hours === 24 ? Math.floor(value) + 1 : Math.floor(value),
+        hours: hours === 24 ? 0 : hours,
+    };
+}
+
 export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt, sprintMetrics }) {
-    const { deliveredStories, deliveredPoints, releaseFrequency, leadTimeForChangeInMinutes } = sprintMetrics
+    const {
+        deliveredStories,
+        deliveredPoints,
+        releaseFrequencyThreeSprints,
+        leadTimeForChangeInMinutes
+    } = sprintMetrics
 
     const releaseFrequencyString = useMemo(() => {
-        if (releaseFrequency) {
-            const freq =  1 / releaseFrequency
-            const days = Math.floor(freq)
-            const hours = (freq % 1) * 24
-            return formatDuration({
-                days: days,
-                hours: Math.floor(hours),
-            })
+        if (releaseFrequencyThreeSprints) {
+            const freq =  1 / releaseFrequencyThreeSprints
+            const hours = Math.round((freq % 1) * 24)
+            return formatDuration(getFormatDuration(freq, hours))
         }
         return 'No Releases'
-    }, [releaseFrequency])
+    }, [releaseFrequencyThreeSprints])
 
     const leadTimeForChangeString = useMemo(() => {
         if (leadTimeForChangeInMinutes > 0) {
             const days = leadTimeForChangeInMinutes / 60 / 24
-            const hours = (days % 1) * 24
-            return formatDuration({
-                days: Math.floor(days),
-                hours: Math.floor(hours),
-            })
+            const hours = Math.round((days % 1) * 24)
+            return formatDuration(getFormatDuration(days, hours))
         }
         return 'No Releases'
     }, [leadTimeForChangeInMinutes])
@@ -37,7 +42,11 @@ export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt
         { title: 'Closed Issues:', value: deliveredStories },
         { title: 'Points Delivered:', value: deliveredPoints },
         { title: 'Lead Time for Change:', value: leadTimeForChangeString, tooltip: tooltips.DORA_LEAD_TIME_FOR_CHANGE },
-        { title: 'Release Frequency:', value: releaseFrequencyString, tooltip: tooltips.DORA_RELEASE_FREQUENCY },
+        {
+            title: 'Release Frequency (Last 3 Sprints):',
+            value: releaseFrequencyString,
+            tooltip: tooltips.DORA_RELEASE_FREQUENCY
+        },
     ]
 
     return (
@@ -91,7 +100,7 @@ ProductDoraMetrics.propTypes = {
     sprintMetrics: PropTypes.shape({
         deliveredStories: PropTypes.number,
         deliveredPoints: PropTypes.number,
-        releaseFrequency: PropTypes.number,
+        releaseFrequencyThreeSprints: PropTypes.number,
         leadTimeForChangeInMinutes: PropTypes.number,
     }),
 }
