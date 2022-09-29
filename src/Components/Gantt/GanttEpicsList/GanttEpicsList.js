@@ -22,6 +22,7 @@ export default function GanttEpicsList({ onDeleteClick, ids, startDate, dueDate 
                         onDelete = {typeof onDeleteClick === 'function' ? () => onDeleteClick(epic.id) : undefined}
                         startDate = {startDate}
                         dueDate = {dueDate}
+                        isClosed = {epic.state === 'closed'}
                     />
                 </div>
             )}

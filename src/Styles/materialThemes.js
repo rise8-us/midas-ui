@@ -74,6 +74,12 @@ const theme = createTheme({
                     text: '#fff'
                 }
             }
+        },
+        epic: {
+            closed: {
+                background: '#635E57',
+                text: '#EAE1D9',
+            }
         }
     },
     typography: {

@@ -7,12 +7,25 @@ describe('<GanttAssociatedEpic />', () => {
     const dueDate = '07-01-2022'
 
     test('should render', () => {
+        render(<GanttAssociatedEpic
+            title = 'title'
+            name = 'name'
+            startDate = {startDate}
+            dueDate = {dueDate}
+            isClosed = {true}
+        />)
+
+        screen.getByText('name')
+        screen.getByText('-')
+        screen.getByText('title')
+        screen.getByTestId('GanttAssociatedEpic__epic-progress')
+        screen.getByText('CLOSED')
+    })
+
+    test('should not display CLOSED for open epics', () => {
         render(<GanttAssociatedEpic title = 'title' name = 'name' startDate = {startDate} dueDate = {dueDate}/>)
 
-        expect(screen.getByText('name')).toBeInTheDocument()
-        expect(screen.getByText('-')).toBeInTheDocument()
-        expect(screen.getByText('title')).toBeInTheDocument()
-        expect(screen.getByTestId('GanttAssociatedEpic__epic-progress')).toBeInTheDocument()
+        expect(screen.queryByText('CLOSED')).not.toBeInTheDocument()
     })
 
     test('should render with no name', () => {
