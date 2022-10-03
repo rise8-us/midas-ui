@@ -240,7 +240,7 @@ export default function GanttSubTarget({ id, defaultOpen }) {
                 <Stack spacing = {1}>
                     {target.description &&
                         <Typography
-                            color = 'subtarget.dark.text'
+                            color = 'common.white'
                             variant = 'body2'
                             data-testid = 'GanttSubTarget__description'
                         >
