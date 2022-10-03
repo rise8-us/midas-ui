@@ -80,7 +80,10 @@ export default function PageMetrics({ id, type }) {
             </Typography>
             <Stack marginLeft = {3} maxWidth = '344px'>
                 <Divider sx = {{ marginY: 1 }}/>
-                <PageRoleMetrics ids = {filteredPeopleIds} />
+                <PageRoleMetrics
+                    ids = {filteredPeopleIds}
+                    unknownViewerTitle = {type === 'portfolio' ? 'Unique Viewers:' : undefined}
+                />
             </Stack>
         </>
     )

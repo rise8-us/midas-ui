@@ -103,6 +103,6 @@ describe('<PageMetrics>', () => {
 
         render(<PageMetrics id = {18} type = 'portfolio' />)
 
-        expect(await screen.findByText('Non-team Viewers:')).toBeInTheDocument()
+        expect(await screen.findByText('Unique Viewers:')).toBeInTheDocument()
     })
 })

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { selectTotalRoleCountByUserIds } from 'Redux/Users/selectors'
 import { camelToCapitalCase } from 'Utilities/caseConversions'
 
-export default function PageRoleMetrics({ ids }) {
+export default function PageRoleMetrics({ ids, unknownViewerTitle }) {
     const totalRoleCounts = useSelector(state => selectTotalRoleCountByUserIds(state, ids))
 
     return (
@@ -17,7 +17,7 @@ export default function PageRoleMetrics({ ids }) {
                 title = {<UserTooltip userIds = {ids} title = 'Total Unique Users'/>}
             >
                 <Stack direction = 'row' justifyContent = 'space-between' alignItems = 'end'>
-                    <Typography variant = 'h6' color = 'text.primary'>Non-team Viewers:</Typography>
+                    <Typography variant = 'h6' color = 'text.primary'>{unknownViewerTitle}</Typography>
                     <Typography variant = 'subtitle1' color = 'primary'>{ids.length}</Typography>
                 </Stack>
             </Tooltip>
@@ -48,5 +48,10 @@ export default function PageRoleMetrics({ ids }) {
 }
 
 PageRoleMetrics.propTypes = {
-    ids: PropTypes.arrayOf(PropTypes.number).isRequired
+    ids: PropTypes.arrayOf(PropTypes.number).isRequired,
+    unknownViewerTitle: PropTypes.string
+}
+
+PageRoleMetrics.defaultProps = {
+    unknownViewerTitle: 'Non-team Viewers:'
 }
