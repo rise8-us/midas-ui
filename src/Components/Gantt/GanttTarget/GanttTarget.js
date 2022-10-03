@@ -1,5 +1,5 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
-import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
+import { Button, Collapse, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +10,6 @@ import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
-import { selectEpicIdsByTargetIds } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
@@ -105,7 +104,18 @@ export default function GanttTarget({ target, dateRange }) {
     const dispatch = useDispatch()
     const ref = useRef()
 
-    const { id, portfolioId, startDate, dueDate, title, description, type, childrenIds } = target
+    const {
+        id,
+        portfolioId,
+        startDate,
+        dueDate,
+        title,
+        description,
+        type,
+        epicIds,
+        childrenEpicIds,
+        childrenIds
+    } = target
     const dateString = parseDate(startDate, dueDate)
 
     const [openAll, setOpenAll] = useState(false)
@@ -119,10 +129,10 @@ export default function GanttTarget({ target, dateRange }) {
     const minWidth = useMemo(() => `calc(${duration}vw - ${duration / 100 * 28}px)`, [JSON.stringify(duration)])
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
-    const epicIds = useSelector(state => selectEpicIdsByTargetIds(state, childrenIds))
     const isExpanded = useSelector(state => selectPortfolioPageSettingTargetIdExpanded(state, portfolioId, id))
+    const totalEpics = Array.from(new Set(epicIds.concat(childrenEpicIds)))
 
-    const epics = useSelector(state => selectEpicsByIds(state, epicIds))
+    const epics = useSelector(state => selectEpicsByIds(state, totalEpics))
 
     const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
 
@@ -201,6 +211,29 @@ export default function GanttTarget({ target, dateRange }) {
                 ...calculateBorderRadius(start, due, dateRange)
             }}
         >
+            {totalEpics.length > 0 && epics.length === 0 &&
+                <div style = {{ display: 'flex', alignItems: 'center' }}>
+                    <LinearProgress
+                        variant = 'determinate'
+                        value = {0}
+                        sx = {theme => ({ backgroundColor: theme.palette.gantt.subtarget.dark.background }) }
+                        style = {{ width: '100%', height: 14 }}
+                    />
+                    <Typography
+                        data-testid = 'GanttTarget__loading-progress'
+                        variant = 'overline'
+                        minWidth = {35}
+                        style = {{
+                            position: 'relative',
+                            marginRight: '-100%',
+                            right: '50%',
+                            transform: 'translate(-50%, 0)',
+                            color: 'white',
+                            lineHeight: '14px'
+                        }}
+                    >Loading Progress...</Typography>
+                </div>
+            }
             {epics.length > 0 &&
                 <GanttProgressBar
                     currentValue = {totalCompletedWeight}
@@ -304,7 +337,9 @@ GanttTarget.propTypes = {
         type: PropTypes.string,
         startDate: PropTypes.string,
         dueDate: PropTypes.string,
-        childrenIds: PropTypes.arrayOf(PropTypes.number)
+        childrenIds: PropTypes.arrayOf(PropTypes.number),
+        epicIds: PropTypes.arrayOf(PropTypes.number),
+        childrenEpicIds: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
     dateRange: PropTypes.array.isRequired
 }
