@@ -4,6 +4,7 @@ import { HrefText } from 'Components/HrefText'
 import PropTypes from 'prop-types'
 import { styled } from 'Styles/materialThemes'
 import { GanttProgressBar } from '../GanttProgressBar'
+import { ClosedLabel } from '../../Epics'
 
 const StyledDiv = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(1),
@@ -18,7 +19,7 @@ const StyledHrefText = styled(HrefText)(({ theme }) => ({
 
 export default function GanttAssociatedEpic(props) {
 
-    const { name, title, webUrl, onDelete, totalWeight, completedWeight, startDate, dueDate } = props
+    const { name, title, webUrl, onDelete, totalWeight, completedWeight, startDate, dueDate, isClosed } = props
 
     return (
         <StyledDiv>
@@ -37,6 +38,7 @@ export default function GanttAssociatedEpic(props) {
                     </>
                 }
                 <StyledHrefText text = {title} href = {webUrl}/>
+                {isClosed && <ClosedLabel/>}
                 {typeof onDelete === 'function' &&
                     <IconButton onClick = {onDelete} style = {{ marginLeft: 'auto' }}>
                         <DeleteOutlined fontSize = 'small'/>
@@ -56,6 +58,7 @@ GanttAssociatedEpic.propTypes = {
     webUrl: PropTypes.string,
     startDate: PropTypes.string.isRequired,
     dueDate: PropTypes.string.isRequired,
+    isClosed: PropTypes.bool,
 }
 
 GanttAssociatedEpic.defaultProps = {
@@ -64,4 +67,5 @@ GanttAssociatedEpic.defaultProps = {
     onDelete: undefined,
     totalWeight: 0,
     webUrl: undefined,
+    isClosed: false,
 }
