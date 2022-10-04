@@ -9,7 +9,7 @@ function getFormatDuration(value, hours) {
     return {
         days: hours === 24 ? Math.floor(value) + 1 : Math.floor(value),
         hours: hours === 24 ? 0 : hours,
-    };
+    }
 }
 
 export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt, sprintMetrics }) {
