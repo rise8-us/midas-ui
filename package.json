@@ -82,7 +82,8 @@
     "ejs": "^3.1.7",
     "eventsource": "^2.0.2",
     "glob-parent": "^6.0.2",
-    "terser": "^5.14.2"
+    "terser": "^5.14.2",
+    "d3-color": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
