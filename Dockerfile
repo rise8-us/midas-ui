@@ -20,11 +20,16 @@ COPY --from=builder /app/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/nginx/nginx-security.conf /etc/nginx/snippets/nginx-security.conf
 
 # Build pkg
-COPY --from=builder /app/build/ /var/www
+COPY --from=builder --chown=nginx:nginx /app/build/ /var/www
 
 # Required to run the CMD
-COPY --from=builder /app/scripts/ /app/scripts/
+COPY --from=builder --chown=nginx:nginx /app/scripts/ /app/scripts/
+
+RUN touch /var/run/nginx.pid
+RUN chown nginx:nginx /var/run/nginx.pid
 
 EXPOSE 80
+
+USER nginx
 
 CMD [ "sh", "/app/scripts/docker_run.sh", "/var/www/config.js"]
