@@ -1,5 +1,6 @@
 import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
 import { ProjectCardSprintStats } from './index'
+import { fireEvent } from '@testing-library/dom'
 
 jest.mock('Components/IssueSyncRequest/IssueSyncRequest', () =>
     function testing({ request }) { return (<div data-testid = 'SyncIcon' onClick = {request}></div>) })
@@ -24,12 +25,16 @@ describe('<ProductCardSprintStats />', () => {
         selectReleaseClosestToMock.mockReturnValue({})
     })
 
-    test('should render', async() => {
+    test('should render and expand when clicked', async() => {
         render(<ProjectCardSprintStats projectId = {1} dateRange = {[JUN_9_2022, JUN_9_2022]}/>)
 
-        expect(await screen.findByText('project name')).toBeInTheDocument()
-        expect(screen.getByText('Issues Deployed to Production (CUI):')).toBeInTheDocument()
-        expect(screen.getByText('Issues Deployed to Staging:')).toBeInTheDocument()
+        expect(screen.getByText('Issues Deployed to Production (CUI):')).not.toBeVisible()
+        expect(screen.getByText('Issues Deployed to Staging:')).not.toBeVisible()
+
+        fireEvent.click(await screen.findByText('project name'))
+        expect(screen.getByText('Issues Deployed to Production (CUI):')).toBeVisible()
+        expect(screen.getByText('Issues Deployed to Staging:')).toBeVisible()
+
         expect(requestSearchIssuesMock)
             .toHaveBeenCalledWith('project.id:1 AND completedAt>=2022-06-09 AND completedAt<=2022-06-09')
     })

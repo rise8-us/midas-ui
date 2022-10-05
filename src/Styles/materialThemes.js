@@ -178,6 +178,19 @@ const theme = createTheme({
                 }
             }
         },
+        MuiAccordion: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '5px',
+                    '&:before': {
+                        display: 'none',
+                    },
+                },
+            },
+            defaultProps: {
+                disableGutters: true,
+            }
+        },
     }
 })
 

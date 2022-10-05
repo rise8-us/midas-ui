@@ -1,5 +1,12 @@
-
-import { Card, Grid, Skeleton, Stack, Typography } from '@mui/material'
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Grid,
+    Skeleton,
+    Stack,
+    Typography
+} from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { IssueSyncRequest } from 'Components/IssueSyncRequest'
 import { TextSkeleton } from 'Components/Skeletons'
@@ -8,12 +15,19 @@ import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestSearchIssues, requestSyncIssuesByProjectId } from 'Redux/Issues/actions'
+import {
+    requestSearchIssues,
+    requestSyncIssuesByProjectId
+} from 'Redux/Issues/actions'
 import { selectProjectById } from 'Redux/Projects/selectors'
 import { requestSyncReleasesByProjectId } from 'Redux/Releases/actions'
-import { selectReleaseClosestTo, selectReleaseInRangeAndProjectId } from 'Redux/Releases/selectors'
+import {
+    selectReleaseClosestTo,
+    selectReleaseInRangeAndProjectId
+} from 'Redux/Releases/selectors'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 import { isLoading } from 'Utilities/requests'
+import { ExpandMore } from '@mui/icons-material'
 
 export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, loading }) {
     const dispatch = useDispatch()
@@ -70,8 +84,10 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, 
     }, [JSON.stringify(releasesThisSprint)])
 
     return (
-        <Card style = {{ padding: '8px' }}>
-            <Stack>
+        <Accordion>
+            <AccordionSummary
+                expandIcon = {<ExpandMore />}
+            >
                 <Stack
                     height = '36px'
                     marginLeft = {1}
@@ -86,6 +102,8 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, 
                         <IssueSyncRequest projectId = {projectId} request = {syncIssues} tooltip = ''/>
                     </div>
                 </Stack>
+            </AccordionSummary>
+            <AccordionDetails>
                 <Grid container margin = {1} columns = {13}>
                     <Grid item xs = {12} lg = {3}>
                         <div>
@@ -174,8 +192,8 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, 
                         </div>
                     </Grid>
                 </Grid>
-            </Stack>
-        </Card>
+            </AccordionDetails>
+        </Accordion>
     )
 }
 
