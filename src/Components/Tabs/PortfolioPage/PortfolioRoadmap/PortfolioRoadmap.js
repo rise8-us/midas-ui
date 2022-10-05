@@ -30,7 +30,7 @@ import { selectWinsByPortfolioId } from 'Redux/Wins/selectors'
 import { buildOrQueryByIds } from 'Utilities/requests'
 import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
-const CHUNK_SIZE = 35
+const CHUNK_SIZE = 20
 
 export default function PortfolioRoadmap({ portfolioId }) {
 
