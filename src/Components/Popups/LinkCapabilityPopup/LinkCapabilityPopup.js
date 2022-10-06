@@ -37,10 +37,11 @@ export default function LinkCapabilityPopup({ portfolioId }) {
         }).catch(() => {
             setProcessing(false)
             setSuccess(false)
-        }).then(() => setTimeout(() => {
+        })
+        setTimeout(() => {
             setValue('')
             setSuccess(null)
-        }, 1500))
+        }, 1500)
     }
 
     const onClose = () => dispatch(closePopup('LinkCapabilityPopup'))

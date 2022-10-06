@@ -40,22 +40,26 @@ export default function SprintReport({ portfolioId, productIds, sprintStart, spr
         setLoading(true)
     }
 
-    useEffect(async() => {
-        const requests = []
-        requests.push(dispatch(requestfetchPortfolioMetrics({
-            id: portfolioId,
-            sprintCycles: 10,
-            startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
-            sprintDuration,
-        })).then(unwrapResult).then(setPortfolioMetrics))
+    useEffect(() => {
+        const updateMetrics = async() => {
+            const requests = []
+            requests.push(dispatch(requestfetchPortfolioMetrics({
+                id: portfolioId,
+                sprintCycles: 10,
+                startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
+                sprintDuration,
+            })).then(unwrapResult).then(setPortfolioMetrics))
 
-        type === 'portfolio' && requests.push(dispatch(requestfetchPortfolioMetricsSummary({
-            id: portfolioId,
-            startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
-            sprintDuration,
-        })).then(unwrapResult).then(setPortfolioMetricsSummary))
+            type === 'portfolio' && requests.push(dispatch(requestfetchPortfolioMetricsSummary({
+                id: portfolioId,
+                startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
+                sprintDuration,
+            })).then(unwrapResult).then(setPortfolioMetricsSummary))
 
-        Promise.allSettled(requests).then(() => setLoading(false))
+            Promise.allSettled(requests).then(() => setLoading(false))
+        }
+
+        updateMetrics()
     }, [JSON.stringify(debouncedDateRange)])
 
     return (

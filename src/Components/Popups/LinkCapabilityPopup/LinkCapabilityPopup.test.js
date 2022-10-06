@@ -1,5 +1,10 @@
 import {
-    act, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor, waitForElementToBeRemoved
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent,
+    waitForElementToBeRemoved
 } from 'Utilities/test-utils'
 import { LinkCapabilityPopup } from './index'
 
@@ -30,45 +35,26 @@ describe('<LinkCapabilityPopup />', () => {
     })
 
     test('should handle selection -- success', async() => {
-        jest.useFakeTimers()
-
-        await waitFor(() => {
-            useDispatchMock().mockResolvedValue({ type: '/', payload: {} })
-        })
+        useDispatchMock().mockResolvedValue({ type: '/', payload: {} })
 
         render(<LinkCapabilityPopup portfolioId = {1}/>)
+        userEvent.click(screen.getByText('Please select a requirement'))
+        userEvent.click(await screen.findByText('Capability 1'))
 
-        await act(async() => {
-            userEvent.click(screen.getAllByRole('button')[1])
-            userEvent.click(await screen.findByText('Capability 1'))
-        })
-
-        expect(screen.getByTestId('CheckCircleOutlinedIcon')).toBeInTheDocument()
-
-        jest.advanceTimersByTime(1000)
-        await waitForElementToBeRemoved(screen.getByTestId('CheckCircleOutlinedIcon'))
-
-        jest.useRealTimers()
+        await screen.findByTestId('CheckCircleOutlinedIcon')
+        await waitForElementToBeRemoved(() => screen.queryByTestId('CheckCircleOutlinedIcon'), { timeout: 2000 })
     })
 
     test('should handle selection -- failure', async() => {
-        jest.useFakeTimers()
-
-        await waitFor(() => {
-            useDispatchMock()
-                .mockResolvedValueOnce({ type: '/', payload: {} })
-                .mockRejectedValue('testing')
-        })
+        useDispatchMock()
+            .mockResolvedValueOnce({ type: '/', payload: {} })
+            .mockRejectedValue('testing')
 
         render(<LinkCapabilityPopup portfolioId = {1}/>)
+        userEvent.click(screen.getByText('Please select a requirement'))
+        userEvent.click(await screen.findByText('Capability 1'))
 
-        await act(async() => {
-            userEvent.click(screen.getAllByRole('button')[1])
-            userEvent.click(await screen.findByText('Capability 1'))
-        })
-
-        expect(screen.getByTestId('WarningAmberRoundedIcon')).toBeInTheDocument()
-
-        jest.useRealTimers()
+        await screen.findByTestId('WarningAmberRoundedIcon')
+        await waitForElementToBeRemoved(() => screen.queryByTestId('WarningAmberRoundedIcon'), { timeout: 2000 })
     })
 })

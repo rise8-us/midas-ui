@@ -2,7 +2,8 @@ import {
     render,
     screen,
     useDispatchMock,
-    useModuleMock
+    useModuleMock,
+    waitFor
 } from 'Utilities/test-utils'
 import { SearchEpicsDropdown } from './index'
 
@@ -10,6 +11,7 @@ describe('<SearchEpicsDropdown />', () => {
 
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
     const selectProductsByPortfolioIdMock = useModuleMock('Redux/Products/selectors', 'selectProductsByPortfolioId')
+    const requestFetchSearchEpicsMock = useModuleMock('Redux/Epics/actions', 'requestFetchSearchEpics')
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ payload: [{ title: 'epic', portfolioId: 1, productId: 2 }] })
@@ -18,6 +20,10 @@ describe('<SearchEpicsDropdown />', () => {
     })
 
     test('should render properly', async() => {
+        waitFor(() => {
+            requestFetchSearchEpicsMock.mockResolvedValue([])
+        })
+
         render(<SearchEpicsDropdown
             portfolioId = {1}
             linkedEpicIds = {[]}
@@ -26,7 +32,7 @@ describe('<SearchEpicsDropdown />', () => {
         />)
 
         expect(await screen.findByText('portfolio')).toBeInTheDocument()
-        expect(screen.getByText('product')).toBeInTheDocument()
+        expect(await screen.findByText('product')).toBeInTheDocument()
     })
 
 })
