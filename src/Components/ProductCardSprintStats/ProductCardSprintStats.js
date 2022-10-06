@@ -60,6 +60,7 @@ export default function ProductCardSprintStats(props) {
                 {product.projectIds?.map((projectId, index) =>
                     <ProjectCardSprintStats
                         key = {index}
+                        portfolioId = {product.portfolioId}
                         projectId = {projectId}
                         dateRange = {dateRange}
                         hasEdit = {Boolean(pagePermissions.edit)}

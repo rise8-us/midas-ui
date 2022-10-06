@@ -43,17 +43,29 @@ export const selectPortfolioPageSettingView = (state, id) => {
     }
 }
 
-export const selectPortfolioPageSettingExpanded = (state, id) => {
-    return selectPortfolioPageSetting(state, id, 'expanded') ?? {
+export const selectPortfolioPageGanttSettingExpanded = (state, id) => {
+    return selectPortfolioPageSetting(state, id, 'targets') ?? {
         allExpanded: false
     }
 }
 
-export const selectPortfolioPageSettingAllExpanded = (state, id) =>
-    state.app.portfolioPage[id]?.expanded?.allExpanded ?? false
+export const selectPortfolioPageSprintReportSettingExpanded = (state, id) => {
+    return selectPortfolioPageSetting(state, id, 'projects') ?? {
+        allExpanded: false
+    }
+}
+
+export const selectPortfolioPageGanttAllExpanded = (state, id) =>
+    state.app.portfolioPage[id]?.targets?.allExpanded ?? false
+
+export const selectPortfolioPageSprintReportAllExpanded = (state, id) =>
+    state.app.portfolioPage[id]?.projects?.allExpanded ?? false
 
 export const selectPortfolioPageSettingTargetIdExpanded = (state, portfolioId, id) =>
-    state.app.portfolioPage[portfolioId]?.expanded?.[id] ?? false
+    state.app.portfolioPage[portfolioId]?.targets?.[id] ?? false
+
+export const selectPortfolioPageSettingProjectIdExpanded = (state, portfolioId, id) =>
+    state.app.portfolioPage[portfolioId]?.projects?.[id] ?? false
 
 const getGitlabPaginationOrDefault = (itemToFetch) => itemToFetch ?? { value: 0, status: 'SYNCED' }
 

@@ -20,7 +20,7 @@ describe('<SprintReport />', () => {
     })
 
     test('should render', async() => {
-        
+
         render(<SprintReport {...defaultProps}/>)
         await act(() => Promise.resolve())
         await screen.findByTestId('SprintReport__container-stack')

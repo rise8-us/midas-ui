@@ -1,10 +1,10 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import { Button, Stack, useTheme } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { ExpandAllEntities } from 'Components/ExpandAllEntities'
 import { GanttChart } from 'Components/Gantt'
 import { GanttAddNewItem } from 'Components/Gantt/GanttAddNewItem'
 import { GanttEvent } from 'Components/Gantt/GanttEvent'
-import { GanttExpandAllTargets } from 'Components/Gantt/GanttExpandAllTargets'
 import { GanttFilter } from 'Components/Gantt/GanttFilter'
 import { GanttLegend } from 'Components/Gantt/GanttLegend'
 import { GanttMilestone } from 'Components/Gantt/GanttMilestone'
@@ -15,7 +15,10 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPortfolioPageSetting } from 'Redux/AppSettings/reducer'
-import { selectPortfolioPageSettingExpanded, selectPortfolioPageSettingView } from 'Redux/AppSettings/selectors'
+import {
+    selectPortfolioPageGanttSettingExpanded,
+    selectPortfolioPageSettingView
+} from 'Redux/AppSettings/selectors'
 import { requestSearchDeliverables } from 'Redux/Deliverables/actions'
 import { requestFetchSearchEpics } from 'Redux/Epics/actions'
 import { requestSearchEvents } from 'Redux/Events/actions'
@@ -82,8 +85,7 @@ export default function PortfolioRoadmap({ portfolioId }) {
 
     const [dateStart, setDateStart] = useState(new Date())
     const view = useSelector(state => selectPortfolioPageSettingView(state, portfolioId))
-    const expandedState = useSelector(state => selectPortfolioPageSettingExpanded(state, portfolioId))
-
+    const expandedState = useSelector(state => selectPortfolioPageGanttSettingExpanded(state, portfolioId))
     const entries = [
         ...milestones,
         ...events,
@@ -113,7 +115,7 @@ export default function PortfolioRoadmap({ portfolioId }) {
         }, { allExpanded: expandedState.allExpanded })
 
         setTimeout(() => {
-            dispatch(setPortfolioPageSetting({ id: portfolioId, settingName: 'expanded', settingValue: init }))
+            dispatch(setPortfolioPageSetting({ id: portfolioId, settingName: 'targets', settingValue: init }))
         }, 0)
     }
 
@@ -154,7 +156,7 @@ export default function PortfolioRoadmap({ portfolioId }) {
                         <GanttAddNewItem portfolioId = {portfolioId} /> :
                         <>
                             <GanttView portfolioId = {portfolioId}/>
-                            <GanttExpandAllTargets portfolioId = {portfolioId}/>
+                            <ExpandAllEntities portfolioId = {portfolioId}/>
                             <GanttFilter />
                         </>
                 }}

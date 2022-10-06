@@ -1,6 +1,12 @@
-import { act, render, screen, useDispatchMock, useModuleMock, userEvent } from 'Utilities/test-utils'
+import {
+    act,
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent
+} from 'Utilities/test-utils'
 import { ProjectCardSprintStats } from './index'
-import { fireEvent } from '@testing-library/dom'
 
 jest.mock('Components/IssueSyncRequest/IssueSyncRequest', () =>
     function testing({ request }) { return (<div data-testid = 'SyncIcon' onClick = {request}></div>) })
@@ -15,6 +21,8 @@ describe('<ProductCardSprintStats />', () => {
     const selectReleaseInRangeAndProjectIdMock =
         useModuleMock('Redux/Releases/selectors', 'selectReleaseInRangeAndProjectId')
     const selectReleaseClosestToMock = useModuleMock('Redux/Releases/selectors', 'selectReleaseClosestTo')
+    const selectPortfolioPageSettingProjectIdExpandedMock =
+        useModuleMock('Redux/AppSettings/selectors', 'selectPortfolioPageSettingProjectIdExpanded')
 
     const JUN_9_2022 = 1654732800000
 
@@ -25,18 +33,20 @@ describe('<ProductCardSprintStats />', () => {
         selectReleaseClosestToMock.mockReturnValue({})
     })
 
-    test('should render and expand when clicked', async() => {
-        render(<ProjectCardSprintStats projectId = {1} dateRange = {[JUN_9_2022, JUN_9_2022]}/>)
-
+    test('should render closed if not expanded in state', async() => {
+        selectPortfolioPageSettingProjectIdExpandedMock.mockReturnValue(false)
+        render(<ProjectCardSprintStats portfolioId = {1} projectId = {1} dateRange = {[JUN_9_2022, JUN_9_2022]}/>)
         expect(screen.getByText('Issues Deployed to Production (CUI):')).not.toBeVisible()
         expect(screen.getByText('Issues Deployed to Staging:')).not.toBeVisible()
-
-        fireEvent.click(await screen.findByText('project name'))
-        expect(screen.getByText('Issues Deployed to Production (CUI):')).toBeVisible()
-        expect(screen.getByText('Issues Deployed to Staging:')).toBeVisible()
-
         expect(requestSearchIssuesMock)
             .toHaveBeenCalledWith('project.id:1 AND completedAt>=2022-06-09 AND completedAt<=2022-06-09')
+    })
+
+    test('should render open if expanded in state', async() => {
+        selectPortfolioPageSettingProjectIdExpandedMock.mockReturnValue(true)
+        render(<ProjectCardSprintStats portfolioId = {1} projectId = {1} dateRange = {[JUN_9_2022, JUN_9_2022]}/>)
+        expect(screen.getByText('Issues Deployed to Production (CUI):')).toBeVisible()
+        expect(screen.getByText('Issues Deployed to Staging:')).toBeVisible()
     })
 
     test('should sync when sync button is pressed', async() => {
