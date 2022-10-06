@@ -1,4 +1,4 @@
-import { render, screen, useDispatchMock, userEvent } from 'Utilities/test-utils'
+import { act, render, screen, useDispatchMock, userEvent } from 'Utilities/test-utils'
 import { SprintReport } from './index'
 
 jest.mock('Components/ProductCardSprintStats/ProductCardSprintStats',
@@ -20,7 +20,9 @@ describe('<SprintReport />', () => {
     })
 
     test('should render', async() => {
+        
         render(<SprintReport {...defaultProps}/>)
+        await act(() => Promise.resolve())
         await screen.findByTestId('SprintReport__container-stack')
 
         expect(screen.getByTestId('ArrowBackIcon')).toBeInTheDocument()
@@ -32,6 +34,7 @@ describe('<SprintReport />', () => {
 
     test('should handle navigation changes', async() => {
         render(<SprintReport {...defaultProps}/>)
+        await act(() => Promise.resolve())
         await screen.findByTestId('SprintReport__container-stack')
 
         userEvent.click(screen.getByTestId('ArrowBackIcon'))
