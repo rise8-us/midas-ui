@@ -1,6 +1,7 @@
 import { Notes } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
+import { scrollbar, styled } from 'Styles/materialThemes'
 import { GanttActionButtons } from '../GanttActionButtons'
 
 const headerRowStyle = {
@@ -9,6 +10,13 @@ const headerRowStyle = {
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
 }
+
+const StyledDiv = styled('div')(({ theme }) => ({
+    ...scrollbar(theme),
+    minWidth: '240px',
+    maxHeight: '350px',
+    overflow: 'hidden auto'
+}))
 
 export default function GanttTooltip({
     children,
@@ -21,7 +29,7 @@ export default function GanttTooltip({
 }) {
 
     return (
-        <div style = {{ minWidth: '240px', maxHeight: '350px', overflow: 'scroll' }}>
+        <StyledDiv>
             <Stack spacing = {2}>
                 <div style = {{ marginBottom: '8px' }}>
                     <div style = {headerRowStyle}>
@@ -50,7 +58,7 @@ export default function GanttTooltip({
                 }
                 {children}
             </Stack>
-        </div>
+        </StyledDiv>
     )
 }
 
