@@ -1,5 +1,5 @@
 import {
-    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitForElementToBeRemoved
+    fireEvent, render, screen, useDispatchMock, useModuleMock, userEvent, waitFor, waitForElementToBeRemoved
 } from 'Utilities/test-utils'
 import { DatabaseTab } from './index'
 
@@ -9,6 +9,7 @@ describe('<DatabaseTab />', () => {
     const requestTakeBackupMock = useModuleMock('Redux/DatabaseActions/actions', 'requestTakeBackup')
     const requestRestoreMock = useModuleMock('Redux/DatabaseActions/actions', 'requestRestore')
     const requestDownloadBackupFileMock = useModuleMock('Redux/DatabaseActions/actions', 'requestDownloadBackupFile')
+    const requestGetBackupListMock = useModuleMock('Redux/DatabaseActions/actions', 'requestGetBackupList')
 
     beforeEach(() => {
         useDispatchMock().mockResolvedValue({ type: '/', payload: ['backups/1738/file42.fun'] })
@@ -33,12 +34,16 @@ describe('<DatabaseTab />', () => {
     })
 
     test('should restore', async() => {
+        waitFor(() => {
+            requestGetBackupListMock.mockResolvedValue([])
+        })
+
         render(<DatabaseTab />)
 
         fireEvent.click(screen.getByTitle('Open'))
         await screen.findByText('Retrieving backups...')
 
-        fireEvent.click(screen.getByText('file42.fun'))
+        fireEvent.click(await screen.findByText('file42.fun'))
         fireEvent.click(screen.getByText('restore'))
         fireEvent.click(screen.getByTestId('Popup__button-submit'))
 
@@ -46,12 +51,16 @@ describe('<DatabaseTab />', () => {
     })
 
     test('should cancel restore', async() => {
+        waitFor(() => {
+            requestGetBackupListMock.mockResolvedValue([])
+        })
+
         render(<DatabaseTab />)
 
         fireEvent.click(screen.getByTitle('Open'))
         await screen.findByText('Retrieving backups...')
 
-        fireEvent.click(screen.getByText('file42.fun'))
+        fireEvent.click(await screen.findByText('file42.fun'))
         fireEvent.click(screen.getByText('restore'))
         fireEvent.click(screen.getByTestId('Popup__button-cancel'))
 
@@ -59,18 +68,26 @@ describe('<DatabaseTab />', () => {
     })
 
     test('should download backup', async() => {
+        waitFor(() => {
+            requestGetBackupListMock.mockResolvedValue([])
+        })
+
         render(<DatabaseTab />)
 
         fireEvent.click(screen.getByTitle('Open'))
         await screen.findByText('Retrieving backups...')
 
-        fireEvent.click(screen.getByText('file42.fun'))
+        fireEvent.click(await screen.findByText('file42.fun'))
         fireEvent.click(screen.getByText('download'))
 
         expect(requestDownloadBackupFileMock).toHaveBeenCalledTimes(1)
     })
 
     test('should handle errors', async() => {
+        waitFor(() => {
+            requestGetBackupListMock.mockResolvedValue([])
+        })
+
         useDispatchMock().mockRejectedValue(['errors'])
 
         render(<DatabaseTab />)
@@ -78,7 +95,7 @@ describe('<DatabaseTab />', () => {
         fireEvent.click(screen.getByTitle('Open'))
         await screen.findByText('Retrieving backups...')
 
-        expect(screen.getByText('No backups retrieved.')).toBeInTheDocument()
+        expect(await screen.findByText('No backups retrieved.')).toBeInTheDocument()
         expect(screen.getByTestId('DatabaseTab__warning-icon')).toBeInTheDocument()
     })
 

@@ -2,13 +2,16 @@
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { Fragment } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
 import store from 'Redux/store'
 import App from './App'
 import { theme } from './Styles/materialThemes'
+
+const container = document.getElementById('root')
+const root = createRoot(container)
 
 // expose store when run in Cypress
 if (window.Cypress) {
@@ -22,7 +25,7 @@ const errorFallbackComponent = ({ error }) => (
     </div>
 )
 
-ReactDOM.render(
+root.render(
     <Router>
         <Provider store = {store}>
             <Fragment>
@@ -36,6 +39,4 @@ ReactDOM.render(
                 </ThemeProvider>
             </Fragment>
         </Provider>
-    </Router>,
-    document.getElementById('root')
-)
+    </Router>,)

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { act, fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { CodeCoverageTooltip } from './index'
 
 describe('<CodeCoverageTooltip />', () => {
@@ -20,7 +20,7 @@ describe('<CodeCoverageTooltip />', () => {
     ]
 
     test('should render with no results', async() => {
-        useDispatchMock().mockResolvedValue({ payload: [] })
+        act(() => useDispatchMock().mockResolvedValue({ payload: [] }))
 
         render(<CodeCoverageTooltip currentPercent = {10} projectId = {0}/>)
 
@@ -38,7 +38,7 @@ describe('<CodeCoverageTooltip />', () => {
         expect(await screen.findByText('Code coverage is currently at 10%')).toBeInTheDocument()
         requestSearchCoveragesMock.mockClear()
 
-        expect(screen.getByText('2021-01-01')).toBeInTheDocument()
+        expect(await screen.findByText('2021-01-01')).toBeInTheDocument()
         expect(screen.getByText('80.0')).toBeInTheDocument()
         expect(screen.getAllByTestId('CodeCoverageTooltip__coverage-row')).toHaveLength(5)
 
