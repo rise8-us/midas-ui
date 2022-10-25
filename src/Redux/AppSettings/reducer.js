@@ -73,11 +73,11 @@ const appSettingsSlice = createSlice({
                 }
             )
         },
-        setPortfolioPageSettingExpandAll: (state, action) => {
+        setPortfolioPageGanttExpandAll: (state, action) => {
             const { portfolioId, isExpanded } = action.payload
 
             const updateState = () => {
-                const existingState = { ...state.portfolioPage[portfolioId]?.expanded }
+                const existingState = { ...state.portfolioPage[portfolioId]?.targets }
                 const newState = Object.keys(existingState).reduce((acc, next) => ({
                     ...acc,
                     [next]: isExpanded
@@ -85,7 +85,24 @@ const appSettingsSlice = createSlice({
 
                 state.portfolioPage[portfolioId] = {
                     ...state.portfolioPage[portfolioId],
-                    expanded: newState
+                    targets: newState
+                }
+            }
+            portfolioId > 0 && updateState()
+        },
+        setPortfolioPageSprintReportExpandAll: (state, action) => {
+            const { portfolioId, isExpanded } = action.payload
+
+            const updateState = () => {
+                const existingState = { ...state.portfolioPage[portfolioId]?.projects }
+                const newState = Object.keys(existingState).reduce((acc, next) => ({
+                    ...acc,
+                    [next]: isExpanded
+                }), { allExpanded: isExpanded })
+
+                state.portfolioPage[portfolioId] = {
+                    ...state.portfolioPage[portfolioId],
+                    projects: newState
                 }
             }
             portfolioId > 0 && updateState()
@@ -96,11 +113,27 @@ const appSettingsSlice = createSlice({
             portfolioId > 0 && (
                 state.portfolioPage[portfolioId] = {
                     ...state.portfolioPage[portfolioId],
-                    expanded: {
-                        ...state.portfolioPage[portfolioId]?.expanded,
+                    targets: {
+                        ...state.portfolioPage[portfolioId]?.targets,
                         [id]: isExpanded,
-                        allExpanded: !Object.entries(state.portfolioPage[portfolioId].expanded)
+                        allExpanded: !Object.entries(state.portfolioPage[portfolioId].targets)
                             .filter(entry => entry[0] !== 'allExpanded' && entry[0] !== id.toString())
+                            .some(entry => !entry[1]) && isExpanded
+                    }
+                }
+            )
+        },
+        setPortfolioPageSettingProjectIdExpand: (state, action) => {
+            const { portfolioId, projectId, isExpanded } = action.payload
+
+            portfolioId > 0 && (
+                state.portfolioPage[portfolioId] = {
+                    ...state.portfolioPage[portfolioId],
+                    projects: {
+                        ...state.portfolioPage[portfolioId]?.projects,
+                        [projectId]: isExpanded,
+                        allExpanded: !Object.entries(state.portfolioPage[portfolioId].projects)
+                            .filter(entry => entry[0] !== 'allExpanded' && entry[0] !== projectId.toString())
                             .some(entry => !entry[1]) && isExpanded
                     }
                 }
@@ -146,14 +179,15 @@ const appSettingsSlice = createSlice({
 })
 
 export const {
-    toggleNavBar,
     setAssertionComment,
     setPageScrollY,
     setInitialized,
     setPortfolioPageSettings,
     setPortfolioPageSetting,
-    setPortfolioPageSettingExpandAll,
+    setPortfolioPageGanttExpandAll,
+    setPortfolioPageSprintReportExpandAll,
     setPortfolioPageSettingTargetIdExpand,
+    setPortfolioPageSettingProjectIdExpand,
     setEpicSyncProgress,
     setIssueSyncProgress,
     setReleaseSyncProgress

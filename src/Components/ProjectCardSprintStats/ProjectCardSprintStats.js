@@ -1,3 +1,4 @@
+import { ExpandMore } from '@mui/icons-material'
 import {
     Accordion,
     AccordionDetails,
@@ -15,6 +16,8 @@ import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { setPortfolioPageSettingProjectIdExpand } from 'Redux/AppSettings/reducer'
+import { selectPortfolioPageSettingProjectIdExpanded } from 'Redux/AppSettings/selectors'
 import {
     requestSearchIssues,
     requestSyncIssuesByProjectId
@@ -27,9 +30,8 @@ import {
 } from 'Redux/Releases/selectors'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 import { isLoading } from 'Utilities/requests'
-import { ExpandMore } from '@mui/icons-material'
 
-export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, loading }) {
+export default function ProjectCardSprintStats({ portfolioId, projectId, dateRange, hasEdit, loading }) {
     const dispatch = useDispatch()
 
     const project = useSelector(state => selectProjectById(state, projectId))
@@ -38,6 +40,12 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, 
     const [releasedIssuesThisSprint, setReleasedIssuesThisSprint] = useState([])
     const releasesThisSprint = useSelector(state => selectReleaseInRangeAndProjectId(state, dateRange, projectId))
     const previousRelease = useSelector(state => selectReleaseClosestTo(state, dateRange[0], projectId))
+    const isExpanded = useSelector(state => selectPortfolioPageSettingProjectIdExpanded(state, portfolioId, projectId))
+
+    const setExpanded = () => {
+        dispatch(setPortfolioPageSettingProjectIdExpand({ portfolioId, projectId, isExpanded: !isExpanded }))
+    }
+
 
     const syncIssues = async() => {
         return Promise.all(
@@ -84,7 +92,7 @@ export default function ProjectCardSprintStats({ projectId, dateRange, hasEdit, 
     }, [JSON.stringify(releasesThisSprint)])
 
     return (
-        <Accordion>
+        <Accordion onChange = {setExpanded} expanded = {isExpanded}>
             <AccordionSummary
                 expandIcon = {<ExpandMore />}
             >
@@ -201,6 +209,7 @@ ProjectCardSprintStats.propTypes = {
     dateRange: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number])).isRequired,
     hasEdit: PropTypes.bool,
     loading: PropTypes.bool,
+    portfolioId: PropTypes.number.isRequired,
     projectId: PropTypes.number.isRequired,
 }
 

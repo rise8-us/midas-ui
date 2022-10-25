@@ -1,14 +1,18 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 import { IconButton, Stack, Typography } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { ExpandAllEntities } from 'Components/ExpandAllEntities'
 import { PortfolioCardSprintStats } from 'Components/PortfolioCardSprintStats'
 import { ProductCardSprintStats } from 'Components/ProductCardSprintStats'
 import { format } from 'date-fns'
 import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPortfolioPageSetting } from 'Redux/AppSettings/reducer'
+import { selectPortfolioPageSprintReportSettingExpanded } from 'Redux/AppSettings/selectors'
 import { requestfetchPortfolioMetrics, requestfetchPortfolioMetricsSummary } from 'Redux/Portfolios/actions'
+import { selectProjectIdsByPortfolioId } from 'Redux/Projects/selectors'
 import { getDateInDatabaseOrder } from 'Utilities/dateHelpers'
 
 const calculateDate = (initialDate, duration, multipler) => {
@@ -27,6 +31,8 @@ export default function SprintReport({ portfolioId, productIds, sprintStart, spr
     const [portfolioMetrics, setPortfolioMetrics] = useState({})
     const [portfolioMetricsSummary, setPortfolioMetricsSummary] = useState({})
     const [loading, setLoading] = useState(true)
+    const projectIds = useSelector(state => selectProjectIdsByPortfolioId(state, portfolioId))
+    const expandedState = useSelector(state => selectPortfolioPageSprintReportSettingExpanded(state, portfolioId))
 
     const debouncedDateRange = useDebounce(dateRange, 200)
 
@@ -39,6 +45,19 @@ export default function SprintReport({ portfolioId, productIds, sprintStart, spr
         setDateRange([newStartDate, newEndDate])
         setLoading(true)
     }
+
+    useEffect(() => {
+        const init = projectIds.reduce((acc, id) => {
+            return {
+                ...acc,
+                [id]: expandedState[id] ?? false
+            }
+        }, { allExpanded: expandedState.allExpanded })
+
+        setTimeout(() => {
+            dispatch(setPortfolioPageSetting({ id: portfolioId, settingName: 'projects', settingValue: init }))
+        }, 0)
+    }, [JSON.stringify(projectIds)])
 
     useEffect(() => {
         const updateMetrics = async() => {
@@ -74,6 +93,7 @@ export default function SprintReport({ portfolioId, productIds, sprintStart, spr
                 <IconButton onClick = {() => updateRange(1)} disabled = {navigationMultiplier === 0}>
                     <ArrowForward fontSize = 'small' />
                 </IconButton>
+                <ExpandAllEntities portfolioId = {portfolioId} type = 'SprintReport'/>
             </Stack>
             {type === 'portfolio' &&
                 <PortfolioCardSprintStats

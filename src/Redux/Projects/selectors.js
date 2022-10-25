@@ -1,3 +1,4 @@
+import { selectProductsByPortfolioId } from 'Redux/Products/selectors'
 import { selectTagsByIds } from 'Redux/Tags/selectors'
 
 export const selectProjectById = (state, id) => {
@@ -37,4 +38,17 @@ export const selectProjectsWithNoProductId = (state) => {
 
 export const selectProjectsByProductId = (state, productId) => {
     return selectProjects(state).filter(p => p.productId === productId)
+}
+
+export const selectProjectIdsByPortfolioId = (state, portfolioId) => {
+    const products = selectProductsByPortfolioId(state, portfolioId)
+
+    let projectIds = []
+    products.forEach(p => {
+        p.projectIds.forEach(id => {
+            projectIds.push(id)
+        })
+    })
+
+    return projectIds
 }
