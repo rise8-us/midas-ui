@@ -68,7 +68,6 @@ export default function SprintReport({ portfolioId, productIds, sprintStart, spr
                 startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),
                 sprintDuration,
             })).then(unwrapResult).then(setPortfolioMetrics))
-
             type === 'portfolio' && requests.push(dispatch(requestfetchPortfolioMetricsSummary({
                 id: portfolioId,
                 startDate: getDateInDatabaseOrder(new Date(dateRange[0]).toISOString()),

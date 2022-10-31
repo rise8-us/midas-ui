@@ -12,10 +12,14 @@ function getFormatDuration(value, hours) {
     }
 }
 
-export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt, sprintMetrics }) {
+export default function ProductDoraMetrics({
+    deliveredPointsAverage,
+    loading,
+    releasedAt,
+    showReleasedAt,
+    sprintMetrics
+}) {
     const {
-        deliveredStories,
-        deliveredPoints,
         releaseFrequencyThreeSprints,
         leadTimeForChangeInMinutes
     } = sprintMetrics
@@ -39,8 +43,10 @@ export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt
     }, [leadTimeForChangeInMinutes])
 
     const metrics = [
-        { title: 'Closed Issues:', value: deliveredStories },
-        { title: 'Points Delivered:', value: deliveredPoints },
+        {
+            title: 'Average Velocity (3 Sprints):',
+            value: Math.floor(deliveredPointsAverage)
+        },
         { title: 'Lead Time for Change:', value: leadTimeForChangeString, tooltip: tooltips.DORA_LEAD_TIME_FOR_CHANGE },
         {
             title: 'Release Frequency (Last 3 Sprints):',
@@ -94,6 +100,7 @@ export default function ProductDoraMetrics({ loading, releasedAt, showReleasedAt
 }
 
 ProductDoraMetrics.propTypes = {
+    deliveredPointsAverage: PropTypes.number,
     loading: PropTypes.bool,
     releasedAt: PropTypes.string,
     showReleasedAt: PropTypes.bool,
@@ -106,6 +113,7 @@ ProductDoraMetrics.propTypes = {
 }
 
 ProductDoraMetrics.defaultProps = {
+    deliveredPointsAverage: undefined,
     loading: false,
     releasedAt: null,
     showReleasedAt: true,

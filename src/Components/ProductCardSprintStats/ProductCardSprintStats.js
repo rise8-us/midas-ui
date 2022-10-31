@@ -16,9 +16,14 @@ export default function ProductCardSprintStats(props) {
 
     const product = useSelector(state => selectProductById(state, productId))
     const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, product.portfolioId))
-
     const latestSprintMetrics = sprintMetrics[0] ?? {}
     const latestReleasedAt = product.latestRelease?.releasedAt ? product.latestRelease.releasedAt + 'Z' : null
+    const iteration = dateRange[1] < new Date() ? 0 : 1
+    let total = 0
+
+    for (let i = iteration; i < iteration + 3; i++) {
+        total += sprintMetrics[i]?.deliveredPoints
+    }
 
     useEffect(() => {
         dispatch(fetchReleasesByProductId(productId))
@@ -48,6 +53,7 @@ export default function ProductCardSprintStats(props) {
                                 showReleasedAt = {showReleasedAt}
                                 releasedAt = {latestReleasedAt}
                                 sprintMetrics = {latestSprintMetrics}
+                                deliveredPointsAverage = {total / 3}
                             />
                         </Stack>
                     </Grid>
