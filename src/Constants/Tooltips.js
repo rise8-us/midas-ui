@@ -23,8 +23,7 @@ export default {
     EPICS_ROADMAP_SYNC: 'Sync Epics from GitLab.',
     MATTERMOST_LOGO: 'Find a bug? Got a Feature Request? Just need someone to talk to? Hop over to the ' +
     'Midas MatterMost server where we you can communicate your needs directly to developers. See you there!',
-    DORA_RELEASE_FREQUENCY: 'DORA throughput metric that represents the average number of' +
-    ' days between releases. Low numbers indicate high performing teams.',
-    DORA_LEAD_TIME_FOR_CHANGE: 'DORA throughput metric that represents time from work' +
-    ' completed to deployed in production. Low numbers indicate high performing teams.'
+    DORA_RELEASE_FREQUENCY: 'Average time between releases over the last 3 sprints.',
+    DORA_LEAD_TIME_FOR_CHANGE: 'Average time from work completed to deployed in production over the last 3 sprints.',
+    VELOCITY_DURATION: 'Average number of points delivered over the last 3 completed sprints.'
 }

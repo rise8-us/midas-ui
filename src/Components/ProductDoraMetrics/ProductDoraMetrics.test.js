@@ -20,7 +20,7 @@ describe('<ProductDoraMetrics />', () => {
     test('should render', () => {
         render(<ProductDoraMetrics sprintMetrics = {sprintMetrics}/>)
 
-        expect(screen.getByText('Average Velocity (3 Sprints):')).toBeInTheDocument()
+        expect(screen.getByText('Average Velocity:')).toBeInTheDocument()
         expect(screen.getByText('Latest Release:')).toBeInTheDocument()
         expect(screen.getByText('Lead Time for Change:')).toBeInTheDocument()
         expect(screen.queryByTestId('ProductDoraMetrics__last-release')).not.toBeInTheDocument()

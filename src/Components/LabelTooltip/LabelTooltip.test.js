@@ -3,20 +3,23 @@ import { LabelTooltip } from './index'
 
 describe('<LabelTooltip>', () => {
 
-    test('should render with tooltip text', async() => {
+    test('should render with tooltip text when clicked', async() => {
         render(<LabelTooltip text = 'text' tooltipProps = {{ title: 'tooltip text' }} />)
 
-        fireEvent.mouseEnter(screen.getByTestId('LabelTooltip__icon'))
+        screen.getByTestId('LabelTooltip__icon')
+        screen.getByText('text')
 
-        expect(screen.getByTestId('LabelTooltip__icon')).toBeInTheDocument()
-        expect(screen.getByText('text')).toBeInTheDocument()
-        expect(await screen.findByText('tooltip text')).toBeInTheDocument()
+        fireEvent.mouseEnter(screen.getByTestId('LabelTooltip__icon'))
+        expect(screen.queryByText('tooltip text')).not.toBeInTheDocument()
+
+        fireEvent.click(screen.getByTestId('LabelTooltip__icon'))
+        screen.getByText('tooltip text')
     })
 
     test('should not render icon with no tooltipProps', () => {
         render(<LabelTooltip text = 'text'/>)
 
-        expect(screen.getByText('text')).toBeInTheDocument()
+        screen.getByText('text')
         expect(screen.queryByTestId('LabelTooltip__icon')).not.toBeInTheDocument()
     })
 
