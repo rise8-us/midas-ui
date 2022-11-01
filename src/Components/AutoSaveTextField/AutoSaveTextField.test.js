@@ -6,7 +6,7 @@ const getTextWidthMock = useModuleMock('Utilities/textHelpers', 'getTextWidth')
 describe('<AutoSaveTextField>', () => {
 
     test('should render', () => {
-        render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'test' label = 'title' tooltip = 'tooltip'/>)
+        render(<AutoSaveTextField onSave = {jest.fn()} initialValue = 'test' label = 'title'/>)
 
         expect(screen.getByDisplayValue('test')).toBeInTheDocument()
         expect(screen.queryByTestId('AutoSaveTextField__input')).not.toHaveClass('MuiInput-underline')

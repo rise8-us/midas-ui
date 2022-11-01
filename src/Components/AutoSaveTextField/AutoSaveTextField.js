@@ -1,5 +1,4 @@
 import { TextField, Typography } from '@mui/material'
-import { LabelTooltip } from 'Components/LabelTooltip'
 import PropTypes from 'prop-types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import FormatErrors from 'Utilities/FormatErrors'
@@ -27,7 +26,7 @@ const hasErrors = (errors, showCharCount, titleLengthError) =>
 
 function AutoSaveTextField({
     autogrow, canEdit, className, dataTestId, enableSpellCheck, errors,
-    initialValue, onSave, clearAfterSave, revertOnEmpty, tooltip, uniqueId,
+    initialValue, onSave, clearAfterSave, revertOnEmpty, uniqueId,
     onHoverChange, maxLength, ...textFieldProps }) {
 
     const ref = useRef()
@@ -128,23 +127,10 @@ function AutoSaveTextField({
                 ...textFieldProps.inputProps
             }}
             value = {value}
-            label = {doubleValidate(textFieldProps.label, tooltip)
-                ? <LabelTooltip
-                    text = {textFieldProps.label}
-                    typographyProps = {{
-                        variant: 'h6',
-                        color: 'text.primary'
-                    }}
-                    tooltipProps = {{
-                        title: tooltip,
-                        placement: 'bottom-start',
-                        enterDelay: 500,
-                        arrow: true
-                    }}
-                    iconFontSize = 'small'
-                />
-                : <Typography style = {{ variant: 'h6', color: 'text.primary' }}> {textFieldProps.label} </Typography>
-            }
+            label = {textFieldProps.label &&
+                <Typography style = {{ variant: 'h6', color: 'text.primary' }}>
+                    {textFieldProps.label}
+                </Typography>}
             onFocus = {inEditMode ? onFocus : undefined}
             onMouseEnter = {onMouseEnter}
             onMouseLeave = {onMouseLeave}
@@ -179,7 +165,6 @@ AutoSaveTextField.propTypes = {
     onSave: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     revertOnEmpty: PropTypes.bool,
-    tooltip: PropTypes.string,
     uniqueId: PropTypes.string,
 }
 
@@ -201,7 +186,6 @@ AutoSaveTextField.defaultProps = {
     onHoverChange: (e) => e,
     placeholder: '',
     revertOnEmpty: false,
-    tooltip: '',
     uniqueId: null
 }
 

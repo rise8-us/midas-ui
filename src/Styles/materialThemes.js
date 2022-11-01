@@ -25,6 +25,7 @@ const theme = createTheme({
             SCI: '#EFF01A'
         },
         divider: '#3E4548',
+        infoIcon: '#FFDEA9',
         gantt: {
             milestone: {
                 dark: {

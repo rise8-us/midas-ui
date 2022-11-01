@@ -1,9 +1,10 @@
-import { Stack, Tooltip, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import { TextSkeleton } from 'Components/Skeletons'
 import tooltips from 'Constants/Tooltips'
 import { format, formatDistanceToNow, formatDuration } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
+import { LabelTooltip } from '../LabelTooltip'
 
 function getFormatDuration(value, hours) {
     return {
@@ -44,12 +45,17 @@ export default function ProductDoraMetrics({
 
     const metrics = [
         {
-            title: 'Average Velocity (3 Sprints):',
-            value: Math.floor(deliveredPointsAverage)
+            title: 'Average Velocity:',
+            value: Math.floor(deliveredPointsAverage),
+            tooltip: tooltips.VELOCITY_DURATION
         },
-        { title: 'Lead Time for Change:', value: leadTimeForChangeString, tooltip: tooltips.DORA_LEAD_TIME_FOR_CHANGE },
         {
-            title: 'Release Frequency (Last 3 Sprints):',
+            title: 'Lead Time for Change:',
+            value: leadTimeForChangeString,
+            tooltip: tooltips.DORA_LEAD_TIME_FOR_CHANGE
+        },
+        {
+            title: 'Release Frequency:',
             value: releaseFrequencyString,
             tooltip: tooltips.DORA_RELEASE_FREQUENCY
         },
@@ -58,42 +64,62 @@ export default function ProductDoraMetrics({
     return (
         <Stack spacing = {0.5} marginBottom = {2}>
             {metrics.map((metric, index) =>
-                <Tooltip key = {index} title = {metric.tooltip ?? ''}>
-                    <Stack direction = 'row' alignItems = 'baseline' spacing = {0.5}>
-                        <Typography variant = 'body2'>{metric.title}</Typography>
-                        <Typography fontWeight = 'bold'>
-                            <TextSkeleton loading = {loading} text = {metric.value} width = {24}/>
-                        </Typography>
-                    </Stack>
-                </Tooltip>
+                <Stack key = {index} direction = 'row' alignItems = 'baseline' spacing = {0.5}>
+                    <Typography variant = 'body2' width = '50%' minWidth = '155px'>{metric.title}</Typography>
+                    <LabelTooltip
+                        text = {<TextSkeleton loading = {loading} text = {metric.value} width = {24}/>}
+                        iconFontSize = 'small'
+                        typographyProps = {{
+                            variant: 'body2',
+                            color: 'text.primary',
+                            fontWeight: 'bold'
+                        }}
+                        tooltipProps = {{
+                            title: metric.tooltip ?? 'placeholder',
+                            placement: 'bottom-start',
+                            arrow: true
+                        }}
+                    />
+                </Stack>
             )}
             {showReleasedAt &&
-                <Tooltip
-                    title = {format(new Date(releasedAt), 'PPpp')}
-                    disableHoverListener = {!releasedAt}
-                    placement = 'bottom-start'
-                >
-                    <Stack direction = 'row' alignItems = 'baseline' spacing = {0.5}>
-                        <Typography variant = 'body2'>Latest Release:</Typography>
-                        {releasedAt ?
-                            <Typography fontWeight = 'bold' data-testid = 'ProductDoraMetrics__last-release'>
-                                <TextSkeleton
-                                    loading = {loading}
-                                    text = {formatDistanceToNow(
-                                        new Date(releasedAt),
-                                        { includeSeconds: true, addSuffix: true }
-                                    )}
-                                    width = {24}
-                                />
-                                {}
-                            </Typography>
-                            :
-                            <Typography color = 'secondary' fontStyle = 'italic'>
-                                <TextSkeleton loading = {loading} text = 'N/A' width = {24}/>
-                            </Typography>
-                        }
-                    </Stack>
-                </Tooltip>
+                <Stack direction = 'row' alignItems = 'baseline' spacing = {0.5}>
+                    <Typography variant = 'body2' width = '50%' minWidth = '155px'>Latest Release:</Typography>
+                    {releasedAt ?
+                        <LabelTooltip
+                            text = {<TextSkeleton
+                                loading = {loading}
+                                text = {formatDistanceToNow(
+                                    new Date(releasedAt),
+                                    { includeSeconds: true, addSuffix: true }
+                                )}
+                                width = {24}
+                            />}
+                            iconFontSize = 'small'
+                            typographyProps = {{
+                                variant: 'body2',
+                                color: 'text.primary',
+                                fontWeight: 'bold',
+                                'data-testid': 'ProductDoraMetrics__last-release'
+                            }}
+                            tooltipProps = {{
+                                title: format(new Date(releasedAt), 'PPpp'),
+                                placement: 'bottom-start',
+                                arrow: true
+                            }}
+                        />
+                        :
+                        <Typography
+                            variant = 'body2'
+                            color = 'secondary'
+                            fontStyle = 'italic'
+                            data-testid = 'ProductDoraMetrics__no-release'
+                            width = '100%'
+                        >
+                            <TextSkeleton loading = {loading} text = 'N/A' width = {24}/>
+                        </Typography>
+                    }
+                </Stack>
             }
         </Stack>
     )

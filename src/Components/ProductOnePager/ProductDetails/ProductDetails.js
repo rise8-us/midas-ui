@@ -8,6 +8,7 @@ import { requestUpdateProduct } from 'Redux/Products/actions'
 import ProductConstants from 'Redux/Products/constants'
 import { selectProductById } from 'Redux/Products/selectors'
 import { styled } from 'Styles/materialThemes'
+import { LabelTooltip } from '../../LabelTooltip'
 
 const AutoSaveTextFieldStyled = styled(AutoSaveTextField)(({ theme }) => ({
     color: theme.palette.text.secondary
@@ -31,77 +32,71 @@ function ProductDetails({ productId, hasEdit }) {
         }))
     }
 
+    const items = [
+        {
+            label: 'CORE DOMAIN',
+            tooltip: tooltips.PRODUCT_CORE_DOMAIN,
+            initial: defaultValue(product.coreDomain),
+            dispatchId: 'coreDomain',
+            placeholder: 'Type of data the app is the system of record for.'
+        },
+        {
+            label: 'OUR VISION',
+            tooltip: tooltips.PRODUCT_VISION,
+            initial: defaultValue(product.vision),
+            dispatchId: 'vision',
+            placeholder: 'End goal for this product.'
+        },
+        {
+            label: 'OUR MISSION',
+            tooltip: tooltips.PRODUCT_MISSION,
+            initial: defaultValue(product.mission),
+            dispatchId: 'mission',
+            placeholder: 'Near term goal that supports the vision.'
+        },
+        {
+            label: 'PROBLEM STATEMENT',
+            tooltip: tooltips.PRODUCT_PROBLEM_STATEMENT,
+            initial: defaultValue(product.problemStatement),
+            dispatchId: 'problemStatement',
+            placeholder: 'What problem does this product aim to fix/improve upon.'
+        }
+    ]
+
     return (
         <Grid container direction = 'column' spacing = {2}>
-            <Grid item marginTop = {1}>
-                <AutoSaveTextFieldStyled
-                    label = 'CORE DOMAIN'
-                    dataTestId = 'ProductDetails-core-domain'
-                    initialValue = {defaultValue(product.coreDomain)}
-                    canEdit = {hasEdit}
-                    onSave = {(e) => dispatchUpdateProduct('coreDomain', e)}
-                    placeholder = 'Type of data the app is the system of record for.'
-                    tooltip = {tooltips.PRODUCT_CORE_DOMAIN}
-                    enableSpellCheck
-                    fullWidth
-                    multiline
-                    errors = {errors}
-                    InputLabelProps = {{
-                        shrink: true
-                    }}
-                />
-            </Grid>
-            <Grid item>
-                <AutoSaveTextFieldStyled
-                    label = 'OUR VISION'
-                    data-testid = 'ProductDetails__vision-statement'
-                    initialValue = {defaultValue(product.vision)}
-                    canEdit = {hasEdit}
-                    onSave = {(e) => dispatchUpdateProduct('vision', e)}
-                    placeholder = 'End goal for this product.'
-                    tooltip = {tooltips.PRODUCT_VISION}
-                    enableSpellCheck
-                    fullWidth
-                    multiline
-                    InputLabelProps = {{
-                        shrink: true
-                    }}
-                />
-            </Grid>
-            <Grid item>
-                <AutoSaveTextFieldStyled
-                    label = 'OUR MISSION'
-                    data-testid = 'ProductDetails__mission-statement'
-                    initialValue = {defaultValue(product.mission)}
-                    canEdit = {hasEdit}
-                    onSave = {(e) => dispatchUpdateProduct('mission', e)}
-                    placeholder = 'Near term goal that supports the vision.'
-                    tooltip = {tooltips.PRODUCT_MISSION}
-                    enableSpellCheck
-                    fullWidth
-                    multiline
-                    InputLabelProps = {{
-                        shrink: true
-                    }}
-                />
-            </Grid>
-            <Grid item>
-                <AutoSaveTextFieldStyled
-                    label = 'PROBLEM STATEMENT'
-                    data-testid = 'ProductDetails__problem-statement'
-                    initialValue = {defaultValue(product.problemStatement)}
-                    canEdit = {hasEdit}
-                    onSave = {(e) => dispatchUpdateProduct('problemStatement', e)}
-                    placeholder = 'What problem does this product aim to fix/improve upon.'
-                    tooltip = {tooltips.PRODUCT_PROBLEM_STATEMENT}
-                    enableSpellCheck
-                    fullWidth
-                    multiline
-                    InputLabelProps = {{
-                        shrink: true
-                    }}
-                />
-            </Grid>
+            {items.map((item, index) =>
+                <Grid item marginTop = {index === 0 ? 1 : 0} key = {index}>
+                    <LabelTooltip
+                        text = {item.label}
+                        typographyProps = {{
+                            variant: 'body2',
+                            color: 'text.primary',
+                            fontWeight: 'bold'
+                        }}
+                        tooltipProps = {{
+                            title: item.tooltip,
+                            placement: 'bottom-start',
+                            arrow: true
+                        }}
+                        iconFontSize = 'small'
+                    />
+                    <AutoSaveTextFieldStyled
+                        dataTestId = {`ProductDetails__${ item.label.toLowerCase().replaceAll(' ', '-') }`}
+                        initialValue = {item.initial}
+                        canEdit = {hasEdit}
+                        onSave = {(e) => dispatchUpdateProduct(item.dispatchId, e)}
+                        placeholder = {item.placeholder}
+                        enableSpellCheck
+                        fullWidth
+                        multiline
+                        errors = {errors}
+                        InputLabelProps = {{
+                            shrink: true
+                        }}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }

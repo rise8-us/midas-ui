@@ -33,7 +33,7 @@ export default function ProductCardSprintStats(props) {
         <Card style = {{ padding: '0px 8px 8px' }}>
             <Stack paddingX = {1} spacing = {1}>
                 <Grid container>
-                    <Grid item xs = {12} md = {3}>
+                    <Grid item xs = {12} md = {4} zIndex = {1}>
                         <Stack>
                             <Typography marginTop = {1} variant = 'h6'>
                                 <TextSkeleton loading = {!product.name} text = {product.name} width = '160px'/>
@@ -57,7 +57,7 @@ export default function ProductCardSprintStats(props) {
                             />
                         </Stack>
                     </Grid>
-                    <Grid item md = {9} xs = {12} paddingTop = {1.5}>
+                    <Grid item md = {8} xs = {12} paddingTop = {1.5}>
                         <div style = {{ maxWidth: '800px', minHeight: '200px', height: '100%', width: '100%' }}>
                             <ProductStoriesLineGraph rawData = {sprintMetrics} dateOffset = {sprintDuration}/>
                         </div>
