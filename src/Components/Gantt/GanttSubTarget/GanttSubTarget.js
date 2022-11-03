@@ -5,16 +5,13 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCapabilitiesByPortfolioId } from 'Redux/Capabilities/selectors'
-import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestDeleteTarget, requestUpdateTarget } from 'Redux/Targets/actions'
 import TargetConstants from 'Redux/Targets/constants'
 import { selectTargetById } from 'Redux/Targets/selectors'
 import { styled } from 'Styles/materialThemes'
-import { getTotalWeights } from 'Utilities/progressHelpers'
 import { GanttEpicsList } from '../GanttEpicsList'
-import { GanttProgressBar } from '../GanttProgressBar'
 import { GanttRequirementsList } from '../GanttRequirementsList'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -56,9 +53,7 @@ export default function GanttSubTarget({ id, defaultOpen }) {
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const capabilities = useSelector(state => selectCapabilitiesByPortfolioId(state, portfolioId))
-    const epics = useSelector(state => selectEpicsByIds(state, epicIds))
 
-    const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
     const prioritySettings = getPrioritySettings(isPriority)
 
     const [open, setOpen] = useState(defaultOpen)
@@ -148,16 +143,6 @@ export default function GanttSubTarget({ id, defaultOpen }) {
 
     return (
         <StyledDiv>
-            {epics.length > 0 ?
-                <GanttProgressBar
-                    currentValue = {totalCompletedWeight}
-                    targetValue = {totalWeight}
-                    startDate = {startDate}
-                    endDate = {dueDate}
-                    dataTestId = 'GanttSubtarget__subtarget-progress'
-                />
-                :
-                <Typography variant = 'body2' color = 'text.secondary'>No Epics linked</Typography>}
             <StyledHeader>
                 {(permissions.edit || isPriority) &&
                     <Tooltip disableInteractive title = {prioritySettings.title}>

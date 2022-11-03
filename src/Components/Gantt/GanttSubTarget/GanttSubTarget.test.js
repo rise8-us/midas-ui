@@ -21,10 +21,6 @@ describe('<GanttSubTarget />', () => {
         isPriority: false
     }
 
-    const foundEpics = [
-        { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 }
-    ]
-
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
 
@@ -44,7 +40,6 @@ describe('<GanttSubTarget />', () => {
 
         expect(screen.getByTitle('This is the subTarget title')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttSubTarget__associate-req')).not.toBeInTheDocument()
-        expect(screen.getByText('No Epics linked')).toBeInTheDocument()
         expect(screen.getByText('These are the details')).toBeInTheDocument()
         expect(screen.queryByTestId('GanttSubTarget__priority')).not.toBeInTheDocument()
     })
@@ -85,14 +80,6 @@ describe('<GanttSubTarget />', () => {
                 }
             }
         )
-    })
-
-    test('should show progress bar', () => {
-        selectEpicsByIdsMock.mockReturnValue(foundEpics)
-
-        render(<GanttSubTarget id = {1}/>)
-
-        expect(screen.getByTestId('GanttSubtarget__subtarget-progress')).toBeInTheDocument()
     })
 
     test('should show with priority', () => {

@@ -1,11 +1,10 @@
 import { ExpandMore, KeyboardDoubleArrowDown } from '@mui/icons-material'
-import { Button, Collapse, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material'
+import { Button, Collapse, IconButton, Tooltip, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPortfolioPageSettingTargetIdExpand } from 'Redux/AppSettings/reducer'
 import { selectPortfolioPageSettingTargetIdExpanded } from 'Redux/AppSettings/selectors'
-import { selectEpicsByIds } from 'Redux/Epics/selectors'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { requestCreateTarget, requestDeleteTarget } from 'Redux/Targets/actions'
@@ -13,10 +12,8 @@ import TargetConstants from 'Redux/Targets/constants'
 import { styled } from 'Styles/materialThemes'
 import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
-import { getTotalWeights } from 'Utilities/progressHelpers'
 import { GanttActionButtons } from '../GanttActionButtons'
 import { GanttEntryHeader } from '../GanttEntryHeader'
-import { GanttProgressBar } from '../GanttProgressBar'
 import { GanttSubTargetList } from '../GanttSubTargetList'
 import { GanttTargetTooltip } from '../GanttTargetTooltip'
 
@@ -112,8 +109,6 @@ export default function GanttTarget({ target, dateRange }) {
         title,
         description,
         type,
-        epicIds,
-        childrenEpicIds,
         childrenIds
     } = target
     const dateString = parseDate(startDate, dueDate)
@@ -130,11 +125,6 @@ export default function GanttTarget({ target, dateRange }) {
 
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
     const isExpanded = useSelector(state => selectPortfolioPageSettingTargetIdExpanded(state, portfolioId, id))
-    const totalEpics = Array.from(new Set(epicIds.concat(childrenEpicIds)))
-
-    const epics = useSelector(state => selectEpicsByIds(state, totalEpics))
-
-    const [totalWeight, totalCompletedWeight] = getTotalWeights(epics)
 
     const handleHover = {
         onMouseEnter: () => setHover(true),
@@ -211,38 +201,6 @@ export default function GanttTarget({ target, dateRange }) {
                 ...calculateBorderRadius(start, due, dateRange)
             }}
         >
-            {totalEpics.length > 0 && epics.length === 0 &&
-                <div style = {{ display: 'flex', alignItems: 'center' }}>
-                    <LinearProgress
-                        variant = 'determinate'
-                        value = {0}
-                        sx = {theme => ({ backgroundColor: theme.palette.gantt.subtarget.dark.background }) }
-                        style = {{ width: '100%', height: 14 }}
-                    />
-                    <Typography
-                        data-testid = 'GanttTarget__loading-progress'
-                        variant = 'overline'
-                        minWidth = {35}
-                        style = {{
-                            position: 'relative',
-                            marginRight: '-100%',
-                            right: '50%',
-                            transform: 'translate(-50%, 0)',
-                            color: 'white',
-                            lineHeight: '14px'
-                        }}
-                    >Loading Progress...</Typography>
-                </div>
-            }
-            {epics.length > 0 &&
-                <GanttProgressBar
-                    currentValue = {totalCompletedWeight}
-                    targetValue = {totalWeight}
-                    startDate = {startDate}
-                    endDate = {dueDate}
-                    dataTestId = 'GanttTarget__target-progress'
-                />
-            }
             <Tooltip
                 open = {hover && !isExpanded}
                 title = {<GanttTargetTooltip target = {target}/>}
@@ -338,8 +296,6 @@ GanttTarget.propTypes = {
         startDate: PropTypes.string,
         dueDate: PropTypes.string,
         childrenIds: PropTypes.arrayOf(PropTypes.number),
-        epicIds: PropTypes.arrayOf(PropTypes.number),
-        childrenEpicIds: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
     dateRange: PropTypes.array.isRequired
 }

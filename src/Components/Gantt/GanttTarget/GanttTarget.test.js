@@ -10,8 +10,6 @@ describe('<GanttTarget />', () => {
         dueDate: '2022-05-01',
         description: 'These are the details',
         childrenIds: [],
-        epicIds: [],
-        childrenEpicsIds: [],
         portfolioId: 1,
     }
     const target2 = {
@@ -21,7 +19,6 @@ describe('<GanttTarget />', () => {
         dueDate: '2022-04-30',
         description: 'These are the details',
         childrenIds: [],
-        epicIds: [],
         portfolioId: 1,
     }
     const target3 = {
@@ -31,7 +28,6 @@ describe('<GanttTarget />', () => {
         dueDate: '2023-04-30',
         description: 'These are the details',
         childrenIds: [],
-        epicIds: [],
         portfolioId: 1,
     }
     const target4 = {
@@ -41,7 +37,6 @@ describe('<GanttTarget />', () => {
         dueDate: '2023-04-30',
         description: 'These are the details',
         childrenIds: [],
-        epicIds: [],
         portfolioId: 1,
     }
     const newSubTarget = {
@@ -51,10 +46,6 @@ describe('<GanttTarget />', () => {
         startDate: '2022-04-30',
         dueDate: '2022-05-01',
     }
-
-    const foundEpics = [
-        { id: 1, name: 'alpha', title: 'foo', totalWeight: 0, completedWeight: 0 }
-    ]
 
     const dateRange = [new Date(2022, 0, 1), new Date(2022, 5, 1)]
 
@@ -160,15 +151,6 @@ describe('<GanttTarget />', () => {
         expect(requestCreateTargetMock).toHaveBeenCalledWith(newSubTarget)
     })
 
-    test('should show progress bar', () => {
-        selectEpicsByIdsMock.mockReturnValue(foundEpics)
-
-        render(<GanttTarget {...defaultProps}/>)
-
-        expect(screen.getByTestId('GanttTarget__target-progress')).toBeInTheDocument()
-        expect(screen.queryByTestId('GanttTarget__loading-progress')).not.toBeInTheDocument()
-    })
-
     test('should expand all', () => {
         render(<GanttTarget {...defaultProps}/>)
 
@@ -180,15 +162,5 @@ describe('<GanttTarget />', () => {
             userEvent.click(screen.getByTestId('GanttTarget__expandAllButton_open'))
             expect(screen.getByTestId('GanttTarget__expandAllButton_closed')).toBeInTheDocument()
         })
-    })
-
-    test('should show loading progress', () => {
-        selectEpicsByIdsMock.mockReturnValue([])
-        const testTarget = { ...target1, childrenEpicIds: [1] }
-
-        render(<GanttTarget {...defaultProps} target = {testTarget}/>)
-
-        expect(screen.queryByTestId('GanttTarget__target-progress')).not.toBeInTheDocument()
-        expect(screen.getByTestId('GanttTarget__loading-progress')).toBeInTheDocument()
     })
 })
