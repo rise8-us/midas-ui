@@ -47,7 +47,7 @@ describe('<ProductDoraMetrics />', () => {
     })
 
     test('should not show released at if showReleasedAt is false', () => {
-        render(<ProductDoraMetrics sprintMetrics = {sprintMetrics} showReleasedAt={false}/>)
+        render(<ProductDoraMetrics sprintMetrics = {sprintMetrics} showReleasedAt = {false}/>)
 
         expect(screen.queryByTestId('ProductDoraMetrics__last-release')).not.toBeInTheDocument()
         expect(screen.queryByText('N/A')).not.toBeInTheDocument()

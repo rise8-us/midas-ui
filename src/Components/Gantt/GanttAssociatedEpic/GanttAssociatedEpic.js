@@ -3,7 +3,6 @@ import { IconButton, Stack, Typography } from '@mui/material'
 import { HrefText } from 'Components/HrefText'
 import PropTypes from 'prop-types'
 import { styled } from 'Styles/materialThemes'
-import { GanttProgressBar } from '../GanttProgressBar'
 import { ClosedLabel } from '../../Epics'
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -19,17 +18,10 @@ const StyledHrefText = styled(HrefText)(({ theme }) => ({
 
 export default function GanttAssociatedEpic(props) {
 
-    const { name, title, webUrl, onDelete, totalWeight, completedWeight, startDate, dueDate, isClosed } = props
+    const { name, title, webUrl, onDelete, isClosed } = props
 
     return (
         <StyledDiv>
-            <GanttProgressBar
-                currentValue = {completedWeight}
-                targetValue = {totalWeight}
-                startDate = {startDate}
-                endDate = {dueDate}
-                dataTestId = 'GanttAssociatedEpic__epic-progress'
-            />
             <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                 {name &&
                     <>
@@ -50,22 +42,16 @@ export default function GanttAssociatedEpic(props) {
 }
 
 GanttAssociatedEpic.propTypes = {
-    completedWeight: PropTypes.number,
     name: PropTypes.string,
     onDelete: PropTypes.func,
     title: PropTypes.string.isRequired,
-    totalWeight: PropTypes.number,
     webUrl: PropTypes.string,
-    startDate: PropTypes.string.isRequired,
-    dueDate: PropTypes.string.isRequired,
     isClosed: PropTypes.bool,
 }
 
 GanttAssociatedEpic.defaultProps = {
-    completedWeight: 0,
     name: undefined,
     onDelete: undefined,
-    totalWeight: 0,
     webUrl: undefined,
     isClosed: false,
 }
