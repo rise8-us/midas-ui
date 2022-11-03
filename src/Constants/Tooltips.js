@@ -20,7 +20,7 @@ export default {
     PRODUCT_PROBLEM_STATEMENT: 'A single statement that describes what problem this product is aiming to ' +
     'fix/improve upon.',
     PRODUCT_DETAILS_EMPTY: 'This field looks empty, someone should fix that.',
-    EPICS_ROADMAP_SYNC: 'Sync Epics from GitLab.',
+    EPICS_ROADMAP_SYNC: 'Sync Epics from GitLab',
     MATTERMOST_LOGO: 'Find a bug? Got a Feature Request? Just need someone to talk to? Hop over to the ' +
     'Midas MatterMost server where we you can communicate your needs directly to developers. See you there!',
     DORA_RELEASE_FREQUENCY: 'Average time between releases over the last 3 sprints.',

@@ -14,22 +14,20 @@ export default function EpicSyncRequest({ id, request, tooltip }) {
 
     const syncEpics = () => {
         dispatch(setEpicSyncProgress({ id: id, value: .01 }))
-        request(id)
+        dispatch(request(id))
     }
 
     return loading ?
         <Tooltip title = {`${(value * 100).toFixed(1)}%`} placement = 'top' arrow>
-            <div>
+            <div style = {{ display: 'flex' }}>
                 <CircularProgress
                     value = {value * 100}
                     variant = 'determinate'
                     data-testid = 'SyncRequest__CircularProgress'
                     style = {{
-                        position: 'absolute',
-                        right: '2px',
-                        top: '2px'
+                        width: 'unset',
+                        height: 'unset'
                     }}
-                    size = '30px'
                 />
                 <Sync
                     color = 'primary'
@@ -54,9 +52,6 @@ export default function EpicSyncRequest({ id, request, tooltip }) {
                 size = 'small'
                 data-testid = 'SyncRequest__button-sync'
                 onClick = {syncEpics}
-                sx = {{
-                    marginBottom: '6px'
-                }}
             >
                 <Sync
                     color = 'secondary'

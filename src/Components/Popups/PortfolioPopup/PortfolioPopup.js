@@ -1,23 +1,26 @@
 import { Autocomplete, Box, TextField } from '@mui/material'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { DateSelector } from 'Components/DateSelector'
-import { EpicSyncRequest } from 'Components/EpicSyncRequest'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
 import { UsersCollection } from 'Components/UsersCollection'
-import Tooltips from 'Constants/Tooltips'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestSyncEpicsByPortfolioId } from 'Redux/Epics/actions'
 import { selectRequestErrors } from 'Redux/Errors/selectors'
 import { closePopup } from 'Redux/Popups/actions'
-import { requestCreatePortfolio, requestUpdatePortfolio } from 'Redux/Portfolios/actions'
+import {
+    requestCreatePortfolio,
+    requestUpdatePortfolio
+} from 'Redux/Portfolios/actions'
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { selectAvailableProducts } from 'Redux/Products/selectors'
-import { selectSourceControlById, selectSourceControls } from 'Redux/SourceControls/selectors'
+import {
+    selectSourceControlById,
+    selectSourceControls
+} from 'Redux/SourceControls/selectors'
 import { requestSearchUsers } from 'Redux/Users/actions'
 import { styled } from 'Styles/materialThemes'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
@@ -99,10 +102,6 @@ function PortfolioPopup({ id }) {
         }))
     }
 
-    const showSync = () => {
-        return (!context.isCreate && portfolio.sourceControlId !== null && portfolio.gitlabGroupId !== null)
-    }
-
     useEffect(() => {
         if (!fetched && portfolio?.personnel?.ownerId > 0) {
             setFetched(true)
@@ -164,16 +163,6 @@ function PortfolioPopup({ id }) {
                     type = 'number'
                     inputProps = {{
                         'data-testid': 'PortfolioPopup__input-gitlabGroupId',
-                    }}
-                    InputProps = {{
-                        endAdornment: (
-                            showSync() &&
-                            <EpicSyncRequest
-                                id = {id}
-                                request = {requestSyncEpicsByPortfolioId}
-                                tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
-                            />
-                        )
                     }}
                     value = {formValues.gitlabGroupId}
                     onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
