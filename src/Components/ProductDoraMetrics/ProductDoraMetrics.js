@@ -43,6 +43,15 @@ export default function ProductDoraMetrics({
         return 'No Releases'
     }, [leadTimeForChangeInMinutes])
 
+    const formatReleasedAt = (date) => {
+        const newDate = new Date(date)
+        const releasedAtDate = formatDistanceToNow(newDate, { includeSeconds: true, addSuffix: true })
+
+        return releasedAtDate.charAt(0).toUpperCase() + releasedAtDate.slice(1)
+        + ' - ' +
+        format(newDate, 'PPpp')
+    }
+
     const metrics = [
         {
             title: 'Average Velocity:',
@@ -86,28 +95,19 @@ export default function ProductDoraMetrics({
                 <Stack direction = 'row' alignItems = 'baseline' spacing = {0.5}>
                     <Typography variant = 'body2' width = '50%' minWidth = '155px'>Latest Release:</Typography>
                     {releasedAt ?
-                        <LabelTooltip
-                            text = {<TextSkeleton
+                        <Typography
+                            variant = 'body2'
+                            color = 'text.primary'
+                            fontWeight = 'bold'
+                            data-testid = 'ProductDoraMetrics__last-release'
+                            width = '100%'
+                        >
+                            <TextSkeleton
                                 loading = {loading}
-                                text = {formatDistanceToNow(
-                                    new Date(releasedAt),
-                                    { includeSeconds: true, addSuffix: true }
-                                )}
+                                text = {formatReleasedAt(releasedAt)}
                                 width = {24}
-                            />}
-                            iconFontSize = 'small'
-                            typographyProps = {{
-                                variant: 'body2',
-                                color: 'text.primary',
-                                fontWeight: 'bold',
-                                'data-testid': 'ProductDoraMetrics__last-release'
-                            }}
-                            tooltipProps = {{
-                                title: format(new Date(releasedAt), 'PPpp'),
-                                placement: 'bottom-start',
-                                arrow: true
-                            }}
-                        />
+                            />
+                        </Typography>
                         :
                         <Typography
                             variant = 'body2'
