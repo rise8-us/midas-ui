@@ -75,9 +75,7 @@ export default function Portfolio() {
     }
 
     useEffect(() => {
-        if (Array.isArray(portfolio?.capabilities)) {
-            portfolio.capabilities.forEach(capability => dispatch(setCapability(capability)))
-        }
+        portfolio?.capabilities?.forEach(capability => dispatch(setCapability(capability)))
     }, [JSON.stringify(portfolio)])
 
     return (
