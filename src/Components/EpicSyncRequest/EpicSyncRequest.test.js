@@ -16,19 +16,27 @@ describe('<EpicSyncRequest />', () => {
     })
 
     test('should display epic sync progress', async() => {
-        const mockRequest = jest.fn()
         selectEpicSyncProgressMock
             .mockReturnValueOnce({ id: 1, value: 0, status: 'SYNCED' })
             .mockReturnValue({ id: 1, value: .9, status: 'SYNCING' })
         useDispatchMock().mockResolvedValue({})
 
-        const { rerender } = render(<EpicSyncRequest {...defaultProps} request = {mockRequest} />)
-        userEvent.click(screen.getByTestId('SyncRequest__button-sync'))
+        const { rerender } = render(<EpicSyncRequest {...defaultProps} />)
         rerender(<EpicSyncRequest {...defaultProps}/>)
 
         const progressVal = screen.getByTestId('SyncRequest__CircularProgress').getAttribute('aria-valuenow')
         expect(progressVal).toEqual('90')
-        expect(mockRequest).toHaveBeenCalledWith(1)
     })
 
+    test('should dispatch request when clicked', async() => {
+        const mockRequest = jest.fn()
+        const dispatchMock = useDispatchMock()
+        selectEpicSyncProgressMock.mockReturnValueOnce({ value: 0, status: 'SYNCED' })
+        dispatchMock.mockResolvedValue({})
+        render(<EpicSyncRequest {...defaultProps} request = { mockRequest }/>)
+
+        userEvent.click(screen.getByTestId('SyncRequest__button-sync'))
+        expect(mockRequest).toHaveBeenCalledWith(1)
+        expect(dispatchMock).toHaveBeenCalledTimes(2)
+    })
 })

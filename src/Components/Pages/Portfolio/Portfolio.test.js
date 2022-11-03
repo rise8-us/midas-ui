@@ -1,4 +1,10 @@
-import { fireEvent, renderWithRouter, screen, useModuleMock } from 'Utilities/test-utils'
+import {
+    fireEvent,
+    renderWithRouter,
+    screen,
+    useDispatchMock,
+    useModuleMock
+} from 'Utilities/test-utils'
 import { Portfolio } from './index'
 
 jest.mock('Components/Tabs/PortfolioPage/PortfolioCapabilities/PortfolioCapabilities',
@@ -23,9 +29,13 @@ describe('<Portfolio />', () => {
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
     const selectPortfolioPagePermissionMock =
         useModuleMock('Redux/PageAccess/selectors', 'selectPortfolioPagePermission')
+    const setPortfolioPagePermissionMock =
+        useModuleMock('Redux/PageAccess/reducer', 'setPortfolioPagePermission')
+    const selectUserLoggedInMock = useModuleMock('Redux/Auth/selectors', 'selectUserLoggedIn')
 
     beforeEach(() => {
         selectPortfolioByIdMock.mockReturnValue({ name: 'foo' })
+        selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
         selectPortfolioPagePermissionMock.mockReturnValue({})
     })
 
@@ -76,22 +86,81 @@ describe('<Portfolio />', () => {
         expect(mockHistoryPush).toHaveBeenCalledWith('/portfolios/91/sprint-report')
     })
 
-    test('should handle action icons with permissions', () => {
-        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
+    describe('icons and permissions', () => {
+        test('should not show lock and sync buttons without proper permissions', () => {
+            selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
+            renderWithRouter(<Portfolio />)
 
-        renderWithRouter(<Portfolio />)
-        fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+            expect(screen.queryByTestId('Portfolio__button-edit')).not.toBeInTheDocument()
+            expect(screen.queryByTestId('SyncRequest__button-sync')).not.toBeInTheDocument()
+        })
 
+        test('should show lock and sync buttons if portfolio admin', () => {
+            selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
+            selectPortfolioByIdMock.mockReturnValue({ name: 'foo', personnel: { ownerId: 50, adminIds: [1] } })
+            renderWithRouter(<Portfolio />)
+
+            screen.getByTestId('Portfolio__button-edit')
+            screen.getByTestId('SyncRequest__button-sync')
+        })
+
+        test('should show lock and sync buttons if portfolio owner', () => {
+            selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
+            selectPortfolioByIdMock.mockReturnValue({ name: 'foo', personnel: { ownerId: 1, adminIds: [50] } })
+            renderWithRouter(<Portfolio />)
+
+            screen.getByTestId('Portfolio__button-edit')
+            screen.getByTestId('SyncRequest__button-sync')
+        })
+
+        test('should show lock and sync buttons if site admin', () => {
+            selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: true })
+            renderWithRouter(<Portfolio />)
+
+            screen.getByTestId('Portfolio__button-edit')
+            screen.getByTestId('SyncRequest__button-sync')
+        })
+
+        test('should not show sync button if no source control ID', () => {
+            selectPortfolioByIdMock.mockReturnValue({
+                name: 'foo',
+                personnel: { ownerId: 1, adminIds: [50] },
+                sourceControlId: null,
+                gitlabGroupId: 1
+            })
+            renderWithRouter(<Portfolio />)
+
+            expect(screen.queryByTestId('SyncRequest__button-sync')).not.toBeInTheDocument()
+        })
+
+        test('should not show sync button if no GitLab group ID', () => {
+            selectPortfolioByIdMock.mockReturnValue({
+                name: 'foo',
+                personnel: { ownerId: 1, adminIds: [50] },
+                sourceControlId: 1,
+                gitlabGroupId: null
+            })
+            renderWithRouter(<Portfolio />)
+
+            expect(screen.queryByTestId('SyncRequest__button-sync')).not.toBeInTheDocument()
+        })
+    })
+
+    test('should toggle edit mode when clicking the lock icon', () => {
+        selectPortfolioPagePermissionMock
+            .mockReturnValueOnce({ edit: true })
+            .mockReturnValueOnce({ edit: false })
+        const dispatchMock = useDispatchMock()
+        dispatchMock.mockResolvedValue({})
+
+        const { rerender } = renderWithRouter(<Portfolio />)
         expect(screen.getByTestId('LockOpenOutlinedIcon')).toBeInTheDocument()
-    })
-
-    test('should handle actions icons without permissions', () => {
-        selectPortfolioPagePermissionMock.mockReturnValue({ edit: false })
-
-        renderWithRouter(<Portfolio />)
         fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+        expect(setPortfolioPagePermissionMock).toHaveBeenNthCalledWith(1, { id: NaN, permissions: { edit: false } })
 
+        rerender(<Portfolio />)
         expect(screen.getByTestId('LockOutlinedIcon')).toBeInTheDocument()
+        fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
+        expect(setPortfolioPagePermissionMock).toHaveBeenLastCalledWith({ id: NaN, permissions: { edit: true } })
     })
-
 })

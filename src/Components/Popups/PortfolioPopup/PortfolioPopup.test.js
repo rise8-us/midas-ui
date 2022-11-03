@@ -239,12 +239,4 @@ describe('<PortfolioPopup />', () => {
             }
         })
     })
-
-    test('sync icon is visible', () => {
-        selectPortfolioByIdMock.mockReturnValue({ ...returnedFoundPortfolio, sourceControlId: 1, gitlabGroupId: 1 })
-
-        render(<PortfolioPopup id = {4} />)
-
-        expect(screen.getByTestId('mockSyncRequest__sync-button')).toBeInTheDocument()
-    })
 })

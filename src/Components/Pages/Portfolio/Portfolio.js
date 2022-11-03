@@ -1,6 +1,15 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import {
-    Box, CircularProgress, Divider, IconButton, Skeleton, Stack, Tab, Tabs, Tooltip, Typography
+    Box,
+    CircularProgress,
+    Divider,
+    IconButton,
+    Skeleton,
+    Stack,
+    Tab,
+    Tabs,
+    Tooltip,
+    Typography
 } from '@mui/material'
 import { GanttPortfolioNote } from 'Components/Gantt/GanttPortfolioNote'
 import { Page } from 'Components/Page'
@@ -17,11 +26,15 @@ import { setPortfolioPagePermission } from 'Redux/PageAccess/reducer'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { parseStringToDate } from 'Utilities/dateHelpers'
+import { requestSyncEpicsByPortfolioId } from '../../../Redux/Epics/actions'
+import Tooltips from '../../../Constants/Tooltips'
+import { EpicSyncRequest } from '../../EpicSyncRequest'
 
-const isOwnerOrAdmin = (userId, personnel) => personnel?.ownerId === userId || personnel?.adminIds?.includes(userId)
-const isMemberOrSiteAdmin = (portfolioMember, siteAdmin) => portfolioMember || siteAdmin
-const togglePageEdit = (permission) => permission ? false : true
-const pageEditTooltipTitle = (permission) =>permission ? 'Click to stop editing' : 'Click to edit'
+const isPortfolioOwnerOrPortfolioAdmin =
+    (userId, personnel) => personnel?.ownerId === userId || personnel?.adminIds?.includes(userId)
+const isPortfolioMemberOrSiteAdmin = (portfolioMember, siteAdmin) => portfolioMember || siteAdmin
+const togglePageEdit = (isInEditMode) => !isInEditMode
+const pageEditTooltipTitle = (isInEditMode) => isInEditMode ? 'Click to stop editing' : 'Click to edit'
 
 const loadPortfolioName = (portfolioName) => portfolioName
     ? <Typography variant = 'h3'>{portfolioName}</Typography>
@@ -38,10 +51,12 @@ export default function Portfolio() {
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
-    const pagePermissions = useSelector(state => selectPortfolioPagePermission(state, id))
-    const isAuthorized = isMemberOrSiteAdmin(
-        isOwnerOrAdmin(userLoggedIn.id, portfolio?.personnel), userLoggedIn.isAdmin
+    const isInEditMode = useSelector(state => selectPortfolioPagePermission(state, id).edit)
+    const isAuthorized = isPortfolioMemberOrSiteAdmin(
+        isPortfolioOwnerOrPortfolioAdmin(userLoggedIn.id, portfolio?.personnel), userLoggedIn.isAdmin
     )
+    const showLock = isAuthorized && portfolio.name
+    const showSync = isAuthorized && portfolio.sourceControlId !== null && portfolio.gitlabGroupId !== null
 
     const handleChange = (_e, newValue) => {
         let url = `/portfolios/${id}/${newValue}`
@@ -54,7 +69,7 @@ export default function Portfolio() {
         dispatch(setPortfolioPagePermission({
             id,
             permissions: {
-                edit: togglePageEdit(pagePermissions.edit)
+                edit: togglePageEdit(isInEditMode)
             }
         }))
     }
@@ -68,17 +83,18 @@ export default function Portfolio() {
     return (
         <Page>
             <Stack paddingX = {2}>
-                <Stack direction = 'row' spacing = {1} alignItems = 'end'>
-                    {loadPortfolioName(portfolio?.name)}
-                    <div>
-                        {portfolio.name && isAuthorized &&
-                            <Tooltip title = {pageEditTooltipTitle(pagePermissions.edit)}>
-                                <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
-                                    {pageEditIcon(pagePermissions.edit)}
-                                </IconButton>
-                            </Tooltip>
-                        }
-                    </div>
+                <Stack direction = 'row' spacing = {1} alignItems = 'center'>
+                    { loadPortfolioName(portfolio?.name) }
+                    { showLock && <Tooltip title = {pageEditTooltipTitle(isInEditMode)}>
+                        <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
+                            { pageEditIcon(isInEditMode) }
+                        </IconButton>
+                    </Tooltip> }
+                    { showSync && <EpicSyncRequest
+                        id = {id}
+                        request = {requestSyncEpicsByPortfolioId}
+                        tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
+                    /> }
                 </Stack>
                 <Tabs value = {portfolioTab ?? 'roadmap'} onChange = {handleChange}>
                     <Tab
