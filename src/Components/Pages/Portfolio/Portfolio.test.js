@@ -1,3 +1,4 @@
+import PortfolioConstants from 'Redux/Portfolios/constants'
 import {
     fireEvent,
     renderWithRouter,
@@ -93,6 +94,7 @@ describe('<Portfolio />', () => {
 
             expect(screen.queryByTestId('Portfolio__button-edit')).not.toBeInTheDocument()
             expect(screen.queryByTestId('SyncRequest__button-sync')).not.toBeInTheDocument()
+            expect(screen.queryByTestId('Portfolio__button-settings')).not.toBeInTheDocument()
         })
 
         test('should show lock and sync buttons if portfolio admin', () => {
@@ -102,6 +104,7 @@ describe('<Portfolio />', () => {
 
             screen.getByTestId('Portfolio__button-edit')
             screen.getByTestId('SyncRequest__button-sync')
+            screen.getByTestId('Portfolio__button-settings')
         })
 
         test('should show lock and sync buttons if portfolio owner', () => {
@@ -111,6 +114,7 @@ describe('<Portfolio />', () => {
 
             screen.getByTestId('Portfolio__button-edit')
             screen.getByTestId('SyncRequest__button-sync')
+            screen.getByTestId('Portfolio__button-settings')
         })
 
         test('should show lock and sync buttons if site admin', () => {
@@ -119,6 +123,7 @@ describe('<Portfolio />', () => {
 
             screen.getByTestId('Portfolio__button-edit')
             screen.getByTestId('SyncRequest__button-sync')
+            screen.getByTestId('Portfolio__button-settings')
         })
 
         test('should not show sync button if no source control ID', () => {
@@ -162,5 +167,20 @@ describe('<Portfolio />', () => {
         expect(screen.getByTestId('LockOutlinedIcon')).toBeInTheDocument()
         fireEvent.click(screen.getByTestId('Portfolio__button-edit'))
         expect(setPortfolioPagePermissionMock).toHaveBeenLastCalledWith({ id: NaN, permissions: { edit: true } })
+    })
+
+    test('should call PortfolioPopup', () => {
+        const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
+        selectUserLoggedInMock.mockReturnValue({ id: 1, isAdmin: false })
+        selectPortfolioByIdMock.mockReturnValue({ id: 91, name: 'foo', personnel: { ownerId: 1, adminIds: [50] } })
+
+        const dispatchMock = useDispatchMock()
+        dispatchMock.mockResolvedValue({})
+
+        renderWithRouter(<Portfolio />)
+
+        fireEvent.click(screen.getByTestId('Portfolio__button-settings'))
+
+        expect(openPopupMock).toHaveBeenCalledWith(PortfolioConstants.UPDATE_PORTFOLIO, 'PortfolioPopup', { id: NaN })
     })
 })
