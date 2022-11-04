@@ -1,6 +1,8 @@
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
+import SettingsIcon from '@mui/icons-material/Settings'
 import {
     Box,
+    Button,
     CircularProgress,
     Divider,
     IconButton,
@@ -24,10 +26,12 @@ import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { setCapability } from 'Redux/Capabilities/reducer'
 import { setPortfolioPagePermission } from 'Redux/PageAccess/reducer'
 import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
+import { openPopup } from 'Redux/Popups/actions'
+import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { parseStringToDate } from 'Utilities/dateHelpers'
-import { requestSyncEpicsByPortfolioId } from '../../../Redux/Epics/actions'
 import Tooltips from '../../../Constants/Tooltips'
+import { requestSyncEpicsByPortfolioId } from '../../../Redux/Epics/actions'
 import { EpicSyncRequest } from '../../EpicSyncRequest'
 
 const isPortfolioOwnerOrPortfolioAdmin =
@@ -57,6 +61,7 @@ export default function Portfolio() {
     )
     const showLock = isAuthorized && portfolio.name
     const showSync = isAuthorized && portfolio.sourceControlId !== null && portfolio.gitlabGroupId !== null
+    const showSettings = isAuthorized
 
     const handleChange = (_e, newValue) => {
         let url = `/portfolios/${id}/${newValue}`
@@ -74,6 +79,12 @@ export default function Portfolio() {
         }))
     }
 
+    const updatePortfolioPopup = () => {
+        dispatch(
+            openPopup(PortfolioConstants.UPDATE_PORTFOLIO, 'PortfolioPopup', { id })
+        )
+    }
+
     useEffect(() => {
         portfolio?.capabilities?.forEach(capability => dispatch(setCapability(capability)))
     }, [JSON.stringify(portfolio)])
@@ -81,18 +92,31 @@ export default function Portfolio() {
     return (
         <Page>
             <Stack paddingX = {2}>
-                <Stack direction = 'row' spacing = {1} alignItems = 'center'>
-                    { loadPortfolioName(portfolio?.name) }
-                    { showLock && <Tooltip title = {pageEditTooltipTitle(isInEditMode)}>
-                        <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
-                            { pageEditIcon(isInEditMode) }
-                        </IconButton>
-                    </Tooltip> }
-                    { showSync && <EpicSyncRequest
-                        id = {id}
-                        request = {requestSyncEpicsByPortfolioId}
-                        tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
-                    /> }
+                <Stack direction = 'row' spacing = {1} justifyContent = 'space-between'>
+                    <Stack direction = 'row' spacing = {1} alignItems = 'center'>
+                        { loadPortfolioName(portfolio?.name) }
+                        { showLock && <Tooltip title = {pageEditTooltipTitle(isInEditMode)}>
+                            <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
+                                { pageEditIcon(isInEditMode) }
+                            </IconButton>
+                        </Tooltip> }
+                        { showSync && <EpicSyncRequest
+                            id = {id}
+                            request = {requestSyncEpicsByPortfolioId}
+                            tooltip = {Tooltips.EPICS_ROADMAP_SYNC}
+                        /> }
+                    </Stack>
+                    { showSettings &&
+                        <Button
+                            onClick = {updatePortfolioPopup}
+                            color = 'primary'
+                            startIcon = {<SettingsIcon />}
+                            data-testid = 'Portfolio__button-settings'
+                            size = 'large'
+                        >
+                        Settings
+                        </Button>
+                    }
                 </Stack>
                 <Tabs value = {portfolioTab ?? 'roadmap'} onChange = {handleChange}>
                     <Tab
