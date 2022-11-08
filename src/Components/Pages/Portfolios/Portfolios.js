@@ -3,7 +3,7 @@ import { PortfolioCard } from 'Components/Cards'
 import { FloatingActionButton } from 'Components/FloatingActionButton'
 import { Page } from 'Components/Page'
 import { useDispatch, useSelector } from 'react-redux'
-import { isProductCreator } from 'Redux/Auth/selectors'
+import { isPortfolioCreator } from 'Redux/Auth/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import PortfolioConstant from 'Redux/Portfolios/constants'
 import { selectUnarchivedPortfolios } from 'Redux/Portfolios/selectors'
@@ -12,7 +12,7 @@ function Portfolios() {
     const dispatch = useDispatch()
 
     const allPortfolios = useSelector(selectUnarchivedPortfolios)
-    const isPortfolioCreator = useSelector(isProductCreator)
+    const isCreator = useSelector(isPortfolioCreator)
 
     const create = () => dispatch(openPopup(PortfolioConstant.CREATE_PORTFOLIO, 'PortfolioPopup'))
 
@@ -34,7 +34,7 @@ function Portfolios() {
                         ))}
                     </Box>
                 </Box>
-                {isPortfolioCreator && <FloatingActionButton onClick = {create} />}
+                {isCreator && <FloatingActionButton onClick = {create} />}
             </>
         </Page>
     )

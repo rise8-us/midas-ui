@@ -10,13 +10,13 @@ jest.mock('Hooks/useHistory')
 describe('<Portfolios>', () => {
 
     const openPopupMock = useModuleMock('Redux/Popups/actions', 'openPopup')
-    const isProductCreatorMock = useModuleMock('Redux/Auth/selectors', 'isProductCreator')
+    const isPortfolioCreatorMock = useModuleMock('Redux/Auth/selectors', 'isPortfolioCreator')
     const selectUnarchivedPortfoliosMock =
         useModuleMock('Redux/Portfolios/selectors', 'selectUnarchivedPortfolios')
 
     beforeEach(() => {
         useDispatchMock().mockReturnValue({})
-        isProductCreatorMock.mockReturnValue(true)
+        isPortfolioCreatorMock.mockReturnValue(true)
         selectUnarchivedPortfoliosMock.mockReturnValue([
             {
                 id: 1,
@@ -52,7 +52,7 @@ describe('<Portfolios>', () => {
     })
 
     test('should not render FAB', () => {
-        isProductCreatorMock.mockReturnValue(false)
+        isPortfolioCreatorMock.mockReturnValue(false)
 
         render(<Portfolios />)
 

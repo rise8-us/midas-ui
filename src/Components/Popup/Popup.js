@@ -72,7 +72,8 @@ const Popup = ({
                     data-testid = 'Popup__button-cancel'
                     onClick = {onClose}
                     color = 'secondary'
-                    variant = 'text'
+                    variant = 'outlined'
+                    style = {{ borderRadius: '20px' }}
                 >
                     {cancelText}
                 </Button>
@@ -81,7 +82,8 @@ const Popup = ({
                         data-testid = 'Popup__button-submit'
                         onClick = {onSubmit}
                         color = 'primary'
-                        variant = 'outlined'
+                        variant = 'contained'
+                        style = {{ borderRadius: '20px' }}
                     >
                         <div style = {{ height: '24px', width: '60px' }}>
                             {isSubmitting ? <CircularProgress size = '22px'/>
