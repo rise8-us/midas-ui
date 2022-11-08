@@ -8,6 +8,7 @@ import {
     IconButton,
     Skeleton,
     Stack,
+    styled,
     Tab,
     Tabs,
     Tooltip,
@@ -40,11 +41,16 @@ const togglePageEdit = (isInEditMode) => !isInEditMode
 const pageEditTooltipTitle = (isInEditMode) => isInEditMode ? 'Click to stop editing' : 'Click to edit'
 
 const loadPortfolioName = (portfolioName) => portfolioName
-    ? <Typography variant = 'h3'>{portfolioName}</Typography>
+    ? <Typography variant = 'h4'>{portfolioName}</Typography>
     : <Skeleton height = '64px' width = '60vw' data-testid = 'Portfolio__skeleton-name'/>
 const pageEditIcon = (editPermissions) => editPermissions
     ? <LockOpenOutlined fontSize = 'medium' color = 'primary'/>
     : <LockOutlined fontSize = 'medium' color = 'primary'/>
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.grey[600],
+    size: 'large'
+}))
 
 export default function Portfolio() {
     const history = useHistory()
@@ -106,18 +112,20 @@ export default function Portfolio() {
                         /> }
                     </Stack>
                     { showSettings &&
-                        <Button
+                        <StyledButton
                             onClick = {updatePortfolioPopup}
-                            color = 'primary'
                             startIcon = {<SettingsIcon />}
                             data-testid = 'Portfolio__button-settings'
-                            size = 'large'
                         >
                         Settings
-                        </Button>
+                        </StyledButton>
                     }
                 </Stack>
-                <Tabs value = {portfolioTab ?? 'roadmap'} onChange = {handleChange}>
+                <Tabs
+                    textColor = 'primary'
+                    indicatorColor = 'primary'
+                    value = {portfolioTab ?? 'roadmap'}
+                    onChange = {handleChange}>
                     <Tab
                         label = 'roadmap'
                         value = 'roadmap'

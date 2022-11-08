@@ -103,7 +103,7 @@ describe('<AppBar />', () => {
 
         render(<AppBar />)
 
-        fireEvent.click(screen.getByTestId('ContactSupportOutlinedIcon'))
+        fireEvent.click(screen.getByTestId('ContactSupportIcon'))
 
         expect(screen.getAllByTestId('MoreOptionsPopperMenu__link')).toHaveLength(4)
         expect(screen.getByRole('link', { name: 'Submit feedback' }))

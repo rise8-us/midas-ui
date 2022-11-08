@@ -1,4 +1,4 @@
-import { AccountCircle, ContactSupportOutlined, Gavel, LocalOffer, Menu } from '@mui/icons-material'
+import { AccountCircle, ContactSupport, Gavel, LocalOffer, Menu } from '@mui/icons-material'
 import { Button, Grid, IconButton, Typography } from '@mui/material'
 import MidasLogo from 'Assets/MidasLogo.svg'
 import { MoreOptionsPopperMenu } from 'Components/MoreOptionsPopperMenu'
@@ -33,7 +33,7 @@ const GridItemStyled = styled(Grid)(({ theme }) => ({
 }))
 
 const PageTypographyStyled = styled(Typography)(({ theme, selected }) => ({
-    color: selected ? theme.palette.text.primary : theme.palette.grey[600],
+    color: selected ? theme.palette.primary.main : theme.palette.grey[600],
     fontWeight: 'bold',
     cursor: 'pointer',
     margin: theme.spacing(1),
@@ -79,95 +79,99 @@ function AppBar() {
     ]
 
     return (
-        <GridWrapStyled container alignItems = 'center' wrap = 'nowrap'>
-            <Grid item style = {{ height: '18px' }} sx = {{ display: { xs: 'none', md: 'flex' } }}>
-                <img
-                    src = {MidasLogo}
-                    onClick = {goHome}
-                    style = {{ cursor: 'pointer', marginRight: '8px' }}
-                    data-testid = 'AppBar__logo'
-                />
-            </Grid>
-            <GridPagesContainerStyled
-                container
-                item
-                alignContent = 'center'
-                wrap = 'nowrap'
-                sx = {{
-                    display: {
-                        xs: 'none',
-                        md: 'flex'
-                    }
-                }}
-            >
-                {pages.map((page) => (
-                    <Grid item key = {page.text}>
-                        <PageTypographyStyled
-                            onClick = {page.onClick}
-                            variant = 'body1'
-                            selected = {currentPage.toUpperCase() === page.text.toUpperCase()}
-                        >
-                            {page.text}
-                        </PageTypographyStyled>
-                    </Grid>
-                ))}
-            </GridPagesContainerStyled>
-            <GridPagesContainerStyled container item sx = {{ display: { md: 'none' } }}>
-                <MoreOptionsPopperMenu options = {pages} icon = {<Menu color = 'primary'/>}/>
-            </GridPagesContainerStyled>
-            <Grid item>
-                <AppBarSearch />
-            </Grid>
-            <GridItemStyled item marginLeft = {1}>
-                <MoreOptionsPopperMenu
-                    options = {contactSupportOptions}
-                    icon = {
-                        <IconButton
-                            color = 'secondary'
-                            size = 'small'
-                            title = 'contact midas support'
-                        >
-                            <ContactSupportOutlined />
-                        </IconButton>
-                    }
-                />
-            </GridItemStyled>
-            <GridItemStyled item>
-                <IconButton
-                    color = 'secondary'
-                    onClick = {() => history.push('/tags')}
-                    size = 'small'
-                    title = 'tags'
+        <GridWrapStyled container direction = 'row' wrap = 'nowrap' justifyContent = 'space-evenly'>
+            <Grid container width = 'unset' wrap = 'nowrap' alignItems = 'center' direction = 'row' >
+                <Grid item style = {{ height: '18px' }} sx = {{ display: { xs: 'none', md: 'flex' } }}>
+                    <img
+                        src = {MidasLogo}
+                        onClick = {goHome}
+                        style = {{ cursor: 'pointer', marginRight: '8px' }}
+                        data-testid = 'AppBar__logo'
+                    />
+                </Grid>
+                <GridPagesContainerStyled
+                    container
+                    item
+                    alignContent = 'center'
+                    wrap = 'nowrap'
+                    sx = {{
+                        display: {
+                            xs: 'none',
+                            md: 'flex'
+                        }
+                    }}
                 >
-                    <LocalOffer />
-                </IconButton>
-            </GridItemStyled>
-            {user.isAdmin && (
+                    {pages.map((page) => (
+                        <Grid item key = {page.text}>
+                            <PageTypographyStyled
+                                onClick = {page.onClick}
+                                variant = 'body1'
+                                selected = {currentPage.toUpperCase() === page.text.toUpperCase()}
+                            >
+                                {page.text}
+                            </PageTypographyStyled>
+                        </Grid>
+                    ))}
+                </GridPagesContainerStyled>
+                <GridPagesContainerStyled container item sx = {{ display: { md: 'none' } }}>
+                    <MoreOptionsPopperMenu options = {pages} icon = {<Menu color = 'primary'/>}/>
+                </GridPagesContainerStyled>
+            </Grid>
+            <Grid container width = 'unset' wrap = 'nowrap' alignItems = 'center' direction = 'row'>
+                <Grid item>
+                    <AppBarSearch />
+                </Grid>
+                <GridItemStyled item marginLeft = {1}>
+                    <MoreOptionsPopperMenu
+                        options = {contactSupportOptions}
+                        icon = {
+                            <IconButton
+                                color = 'secondary'
+                                size = 'small'
+                                title = 'contact midas support'
+                            >
+                                <ContactSupport />
+                            </IconButton>
+                        }
+                    />
+                </GridItemStyled>
                 <GridItemStyled item>
                     <IconButton
                         color = 'secondary'
-                        onClick = {() => history.push('/admin')}
+                        onClick = {() => history.push('/tags')}
                         size = 'small'
-                        title = 'admin'
-                        data-testid = 'AppBar__admin-button'
+                        title = 'tags'
                     >
-                        <Gavel />
+                        <LocalOffer />
                     </IconButton>
                 </GridItemStyled>
-            )}
-            {user.id && (
-                <GridItemStyled item whiteSpace = 'nowrap'>
-                    <Button
-                        color = 'secondary'
-                        onClick = {() => history.push('/account')}
-                        title = 'account'
-                        endIcon = {<AccountCircle/>}
-                        data-testid = 'AppBar__account-button'
-                    >
-                        {user.displayName}
-                    </Button>
-                </GridItemStyled>
-            )}
+                {user.isAdmin && (
+                    <GridItemStyled item>
+                        <IconButton
+                            color = 'secondary'
+                            onClick = {() => history.push('/admin')}
+                            size = 'small'
+                            title = 'admin'
+                            data-testid = 'AppBar__admin-button'
+                        >
+                            <Gavel />
+                        </IconButton>
+                    </GridItemStyled>
+                )}
+                {user.id && (
+                    <GridItemStyled item whiteSpace = 'nowrap'>
+                        <Button
+                            color = 'secondary'
+                            onClick = {() => history.push('/account')}
+                            title = 'account'
+                            endIcon = {<AccountCircle/>}
+                            data-testid = 'AppBar__account-button'
+                        >
+                            {user.displayName}
+                        </Button>
+                    </GridItemStyled>
+                )}
+            </Grid>
         </GridWrapStyled>
     )
 }
