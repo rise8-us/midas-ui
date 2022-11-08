@@ -152,7 +152,7 @@ export default function Portfolio() {
                 <Box paddingY = {3}>
                     {(portfolioTab === 'roadmap' || portfolioTab === undefined) &&
                         <Suspense fallback = {<div data-testid = 'Portfolio__fallback'/>}>
-                            <PortfolioTab.PortfolioRoadmap portfolioId = {id}/>
+                            <PortfolioTab.PortfolioRoadmap portfolioId = {id} isAuthorized = {isAuthorized}/>
                         </Suspense>
                     }
                     {portfolioTab === 'requirements' &&
