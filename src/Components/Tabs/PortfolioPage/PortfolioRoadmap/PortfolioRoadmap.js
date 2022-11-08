@@ -25,7 +25,6 @@ import { requestSearchEvents } from 'Redux/Events/actions'
 import { selectEventsByPortfolioId } from 'Redux/Events/selectors'
 import { requestSearchMilestones } from 'Redux/Milestones/actions'
 import { selectMilestonesByPortfolioId } from 'Redux/Milestones/selectors'
-import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { requestSearchTargets } from 'Redux/Targets/actions'
 import { selectTargetsByPortfolioId } from 'Redux/Targets/selectors'
 import { requestSearchWins } from 'Redux/Wins/actions'
@@ -35,12 +34,11 @@ import { sortArrayByDateAndTitle } from 'Utilities/sorting'
 
 const CHUNK_SIZE = 20
 
-export default function PortfolioRoadmap({ portfolioId }) {
+export default function PortfolioRoadmap({ isAuthorized, portfolioId }) {
 
     const dispatch = useDispatch()
     const theme = useTheme()
     const searchValue = 'portfolio.id:' + portfolioId
-    const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
 
     useEffect(() => {
         dispatch(requestSearchMilestones(searchValue))
@@ -136,7 +134,14 @@ export default function PortfolioRoadmap({ portfolioId }) {
 
     return (
         <Stack>
-            <GanttLegend />
+            <Stack direction = 'row' style = {{ justifyContent: 'space-between' }}>
+                <div>
+                    {isAuthorized &&
+                        <GanttAddNewItem portfolioId = {portfolioId} />
+                    }
+                </div>
+                <GanttLegend />
+            </Stack>
             <GanttChart
                 startDate = {dateStart}
                 maxHeight = 'calc(100vh - 280px)'
@@ -152,8 +157,7 @@ export default function PortfolioRoadmap({ portfolioId }) {
                         style: { minWidth: '34px', borderRadius: 0, borderRight: '1px solid black' },
                         size: 'small'
                     },
-                    additionalActions: permissions.edit ?
-                        <GanttAddNewItem portfolioId = {portfolioId} /> :
+                    additionalActions:
                         <>
                             <GanttView portfolioId = {portfolioId}/>
                             <ExpandAllEntities portfolioId = {portfolioId}/>
@@ -177,5 +181,6 @@ export default function PortfolioRoadmap({ portfolioId }) {
 }
 
 PortfolioRoadmap.propTypes = {
-    portfolioId: PropTypes.number.isRequired,
+    isAuthorized: PropTypes.bool.isRequired,
+    portfolioId: PropTypes.number.isRequired
 }

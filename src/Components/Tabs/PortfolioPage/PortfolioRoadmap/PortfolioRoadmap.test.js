@@ -1,4 +1,4 @@
-import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { fireEvent, render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
 import { PortfolioRoadmap } from './index'
 
 jest.mock('Components/Gantt/GanttTarget/GanttTarget', () => function testing(props) {
@@ -47,17 +47,36 @@ describe('<PortfolioRoadmap />', () => {
         selectPortfolioPageSettingViewMock.mockReturnValue(defaultView)
     })
 
-    test('should render without edit', () => {
-        render(<PortfolioRoadmap portfolioId = {0} />)
+    test('should render without authorization', () => {
+        render(<PortfolioRoadmap portfolioId = {0} isAuthorized = {false} />)
 
+        screen.getByTestId('GanttFilter__button')
         expect(screen.queryByTestId('GanttAddNewItem__button')).not.toBeInTheDocument()
     })
 
-    test('should render with edit', () => {
-        selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
-        render(<PortfolioRoadmap portfolioId = {0} />)
+    test('should render with authorization', () => {
+        render(<PortfolioRoadmap portfolioId = {0} isAuthorized = {true} />)
 
-        expect(screen.getByTestId('GanttAddNewItem__button')).toBeInTheDocument()
+        screen.getByTestId('GanttAddNewItem__button')
+    })
+
+    test('should display Menu Options when Add New is clicked', () => {
+        render(<PortfolioRoadmap portfolioId = {0} isAuthorized = {true}/>)
+
+        fireEvent.click(screen.getByTestId('GanttAddNewItem__button'))
+
+        screen.getByTestId('MoreOptionsPopperMenu__Milestone')
+        screen.getByTestId('MoreOptionsPopperMenu__Win')
+        screen.getByTestId('MoreOptionsPopperMenu__Event')
+        screen.getByTestId('MoreOptionsPopperMenu__Target')
+    })
+
+    test('should display filter option when Filter is clicked', () => {
+        render(<PortfolioRoadmap portfolioId = {0} isAuthorized = {true}/>)
+
+        fireEvent.click(screen.getByTestId('GanttFilter__button'))
+
+        screen.getByTestId('CheckBoxOutlineBlankIcon')
     })
 
 })
