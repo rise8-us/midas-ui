@@ -1,5 +1,5 @@
 import { LinkOffOutlined } from '@mui/icons-material'
-import { Box, Grid, IconButton, LinearProgress, Link, Stack, Tooltip, Typography } from '@mui/material'
+import { Grid, IconButton, Link, Stack, Typography } from '@mui/material'
 import { HrefText } from 'Components/HrefText'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,7 +8,6 @@ import { requestDeleteDeliverable } from 'Redux/Deliverables/actions'
 import { selectDeliverableById } from 'Redux/Deliverables/selectors'
 import { selectProductById } from 'Redux/Products/selectors'
 import { styled } from 'Styles/materialThemes'
-import { normalise, roundedPercent } from 'Utilities/progressHelpers'
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     '&:hover': {
@@ -37,19 +36,13 @@ export default function DeliverableWorkEntry({ id, hasEdit }) {
         <Stack marginBottom = {1}>
             <Grid container alignItems = 'center'>
                 <Grid item xs = {8}>
-                    <Tooltip
-                        followCursor
-                        disableInteractive
-                        title = {roundedPercent(completion?.value, completion?.target)}
-                    >
-                        <div>
-                            <HrefText
-                                text = {deliverable.title}
-                                href = {completion.gitlabEpic?.webUrl}
-                                color = 'secondary'
-                            />
-                        </div>
-                    </Tooltip>
+                    <div>
+                        <HrefText
+                            text = {deliverable.title}
+                            href = {completion.gitlabEpic?.webUrl}
+                            color = 'secondary'
+                        />
+                    </div>
                 </Grid>
                 <Grid item xs = 'auto' marginLeft = 'auto'>
                     <Link to = {'/products/' + product?.id + '/overview'} underline = 'none' component = {NavLink}>
@@ -66,26 +59,6 @@ export default function DeliverableWorkEntry({ id, hasEdit }) {
                     </Grid>
                 }
             </Grid>
-            <Tooltip
-                followCursor
-                disableInteractive
-                title = {roundedPercent(completion?.value, completion?.target)}
-            >
-                <Box display = 'flex' alignItems = 'center'>
-                    <Box minWidth = {35}>
-                        <Typography variant = 'body2' color = 'text.secondary'>
-                            {Math.floor(normalise(completion?.value, completion?.target)) + '%'}
-                        </Typography>
-                    </Box>
-                    <Box width = '100%' marginLeft = {1}>
-                        <LinearProgress
-                            variant = 'determinate'
-                            value = {normalise(completion?.value, completion?.target)}
-                            color = 'primary'
-                        />
-                    </Box>
-                </Box>
-            </Tooltip>
         </Stack>
     )
 }

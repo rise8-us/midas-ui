@@ -1,20 +1,21 @@
 import { Chat, Delete, TrackChangesOutlined } from '@mui/icons-material'
-import { Badge, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Badge, Divider, Grid, IconButton, Stack } from '@mui/material'
 import { AutoSaveTextField } from 'Components/AutoSaveTextField'
 import { CollapsableCard } from 'Components/Cards/CollapsableCard'
 import { CompletionType } from 'Components/CompletionType'
 import { DateSelector } from 'Components/DateSelector'
 import { ConfirmationPopup } from 'Components/Popups/ConfirmationPopup'
-import { ProgressBar } from 'Components/ProgressBar'
 import { StatusSelectorChip } from 'Components/StatusSelectorChip'
-import { parseISO } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAssertionComment } from 'Redux/AppSettings/reducer'
-import { selectAssertionStatuses, selectCompletionTypes } from 'Redux/AppSettings/selectors'
+import { selectAssertionStatuses } from 'Redux/AppSettings/selectors'
 import { requestSearchComments } from 'Redux/Comments/actions'
-import { requestDeleteMeasure, requestUpdateMeasure } from 'Redux/Measures/actions'
+import {
+    requestDeleteMeasure,
+    requestUpdateMeasure
+} from 'Redux/Measures/actions'
 import { selectMeasureById } from 'Redux/Measures/selectors'
 import { styled } from 'Styles/materialThemes'
 import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
@@ -25,16 +26,6 @@ const AutoSaveTextFieldTitle = styled(AutoSaveTextField)(({ theme }) => ({
 }))
 
 const isManualOption = (option) => ['BINARY', 'PERCENTAGE', 'NUMBER', 'MONEY'].includes(option)
-
-const displayCompletedAt = (dateTime) => {
-    const date = parseISO(dateTime).toString().split(' ')
-
-    return (
-        <Typography textAlign = 'center' color = 'primary'>
-            Completed on: {date[0]} {date[1]} {date[2]} {date[3]}
-        </Typography>
-    )
-}
 
 const determineStatusByValue = (data, origStatus) => {
     if (data.value === 0 && data.startDate === null) {
@@ -53,14 +44,11 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     const collapse = useRef(null)
 
     const allStatuses = useSelector(selectAssertionStatuses)
-    const allCompletionTypes = useSelector(selectCompletionTypes)
     const measure = useSelector((state) => selectMeasureById(state, id))
 
     const [openConfirmation, setOpenConfirmation] = useState(false)
-    const [expanded, setExpanded] = useState(false)
 
     const status = allStatuses[measure.status] ?? { color: '#c3c3c3' }
-    const selectedCompletionType = allCompletionTypes[measure.completion.completionType]
 
     const handlePopup = () => setOpenConfirmation((prev) => !prev)
 
@@ -107,7 +95,6 @@ export default function MeasureCard({ id, hasEdit, icon }) {
     return (
         <CollapsableCard
             ref = {collapse}
-            onExpanded = {setExpanded}
             header = {
                 <Grid
                     container
@@ -168,24 +155,6 @@ export default function MeasureCard({ id, hasEdit, icon }) {
                         }
                     </Grid>
                 </Grid>
-            }
-            footer = {
-                <ProgressBar
-                    showPercent = {expanded}
-                    value = {measure.completion.value}
-                    target = {measure.completion.target}
-                    hasEdit = {hasEdit}
-                    overlayDate = {{
-                        end: measure.completion.dueDate,
-                        show: true,
-                        start: measure.completion.startDate
-                    }}
-                    progressCompleteComponent = {measure?.completion?.completedAt
-                        ? () => <span>{ displayCompletedAt(measure.completion.completedAt) }</span>
-                        : undefined
-                    }
-                    descriptor = {selectedCompletionType?.descriptor ? ` ${selectedCompletionType.descriptor}` : null}
-                />
             }
         >
             <Grid

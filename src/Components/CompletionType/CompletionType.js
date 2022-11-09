@@ -144,7 +144,7 @@ function TargetType({ type, inputValue, onChange, disabled }) {
 
 function ValueType({ type, inputValue, onChange, disabled, max }) {
     const addPercentageSymbol = () => type === types.PERCENTAGE ? ' (%)' : ''
-    const isChecked = () => inputValue === 1 ? true : false
+    const isChecked = () => inputValue === 1
 
     return [types.NUMBER, types.MONEY, types.PERCENTAGE].includes(type)
         ? <Grid item xs = 'auto' data-testid = {`CompletionType__value-${type}`}>
