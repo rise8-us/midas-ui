@@ -1,5 +1,11 @@
 import {
-    mockSearchEpicsComponent, render, renderWithRouter, screen, useDispatchMock, useModuleMock, userEvent, waitFor
+    mockSearchEpicsComponent,
+    render,
+    screen,
+    useDispatchMock,
+    useModuleMock,
+    userEvent,
+    waitFor
 } from 'Utilities/test-utils'
 import { DeliverablesView } from './index'
 
@@ -53,33 +59,6 @@ describe('<DeliverablesView>', () => {
         render(<DeliverablesView portfolioId = {1}/>)
 
         expect(screen.queryByText('DELIVERABLE PARENT TITLE')).not.toBeInTheDocument()
-    })
-
-    test('should show correct progrss percentage', () => {
-        selectDeliverableByParentIdMock.mockReturnValue([{
-            title: 'epic title',
-            productId: 1,
-            id: 2,
-            completion: {
-                value: 2,
-                target: 10,
-                gitlabEpic: {
-                    id: 20
-                }
-            }
-        }])
-
-        selectEpicsByIdsMock.mockReturnValue([
-            {
-                title: 'subtargetEpicTitle',
-                totalWeight: 10,
-                completedWeight: 3
-            }
-        ])
-
-        renderWithRouter(<DeliverablesView hasEdit {...defaultProps}/>)
-
-        expect(screen.getByText('25%')).toBeInTheDocument()
     })
 
     test('should handle input selection', () => {

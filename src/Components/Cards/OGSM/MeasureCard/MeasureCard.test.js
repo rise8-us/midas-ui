@@ -78,7 +78,6 @@ describe('<MeasureCard />', () => {
         expect(screen.getByDisplayValue('Text')).toBeInTheDocument()
         expect(screen.getByDisplayValue('01-01-2020')).toBeInTheDocument()
         expect(screen.getByDisplayValue('03-03-2020')).toBeInTheDocument()
-        expect(screen.getByText('Completed on: Sun Feb 02 2020')).toBeInTheDocument()
     })
 
     test('should update measure text', () => {

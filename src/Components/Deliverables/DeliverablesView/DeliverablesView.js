@@ -1,16 +1,19 @@
 import { Link } from '@mui/icons-material'
-import { Box, Collapse, Divider, Stack, Typography } from '@mui/material'
+import { Collapse, Divider, Stack, Typography } from '@mui/material'
 import { DeliverablesViewTargets } from 'Components/DeliverablesViewTargets'
 import PropTypes from 'prop-types'
-import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { requestCreateDeliverable, requestDeleteDeliverable } from 'Redux/Deliverables/actions'
-import { selectDeliverableById, selectDeliverableByParentId } from 'Redux/Deliverables/selectors'
-import { selectEpicsByIds } from 'Redux/Epics/selectors'
+import {
+    requestCreateDeliverable,
+    requestDeleteDeliverable
+} from 'Redux/Deliverables/actions'
+import {
+    selectDeliverableById,
+    selectDeliverableByParentId
+} from 'Redux/Deliverables/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import { enqueueMessage } from 'Redux/Snackbar/reducer'
-import { selectEpicIdsByTargetIds, selectTargetsByIds } from 'Redux/Targets/selectors'
-import { getTotalWeights } from 'Utilities/progressHelpers'
+import { selectTargetsByIds } from 'Redux/Targets/selectors'
 import { DeliverableWorkList } from '../DeliverableWorkList'
 
 export default function DeliverablesView({ hasEdit, selectedDeliverableId, portfolioId }) {
@@ -20,27 +23,6 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
     const children = useSelector(state => selectDeliverableByParentId(state, selectedDeliverableId))
     const subtargets = useSelector(state => selectTargetsByIds(state, deliverable.targetIds ?? []))
     const targetIds = subtargets?.map(s => s.parentId).filter((val, index, self) => self.indexOf(val) === index)
-
-    const subtargetIds = subtargets?.map(s => s.id)
-    const subtargetEpicIds = useSelector(state => selectEpicIdsByTargetIds(state, subtargetIds))
-    const subtargetEpics = useSelector(state => selectEpicsByIds(state, subtargetEpicIds))
-    const [totalWeight, totalCompletedWeight] = getTotalWeights(subtargetEpics)
-
-    const progress = useMemo(() => {
-        const accumulatedProgress = children.reduce((currentValues, child) => {
-            return {
-                value: currentValues.value + child.completion.value,
-                target: currentValues.target + child.completion.target,
-            }
-        }, { value: 0, target: 0 })
-
-        accumulatedProgress.value = accumulatedProgress.value + totalCompletedWeight
-        accumulatedProgress.target = accumulatedProgress.target + totalWeight
-
-        return accumulatedProgress.target > 0
-            ? Math.floor((accumulatedProgress.value / accumulatedProgress.target) * 100)
-            : 0
-    }, [children])
 
     const onClickAssociateEpics = () => {
 
@@ -86,11 +68,6 @@ export default function DeliverablesView({ hasEdit, selectedDeliverableId, portf
             <Stack direction = 'row' justifyContent = 'space-between'>
                 <Typography variant = 'subtitle1' color = 'grey.400'>{deliverable?.title?.toUpperCase()}</Typography>
             </Stack>
-            <Box>
-                <Typography paddingY = {1}>
-                    <b>{progress}%</b> of currently scoped work is complete.
-                </Typography>
-            </Box>
             <Divider/>
             <Stack>
                 {targetIds.map((targetId, index) => (

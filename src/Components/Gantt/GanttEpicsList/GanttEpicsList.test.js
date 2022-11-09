@@ -14,8 +14,6 @@ describe('<GanttEpicsList />', () => {
     const defaultEpicProps = {
         title: 'foo',
         webUrl: 'foo',
-        totalWeight: 0,
-        completedWeight: 0
     }
     const foundEpics = [
         { id: 1, name: 'alpha', ...defaultEpicProps },

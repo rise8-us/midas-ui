@@ -6,8 +6,8 @@ describe('<DeliverablesViewSubtargets />', () => {
     const selectEpicsByIdsMock = useModuleMock('Redux/Epics/selectors', 'selectEpicsByIds')
 
     const foundEpics = [
-        { id: 4, name: 'alpha', title: 'foo', totalWeight: 5, completedWeight: 1 },
-        { id: 5, name: 'bravo', title: 'foo', totalWeight: 5, completedWeight: 2 },
+        { id: 4, name: 'alpha', title: 'foo' },
+        { id: 5, name: 'bravo', title: 'foo' },
     ]
 
     const subtarget = {
@@ -24,21 +24,11 @@ describe('<DeliverablesViewSubtargets />', () => {
         isPriority: false
     }
 
-    test('should render with progress indication', () => {
+    test('should render', () => {
         selectEpicsByIdsMock.mockReturnValue(foundEpics)
         render(<DeliverablesViewSubtargets subtarget = {subtarget}/>)
 
         expect(screen.getByText('subtarget title')).toBeInTheDocument()
-        expect(screen.getByText('30%')).toBeInTheDocument()
-        expect(screen.getByTestId('DeliverablesViewSubtargets__progress-bar')).toBeInTheDocument()
 
-    })
-
-    test('should render with no epics linked', () => {
-        selectEpicsByIdsMock.mockReturnValue([])
-        render(<DeliverablesViewSubtargets subtarget = {subtarget}/>)
-
-        expect(screen.getByText('subtarget title')).toBeInTheDocument()
-        expect(screen.getByText('No Epics linked')).toBeInTheDocument()
     })
 })

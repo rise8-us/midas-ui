@@ -17,8 +17,6 @@ export default function GanttEpicsList({ onDeleteClick, ids, startDate, dueDate 
                         name = {epic.name}
                         title = {epic.title}
                         webUrl = {epic.webUrl}
-                        totalWeight = {epic.totalWeight}
-                        completedWeight = {epic.completedWeight}
                         onDelete = {typeof onDeleteClick === 'function' ? () => onDeleteClick(epic.id) : undefined}
                         startDate = {startDate}
                         dueDate = {dueDate}
