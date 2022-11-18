@@ -1,4 +1,4 @@
-import { Backup, CloudDownload, Restore, WarningAmberRounded } from '@mui/icons-material'
+import { Backup, CloudDownload, WarningAmberRounded } from '@mui/icons-material'
 import {
     Autocomplete,
     Box,
@@ -46,7 +46,6 @@ export default function DatabaseTab() {
 
     const [isLoading, setIsLoading] = useState(false)
     const [isProcessingBackup, setIsProcessingBackup] = useState(false)
-    const [isProcessingRestore, setIsProcessingRestore] = useState(false)
     const [isProcessingDownload, setIsProcessingDownload] = useState(false)
     const [openRestorePopup, setOpenRestorePopup] = useState(false)
     const [backupsList, setBackupsList] = useState([])
@@ -89,7 +88,7 @@ export default function DatabaseTab() {
     }
 
     const handleRestoreClick = () => {
-        dispatchAction(setIsProcessingRestore, dbActions.requestRestore({
+        dispatchAction(() => {}, dbActions.requestRestore({
             fileName: selectedBackupFile,
             restart: restartApi.current.checked,
             clearTokens: clearTokens.current.checked
@@ -154,18 +153,6 @@ export default function DatabaseTab() {
                     />
                 </Grid>
                 <Grid container item justifyContent = 'center' width = '375px' columnGap = {2}>
-                    <Grid item xs>
-                        <Button
-                            disabled = {selectedBackupFile === null}
-                            onClick = {() => setOpenRestorePopup(true)}
-                            variant = 'outlined'
-                            endIcon = {getIcon(isProcessingRestore, <Restore />)}
-                            disableRipple
-                            fullWidth
-                        >
-                            restore
-                        </Button>
-                    </Grid>
                     <Grid item xs>
                         <Button
                             disabled = {selectedBackupFile === null}

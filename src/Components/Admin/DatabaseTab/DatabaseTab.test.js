@@ -7,7 +7,6 @@ describe('<DatabaseTab />', () => {
     jest.setTimeout(30000)
 
     const requestTakeBackupMock = useModuleMock('Redux/DatabaseActions/actions', 'requestTakeBackup')
-    const requestRestoreMock = useModuleMock('Redux/DatabaseActions/actions', 'requestRestore')
     const requestDownloadBackupFileMock = useModuleMock('Redux/DatabaseActions/actions', 'requestDownloadBackupFile')
     const requestGetBackupListMock = useModuleMock('Redux/DatabaseActions/actions', 'requestGetBackupList')
 
@@ -31,40 +30,6 @@ describe('<DatabaseTab />', () => {
         waitForElementToBeRemoved(screen.getByTestId('DatabaseTab__waiting-icon'))
 
         expect(requestTakeBackupMock).toHaveBeenCalledWith('Test')
-    })
-
-    test('should restore', async() => {
-        waitFor(() => {
-            requestGetBackupListMock.mockResolvedValue([])
-        })
-
-        render(<DatabaseTab />)
-
-        fireEvent.click(screen.getByTitle('Open'))
-        await screen.findByText('Retrieving backups...')
-
-        fireEvent.click(await screen.findByText('file42.fun'))
-        fireEvent.click(screen.getByText('restore'))
-        fireEvent.click(screen.getByTestId('Popup__button-submit'))
-
-        expect(requestRestoreMock).toHaveBeenCalledTimes(1)
-    })
-
-    test('should cancel restore', async() => {
-        waitFor(() => {
-            requestGetBackupListMock.mockResolvedValue([])
-        })
-
-        render(<DatabaseTab />)
-
-        fireEvent.click(screen.getByTitle('Open'))
-        await screen.findByText('Retrieving backups...')
-
-        fireEvent.click(await screen.findByText('file42.fun'))
-        fireEvent.click(screen.getByText('restore'))
-        fireEvent.click(screen.getByTestId('Popup__button-cancel'))
-
-        expect(requestRestoreMock).toHaveBeenCalledTimes(0)
     })
 
     test('should download backup', async() => {
