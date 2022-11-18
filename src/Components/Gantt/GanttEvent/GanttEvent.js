@@ -1,6 +1,6 @@
 import { Tooltip, useTheme } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { requestDeleteEvent } from 'Redux/Events/actions'
 import EventConstants from 'Redux/Events/constants'
@@ -11,6 +11,8 @@ import { calculatePosition, parseStringToDate } from 'Utilities/dateHelpers'
 import { parseDate } from 'Utilities/ganttHelpers'
 import { GanttEntryHeader } from '../GanttEntryHeader'
 import { GanttEventTooltip } from '../GanttEventTooltip'
+import { requestSearchUsers } from '../../../Redux/Users/actions'
+import { buildOrQueryByIds } from '../../../Utilities/requests'
 
 const StyledDiv = styled('div')(({ theme, minwidth }) => ({
     position: 'relative',
@@ -35,7 +37,7 @@ const StyledDiv = styled('div')(({ theme, minwidth }) => ({
 export default function GanttEvent({ event, dateRange }) {
     const dispatch = useDispatch()
 
-    const { id, portfolioId, startDate, dueDate, title, type } = event
+    const { id, portfolioId, startDate, dueDate, title, type, organizerIds, attendeeIds } = event
 
     const theme = useTheme()
     const permissions = useSelector(state => selectPortfolioPagePermission(state, portfolioId))
@@ -74,6 +76,10 @@ export default function GanttEvent({ event, dateRange }) {
         borderRadius: '3px',
     }
 
+    useEffect(() => {
+        dispatch(requestSearchUsers(buildOrQueryByIds([...organizerIds, ...attendeeIds])))
+    }, [])
+
     return (
         <Tooltip
             arrow
@@ -107,7 +113,8 @@ GanttEvent.propTypes = {
         location: PropTypes.string,
         portfolioId: PropTypes.number,
         type: PropTypes.string,
-        organizerIds: PropTypes.arrayOf(PropTypes.number)
+        organizerIds: PropTypes.arrayOf(PropTypes.number),
+        attendeeIds: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
     dateRange: PropTypes.array.isRequired
 }

@@ -26,14 +26,17 @@ describe('<GanttEvent />', () => {
     const openPopupMock =
         useModuleMock('Redux/Popups/actions', 'openPopup')
 
+    beforeEach(() => {
+        useDispatchMock().mockReturnValue()
+    })
+
     test('should render', () => {
         render(<GanttEvent event = {event} dateRange = {dateRange}/>)
 
-        expect(screen.getByText('This is the event title')).toBeInTheDocument()
+        screen.getByText('This is the event title')
     })
 
     test('should handle onEditClick', async() => {
-        useDispatchMock().mockReturnValue()
         selectUsersByIdsMock.mockReturnValue([])
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
@@ -50,7 +53,6 @@ describe('<GanttEvent />', () => {
     })
 
     test('should handle onDeleteClick', async() => {
-        useDispatchMock().mockReturnValue()
         selectUsersByIdsMock.mockReturnValue([])
         selectPortfolioPagePermissionMock.mockReturnValue({ edit: true })
 
@@ -68,7 +70,6 @@ describe('<GanttEvent />', () => {
                 title: 'This is the event title',
                 type: 'event'
             })
-
         )
     })
 })

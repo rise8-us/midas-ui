@@ -1,32 +1,37 @@
-import { render, screen, useDispatchMock, useModuleMock } from 'Utilities/test-utils'
+import { render, screen, useModuleMock } from 'Utilities/test-utils'
 import { UserTooltip } from './index'
 
 describe('<UserTooltip />', () => {
-    const requestSearchUsersMock = useModuleMock('Redux/Users/actions', 'requestSearchUsers')
+    const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
 
-    test('should render', async() => {
-        useDispatchMock().mockResolvedValue({ type: '/', payload: [{ username: 'fiz' }] })
-
+    test('should render with title and user display name', async() => {
+        selectUsersByIdsMock.mockReturnValue([{ displayName: 'fiz', username: 'fiz@airforce.com' }])
         render(<UserTooltip userIds = {[1]} title = 'foo'/>)
 
-        expect(requestSearchUsersMock).toHaveBeenCalledWith('id:1')
-        expect(await screen.findByText('fiz')).toBeInTheDocument()
+        screen.getByText('foo')
+        screen.getByText('fiz')
     })
 
-    test('should render empty', async() => {
+    test('should render with username if no display name', async() => {
+        selectUsersByIdsMock.mockReturnValue([{ username: 'fiz@airforce.com' }])
+        render(<UserTooltip userIds = {[1]} title = 'foo'/>)
+
+        screen.getByText('fiz@airforce.com')
+    })
+
+    test('should render with multiple users', async() => {
+        selectUsersByIdsMock.mockReturnValue([{ username: 'fiz@airforce.com' }, { displayName: 'Mr President' }])
+        render(<UserTooltip userIds = {[1]} title = 'foo'/>)
+
+        screen.getByText('fiz@airforce.com')
+        screen.getByText('Mr President')
+    })
+
+    test('should render empty list with title if no users', async() => {
+        selectUsersByIdsMock.mockReturnValue([])
         render(<UserTooltip userIds = {[]} title = 'foo'/>)
 
-        expect(requestSearchUsersMock).not.toHaveBeenCalled()
+        screen.getByText('foo')
+        expect(screen.queryByTestId('User-Tooltip')).not.toBeInTheDocument()
     })
-
-    test('should clear state', async() => {
-        useDispatchMock().mockResolvedValue({ type: '/', payload: [{ username: 'fiz' }] })
-
-        const { rerender } = render(<UserTooltip userIds = {[1]} title = 'foo'/>)
-        expect(await screen.findByText('fiz')).toBeInTheDocument()
-
-        rerender(<UserTooltip userIds = {[]} title = 'foo'/>)
-        expect(screen.queryByText('fiz')).not.toBeInTheDocument()
-    })
-
 })
