@@ -144,7 +144,7 @@ export default function PortfolioRoadmap({ isAuthorized, portfolioId }) {
             </Stack>
             <GanttChart
                 startDate = {dateStart}
-                maxHeight = 'calc(100vh - 280px)'
+                maxHeight = 'calc(100vh - 324px)'
                 entries = {entries}
                 onEntriesFilter = {onEntriesFilter}
                 renderComponent = {renderComponent}
