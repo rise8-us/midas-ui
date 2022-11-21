@@ -9,16 +9,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestSyncEpicsByProductId } from 'Redux/Epics/actions'
 import { selectEpicsByProductId } from 'Redux/Epics/selectors'
 
-const dateToNumber = (date) => new Date().valueOf(date)
+const dateToNumber = (date) => Date.parse(date.substring(0, 19).replace('.', ':'))
 
 export const sortProductEpics = (productEpics) => {
-    const closedEpics = productEpics.filter(epic => epic.state === 'closed')
-        .sort((a, b) => (dateToNumber(a.closedAt) - dateToNumber(b.closedAt)) < 0 ? -1 : 1)
+    const [openEpics, closedEpics] = productEpics.reduce(([open, closed], e) => {
+        return e.state === 'opened' ? [[...open, e], closed] : [open, [...closed, e]]
+    }, [[], []])
 
-    const openedEpics = productEpics.filter(epic => epic.state === 'opened')
-    const futureEpics = openedEpics.filter(epic => epic.startDate === null)
-    const currentEpics = openedEpics.filter(epic => epic.startDate !== null)
-    return futureEpics.reverse().concat(currentEpics.reverse()).concat(closedEpics)
+    const [futureEpics, currentEpics] = openEpics.reduce(([future, current], e) => {
+        return e.startDate === null ? [[...future, e], current] : [future, [...current, e]]
+    }, [[], []])
+
+    return futureEpics.reverse()
+        .concat(currentEpics.reverse())
+        .concat(closedEpics.sort((a, b) => dateToNumber(a.closedAt) - dateToNumber(b.closedAt)))
 }
 
 export default function ProductEpicsRoadmap({ productId, hasEdit }) {

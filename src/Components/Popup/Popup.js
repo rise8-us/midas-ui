@@ -1,5 +1,14 @@
 import { Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, Divider, IconButton, Typography } from '@mui/material'
+import {
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Divider,
+    IconButton,
+    Typography
+} from '@mui/material'
 import { Header } from 'Components/Header'
 import PropTypes from 'prop-types'
 import { scrollbar, styled } from 'Styles/materialThemes'
@@ -16,6 +25,7 @@ const Popup = ({
     hideRequiredText,
     onClose,
     onSubmit,
+    isSubmitting,
     open,
     submitText,
     subtitle,
@@ -73,7 +83,10 @@ const Popup = ({
                         color = 'primary'
                         variant = 'outlined'
                     >
-                        {submitText}
+                        <div style = {{ height: '24px', width: '60px' }}>
+                            {isSubmitting ? <CircularProgress size = '22px'/>
+                                : submitText}
+                        </div>
                     </Button>
                 }
             </DialogActions>
@@ -94,6 +107,7 @@ Popup.propTypes = {
     hideRequiredText: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
+    isSubmitting: PropTypes.bool,
     open: PropTypes.bool,
     submitText: PropTypes.string,
     subtitle: PropTypes.string,
@@ -109,6 +123,7 @@ Popup.defaultProps = {
     height: 'max-content',
     hideRequiredText: false,
     onSubmit: undefined,
+    isSubmitting: false,
     open: true,
     submitText: 'submit',
     subtitle: null,

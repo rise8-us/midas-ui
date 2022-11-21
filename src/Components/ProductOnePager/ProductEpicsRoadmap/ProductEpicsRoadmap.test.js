@@ -25,7 +25,7 @@ describe('<ProductEpicsRoadmap />', () => {
     const epics = [
         {
             id: 3,
-            title: 'opened',
+            title: 'opened 1',
             description: 'description',
             productId: 1,
             startDate: '2021-10-01',
@@ -44,6 +44,14 @@ describe('<ProductEpicsRoadmap />', () => {
             productId: 1,
             state: 'closed',
             closedAt: '2021-09-01T00:00.000000'
+        },
+        {
+            id: 6,
+            title: 'opened 2',
+            description: 'description',
+            productId: 1,
+            startDate: null,
+            state: 'opened',
         }
     ]
 
@@ -53,13 +61,11 @@ describe('<ProductEpicsRoadmap />', () => {
         useDispatchMock().mockReturnValue({})
     })
 
-    test('should sort epics and render', () => {
+    test('should render all epics', () => {
         render(<ProductEpicsRoadmap productId = {1} hasEdit = {false}/>)
 
         const renderedEpics = screen.getAllByText('RoadmapEpic')
-        expect(renderedEpics[0].title == 'closed 1')
-        expect(renderedEpics[1].title == 'closed 2')
-        expect(renderedEpics[2].title == 'opened')
+        expect(renderedEpics.length).toEqual(4)
 
         expect(screen.queryByTestId('mockSyncRequest__sync-button')).not.toBeInTheDocument()
     })
@@ -68,13 +74,19 @@ describe('<ProductEpicsRoadmap />', () => {
         test('should sort closed products', () => {
             const correctOrder = [epics[1], epics[2]]
 
-            expect(sortProductEpics([epics[1], epics[2]])).toEqual(correctOrder)
+            expect(sortProductEpics([epics[2], epics[1]])).toEqual(correctOrder)
         })
 
         test('should sort opened products', () => {
-            const correctOrder = [{ ...epics[0], startDate: null }, epics[0]]
+            const correctOrder = [epics[3], epics[0]]
 
-            expect(sortProductEpics([epics[0], { ...epics[0], startDate: null }])).toEqual(correctOrder)
+            expect(sortProductEpics([epics[0], epics[3]])).toEqual(correctOrder)
+        })
+
+        test('should sort all epics', () => {
+            const correctOrder = [epics[3], epics[0], epics[1], epics[2]]
+
+            expect(sortProductEpics(epics)).toEqual(correctOrder)
         })
     })
 

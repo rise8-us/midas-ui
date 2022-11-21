@@ -1,21 +1,17 @@
-import { Checkbox, CircularProgress, Stack, Typography } from '@mui/material'
+import { Checkbox, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
 import { ClosedLabel } from '../ClosedLabel'
 
-export default function EpicListItem({ epic, epicIds, handleOnSelect, handleOnDeselect }) {
-    const epicAlreadyExists = epicIds.includes(epic.id)
-    const [loading, setLoading] = useState(false)
-
-    const onClick = (e) => {
-        if (!epicAlreadyExists) {
-            handleOnSelect(e, epic, setLoading)
+export default function EpicListItem({ epic, isEpicSelected, handleOnSelect, handleOnDeselect }) {
+    const onClick = () => {
+        if (!isEpicSelected) {
+            handleOnSelect(epic.id)
         } else {
-            handleOnDeselect(e, epic, setLoading)
+            handleOnDeselect(epic.id)
         }
     }
 
-    const checkboxState = epicAlreadyExists ? 'checked' : 'unchecked'
+    const checkboxState = isEpicSelected ? 'checked' : 'unchecked'
     const isClosed = epic.state === 'closed'
 
     return (
@@ -24,32 +20,21 @@ export default function EpicListItem({ epic, epicIds, handleOnSelect, handleOnDe
             justifyContent = 'flex-start'
             alignItems = 'center'
         >
-            {!loading ?
-                <Checkbox
-                    checked = {epicAlreadyExists}
-                    onChange = {onClick}
-                    data-testid = {'EpicListItem__checkbox-' + checkboxState}
-                />
-                :
-                <CircularProgress
-                    size = '18px'
-                    sx = {{
-                        marginLeft: '11px',
-                        marginRight: '13px',
-                        marginTop: '12px',
-                        marginBottom: '12px'
-                    }}
-                />
-            }
+            <Checkbox
+                checked = {isEpicSelected}
+                onChange = {onClick}
+                data-testid = {'EpicListItem__checkbox-' + checkboxState}
+            />
 
             <Typography
-                color = {epicAlreadyExists ? 'text.secondary' : 'text.primary'}
+                color = {isEpicSelected ? 'text.secondary' : 'text.primary'}
                 onClick = {onClick}
                 sx = {{
                     '&:hover': {
                         cursor: 'pointer',
                     }
                 }}
+                data-testid = {'EpicListItem__label'}
             >
                 {epic.title}
             </Typography>
@@ -69,7 +54,7 @@ EpicListItem.propTypes = {
         title: PropTypes.string,
         state: PropTypes.oneOf(['opened', 'closed']),
     }).isRequired,
-    epicIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+    isEpicSelected: PropTypes.bool.isRequired,
     handleOnSelect: PropTypes.func.isRequired,
     handleOnDeselect: PropTypes.func.isRequired,
 }

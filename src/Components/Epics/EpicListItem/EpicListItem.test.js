@@ -10,7 +10,7 @@ describe('<EpicListItem />', () => {
     test('should render properly unchecked', async() => {
         render(<EpicListItem
             epic = {{ id: 1, title: 'epic' }}
-            epicIds = {[]}
+            isEpicSelected = {false}
             handleOnSelect = {jest.fn}
             handleOnDeselect = {jest.fn}
         />)
@@ -22,7 +22,7 @@ describe('<EpicListItem />', () => {
     test('should render properly checked', async() => {
         render(<EpicListItem
             epic = {{ id: 1, title: 'epic' }}
-            epicIds = {[1]}
+            isEpicSelected = {true}
             handleOnSelect = {jest.fn}
             handleOnDeselect = {jest.fn}
         />)
@@ -34,7 +34,7 @@ describe('<EpicListItem />', () => {
     test('should render with CLOSED text when closed', async() => {
         render(<EpicListItem
             epic = {{ id: 1, title: 'epic', state: 'closed' }}
-            epicIds = {[]}
+            isEpicSelected = {false}
             handleOnSelect = {jest.fn}
             handleOnDeselect = {jest.fn}
         />)
@@ -45,7 +45,7 @@ describe('<EpicListItem />', () => {
     test('should render without CLOSED text when open', async() => {
         render(<EpicListItem
             epic = {{ id: 1, title: 'epic', state: 'opened' }}
-            epicIds = {[]}
+            isEpicSelected = {false}
             handleOnSelect = {jest.fn}
             handleOnDeselect = {jest.fn}
         />)

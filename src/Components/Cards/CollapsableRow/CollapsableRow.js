@@ -9,7 +9,6 @@ export default function CollapsableRow({ children, typeText, headerText, styles 
         <CollapsableCard
             timeout = {{ enter: 500, exit: 500 }}
             enterDelay = {0}
-            exitDelay = {0}
             collapsedSize = '0px'
             mouseMovement = {false}
             header = {
