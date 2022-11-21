@@ -88,7 +88,7 @@ export default function DatabaseTab() {
     }
 
     const handleRestoreClick = () => {
-        dispatchAction(() => {}, dbActions.requestRestore({
+        dispatchAction(null, dbActions.requestRestore({
             fileName: selectedBackupFile,
             restart: restartApi.current.checked,
             clearTokens: clearTokens.current.checked

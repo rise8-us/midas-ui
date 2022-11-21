@@ -1,1 +1,1 @@
-export { default as AssociatedEpicsPopup } from './AssociateEpicsPopup'
+export { default as AssociateEpicsPopup } from './AssociateEpicsPopup'

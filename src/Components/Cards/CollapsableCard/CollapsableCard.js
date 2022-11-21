@@ -1,36 +1,28 @@
 import { Card, ClickAwayListener, Collapse } from '@mui/material'
-import useDebounce from 'Hooks/useDebounce'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
 const CollapsableCard = React.forwardRef((props, ref) => {
     const { children, header, footer, collapsedSize, onExpanded,
-        enterDelay, exitDelay, timeout, mouseMovement, ...cardProps } = props
+        timeout, mouseMovement, ...cardProps } = props
 
     const [expanded, setExpanded] = useState(false)
     const [hasFocus, setHasFocus] = useState(false)
-    const [delay, setDelay] = useState(enterDelay)
-
-    const debouncedExpansion = useDebounce(expanded, delay)
 
     const onMouseEnter = () => {
-        setDelay(enterDelay)
         setExpanded(true)
     }
 
     const onMouseLeave = () => {
-        setDelay(exitDelay)
         !hasFocus && setExpanded(false)
     }
 
     const onFocus = () => {
-        setDelay(enterDelay)
         setHasFocus(true)
         mouseMovement ? setExpanded(true) : setExpanded(prev => !prev)
     }
 
     const onClickAway = () => {
-        setDelay(exitDelay)
         setHasFocus(false)
         setExpanded(false)
     }
@@ -52,7 +44,7 @@ const CollapsableCard = React.forwardRef((props, ref) => {
             >
                 {header}
                 <Collapse
-                    in = {debouncedExpansion}
+                    in = {expanded}
                     timeout = {timeout}
                     collapsedSize = {collapsedSize}
                     data-testid = 'Collapsable__collapse'
@@ -70,8 +62,6 @@ CollapsableCard.displayName = 'Collapsable'
 CollapsableCard.propTypes = {
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
     collapsedSize: PropTypes.string,
-    enterDelay: PropTypes.number,
-    exitDelay: PropTypes.number,
     footer: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     header: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     mouseMovement: PropTypes.bool,
@@ -84,8 +74,6 @@ CollapsableCard.propTypes = {
 
 CollapsableCard.defaultProps = {
     collapsedSize: '0px',
-    enterDelay: 500,
-    exitDelay: 200,
     footer: undefined,
     header: undefined,
     mouseMovement: true,

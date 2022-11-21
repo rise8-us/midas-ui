@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { closePopup } from 'Redux/Popups/actions'
 import { selectTargetById } from 'Redux/Targets/selectors'
+import { useState } from 'react'
 
 export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelectEpic }) {
     const dispatch = useDispatch()
@@ -11,16 +12,19 @@ export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelec
     const target = useSelector(state => selectTargetById(state, targetId))
 
     const onClose = () => dispatch(closePopup('AssociateEpics'))
+    const [selectedEpicIds, setSelectedEpicIds] = useState(target.epicIds)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleOnSelect = (e, value, setEpicLoading) => {
-        e.stopPropagation()
-        onSelectEpic([...target.epicIds, value.id], setEpicLoading)
+    const handleSelect = (epicId) => {
+        setSelectedEpicIds([...selectedEpicIds, epicId])
     }
 
-    const handleOnDeselect = (e, value, setEpicLoading) => {
-        e.stopPropagation()
-        const filteredEpicIds = target.epicIds.filter(id => id !== value.id)
-        onSelectEpic(filteredEpicIds, setEpicLoading)
+    const handleDeselect = (epicId) => {
+        setSelectedEpicIds(selectedEpicIds.filter(id => id !== epicId))
+    }
+
+    const onSubmit = () => {
+        onSelectEpic(selectedEpicIds, setIsLoading)
     }
 
     return (
@@ -28,6 +32,8 @@ export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelec
             title = {title}
             subtitle = {subtitle}
             onClose = {onClose}
+            onSubmit = {onSubmit}
+            isSubmitting = {isLoading}
             cancelText = 'close'
             hideRequiredText
             disableDefaultPadding
@@ -35,9 +41,9 @@ export default function AssociateEpicsPopup({ targetId, title, subtitle, onSelec
         >
             <SearchEpicsDropdown
                 portfolioId = {target.portfolioId}
-                linkedEpicIds = {target.epicIds}
-                handleOnSelect = {handleOnSelect}
-                handleOnDeselect = {handleOnDeselect}
+                selectedEpicIds = {selectedEpicIds}
+                handleOnSelect = {handleSelect}
+                handleOnDeselect = {handleDeselect}
             />
         </Popup>
     )

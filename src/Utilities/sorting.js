@@ -18,3 +18,10 @@ export const sortArrayByDateAndTitle = (a, b) => {
     }
     return a.title.localeCompare(b.title, undefined, { numeric: true })
 }
+
+export const sortByStateAndTitle = (a, b) => {
+    if (a.state === b.state) return a.title.localeCompare(b.title)
+    if (a.state === 'closed') return 1
+    if (b.state === 'closed') return -1
+    return a.title.localeCompare(b.title, undefined, { numeric: true })
+}
