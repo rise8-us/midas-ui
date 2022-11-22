@@ -1,23 +1,15 @@
 import { LocationOnOutlined, PeopleOutlined } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { requestSearchUsers } from 'Redux/Users/actions'
+import { useSelector } from 'react-redux'
 import { selectUsersByIds } from 'Redux/Users/selectors'
-import { buildOrQueryByIds } from 'Utilities/requests'
 import { GanttTooltip } from '../GanttTooltip'
 
 export default function GanttEventTooltip({ event, dateRange, onEditClick, onDeleteClick, permissions }) {
-    const dispatch = useDispatch()
     const { title, description, location, organizerIds, attendeeIds } = event
 
     const organizers = useSelector(state => selectUsersByIds(state, organizerIds))
     const attendees = useSelector(state => selectUsersByIds(state, attendeeIds))
-
-    useEffect(() => {
-        dispatch(requestSearchUsers(buildOrQueryByIds([...organizerIds, ...attendeeIds])))
-    }, [])
 
     return (
         <GanttTooltip

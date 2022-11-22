@@ -1,23 +1,10 @@
 import { Divider, Stack, Typography } from '@mui/material'
-import { unwrapResult } from '@reduxjs/toolkit'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { requestSearchUsers } from 'Redux/Users/actions'
-import { buildOrQueryByIds } from 'Utilities/requests'
+import { useSelector } from 'react-redux'
+import { selectUsersByIds } from '../../Redux/Users/selectors'
 
 export default function UserTooltip({ title, userIds }) {
-    const dispatch = useDispatch()
-
-    const [users, setUsers] = useState([])
-
-    useEffect(() => {
-        if (userIds.length > 0) {
-            dispatch(requestSearchUsers(buildOrQueryByIds(userIds))).then(unwrapResult).then(setUsers)
-        } else {
-            users.length > 0 && setUsers([])
-        }
-    }, [userIds])
+    const users = useSelector(state => selectUsersByIds(state, userIds))
 
     return (
         <Stack spacing = {1}>
@@ -28,7 +15,7 @@ export default function UserTooltip({ title, userIds }) {
                 </span>
             }
             {users.map((user, index) =>
-                <Typography key = {index} variant = 'body2'>
+                <Typography key = {index} variant = 'body2' data-testid = 'User-Tooltip'>
                     {user.displayName ?? user.username}
                 </Typography>
             )}
