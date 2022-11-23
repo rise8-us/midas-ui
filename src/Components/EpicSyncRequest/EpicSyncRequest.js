@@ -10,7 +10,7 @@ export default function EpicSyncRequest({ id, request, tooltip }) {
 
     const syncProgress = useSelector(state => selectEpicSyncProgress(state, id))
     const { value, status } = syncProgress
-    const loading = status !== 'SYNCED'
+    const loading = status !== 'SYNCED' && status !== 'SYNC_ERROR'
 
     const syncEpics = () => {
         dispatch(setEpicSyncProgress({ id: id, value: .01 }))
