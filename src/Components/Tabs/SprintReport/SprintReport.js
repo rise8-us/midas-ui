@@ -20,7 +20,7 @@ const calculateDate = (initialDate, duration, multipler) => {
     return newDate.setDate(newDate.getDate() + (duration * multipler))
 }
 
-export default function SprintReport({ portfolioId, productIds, sprintStart, sprintDuration, type }) {
+export default function SprintReport({ portfolioId, productIds, sprintStart, sprintDuration, type, centered }) {
     const dispatch = useDispatch()
 
     let sprintEnd = new Date(sprintStart.getTime())
@@ -81,7 +81,11 @@ export default function SprintReport({ portfolioId, productIds, sprintStart, spr
     }, [JSON.stringify(debouncedDateRange)])
 
     return (
-        <Stack spacing = {1} data-testid = 'SprintReport__container-stack'>
+        <Stack
+            spacing = {1}
+            style = {{ maxWidth: '1440px', margin: centered ? 'auto' : '0' }}
+            data-testid = 'SprintReport__container-stack'
+        >
             <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                 <IconButton onClick = {() => updateRange(-1)}>
                     <ArrowBack fontSize = 'small' />
@@ -125,9 +129,11 @@ SprintReport.propTypes = {
     sprintStart: PropTypes.instanceOf(Date).isRequired,
     sprintDuration: PropTypes.number.isRequired,
     type: PropTypes.string,
+    centered: PropTypes.bool,
 }
 
 SprintReport.defaultProps = {
     productIds: [],
     type: 'portfolio',
+    centered: true
 }

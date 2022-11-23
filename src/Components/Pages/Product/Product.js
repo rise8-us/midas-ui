@@ -175,6 +175,7 @@ function Product() {
                                                 sprintDuration = {portfolio.sprintDurationInDays}
                                                 sprintStart = {parseStringToDate(portfolio.sprintStartDate)}
                                                 type = 'product'
+                                                centered = {false}
                                             />
                                             : <div
                                                 style = {{
