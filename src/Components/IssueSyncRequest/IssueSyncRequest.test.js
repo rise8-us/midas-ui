@@ -12,8 +12,25 @@ describe('<SyncRequest />', () => {
         releaseSyncProgressMock.mockReturnValue({ value: 0, status: 'SYNCED' })
     })
 
-    test('should render', () => {
+    test('should render sync button when no sync in progress', () => {
         selectIssueSyncProgressMock.mockReturnValueOnce({ value: 0, status: 'SYNCED' })
+
+        render(<IssueSyncRequest {...defaultProps}/>)
+
+        expect(screen.getByTestId('SyncRequest__button-sync')).toBeInTheDocument()
+    })
+
+    test('should render sync button when a issue sync fails', () => {
+        selectIssueSyncProgressMock.mockReturnValueOnce({ value: 0, status: 'SYNC_ERROR' })
+
+        render(<IssueSyncRequest {...defaultProps}/>)
+
+        expect(screen.getByTestId('SyncRequest__button-sync')).toBeInTheDocument()
+    })
+
+    test('should render sync button when a release sync fails', () => {
+        selectIssueSyncProgressMock.mockReturnValueOnce({ value: 0, status: 'SYNCED' })
+        releaseSyncProgressMock.mockReturnValue({ value: 0, status: 'SYNC_ERROR' })
 
         render(<IssueSyncRequest {...defaultProps}/>)
 

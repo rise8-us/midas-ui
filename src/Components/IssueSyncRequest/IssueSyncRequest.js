@@ -12,7 +12,8 @@ export default function IssueSyncRequest({ projectId, request, tooltip }) {
     const releaseSyncProgress = useSelector(state => selectReleaseSyncProgress(state, projectId))
     const { value: issueValue, status: issueStatus } = issueSyncProgress
     const { status: releaseStatus } = releaseSyncProgress
-    const loading = issueStatus !== 'SYNCED' || releaseStatus !== 'SYNCED'
+    const loading = (issueStatus !== 'SYNCED'  && issueStatus !== 'SYNC_ERROR') ||
+                    (releaseStatus !== 'SYNCED' && releaseStatus !== 'SYNC_ERROR')
 
     const syncIssues = async() => {
         dispatch(setIssueSyncProgress({ id: projectId, value: .01 }))

@@ -12,7 +12,16 @@ describe('<EpicSyncRequest />', () => {
 
         render(<EpicSyncRequest {...defaultProps} />)
 
-        expect(screen.getByTestId('SyncRequest__button-sync')).toBeInTheDocument()
+        screen.getByTestId('SyncRequest__button-sync')
+    })
+
+    test('should not show loading spinner if sync error', () => {
+        selectEpicSyncProgressMock.mockReturnValueOnce({ value: 0, status: 'SYNC_ERROR' })
+
+        render(<EpicSyncRequest {...defaultProps} />)
+
+        screen.getByTestId('SyncRequest__button-sync')
+        expect(screen.queryByTestId('SyncRequest__CircularProgress')).not.toBeInTheDocument()
     })
 
     test('should display epic sync progress', async() => {
