@@ -171,6 +171,7 @@ export default function Portfolio() {
                                     productIds = {portfolio.productIds}
                                     sprintDuration = {portfolio.sprintDurationInDays}
                                     sprintStart = {parseStringToDate(portfolio.sprintStartDate)}
+                                    centered = {true}
                                 />
                                 : <div
                                     style = {{
