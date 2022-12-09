@@ -17,21 +17,6 @@ export const selectUserById = (state, id) => {
     return { ...user, roles: assignedRoles }
 }
 
-export const selectAvailableUsers = (state, ids) => {
-    if (!ids) return []
-
-    const allUsers = selectUsers(state)
-    let availableUsers = []
-
-    for (let i = 0; i < allUsers.length; i++) {
-        if (!(ids.includes(allUsers[i].id))) {
-            availableUsers.push(allUsers[i])
-        }
-    }
-
-    return availableUsers
-}
-
 export const selectUsersByIds = (state, ids) => {
     return ids?.map(id => selectUserById(state, id))
 }
