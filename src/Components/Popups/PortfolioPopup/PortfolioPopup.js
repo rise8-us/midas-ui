@@ -69,20 +69,22 @@ function PortfolioPopup({ id }) {
 
     const selectedSourceControl = useSelector((state) => selectSourceControlById(state, portfolio.sourceControlId))
     const allSourceControls = useSelector(selectSourceControls)
-    const allUsers = useSelector(state => selectUsers(state))
-    const allProducts = useSelector(state => selectProducts(state))
+    const allUsers = useSelector(state => sortArrayAlphabetically(selectUsers(state), 'username'))
+    const allProducts = useSelector(state => sortArrayAlphabetically(selectProducts(state), 'name'))
 
-    const products = allProducts
-        .filter(p => p.portfolioId === portfolio.id || p.portfolioId === null && !p.isArchived)
+    const [selectedProducts, unselectedProducts] = allProducts
         .reduce(([selected, unselected], product) => {
+            if (product.isArchived || !(product.portfolioId === portfolio.id || product.portfolioId === null)) {
+                return [selected, unselected]
+            }
             formValues?.products.some(p => p.id === product.id) ? selected.push(product) : unselected.push(product)
-            return [sortArrayAlphabetically(selected, 'name'), sortArrayAlphabetically(unselected, 'name')]
+            return [selected, unselected]
         }, [[], []])
 
-    const users = allUsers
+    const [selectedAdmins, unselectedAdmins] = allUsers
         .reduce(([selected, unselected], u) => {
             formValues?.adminIds.includes(u.id) ? selected.push(u) : unselected.push(u)
-            return [sortArrayAlphabetically(selected, 'username'), sortArrayAlphabetically(unselected, 'username')]
+            return [selected, unselected]
         }, [[], []])
 
     const context = initDetails(portfolio.id === undefined)
@@ -260,18 +262,18 @@ function PortfolioPopup({ id }) {
                     forcePopupIcon
                     style = {{ marginBottom: '8px' }}
                     sx = {{ alignSelf: 'baseline', width: '100%' }}
-                    options = {products[1]}
+                    options = {unselectedProducts}
                     getOptionLabel = {(option) => option.name}
                     isOptionEqualToValue = {(option, value) =>  option.id === value.id }
                     data-testid = 'PortfolioPopup__select-products'
                     onChange = {(_e, values) => handleChange('products', values) }
-                    value = {products[0]}
+                    value = {selectedProducts}
                     renderInput = {(params) =>
                         <TextField
                             {...params}
                             label = 'Products'
                             margin = 'dense'
-                            placeholder = {products[0] ? '' : 'Products in this portfolio'}
+                            placeholder = {selectedProducts ? '' : 'Products in this portfolio'}
                             variant = 'filled'
                             InputProps = {{
                                 ...params.InputProps,
@@ -304,18 +306,18 @@ function PortfolioPopup({ id }) {
                     forcePopupIcon
                     style = {{ marginBottom: '8px' }}
                     sx = {{ alignSelf: 'baseline', width: '100%' }}
-                    options = {users[1]}
+                    options = {unselectedAdmins}
                     getOptionLabel = {(option) => setOptionLabel(option)}
                     isOptionEqualToValue = {(option, value) => option.id === value.id }
                     data-testid = 'PortfolioPopup__enter-admins'
                     onChange = {(_e, values) => setIds(values) }
-                    value = {users[0]}
+                    value = {selectedAdmins}
                     renderInput = {(params) =>
                         <TextField
                             {...params}
                             label = 'Portfolio Admins'
                             margin = 'dense'
-                            placeholder = {users[0] ? '' : 'Admins for this portfolio'}
+                            placeholder = {selectedAdmins ? '' : 'Admins for this portfolio'}
                             variant = 'filled'
                             InputProps = {{
                                 ...params.InputProps,
