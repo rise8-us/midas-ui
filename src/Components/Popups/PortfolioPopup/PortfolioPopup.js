@@ -53,6 +53,23 @@ const setOptionLabel = (option) => (option.displayName || option.username) ?? ''
 const isUnavailable = (portfolio, product) => (
     product.isArchived || !(product.portfolioId === portfolio.id || product.portfolioId === null))
 
+function setSelectedAndUnselectedProducts(portfolio, products, formValues) {
+    return products.reduce(([selected, unselected], product) => {
+        if (isUnavailable(portfolio, product)) {
+            return [selected, unselected]
+        }
+        formValues?.products.some(p => p.id === product.id) ? selected.push(product) : unselected.push(product)
+        return [selected, unselected]
+    }, [[], []])
+}
+
+function setSelectedAndUnselectedAdmins(users, formValues) {
+    return users.reduce(([selected, unselected], user) => {
+        formValues?.adminIds.includes(user.id) ? selected.push(user) : unselected.push(user)
+        return [selected, unselected]
+    }, [[], []])
+}
+
 function PortfolioPopup({ id }) {
     const dispatch = useDispatch()
 
@@ -73,21 +90,8 @@ function PortfolioPopup({ id }) {
     const allSourceControls = useSelector(selectSourceControls)
     const allUsers = useSelector(state => sortArrayAlphabetically(selectUsers(state), 'username'))
     const allProducts = useSelector(state => sortArrayAlphabetically(selectProducts(state), 'name'))
-
-    const [selectedProducts, unselectedProducts] = allProducts
-        .reduce(([selected, unselected], product) => {
-            if (isUnavailable(portfolio, product)) {
-                return [selected, unselected]
-            }
-            formValues?.products.some(p => p.id === product.id) ? selected.push(product) : unselected.push(product)
-            return [selected, unselected]
-        }, [[], []])
-
-    const [selectedAdmins, unselectedAdmins] = allUsers
-        .reduce(([selected, unselected], u) => {
-            formValues?.adminIds.includes(u.id) ? selected.push(u) : unselected.push(u)
-            return [selected, unselected]
-        }, [[], []])
+    const [selectedProducts, unselectedProducts] = setSelectedAndUnselectedProducts(portfolio, allProducts, formValues)
+    const [selectedAdmins, unselectedAdmins] = setSelectedAndUnselectedAdmins(allUsers, formValues)
 
     const context = initDetails(portfolio.id === undefined)
     const [fetched, setFetched] = useState(false)
