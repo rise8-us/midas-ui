@@ -50,6 +50,8 @@ const initDetails = (create) => {
 }
 
 const setOptionLabel = (option) => (option.displayName || option.username) ?? ''
+const isUnavailable = (portfolio, product) => (
+    product.isArchived || !(product.portfolioId === portfolio.id || product.portfolioId === null))
 
 function PortfolioPopup({ id }) {
     const dispatch = useDispatch()
@@ -74,7 +76,7 @@ function PortfolioPopup({ id }) {
 
     const [selectedProducts, unselectedProducts] = allProducts
         .reduce(([selected, unselected], product) => {
-            if (product.isArchived || !(product.portfolioId === portfolio.id || product.portfolioId === null)) {
+            if (isUnavailable(portfolio, product)) {
                 return [selected, unselected]
             }
             formValues?.products.some(p => p.id === product.id) ? selected.push(product) : unselected.push(product)
