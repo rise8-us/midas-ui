@@ -131,6 +131,15 @@ export function mockDateSelector(props) {
     )
 }
 
+export function mockDatePicker(props) {
+    return (
+        <input
+            value = {props.value}
+            onChange = {() => props.onChange('2022-11-01')}
+        />
+    )
+}
+
 export function selectRoadmapStatusesMock() {
     const enumSelectors = require('Redux/AppSettings/selectors')
     jest.spyOn(enumSelectors, 'selectRoadmapStatuses').mockReturnValue({

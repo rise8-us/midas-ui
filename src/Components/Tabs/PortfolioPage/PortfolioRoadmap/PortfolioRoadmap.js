@@ -134,7 +134,7 @@ export default function PortfolioRoadmap({ isAuthorized, portfolioId }) {
 
     return (
         <Stack>
-            <Stack direction = 'row' style = {{ justifyContent: 'space-between' }}>
+            <Stack direction = 'row' marginBottom = '4px' style = {{ justifyContent: 'space-between' }}>
                 <div>
                     {isAuthorized &&
                         <GanttAddNewItem portfolioId = {portfolioId} />

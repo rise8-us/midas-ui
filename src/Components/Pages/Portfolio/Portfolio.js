@@ -1,18 +1,13 @@
-import { LockOpenOutlined, LockOutlined } from '@mui/icons-material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import {
     Box,
     Button,
     CircularProgress,
-    Divider,
-    IconButton,
-    Skeleton,
+    Divider, Skeleton,
     Stack,
     styled,
     Tab,
-    Tabs,
-    Tooltip,
-    Typography
+    Tabs, Typography
 } from '@mui/material'
 import { Page } from 'Components/Page'
 import { PageMetrics } from 'Components/Tabs/PageMetrics'
@@ -25,7 +20,6 @@ import { useParams } from 'react-router'
 import { selectUserLoggedIn } from 'Redux/Auth/selectors'
 import { setCapability } from 'Redux/Capabilities/reducer'
 import { setPortfolioPagePermission } from 'Redux/PageAccess/reducer'
-import { selectPortfolioPagePermission } from 'Redux/PageAccess/selectors'
 import { openPopup } from 'Redux/Popups/actions'
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
@@ -37,15 +31,10 @@ import { EpicSyncRequest } from '../../EpicSyncRequest'
 const isPortfolioOwnerOrPortfolioAdmin =
     (userId, personnel) => personnel?.ownerId === userId || personnel?.adminIds?.includes(userId)
 const isPortfolioMemberOrSiteAdmin = (portfolioMember, siteAdmin) => portfolioMember || siteAdmin
-const togglePageEdit = (isInEditMode) => !isInEditMode
-const pageEditTooltipTitle = (isInEditMode) => isInEditMode ? 'Click to stop editing' : 'Click to edit'
 
 const loadPortfolioName = (portfolioName) => portfolioName
     ? <Typography variant = 'h4'>{portfolioName}</Typography>
     : <Skeleton height = '64px' width = '60vw' data-testid = 'Portfolio__skeleton-name'/>
-const pageEditIcon = (editPermissions) => editPermissions
-    ? <LockOpenOutlined fontSize = 'medium' color = 'primary'/>
-    : <LockOutlined fontSize = 'medium' color = 'primary'/>
 
 const StyledButton = styled(Button)(({ theme }) => ({
     color: theme.palette.grey[600],
@@ -60,11 +49,9 @@ export default function Portfolio() {
 
     const userLoggedIn = useSelector(selectUserLoggedIn)
     const portfolio = useSelector(state => selectPortfolioById(state, id))
-    const isInEditMode = useSelector(state => selectPortfolioPagePermission(state, id).edit)
     const isAuthorized = isPortfolioMemberOrSiteAdmin(
         isPortfolioOwnerOrPortfolioAdmin(userLoggedIn.id, portfolio?.personnel), userLoggedIn.isAdmin
     )
-    const showLock = isAuthorized && portfolio.name
     const showSync = isAuthorized && portfolio.sourceControlId !== null && portfolio.gitlabGroupId !== null
     const showSettings = isAuthorized
 
@@ -75,14 +62,15 @@ export default function Portfolio() {
         history.push(url)
     }
 
-    const updatePageEdit = () => {
-        dispatch(setPortfolioPagePermission({
-            id,
-            permissions: {
-                edit: togglePageEdit(isInEditMode)
-            }
-        }))
-    }
+    useEffect(() => {
+        isAuthorized && portfolio.name &&
+            dispatch(setPortfolioPagePermission({
+                id,
+                permissions: {
+                    edit: true
+                }
+            }))
+    }, [portfolio.name])
 
     const updatePortfolioPopup = () => {
         dispatch(
@@ -100,11 +88,6 @@ export default function Portfolio() {
                 <Stack direction = 'row' spacing = {1} justifyContent = 'space-between'>
                     <Stack direction = 'row' spacing = {1} alignItems = 'center'>
                         { loadPortfolioName(portfolio?.name) }
-                        { showLock && <Tooltip title = {pageEditTooltipTitle(isInEditMode)}>
-                            <IconButton onClick = {updatePageEdit} data-testid = 'Portfolio__button-edit'>
-                                { pageEditIcon(isInEditMode) }
-                            </IconButton>
-                        </Tooltip> }
                         { showSync && <EpicSyncRequest
                             id = {id}
                             request = {requestSyncEpicsByPortfolioId}

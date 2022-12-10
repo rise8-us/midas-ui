@@ -1,9 +1,11 @@
-import { Autocomplete, Box, TextField } from '@mui/material'
+import { Search } from '@mui/icons-material'
+import { Autocomplete, Box, InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { DateSelector } from 'Components/DateSelector'
 import { Popup } from 'Components/Popup'
 import { SearchUsers } from 'Components/Search'
-import { UsersCollection } from 'Components/UsersCollection'
 import useFormReducer from 'Hooks/useFormReducer'
 import PropTypes from 'prop-types'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -16,51 +18,62 @@ import {
 } from 'Redux/Portfolios/actions'
 import PortfolioConstants from 'Redux/Portfolios/constants'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
-import { selectAvailableProducts } from 'Redux/Products/selectors'
+import { selectProducts } from 'Redux/Products/selectors'
 import {
     selectSourceControlById,
     selectSourceControls
 } from 'Redux/SourceControls/selectors'
 import { requestSearchUsers } from 'Redux/Users/actions'
+import { selectUsers } from 'Redux/Users/selectors'
 import { styled } from 'Styles/materialThemes'
-import { getDateInDisplayOrder } from 'Utilities/dateHelpers'
 import FormatErrors from 'Utilities/FormatErrors'
+import { sortArrayAlphabetically } from 'Utilities/sorting'
 
 const TextFieldStyled = styled(TextField)(() => ({
-    '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
-      {
-          display: 'none',
-      },
+    width: '47%'
+}))
+
+const TypographyStyled = styled(Typography)(() => ({
+    fontSize: '12px',
+    fontWeight: 'bold',
+    paddingTop: '20px'
 }))
 
 const initDetails = (create) => {
     return {
         isCreate: create,
-        title: create ? 'Create Portfolio' : 'Update Portfolio',
+        title: create ? 'Create Portfolio' : 'Portfolio Settings',
+        submitText: create ? 'create' : 'update',
         constant: create ? PortfolioConstants.CREATE_PORTFOLIO : PortfolioConstants.UPDATE_PORTFOLIO,
         request: (data) => create ? requestCreatePortfolio(data) : requestUpdatePortfolio(data)
     }
+}
+
+const setOptionLabel = (option) => (option.displayName || option.username) ?? ''
+const isUnavailable = (portfolio, product) => (
+    product.isArchived || !(product.portfolioId === portfolio.id || product.portfolioId === null))
+
+function setSelectedAndUnselectedProducts(portfolio, products, formValues) {
+    return products.reduce(([selected, unselected], product) => {
+        if (isUnavailable(portfolio, product)) {
+            return [selected, unselected]
+        }
+        formValues?.products.some(p => p.id === product.id) ? selected.push(product) : unselected.push(product)
+        return [selected, unselected]
+    }, [[], []])
+}
+
+function setSelectedAndUnselectedAdmins(users, formValues) {
+    return users.reduce(([selected, unselected], user) => {
+        formValues?.adminIds.includes(user.id) ? selected.push(user) : unselected.push(user)
+        return [selected, unselected]
+    }, [[], []])
 }
 
 function PortfolioPopup({ id }) {
     const dispatch = useDispatch()
 
     const portfolio = useSelector(state => selectPortfolioById(state, id))
-    const selectedSourceControl = useSelector((state) => selectSourceControlById(state, portfolio.sourceControlId))
-    const allSourceControls = useSelector(selectSourceControls)
-    const notAssignedProducts = useSelector(selectAvailableProducts)
-
-    const context = initDetails(portfolio.id === undefined)
-    const [fetched, setFetched] = useState(false)
-    const [sourceControl, setSourceControl] = useState(
-        selectedSourceControl.id !== undefined ? selectedSourceControl : null
-    )
-
-    const errors = useSelector(state => selectRequestErrors(state, context.constant))
-    const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
-    const uniqueGroupAndSourceIdError = useMemo(() => errors.filter(error => error.includes('Gitlab'), [errors]))
-
-    const availableProducts = notAssignedProducts.concat(portfolio.products)
 
     const [formValues, formDispatch] = React.useReducer(useFormReducer, {
         name: portfolio.name,
@@ -73,6 +86,23 @@ function PortfolioPopup({ id }) {
         adminIds: portfolio.personnel?.adminIds ?? []
     })
 
+    const selectedSourceControl = useSelector((state) => selectSourceControlById(state, portfolio.sourceControlId))
+    const allSourceControls = useSelector(selectSourceControls)
+    const allUsers = useSelector(state => sortArrayAlphabetically(selectUsers(state), 'username'))
+    const allProducts = useSelector(state => sortArrayAlphabetically(selectProducts(state), 'name'))
+    const [selectedProducts, unselectedProducts] = setSelectedAndUnselectedProducts(portfolio, allProducts, formValues)
+    const [selectedAdmins, unselectedAdmins] = setSelectedAndUnselectedAdmins(allUsers, formValues)
+
+    const context = initDetails(portfolio.id === undefined)
+    const [fetched, setFetched] = useState(false)
+    const [sourceControl, setSourceControl] = useState(
+        selectedSourceControl.id !== undefined ? selectedSourceControl : null
+    )
+
+    const errors = useSelector(state => selectRequestErrors(state, context.constant))
+    const nameError = useMemo(() => errors.filter(error => error.includes('name')), [errors])
+    const uniqueGroupAndSourceIdError = useMemo(() => errors.filter(error => error.includes('Gitlab'), [errors]))
+
     const handleChange = (name, value) => {
         formDispatch({
             type: 'onChange',
@@ -81,6 +111,14 @@ function PortfolioPopup({ id }) {
     }
 
     const onClose = () => dispatch(closePopup(context.constant))
+
+    const setIds = (values) => {
+        let ids = []
+        values.forEach(v => {
+            ids.push(v.id)
+        })
+        handleChange('adminIds', ids)
+    }
 
     const onSubmit = () => {
         const adminIdsFinal = new Set(formValues.adminIds)
@@ -103,30 +141,40 @@ function PortfolioPopup({ id }) {
     }
 
     useEffect(() => {
+        dispatch(requestSearchUsers())
+    }, [])
+
+    useEffect(() => {
         if (!fetched && portfolio?.personnel?.ownerId > 0) {
             setFetched(true)
             dispatch(requestSearchUsers(`id:${portfolio.personnel.ownerId}`)).then(unwrapResult)
                 .then(data => { handleChange('owner', data[0]) })
         }
-    }, [portfolio])
+    }, [portfolio.name])
 
     return (
         <Popup
+            hideRequiredText
+            disableDefaultDivider
             title = {context.title}
             onClose = {onClose}
             onSubmit = {onSubmit}
+            submitText = {context.submitText}
+            width = '500px'
         >
+            <Typography fontSize = '12px' fontWeight = 'bold'> Information </Typography>
             <Box display = 'flex' flexDirection = 'column'>
                 <TextField
-                    label = 'Portfolio Name'
+                    label = 'Portfolio Title'
                     inputProps = {{
-                        'data-testid': 'PortfolioPopup__input-name'
+                        'data-testid': 'PortfolioPopup__input-title'
                     }}
                     value = {formValues.name}
                     onChange = {(e) => handleChange('name', e.target.value)}
                     error = {nameError.length > 0}
                     helperText = {<FormatErrors errors = {nameError}/>}
                     margin = 'dense'
+                    variant = 'filled'
                     required
                 />
                 <TextField
@@ -138,87 +186,162 @@ function PortfolioPopup({ id }) {
                     value = {formValues.description}
                     onChange = {(e) => handleChange('description', e.target.value)}
                     margin = 'dense'
+                    variant = 'filled'
                     multiline
                 />
-                <Autocomplete
-                    value = {sourceControl}
-                    isOptionEqualToValue = {(option, value) => option.id === value.id}
-                    onChange = {(_e, values) => setSourceControl(values)}
-                    options = {allSourceControls}
-                    getOptionLabel = {(option) => option.name}
-                    renderInput = {(params) => (
-                        <TextField
-                            {...params}
-                            label = 'Gitlab server'
-                            InputProps = {{
-                                ...params.InputProps,
-                                readOnly: true,
-                            }}
-                            margin = 'dense'
-                        />
-                    )}
-                />
-                <TextFieldStyled
-                    label = 'Gitlab Group Id'
-                    type = 'number'
-                    inputProps = {{
-                        'data-testid': 'PortfolioPopup__input-gitlabGroupId',
-                    }}
-                    value = {formValues.gitlabGroupId}
-                    onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
-                    error = {uniqueGroupAndSourceIdError.length > 0}
-                    helperText = {<FormatErrors errors = {uniqueGroupAndSourceIdError} />}
-                    margin = 'dense'
-                />
-                <TextFieldStyled
-                    label = 'Sprint Duration In Days'
-                    type = 'number'
-                    inputProps = {{
-                        'data-testid': 'PortfolioPopup__input-sprint-duration',
-                    }}
-                    value = {formValues.sprintDurationInDays}
-                    onChange = {(e) => handleChange('sprintDurationInDays', e.target.value)}
-                    margin = 'dense'
-                />
-                <div style = {{ marginTop: '8px', marginBottom: '8px' }}>
-                    <DateSelector
-                        label = 'Sprint Start Date'
-                        initialValue = {getDateInDisplayOrder(portfolio?.sprintStartDate)}
-                        hasEdit = {true}
-                        onAccept = {(value) => handleChange('sprintStartDate', value)}
+                <TypographyStyled> Gitlab Settings </TypographyStyled>
+                <Stack direction = 'row' justifyContent = 'space-between'>
+                    <Autocomplete
+                        value = {sourceControl}
+                        isOptionEqualToValue = {(option, value) => option.id === value.id}
+                        onChange = {(_e, values) => setSourceControl(values)}
+                        options = {allSourceControls}
+                        getOptionLabel = {(option) => option.name}
+                        sx = {{
+                            width: '47%'
+                        }}
+                        renderInput = {(params) => (
+                            <TextField
+                                {...params}
+                                label = 'Gitlab server'
+                                InputProps = {{
+                                    ...params.InputProps,
+                                    readOnly: true,
+                                }}
+                                margin = 'dense'
+                                variant = 'filled'
+                            />
+                        )}
                     />
-                </div>
+                    <TextFieldStyled
+                        label = 'Gitlab Group Id'
+                        type = 'number'
+                        inputProps = {{
+                            'data-testid': 'PortfolioPopup__input-gitlabGroupId',
+                        }}
+                        value = {formValues.gitlabGroupId}
+                        onChange = {(e) => handleChange('gitlabGroupId', e.target.value)}
+                        error = {uniqueGroupAndSourceIdError.length > 0}
+                        helperText = {<FormatErrors errors = {uniqueGroupAndSourceIdError} />}
+                        margin = 'dense'
+                        variant = 'filled'
+                    />
+                </Stack>
+                <TypographyStyled> Sprint Settings </TypographyStyled>
+                <Stack direction = 'row' justifyContent = 'space-between'>
+                    <TextFieldStyled
+                        label = 'Sprint Duration In Days'
+                        type = 'number'
+                        inputProps = {{
+                            'data-testid': 'PortfolioPopup__input-sprint-duration',
+                        }}
+                        value = {formValues.sprintDurationInDays}
+                        onChange = {(e) => handleChange('sprintDurationInDays', e.target.value)}
+                        margin = 'dense'
+                        variant = 'filled'
+                    />
+                    <div style = {{ width: '47%', marginTop: '8px', marginBottom: '8px' }}>
+                        <LocalizationProvider dateAdapter = {AdapterDayjs}>
+                            <DatePicker
+                                label = 'Sprint Start Date'
+                                openTo = 'day'
+                                views = {['day']}
+                                value = {formValues.sprintStartDate}
+                                onChange = {(newValue) => handleChange('sprintStartDate', newValue)}
+                                format = 'MMM-DD-YYYY'
+                                renderInput = {(params) => (
+                                    <TextField
+                                        {...params}
+                                        variant = 'filled'
+                                        helperText = {params?.inputProps?.placeholder}
+                                    />
+                                )}
+                            />
+                        </LocalizationProvider>
+                    </div>
+                </Stack>
+                <TypographyStyled> Portfolio and Product Settings </TypographyStyled>
                 <Autocomplete
                     multiple
                     autoSelect
+                    freeSolo
+                    forcePopupIcon
                     style = {{ marginBottom: '8px' }}
-                    options = {availableProducts}
-                    getOptionLabel = {(option) => option?.name}
-                    isOptionEqualToValue = {(option, value) => option?.id === value.id}
-                    groupBy = {(option) => option?.firstLetter}
+                    sx = {{ alignSelf: 'baseline', width: '100%' }}
+                    options = {unselectedProducts}
+                    getOptionLabel = {(option) => option.name}
+                    isOptionEqualToValue = {(option, value) =>  option.id === value.id }
                     data-testid = 'PortfolioPopup__select-products'
-                    onChange = {(_e, values) => handleChange('products', values)}
-                    value = {formValues.products}
+                    onChange = {(_e, values) => handleChange('products', values) }
+                    value = {selectedProducts}
                     renderInput = {(params) =>
                         <TextField
                             {...params}
                             label = 'Products'
                             margin = 'dense'
-                            placeholder = 'Products in this portfolio'
+                            placeholder = {selectedProducts ? '' : 'Products in this portfolio'}
+                            variant = 'filled'
+                            InputProps = {{
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <Stack
+                                        marginTop = '4px'
+                                        direction = 'row'
+                                        flexWrap = 'wrap'
+                                    >
+                                        <InputAdornment position = 'start'>
+                                            <Search/>
+                                        </InputAdornment>
+                                        {params.InputProps.startAdornment}
+                                    </Stack>
+                                )
+                            }}
                         />
                     }
                 />
                 <SearchUsers
                     title = 'Portfolio Owner'
                     value = {formValues.owner}
-                    onChange = {(_e, values) => handleChange('owner', values)}
+                    onChange = {(_e, values) => { handleChange('owner', values) }}
+                    variant = 'filled'
                 />
-                <UsersCollection
-                    userIds = {formValues.adminIds}
-                    setUserIds = {value => handleChange('adminIds', value)}
-                    placeholderValue = 'Add another admin...'
-                    title = 'Portfolio Admins'
-                    dataTestId = 'PortfolioPopup__enter-admins'
+                <Autocomplete
+                    multiple
+                    autoSelect
+                    freeSolo
+                    forcePopupIcon
+                    style = {{ marginBottom: '8px' }}
+                    sx = {{ alignSelf: 'baseline', width: '100%' }}
+                    options = {unselectedAdmins}
+                    getOptionLabel = {(option) => setOptionLabel(option)}
+                    isOptionEqualToValue = {(option, value) => option.id === value.id }
+                    data-testid = 'PortfolioPopup__enter-admins'
+                    onChange = {(_e, values) => setIds(values) }
+                    value = {selectedAdmins}
+                    renderInput = {(params) =>
+                        <TextField
+                            {...params}
+                            label = 'Portfolio Admins'
+                            margin = 'dense'
+                            placeholder = {selectedAdmins ? '' : 'Admins for this portfolio'}
+                            variant = 'filled'
+                            InputProps = {{
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <Stack
+                                        marginTop = '4px'
+                                        direction = 'row'
+                                        flexWrap = 'wrap'
+                                    >
+                                        <InputAdornment position = 'start'>
+                                            <Search/>
+                                        </InputAdornment>
+                                        {params.InputProps.startAdornment}
+                                    </Stack>
+                                )
+                            }}
+                        />
+                    }
                 />
             </Box>
         </Popup>

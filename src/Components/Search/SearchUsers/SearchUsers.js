@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { requestSearchUsers } from 'Redux/Users/actions'
 
-function SearchUsers({ onDataReturn, title, placeholder, value, error, clearOnSelect, ...autoCompleteProps }) {
+function SearchUsers({ onDataReturn, title, placeholder, value, error, clearOnSelect, variant, ...autoCompleteProps }) {
     const dispatch = useDispatch()
 
     const [options, setOptions] = useState([])
@@ -46,7 +46,8 @@ function SearchUsers({ onDataReturn, title, placeholder, value, error, clearOnSe
                 placeholder: placeholder,
                 error: error !== null,
                 helperText: error,
-                margin: 'dense'
+                margin: 'dense',
+                variant: variant,
             }}
         />
     )
@@ -66,7 +67,8 @@ SearchUsers.propTypes = {
             username: PropTypes.string,
             displayName: PropTypes.string
         })
-    ])
+    ]),
+    variant: PropTypes.string
 }
 
 SearchUsers.defaultProps = {
@@ -77,6 +79,7 @@ SearchUsers.defaultProps = {
     startAdornment: <Search />,
     title: 'Search users',
     value: '',
+    variant: undefined
 }
 
 export default SearchUsers
