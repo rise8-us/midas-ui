@@ -1,13 +1,9 @@
-import { Edit } from '@mui/icons-material'
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, IconButton, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material'
 import { Tag } from 'Components/Tag'
 import useHistory from 'Hooks/useHistory'
 import PropTypes from 'prop-types'
 import { useLayoutEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { hasProductAccess } from 'Redux/Auth/selectors'
-import { openPopup } from 'Redux/Popups/actions'
-import PortfolioConstants from 'Redux/Portfolios/constants'
+import { useSelector } from 'react-redux'
 import { selectPortfolioById } from 'Redux/Portfolios/selectors'
 import { styled } from 'Styles/materialThemes'
 
@@ -36,20 +32,10 @@ const TypographyLink = styled(Typography)(({ theme }) => ({
 }))
 
 function PortfolioCard({ id }) {
-    const dispatch = useDispatch()
     const ref = useRef()
     const history = useHistory()
 
     const portfolio = useSelector((state) => selectPortfolioById(state, id))
-    const hasPortfolioAccess = useSelector((state) =>
-        hasProductAccess(state, id)
-    )
-
-    const updatePortfolioPopup = () => {
-        dispatch(
-            openPopup(PortfolioConstants.UPDATE_PORTFOLIO, 'PortfolioPopup', { id })
-        )
-    }
 
     useLayoutEffect(() => {
         const spans = Math.ceil(ref.current.clientHeight / 2) + 5
@@ -77,18 +63,6 @@ function PortfolioCard({ id }) {
                         }
                     }
                 }}
-                action = {
-                    hasPortfolioAccess && (
-                        <IconButton
-                            onClick = {updatePortfolioPopup}
-                            color = 'secondary'
-                            data-testid = 'PortfolioCard__button-edit'
-                            size = 'large'
-                        >
-                            <Edit />
-                        </IconButton>
-                    )
-                }
             />
             <CardContent style = {{ paddingTop: 0 }}>
                 <Box display = 'flex' justifyContent = 'space-between'>

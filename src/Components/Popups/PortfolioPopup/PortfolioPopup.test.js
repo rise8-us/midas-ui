@@ -1,10 +1,6 @@
 import {
-    fireEvent,
-    mockDateSelector,
-    mockSearchUsersComponent,
-    mockSyncRequest,
-    mockUsersCollectionComponent,
-    render,
+    fireEvent, mockDatePicker, mockSearchUsersComponent,
+    mockSyncRequest, render,
     screen,
     useDispatchMock,
     useModuleMock,
@@ -17,15 +13,11 @@ jest.mock('Components/Search/SearchUsers/SearchUsers', () => function testing({ 
     return mockSearchUsersComponent({ title, onChange, value: value ?? '' })
 })
 
-jest.mock('Components/UsersCollection/UsersCollection', () => function testing({ title, setUserIds }) {
-    return mockUsersCollectionComponent({ title, setUserIds })
-})
-
 jest.mock('Components/EpicSyncRequest/EpicSyncRequest', () => function testing() {
     return mockSyncRequest()
 })
 
-jest.mock('Components/DateSelector/DateSelector', () => function testing(props) { return mockDateSelector(props) })
+jest.mock('@mui/x-date-pickers', () => ({ DatePicker: mockDatePicker }))
 
 describe('<PortfolioPopup />', () => {
     jest.setTimeout(20000)
@@ -34,22 +26,21 @@ describe('<PortfolioPopup />', () => {
     const submitPortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestCreatePortfolio')
     const selectPortfolioByIdMock = useModuleMock('Redux/Portfolios/selectors', 'selectPortfolioById')
     const submitUpdatePortfolioMock = useModuleMock('Redux/Portfolios/actions', 'requestUpdatePortfolio')
-    const selectTagsByTypesMock = useModuleMock('Redux/Tags/selectors', 'selectTagsByTypes')
-    const selectAvailableProductsMock = useModuleMock('Redux/Products/selectors', 'selectAvailableProducts')
     const selectSourceControlsMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControls')
     const selectedSourceControlMock = useModuleMock('Redux/SourceControls/selectors', 'selectSourceControlById')
-    const selectUsersByIdsMock = useModuleMock('Redux/Users/selectors', 'selectUsersByIds')
-
-    const returnedTags = [
-        { id: 4, label: 'Tag 1', description: '', color: '#000000' },
-        { id: 2, label: 'Tag 2', description: '', color: '#000000' },
-        { id: 13, label: 'scoped::label 1', description: '', color: '#000000' },
-        { id: 14, label: 'scoped::label 2', description: '', color: '#000000' }
-    ]
+    const selectUsersMock = useModuleMock('Redux/Users/selectors', 'selectUsers')
+    const selectProductsMock = useModuleMock('Redux/Products/selectors', 'selectProducts')
 
     const returnedProducts = [
-        { id: 20, name: 'product 1' },
-        { id: 21, name: 'product 2' },
+        { id: 20, name: 'product 1', isArchived: false, portfolioId: 4 },
+        { id: 21, name: 'product 2', isArchived: false, portfolioId: null },
+    ]
+
+    const allUsers = [
+        { id: 1, name: 'user1', username: 'user1', displayName: 'User 1' },
+        { id: 2, name: 'user2', username: 'user2', displayName: 'User 2' },
+        { id: 3, name: 'user3', username: 'user3', displayName: 'User 3' },
+        { id: 4, name: 'user4', username: 'user4', displayName: 'User 4' },
     ]
 
     const returnedGitlabServers = [
@@ -83,11 +74,10 @@ describe('<PortfolioPopup />', () => {
 
     beforeEach(() => {
         selectPortfolioByIdMock.mockReturnValue(returnedNewPortfolio)
-        selectTagsByTypesMock.mockReturnValue(returnedTags)
-        selectAvailableProductsMock.mockReturnValue(returnedProducts)
         selectSourceControlsMock.mockReturnValue(returnedGitlabServers)
-        selectUsersByIdsMock.mockReturnValue([])
         selectedSourceControlMock.mockReturnValue({})
+        selectUsersMock.mockReturnValue(allUsers)
+        selectProductsMock.mockReturnValue(returnedProducts)
         useDispatchMock().mockResolvedValue({ type: '/', payload: [] })
     })
 
@@ -108,7 +98,7 @@ describe('<PortfolioPopup />', () => {
     test('should call onSubmit', () => {
         render(<PortfolioPopup />)
 
-        fireEvent.click(screen.getByText('submit'))
+        fireEvent.click(screen.getByText('create'))
 
         expect(submitPortfolioMock).toHaveBeenCalledWith({
             name: '',
@@ -157,7 +147,7 @@ describe('<PortfolioPopup />', () => {
         const gitlabGroupId = '123'
         const newDuration = '85'
 
-        const nameInput = screen.getByTestId('PortfolioPopup__input-name')
+        const nameInput = screen.getByTestId('PortfolioPopup__input-title')
         const descriptionInput = screen.getByTestId('PortfolioPopup__input-description')
         const gitlabGroupIdInput = screen.getByTestId('PortfolioPopup__input-gitlabGroupId')
         const sprintDurationInDays = screen.getByTestId('PortfolioPopup__input-sprint-duration')
@@ -171,7 +161,7 @@ describe('<PortfolioPopup />', () => {
         userEvent.type(gitlabGroupIdInput, gitlabGroupId)
         userEvent.type(sprintDurationInDays, newDuration)
 
-        fireEvent.blur(screen.getByDisplayValue('05-09-2022'))
+        fireEvent.change(screen.getByDisplayValue('2022-05-09'), { target: { value: '11-01-2022' } })
 
         fireEvent.click(screen.getAllByTitle(/open/i)[0])
         fireEvent.click(screen.getByText('IL7 Beyond Top Secret'))
@@ -179,7 +169,7 @@ describe('<PortfolioPopup />', () => {
         fireEvent.click(screen.getAllByTitle(/open/i)[1])
         fireEvent.click(screen.getByText('product 2'))
 
-        fireEvent.click(screen.getByText('submit'))
+        fireEvent.click(screen.getByText('update'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...newFoundPorfolio,
@@ -187,7 +177,7 @@ describe('<PortfolioPopup />', () => {
             description,
             gitlabGroupId: '123',
             sprintDurationInDays: '85',
-            sprintStartDate: '2021-04-20',
+            sprintStartDate: '2022-11-01',
             sourceControlId: 24,
             productIds: [21],
             personnel: {
@@ -204,7 +194,7 @@ describe('<PortfolioPopup />', () => {
         render(<PortfolioPopup id = {4} />)
 
         userEvent.type(screen.getByTitle('Portfolio Owner'), 'bogus')
-        fireEvent.click(screen.getByText('submit'))
+        fireEvent.click(screen.getByText('update'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,
@@ -224,8 +214,12 @@ describe('<PortfolioPopup />', () => {
 
         render(<PortfolioPopup id = {4} />)
 
-        userEvent.type(screen.getByTitle('Portfolio Admins'), 'bogus')
-        fireEvent.click(screen.getByText('submit'))
+        userEvent.click(screen.getAllByTestId('ArrowDropDownIcon')[2])
+        userEvent.click(screen.getByText('User 1'))
+        userEvent.click(screen.getAllByTestId('CancelIcon')[1])
+        userEvent.click(screen.getAllByTestId('ArrowDropDownIcon')[2])
+        userEvent.click(screen.getByText('User 2'))
+        fireEvent.click(screen.getByText('update'))
 
         expect(submitUpdatePortfolioMock).toHaveBeenCalledWith({
             ...returnedFoundPortfolio,
@@ -235,7 +229,7 @@ describe('<PortfolioPopup />', () => {
             personnel: {
                 ownerId: null,
                 teamIds: [],
-                adminIds: [24]
+                adminIds: [2]
             }
         })
     })

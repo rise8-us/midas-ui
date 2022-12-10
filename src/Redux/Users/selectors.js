@@ -1,6 +1,13 @@
 import { convertRolesLongToRolesMap } from 'Utilities/bitwise'
 import { snakeToCamel } from 'Utilities/caseConversions'
 
+export const selectUsers = (state) => {
+    const allUsers = state.users
+    if (!allUsers) return []
+
+    return Object.keys(allUsers).map(id => selectUserById(state, id))
+}
+
 export const selectUserById = (state, id) => {
     const user = state.users[id]
     if (!user) return {}
@@ -11,7 +18,7 @@ export const selectUserById = (state, id) => {
 }
 
 export const selectUsersByIds = (state, ids) => {
-    return ids.map(id => selectUserById(state, id))
+    return ids?.map(id => selectUserById(state, id))
 }
 
 export const selectTotalRoleCountByUserIds = (state, ids) => {
